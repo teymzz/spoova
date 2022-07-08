@@ -92,7 +92,7 @@ if(function_exists('domroot')){
               $errDocText = 'ErrorDocument 404 /'.fol.'res/404.php';
               $htaccess = str_replace($enviroText.' online', $enviroText.' offline', $htaccess);
             }
-            
+            die($errDocText);
             if($errDocText !== $matchesText){
               $htaccess = str_replace($matchesText, $errDocText, $htaccess);
               $fp = fopen(domroot().'.htaccess', 'w+');
