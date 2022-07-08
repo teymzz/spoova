@@ -1,0 +1,35 @@
+<IfModule mod_rewrite.c>
+    #Header add Access-Control-Allow-Origin: "*"
+    #Header add Access-Control-Allow-Methods: "GET,POST,OPTIONS,DELETE,PUT"
+    #Header add Access-Control-Allow-Headers: "Content-Type"
+    
+    #Basic Options -------------------------------------------------
+    RewriteOptions inherit
+    RewriteEngine on
+    #RewriteBase /
+    SetEnv HTACCESS on
+    ErrorDocument 404 /spoove/res/404.php
+    #IndexIgnore core
+
+    #Advanced Options ----------------------------------------------
+    #Options +FollowSymLinks -Multiviews
+
+    #remove php file extension 
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteCond %{THE_REQUEST} ^[A-Z]{3,}\s([^.]+)\.php [NC]
+    RewriteRule ^ %1 [R,L]
+    
+    #add php extension internally
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteCond %{REQUEST_FILENAME}.php -f
+    RewriteRule ^(.*?)/?$ $1.php [L]
+    
+    RewriteRule ^dev$ index.php [NC,L]
+    RewriteRule ^dev\?([0-9a-zA-Z_-]+\=)?$ index.php?urlrq=$1  [NC,L]
+    RewriteRule ^setup$ index.php [NC,L]
+    RewriteRule ^setup-dev$ index.php [NC,L]
+    RewriteRule ^spoova$ %{THE_REQUEST}/ [NC,L]    
+    # Redirect mi /spoova/res/404.php
+    setEnv LAUNCHER main
+    setEnv ENVIRONMENT offline
+</IfModule>

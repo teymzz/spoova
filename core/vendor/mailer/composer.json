@@ -1,0 +1,6 @@
+{
+    "require": {
+        "phpmailer/phpmailer": "^6.0",
+        "pelago/emogrifier": "^3.1"
+    }
+}

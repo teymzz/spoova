@@ -1,0 +1,169 @@
+<?php
+
+// namespace spoova\core\commands;
+
+// class Info Extends Entry{
+    
+//     /**
+//      * load the argument supplied from spoova class
+//      *
+//      * @param array $args func_num_args
+//      */
+//     function __construct($args = []) {
+        
+//     }
+
+//     function features(){
+//         $features = [
+//             'Res' => 'a powerful tool for rendering files 
+//                         ++ RESOURCE CONTROL
+//                         ++ > ::Import => for importing resources (see documentation)
+//                         ++ > ::Name => for grouping resources (see documentation)
+//                         ++ LIVE SERVER CONTROL
+//                         ++ > ::Watch => turn on live server before any import (see documentation)
+//                         ++ > ::Off => turn off live server dog before any import (see documentation)
+//                         ++ > ::Connect => link a page to another (under development)
+//                         ++ TEMPLATE RENDERING
+//                         ++ > ::Load => for loading templates
+//                         ++ > ::Gett => for rendering unrouted templates
+//                         ++ > ::Postt => for rendering unrouted templates
+//                         ++ > ::Post => Router Post for loading templates
+//                         ++ > ::Get => Router Get for loading templates
+//                         ++ FLASH NOTICES
+//                         ++ > ::SetFlash => set a flash message
+//                         ++ > ::Flash => get a flash message using a flash key
+//                     ',
+//             'Input' =>  'Built in class for validating form inputs',
+//             'Automatic Session' =>  'Built in class for controlling log in and log out redirection',
+//             'Meta' =>  'Tool for controlling meta tags.',
+//             'DBHandlers'  => 'Simple Handlers for running mysql queries',
+//             'Live Server' => 'Built in live server and simple debugger (under development)',
+//         ];
+//         self::addLog($features); 
+//     }
+
+//     function version() {
+//         //show the version of spoova
+//         $support  = ' Version '.SP_VERSION;
+//         $this->display($support);
+//     }
+
+//     function support() {
+        
+//         //show the supports of spoova
+//         $support  = PHP_EOL;    
+//         $support .= PHP_EOL.str_repeat(" ", 5).'PHP - 7.4';
+//         $support .= PHP_EOL.str_repeat(" ", 5).'MYSQL';
+//         $support .= PHP_EOL.str_repeat(" ", 5).'APACHE SERVER ONLY';
+//         $support .= PHP_EOL.str_repeat(" ", 5).'ANDROID KSWEB SERVER';
+
+//         $support  = ' Supports: '.$support;
+
+//         $this->display($support);
+//     }    
+
+//     /**
+//      * Display list of commands
+//      *
+//      * @return void
+//      */
+//     function cli(){
+
+//         self::addLog(self::directives);
+//     }
+
+//     function classes($arguments = []){
+
+//         $argC = count($arguments);
+
+//         if($argC > 1){
+//             self::addError('"'.implode(" ",$arguments).'" not recognized');
+//             return;
+//         }
+        
+//         $classes = [
+//             'DB' => 'Initializes a new database class',
+//             'DBHandler'   => 'Handles all database queries',
+//             'DBStatus'    => 'Shows the status of the current user connection',
+//             'Enlist'      => 'Lists the files and folders in a given url',
+//             'FileManager' => 'Files Control system',
+//             'DOMCookie'   => 'Generate a random or static cookie hash value',
+//             'Form'        => 'Creates a new form field',
+//             'FormField'   => 'Parent class for Form',
+//             'DOMCookie'   => 'Generates a random or static hash value',
+//             'Jsonfy'      => 'Manipulates a two level json string an returns array or json format',
+//             'JWSToken'    => 'For creating jwstokens',
+//             'Mailer'      => 'Uses phpMailer to send mails',
+//             'Meta'        => 'For controlling meta tags',
+//             'Model'       => 'Model class',
+//             'MiSQL'       => 'Handles Queries using mysqli connection',
+//             'MiPDO'       => 'Handles Queries using pdo connection',
+//             'Notice'      => 'Handles Flash Notices', 
+//             'Request'     => 'Handle  Requests',
+//             'Res'         => 'Resource main controller. It Handles: 
+//                                                                     ++     -Routing, 
+//                                                                     ++     -Template Rendering, 
+//                                                                     ++     -Live server, 
+//                                                                     ++     -Resource file imports, 
+//                                                                     ++     -Flash notices,
+//                                                                     ++     Res only controls a specific part of the application.',
+//             'Resource'    => 'Parent class for Res',
+//             'Session'     => 'Handles all sessions',
+//             'Slicer'      => 'Template Engine',
+//             'TimeClass'   => 'Handles time conversion',
+//             'User'        => 'Handles current user connections. ++  Handles User authentications. ++  Modifies Sessions and Session redirects. ++  Provides configuration settings.',
+//             'UserAuth'    => 'Handles user authentications, modifies user database connection',
+//             'View'        => 'View function for rendering template engines',
+            
+//             'OTHER TOOLS' => 'All located in the tools folder',
+//             'FileUploader'=> 'Uploads single or multiple files',
+//             'Input'       => 'Validate form inputs',
+//         ];
+
+//         if($argC < 1){
+//             self::addLog($classes);
+//             return;
+//         }
+
+//         if($argC == 1){
+//             if(!array_key_exists($arguments[0], $classes)) {
+//                 self::addError(" class ".$arguments[0]." is not part of package custom functions ");
+//                 return;
+//             }
+//             self::addLog($arguments[0]." > ". $classes[$arguments[0]]);
+//             return;
+//         }
+//     }
+
+//     public function class_methods($arguments = []){
+       
+//         $argC = count($arguments);
+
+//         if($argC < 1){
+//             self::addError('>> spoova class <classnamespace>');
+//             return;            
+//         }
+
+//         if($argC > 1){
+//             self::addError('"'.implode(" ",$arguments).'" not recognized');
+//             return;            
+//         }       
+    
+//         $classname = $arguments[0];
+
+//         $class_paths = [
+//             'classes' => '\core\classes\\',
+//             'tools'   => '\core\tools\\',
+//         ];
+
+//         if(@class_exists($classname)){
+//             $methods = get_class_methods($classname);
+//             self::addLog($methods);
+//             return;
+//         }
+        
+//         self::addLog('class not found');
+        
+//     }
+
+// }
