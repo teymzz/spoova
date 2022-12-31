@@ -1,0 +1,1214 @@
+@charset "UTF-8";
+
+/*general settings*/
+
+html {
+    font-family: sans-serif;
+    -webkit-text-size-adjust: 100%;
+}
+
+*,
+*::before,
+*::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    outline: none;
+}
+
+body {
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-size: 14px;
+    line-height: 1.42857143;
+    color: #333;
+    overflow-x: hidden;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    margin: 0;
+    padding: 0;
+}
+
+section {
+    width: 100%;
+}
+
+code {
+    display: inline-block;
+    font-size: inherit;
+    padding: 2px;
+    margin: .2em;
+    border: solid thin rgba(220, 220, 220, 0.5);
+    border-radius: 4px;
+    font-family: monospace;
+}
+
+/*hyperlinks .............................................*/
+
+a {
+    background-color: transparent;
+}
+
+a:visited {
+    font-family: inherit !important;
+}
+
+a:active {
+    border: none;
+    color: inherit;
+    font-family: inherit !important;
+}
+
+a,
+a:hover,
+a:focus,
+a:visited,
+a[href]:after {
+    text-decoration: none;
+    outline: none;
+}
+
+a.inherit {
+    text-decoration: none;
+    color: inherit;
+}
+
+a.inherit:hover {
+    opacity: 0.7;
+}
+
+:disabled {
+    opacity: .7;
+}
+
+
+/*hide contents*/
+
+.visb-hide {
+    transition: visibility .2s ease-in-out;
+    visibility: hidden;
+}
+
+.no-select {
+    user-select: none;
+}
+
+/*input form css*/
+
+:where(div[role="group"]) {
+    background-color: #fafafa;
+}
+
+:where(fieldset.border) {
+    border: solid thin #c4c9cc;
+}
+
+:where(fieldset:read-write[disabled]) {
+    cursor: not-allowed;
+}
+
+
+/* flex-child == (i-flex, i-flex-full, in-flex, in-flex-full) => child  */
+
+:where([class*="flex-child"]) {
+    background-color: transparent;
+}
+
+:where(.clip-150) {
+    width: 150px;
+}
+
+:where(.clip-140) {
+    width: 140px;
+}
+
+:where(.clip-130) {
+    width: 130px;
+}
+
+:where(.clip-120) {
+    width: 120px;
+}
+
+:where(.clip-110) {
+    width: 100px;
+}
+
+:where(.clip-100) {
+    width: 100px;
+}
+
+:where(.clip-90) {
+    width: 90px;
+}
+
+:where(.clip-80) {
+    width: 80px;
+}
+
+:where(.clip-70) {
+    width: 70px;
+}
+
+:where(.clip-60) {
+    width: 60px;
+}
+
+:where(.clip-50) {
+    width: 50px;
+}
+
+:where(.clip-40) {
+    width: 40px;
+}
+
+:where(.clip-30) {
+    width: 30px;
+}
+
+:where(.clip-20) {
+    width: 20px;
+}
+
+:where(.clip-10) {
+    width: 10px;
+}
+
+:where([class*="flex"][class*="-in"]) {
+    overflow: hidden;
+}
+
+:where([class*="flex"].flex) {
+    display: flex;
+    word-break: keep-all;
+    white-space: nowrap;
+    word-wrap: none;
+}
+
+/* flex-btn == flex-child as btn */
+
+:where([class*="flex-btn"]) {
+    width:fit-content;
+    padding: 4px 6px;
+    white-space: nowrap;
+    border-radius: 0;
+    text-align: center;
+    background-color: transparent;
+    min-height: 30px;
+    border: none;
+}
+
+:where([class*="flex-btn"]:active) {
+    opacity: .5;
+}
+
+.flex-ico {
+    border: none;
+    align-items: center;
+    justify-content: center;
+    padding: .5em;
+    width: fit-content;
+}
+
+/* buttons */
+:where(button.flex-full) {
+    white-space: nowrap;
+    text-align: center;
+    justify-content: center;
+    min-height: 30px;
+    border: none;
+}
+
+:where(button.flex-full:active){
+    opacity: .5;
+}
+
+:where(button.flex-full.flex){
+    display: flex;
+    word-break: keep-all;
+    word-wrap: none;
+    white-space: nowrap;
+}
+
+/* flex grids */
+:where(.col-x-d5){
+    column-gap: .5em;
+}
+
+:where(.col-x-1){
+    column-gap: 1em;
+}
+
+
+
+
+/*div tables .....................................................................*/
+
+:where(div.table-cell) {
+    display: table;
+    border-collapse: collapse;
+}
+
+:where(div.table-cell > div) {
+    display: table-row;
+    border-collapse: separate;
+}
+
+:where(div.table-cell:not(.clear-wrap) > div) {
+    white-space: nowrap;
+}
+
+:where(div.table-cell:not(.no-line) > div) {
+    border: solid thin;
+    border-color: inherit;
+}
+
+:where(div.table-cell > div > span,
+div.table-cell > div > div) {
+    display: table-cell;
+    border-collapse: separate;
+    padding: 6px;
+}
+
+:where(div.table-cell:not(.no-line) > div > span,
+div.table-cell:not(.no-line) > div > div) {
+    border: solid thin inherit;
+}
+
+:where(div.table-cell.spreadsheet > div > span,
+div.table-cell > div.spreadsheet > span) {
+    border: solid thin;
+}
+
+:where(div.table-list > div) {
+    margin: 10px 0px;
+}
+
+:where(div.table-list.lined > div > span) {
+    border: solid thin;
+    border-color: inherit;
+}
+
+
+/* ul styling ...............................................................................................*/
+
+:where(ul.list-square > li) {
+    list-style: square;
+}
+
+:where(ul.list-disc > li) {
+    list-style: disc;
+}
+
+:where(ul.list-free li) {
+    list-style: none;
+}
+
+:where(ul > li.link-padds > a,
+ul > li.link-padds > span) {
+    display: inline-block;
+    width: 100%;
+    height: 100%;
+    color: inherit;
+}
+
+/*float items ............................................................................*/
+
+.pull-left {
+    float: left;
+}
+
+.pull-right {
+    float: right;
+}
+
+.pull-none {
+    float: none;
+}
+
+.pull-clear {
+    clear: both;
+}
+
+
+/* custom checkbox .......................................................................*/
+
+.input-checkbox + input[type='checkbox'] {
+    display: none;
+    visibility: hidden;
+}
+
+:where([checkbox] + input[type='checkbox']) {
+    display: none;
+    visibility: hidden;
+}
+
+.hide-focus:focus {
+    box-shadow: none;
+    border: solid thin #aaa;
+}
+
+/* soft full width marker */
+
+:where([class*="-full"]){
+    width: 100%;
+}
+
+/* box wrapper width*/
+
+.wid-full {
+    width: 100%;
+}
+
+.wid-min {
+    width: min-content;
+}
+
+.wid-fit {
+    width: fit-content;
+}
+
+.wid-max {
+    width: max-content;
+}
+
+
+/* icons and favicons */
+
+[class*="favicon"] {
+    display: flex;
+    background-size: cover;
+    background-position: top center;
+    background-repeat: no-repeat;
+}
+
+.favicon-r {
+    border-radius: 100vh;
+}
+
+.icon {
+    height: 15px;
+    width: 15px;
+}
+
+.icon-x {
+    height: 25px;
+    width: 20px;
+}
+
+.icon-box .icon {
+    vertical-align: unset;
+}
+
+
+/* text alignment ................................................*/
+
+.text-justify {
+    text-align: justify;
+}
+
+.text-center {
+    text-align: center;
+}
+
+.text-right {
+    text-align: right;
+}
+
+.text-left {
+    text-align: left;
+}
+
+.no-wrap {
+    word-break: keep-all;
+    white-space: nowrap;
+    word-wrap: none;
+}
+
+.break-all {
+    word-break: break-all;
+}
+
+
+/* backgrounds ............................................ */
+
+.bc-t {
+    background-color: transparent;
+}
+
+.b-cover {
+    background-size: cover;
+    background-position: top center;
+    background-repeat: no-repeat;
+}
+
+.b-contain {
+    background-size: contain;
+    background-position: top center;
+    background-repeat: no-repeat;
+}
+
+.b-fluid {
+    background-size: cover;
+    background-position: center top;
+    background-repeat: no-repeat;
+}
+
+.b-parallax {
+    background-size: cover;
+    background-position: center top;
+    background-attachment: fixed;
+    background-repeat: no-repeat;
+}
+
+.b-center {
+    background-position: center top;
+}
+
+.b-clip {
+    background-clip: padding-box;
+}
+
+.im-fixed {
+    background-attachment: fixed;
+}
+
+:where(.font-all input,
+.font-all textarea,
+.font-all > *) {
+    font-size: inherit;
+}
+
+/*badges ................................................*/
+
+.mybadge {
+    border: solid thin;
+}
+
+.badge-1,
+.badge-2,
+.badge-3 {
+    display: inline-block;
+    padding: 0 4px;
+    border-radius: 50px;
+}
+
+.badge-1 {
+    background-color: #9dadb0;
+}
+
+.badge-2 {
+    background-color: #5c6769;
+}
+
+.badge-3 {
+    background-color: #3c494b;
+}
+
+/*custom buttons ...................................................*/
+[class*="anc-"] {
+    user-select: none;    
+    width: fit-content;    
+}
+
+[class*="-btn"] {
+    border: none;
+    outline: none;
+    cursor: pointer;    
+    user-select: none;     
+}
+
+:where([class*="-btn"]) { 
+    width: fit-content; 
+    white-space: nowrap; 
+}
+
+[class*="btn-link"]:active
+{
+     opacity: .2; 
+}
+
+.anc-btn:active {
+     opacity: .2;
+}
+
+.btn-box {
+    display: inline-block;
+    cursor: pointer;
+    user-select: none;
+    width: fit-content;
+}
+
+.span-btns {
+    display: inline-block;
+    padding: 4px;
+}
+
+[class*="form-btn"]:active {
+    opacity: .2;
+}
+
+[class*="form-btn"].btn-1 {
+    --padd-p: 10%;
+}
+
+[class*="form-btn"].btn-2 {
+    --padd-p: 20%;
+}
+
+.x-close {
+    padding: 2px;
+    background-color: #a60000;
+    color: #b7b7b7;
+}
+
+/*pointers ...................................................*/
+
+.pointer,
+[data-scroll] {
+    cursor: pointer;
+}
+
+:disabled,
+:disabled *,
+.disabled,
+.disabled * {
+    cursor: not-allowed;
+}
+
+
+/*overflow classes ............................................*/
+
+.flow-hide {
+    overflow: hidden;
+}
+
+.flow-auto {
+    overflow: auto;
+}
+
+.flow-scroll {
+    overflow: scroll;
+}
+
+.flow-x {
+    overflow-x: auto;
+    overflow-y: hidden;
+}
+
+.flow-v, .flow-y {
+    overflow-x: hidden;
+    overflow-y: auto;
+}
+
+
+/* forcing item to center and middle..........................*/
+
+.centre,
+.central {
+    display: grid;
+    place-items: center;
+}
+
+.center {
+    margin: auto;
+}
+
+.mid-outer {
+    display: table;
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+}
+
+.mid-outer .middle {
+    display: table-cell;
+    vertical-align: middle;
+}
+
+.mid-outer .inner {
+    margin-left: auto;
+    margin-right: auto;
+}
+
+
+/* fluid boxes ....................................................................................*/
+:root{
+ --fluid: 100%;
+ --fluid-i: 1;
+ --fluid-1: var(--fluid-i);
+ --fluid-2: var(--fluid-1);
+ --fluid-3: var(--fluid-2);
+}
+
+.fluid-box {
+    width: calc(var(--fluid) / var(--fluid-i));
+    transition: width .5s ease-in-out, height .5s ease-in-out, margin .5s ease-in-out;
+}
+
+.fluid-box:not(.fluid-after):before {
+    content: "";
+    display: inline-block;
+    margin-top: 100%;
+    width: 100%;
+    transition: width .5s ease-in-out, height .5s ease-in-out, margin .5s ease-in-out;
+}
+
+.fluid-box.fluid-after:after {
+    content: "";
+    display: inline-block;
+    margin-top: 100%;
+    width: 100%;
+    transition: width .5s ease-in-out, height .5s ease-in-out, margin .5s ease-in-out;
+}
+
+@media (min-width: 800px) {
+  .fluid-box{
+    width: calc(var(--fluid) / var(--fluid-1));
+    transition: width .5s ease-in-out, height .5s ease-in-out, margin .5s ease-in-out;
+  }  
+}
+
+@media (min-width: 950px) {
+  .fluid-box{
+    width: calc(var(--fluid) / var(--fluid-2));
+    transition: width .5s ease-in-out, height .5s ease-in-out, margin .5s ease-in-out;
+  }  
+}
+
+@media (min-width: 1025px) {
+  .fluid-box{
+    width: calc(var(--fluid) / var(--fluid-3));
+    transition: width .5s ease-in-out, height .5s ease-in-out, margin .5s ease-in-out;
+  }  
+}
+
+
+/* styling images-thumbs..............................................*/
+
+.image-thumb {
+    position: relative;
+    display: inline-block;
+    line-height: 1.42857143;
+    box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    -webkit-transition: all .2s ease-in-out;
+    -o-transition: all .2s ease-in-out;
+    transition: all .2s ease-in-out;
+    padding: 2px;
+}
+
+.image-thumb .image {
+    position: relative;
+    overflow: hidden;
+}
+
+.image-thumb .image .image-label {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
+    padding: 4px;
+    overflow: auto;
+}
+
+.image-thumb .image .image-label[data-anime='slide-up']:not(.slide-up) {    
+    bottom: -100%;
+    transition: top 2s ease-in-out, bottom 2s ease-in-out;
+}
+
+.image-thumb .image .image-label[data-anime='slide-up-scroll']:not(.slide-up) {
+    top: 100%;
+    transition: top 2s ease-in-out, bottom 2s ease-in-out;
+}
+
+.image-thumb .image .image-label.slide-up {
+    bottom: 0;
+    transition: top 1s ease-in-out, bottom 1s ease-in-out; 
+}
+
+.image-thumb .image:hover .image-label[data-anime='slide-up'].on-hover {
+    bottom: 0;
+    transition: top 1s ease-in-out, bottom 1s ease-in-out;
+}
+
+.image-thumb .image:hover .image-label[data-anime='slide-up-scroll'].on-hover {
+    top:0;
+    bottom: 0;
+    transition: top 1s ease-in-out, bottom 1s ease-in-out;
+}
+
+
+/*overlay item ...........................................................................*/
+
+.page-overlay {
+    position: fixed;
+}
+
+.overlay {
+    position: absolute;
+}
+
+.page-overlay,
+.overlay {
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+}
+
+
+/*content positions ................................................*/
+
+.fixed {
+    position: fixed;
+}
+
+.relative {
+    position: relative;
+}
+
+.absolute {
+    position: absolute;
+}
+
+.static {
+    position: static;
+}
+
+.left {
+    left: 0;
+}
+
+.right {
+    right: 0;
+}
+
+.top {
+    top: 0;
+}
+
+.bottom {
+    bottom: 0;
+}
+
+/* widths and pixels*/
+.px-full,
+.full-size {
+    width: 100%;
+    height: 100%;
+}
+
+.h-full {
+    height: 100%;
+}
+
+.vxh-full {
+    height: 100vh;
+    width: 100vw;
+}
+
+.vx-full {
+    width: 100vw;
+}
+
+.vh-full, .vh-100 {
+    height: 100vh;
+}
+
+.vhm-full, .vhm-100 {
+    min-height: 100vh;
+}
+
+.vh-97 {
+    height: 97vh;
+}
+
+.vh-95 {
+    height: 95vh;
+}
+
+.vh-90 {
+    height: 90vh;
+}
+
+.vh-87 {
+    height: 87vh;
+}
+
+.vh-85 {
+    height: 85vh;
+}
+
+.vh-80 {
+    height: 80vh;
+}
+
+.vhm-97 {
+    height: 97vh;
+}
+
+.vhm-95 {
+    min-height: 95vh;
+}
+
+.vhm-90 {
+    min-height: 90vh;
+}
+
+.vhm-87 {
+    min-height: 87vh;
+}
+
+.vhm-85 {
+    min-height: 85vh;
+}
+
+.vhm-80 {
+    min-height: 80vh;
+}
+
+
+.full-width,
+.ll-full {
+    width: 100%;
+}
+
+.wper-50 {
+    width: 50% !important;
+}
+
+
+/*inherit properties*/
+
+.bd-i,
+.bd-i:hover {
+    border: inherit;
+}
+
+.c-i,
+.c-i:hover {
+    color: inherit;
+}
+
+.d-i {
+    display: inherit;
+}
+
+.f-i,
+.f-i:hover {
+    font-size: inherit;
+}
+
+.h-i {
+    height: inherit;
+}
+
+.padd-i {
+    padding: inherit;
+}
+
+.wid-i {
+    width: inherit;
+}
+
+/*display items : grid ............................................................................*/
+
+.grid {
+    display: grid;
+}
+
+.grid-center {
+    display: grid;
+    place-items: center;
+}
+
+.in-grid {
+    display: inline-grid;
+}
+
+/* display items : block ...................................................... */
+
+.block {
+    display: block;
+}
+
+.in-line {
+    display: inline;
+}
+
+.in-block {
+    display: inline-block;
+}
+
+/* display items : Flex ........................................................ */
+
+[class*="flex"] {
+    display: flex;
+}
+
+[class*="in-flex"] {
+    display: inline-flex;
+}
+
+.f-col {
+    flex-direction: column;
+}
+.flex-col {
+    flex-direction: column;
+}
+
+.f-row {
+    flex-direction: row;
+}
+.flex-row {
+    flex-direction: row;
+}
+
+/* mobile direction reverse */
+.flex-col-m {
+    flex-direction: row;
+}
+
+.flex-row-m {
+    flex-direction: column;
+}
+
+/* align flexes - global declarations */
+
+.flex-l {
+    justify-content: flex-start;
+}
+
+.flex-r {
+    justify-content: flex-end;
+}
+
+.flex-lt {
+    justify-content: flex-start;
+    align-items: flex-start;
+}
+
+.flex-lb {
+    justify-content: flex-start;
+    align-items: flex-end;
+}
+
+.flex-rt {
+    justify-content: flex-end;
+    align-items: flex-start;
+}
+
+.flex-rb {
+    justify-content: flex-end;
+    align-items: flex-end;
+}
+
+.flex-c {
+    justify-content: center;
+}
+
+.mid {
+    justify-content: center;
+    align-items: center;
+}
+
+.midl {
+    justify-content: flex-start;
+    align-items: center;
+}
+
+.midr {
+    justify-content: flex-end;
+    align-items: center;
+}
+
+.midv {
+    align-items: center;
+}
+
+.midh {
+    justify-content: center;
+    align-items: flex-start;
+}
+
+.midb {
+    justify-content: center;
+    align-items:flex-end;
+}
+
+.midt {
+    justify-content: center;
+    align-items:flex-start;
+}
+
+/* flex justify ....................................*/
+
+.just-left {
+    justify-content: start;
+}
+
+.just-right {
+    justify-content: end;
+}
+
+.flex-start {
+    justify-content: flex-start;
+}
+
+.flex-end {
+    justify-content: flex-end;
+}
+
+.flex-center {
+    justify-content: center;
+    align-items: center;
+    word-break: keep-all;
+    white-space: nowrap;
+    word-wrap: none;
+}
+
+.just-center {
+    justify-content: center;
+}
+
+.space-between {
+    justify-content: space-between;
+}
+
+.space-around {
+    justify-content: space-around;
+}
+
+.space-even {
+    justify-content: space-evenly;
+}
+
+/* setting even spacing on flex fields*/
+
+:where([class*="flex"].even > [class*="flex"]) {
+    width: 49.5%;
+}
+
+:where([class*="flex"].even) {
+    justify-content: space-between;
+}
+
+/* display items: Table .......................................................... */
+
+.table {
+    display: table;
+}
+
+.in-table {
+    display: inline-table;
+}
+
+/* display items: List .......................................................... */
+.list-item {
+    display: list-item;
+}
+
+
+
+/*MOBILE TRANSORMS .................................................*/
+
+.mobile {
+    display: inline-block !important;
+}
+
+.desktop {
+    display: none !important;
+}
+
+.mobi-100-50{
+    width : 100%;
+}
+
+.mobi-desk-50{
+    width : 100%;
+}
+
+/* Row/Column Display alternator class : Mobile */
+.flex-flow {
+    flex-direction: row;
+}
+
+/* 1000px below */
+@media (max-width:1000px) {
+    .mobi-100 {
+        width: 100% !important;
+    }
+    .mobi-50 {
+        width: 50% !important;
+    }
+}
+
+/* 1000px above */
+@media (min-width:1000px) {
+    .mobile {
+        display: none !important;
+    }
+
+    .desktop {
+        display: inline-block !important;
+    }
+
+    .mobi-100-50{
+        width : 50% !important;
+    }
+
+    .mobi-desk-50 {
+        width : 50%;
+    }
+
+    .desk-100 {
+        width: 100% !important;
+    }
+
+    .desk-50 {
+        width: 50% !important;
+    }
+  
+    /* Row/Column Display alternator class : Desktop */
+    .flex-flow {
+        flex-direction: column;
+    }
+    
+    .icon {
+        height: 20px;
+        width: 20px;
+    }
+
+    .icon-x {
+        height: 30px;
+        width: 25px;
+    }
+}
+
+
+@media (min-width: 320px) and (max-width: 480px) {
+    /* hide on mobile view */
+    .mobi-hide{
+        display: none !important;
+    }
+
+}
+
+
+/* overwrite all media screens */
+
+.blur.blur-on {
+    display: block !important;
+}
+
+.hide,
+.disp-none {
+    display: none;
+}
