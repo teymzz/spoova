@@ -1,0 +1,44 @@
+<IfModule mod_rewrite.c>
+    #Header add Access-Control-Allow-Origin: "*"
+    #Header add Access-Control-Allow-Methods: "GET,POST,OPTIONS,DELETE,PUT"
+    #Header add Access-Control-Allow-Headers: "Content-Type"
+    
+    #Basic Options -------------------------------------------------
+    RewriteOptions inherit
+    RewriteEngine on
+
+    #ErrorDocuments: caution!!!
+    ErrorDocument 404 /spoova/res/errors/404.php
+
+    #Advanced Options ----------------------------------------------
+
+    #remove php file extension 
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteCond %{THE_REQUEST} ^[A-Z]{3,}\s([^.]+)\.php [NC]
+    RewriteRule ^ %1 [R,L]
+    
+    #add php extension internally
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteCond %{REQUEST_FILENAME}.php -f
+    RewriteRule ^(.*?)/?$ $1.php [L]   
+      
+    # Secure all directories - exempted directories must be ignored
+    RewriteRule ^([\/A-Za-z0-9]*?)$ index.php [NC,L]    
+
+    # Secure and Re-Route resource folder php files only  
+    RewriteRule ^(res/(.*\.php)?)$ index.php [NC,L]  
+
+    # Ignore public folder and other file extensions
+    RewriteRule ^(res)($|//) - [L]
+    RewriteRule ^(\*\.!(php))($|//) - [L]
+    
+    # Secure specific core directories and its entire contents
+    RewriteRule ^((core|icore|windows)(//.*?)?) index.php [NC,L]
+
+    # Send all directories to the router file
+    RewriteRule ^((//.*?)?([\/0-9a-zA-Z_-]*)?\.php) index.php [NC,L]   
+
+    setEnv HTACCESS on
+    setEnv LAUNCHER main
+    setEnv ENVIRONMENT offline
+</IfModule>

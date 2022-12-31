@@ -1,0 +1,706 @@
+.ico {
+    display: inline-block;
+}
+
+.ico-bold{
+    font-weight: 900;
+}
+
+.ico-at::after{
+    content: "\0040";
+    display:inline-block;
+    position: relative;
+    top:1px;    
+}
+
+.ico-cloud::after{
+    content: "\2601";
+    display:inline-block;
+    position: relative;
+    top:1px;    
+}
+
+.ico-meteor::after{
+    content: "\2604";
+    display:inline-block;
+    position: relative;
+    top:1px;    
+}
+
+.ico-link::after{
+    content: "\260D";
+    display:inline-block;
+    position: relative;
+    top:1px;    
+}
+
+.ico-square::after{
+    content: "\2610";
+    display:inline-block;
+    position: relative;
+    top:1px;    
+}
+
+.ico-checkbox::after, .ico-check-squared::after{
+    content: "\2611";
+    display:inline-block;
+    position: relative;
+    top:1px;    
+}
+
+.ico-warn::after{
+    content: "\26A0";
+    display:inline-block;
+    position: relative;
+    top:1px;
+}
+.ico-fan::after{
+    content: "\2622";
+    display:inline-block;
+    position: relative;
+    top:1px;    
+}
+.ico-arena::after{
+    content: "\262F";
+    display:inline-block;
+    position: relative;
+    top:1px;    
+}
+.ico-dotted-wheel::after{
+    content: "\2638";
+    display:inline-block;
+    position: relative;
+    top:1px;    
+}
+
+.ico-gear::after{
+    content: "\263C";
+    display:inline-block;
+    position: relative;
+    top:1px;    
+}
+
+.ico-hot::after{
+    content: "\2668";
+    display:inline-block;
+    position: relative;
+    top:1px;    
+}
+
+.ico-o-infinite::after{
+    content: "\267E";
+    display:inline-block;
+    position: relative;
+    top:1px;    
+}
+
+.ico-dice-1::after{
+    content: "\2680";
+    display:inline-block;
+    position: relative;
+    top:1px;    
+}
+
+.ico-dice-2::after{
+    content: "\2681";
+    display:inline-block;
+    position: relative;
+    top:1px;    
+}
+
+.ico-dice-3::after{
+    content: "\2682";
+    display:inline-block;
+    position: relative;
+    top:1px;    
+}
+
+.ico-dice-4::after{
+    content: "\2683";
+    display:inline-block;
+    position: relative;
+    top:1px;    
+}
+
+.ico-dice-5::after{
+    content: "\2684";
+    display:inline-block;
+    position: relative;
+    top:1px;    
+}
+
+.ico-dice-6::after{
+    content: "\2685";
+    display:inline-block;
+    position: relative;
+    top:1px;    
+}
+
+.ico-flag::after{
+    content: "\2690";
+    display:inline-block;
+    position: relative;
+    top:1px;    
+}
+
+.ico-flag-fill::after{
+    content: "\2691";
+    display:inline-block;
+    position: relative;
+    top:1px;    
+}
+
+.ico-o-dot::after{
+    content: "\2686";
+    display:inline-block;
+    position: relative;
+    top:1px;    
+}
+
+.ico-o-ddot::after{
+    content: "\2687";
+    display:inline-block;
+    position: relative;
+    top:1px;    
+}
+
+.ico-circle-dot::after{
+    content: "\2688";
+    display:inline-block;
+    position: relative;
+    top:1px;    
+}
+
+.ico-circle-ddot::after{
+    content: "\2689";
+    display:inline-block;
+    position: relative;
+    top:1px;    
+}
+
+.ico-gear-dot::after{
+    content: "\2699";
+    display:inline-block;
+    position: relative;
+    top:1px;    
+}
+
+.ico-fine-star-dot::after{
+    content: "\269b";
+    display:inline-block;
+    position: relative;
+    top:1px;    
+}
+
+.ico-steering::after{
+    content: "\2707";
+    display:inline-block;
+    position: relative;
+    top:1px;    
+}
+
+.ico-plane::after{
+    content: "\2708";
+    display:inline-block;
+    position: relative;
+    top:1px;    
+}
+
+.ico-star-square::after{
+    content: "\2720";
+    display:inline-block;
+    position: relative;
+    top:1px;    
+}
+.ico-star-o::after{
+    content: "\2721";
+    display: inline-block;
+    position: relative;
+    top:1px;    
+}
+.ico-star-dot::after{
+    content: "\2723";
+    display:inline-block;
+    position: relative;
+    top:1px;    
+}
+
+.ico-star-ballon::after{
+    content: "\2724";
+    display:inline-block;
+    position: relative;
+    top:1px;    
+}
+
+.ico-star-cloud::after{
+    content: "\2725";
+    display:inline-block;
+    position: relative;
+    top:1px;    
+}
+
+.ico-star-out::after{
+    content: "\2729";
+    display:inline-block;
+    position: relative;
+    top:1px;    
+}
+
+.ico-star-fill-circle::after{
+    content: "\272a";
+    display:inline-block;
+    position: relative;
+    top:1px;    
+}
+
+.ico-florrete-dot::after{
+    content: "\273b";
+    display:inline-block;
+    position: relative;
+    top:1px;    
+}
+
+.ico-florrete-dot-o::after{
+    content: "\273c";
+    display:inline-block;
+    position: relative;
+    top:1px;    
+}
+
+.ico-florrete::after{
+    content: "\273d";
+    display:inline-block;
+    position: relative;
+    top:1px;    
+}
+
+.ico-pin-wheel::after{
+    content: "\2740";
+    display:inline-block;
+    position: relative;
+    top:1px;    
+}
+
+.ico-crumbs::after{
+    content: "\2741";
+    display:inline-block;
+    position: relative;
+    top:1px;    
+}
+
+.ico-sun-fill::after{
+    content: "\2742";
+    display:inline-block;
+    position: relative;
+    top:1px;    
+}
+
+.ico-foursquare::after{
+    content: "\2756";
+    display:inline-block;
+    position: relative;
+    top:1px;    
+}
+
+.ico-rightcaret::after{
+    content: "\25b8";
+    display:inline-block;
+    position: relative;
+    top:1px;
+}
+.ico-downcaret::after{
+    content: "\25be";
+    display:inline-block;
+    position: relative;
+    top:1px;
+}
+.ico-copyright::after{
+    content: "\00a9";
+    display:inline-block;
+    position: relative;
+}
+.ico-love::after{
+    content: "\2665";
+    display:inline-block;
+    position: relative;
+}
+.ico-plane::after{
+    content: "\2708";
+    display:inline-block;
+    position: relative;
+}
+.ico-envelope::after{
+    content: "\2709";
+    display:inline-block;
+    position: relative;
+}
+.ico-bullet::after{
+    content: "\25cf";
+    display:inline-block;
+    font-size: inherit;
+    position: relative;
+    top:-2px;
+}
+.ico-middot::after{
+    content: "\25cf";
+    display:inline-block;
+    font-size: 6px;
+    position: relative;
+    top:-2px;
+} 
+.my-bullet-like::after{
+    content: "\25cf";
+    display:inline-block;
+    font-size: 6px;
+    position: relative;
+    top:-2px;
+} 
+.ico-right-arrow::after{
+    content: "\27a4";
+    display:inline-block;
+    position: relative;
+}
+.ico-close::after{
+    content: "\2716";
+    display:inline-block;
+    position: relative;
+}
+.ico-clockwise-arrow::after{
+    content: "\21bb";
+    display:inline-block;
+    position: relative;
+}  
+.ico-aclockwise-arrow::after{
+    content: "\21ba";
+    display:inline-block;
+    position: relative;
+} 
+.ico-fish-eye::after{
+    content: "\25c9";
+    display:inline-block;
+    position: relative;
+}
+.ico-dotted-circle::after{
+    content: "\25cc";
+    display:inline-block;
+    position: relative;
+} 
+.ico-fine-star::after{
+    content: "\269d";
+    display:inline-block;
+    position: relative;
+}
+.ico-hot::after{
+    content: "\2668";
+    display:inline-block;
+    position: relative;
+}
+.ico-telephone::after{
+    content: "\260f";
+    display:inline-block;
+    position: relative;
+}  
+.ico-circled-update::after{
+    content: "\267d";
+    display:inline-block;
+    position: relative;
+}
+.ico-thick-update::after{
+    content: "\267b";
+    display:inline-block;
+    position: relative;
+}
+.ico-normal-update::after{
+    content: "\267a";
+    display:inline-block;
+    position: relative;
+}
+.ico-flag::after{
+    content: "\2691";
+    display:inline-block;
+    position: relative;
+}
+.ico-base-ball::after{
+    content: "\26be";
+    display:inline-block;
+    position: relative;
+}
+.ico-soccer-ball::after{
+    content: "\26bd";
+    display:inline-block;
+    position: relative;
+}
+.ico-song::after{
+    content: "\266b";
+    display:inline-block;
+    position: relative;
+}
+.ico-settings::after{
+    content: "\2699";
+    display:inline-block;
+    position: relative;
+}
+.ico-flash::after{
+    content: "\26a1";
+    display:inline-block;
+    position: relative;
+}
+.ico-sun-cloud::after{
+    content: "\26c5";
+    display:inline-block;
+    position: relative;
+}
+.ico-truck::after{
+    content: "\26c5";
+    display:inline-block;
+    position: relative;
+}
+.ico-church::after{
+    content: "\26c5";
+    display:inline-block;
+    position: relative;
+}
+.ico-ship::after{
+    content: "\2674";
+    display:inline-block;
+    position: relative;
+}
+.ico-umbrella::after{
+    content: "\2602";
+    display:inline-block;
+    position: relative;
+}
+.ico-lightening-rain::after{
+    content: "\26c8";
+    display:inline-block;
+    position: relative;
+}
+.ico-golf-port::after{
+    content: "\26f3";
+    display:inline-block;
+    position: relative;
+}
+.ico-baseket-ball-player::after{
+    content: "\26f9";
+    display:inline-block;
+    position: relative;
+}
+.ico-sier::after{
+    content: "\26f7";
+    display:inline-block;
+    position: relative;
+}
+.ico-empty-knight::after{
+    content: "\2658";
+    display:inline-block;
+    position: relative;
+}
+.ico-filled-knight::after{
+    content: "\265e";
+    display:inline-block;
+    position: relative;
+}
+.ico-king::after{
+    content: "\2654";
+    display:inline-block;
+    position: relative;
+}
+.ico-checkmark::after{
+    content: "\2713";
+    display:inline-block;
+    position: relative;
+}  
+.ico-checkmarkd::after{
+    content: "\2714";
+    display:inline-block;
+    position: relative;
+}
+.ico-handwrite::after{
+    content: "\270d";
+    display:inline-block;
+    position: relative;
+}
+.ico-handwave::after{
+    content: "\270c";
+    display:inline-block;
+    position: relative;
+}
+.ico-two-fingers::after{
+    content: "\270b";
+    display:inline-block;
+    position: relative;
+}
+.ico-world::after{
+    content: "\1f30d";
+    display:inline-block;
+}
+.ico-graduate::after{
+    content: "\1f393";
+    display:inline-block;
+    position: relative;
+}
+.ico-xmas::after{
+    content: "\1f385";
+    display:inline-block;
+    position: relative;
+}
+.ico-gamepad::after{
+    content: "\1f3ae";
+    display:inline-block;
+    position: relative;
+}
+.ico-hat::after{
+    content: "\1f3a9";
+    display:inline-block;
+    position: relative;
+}
+.ico-emo-house::after{
+    content: "\1f3e0";
+    display:inline-block;
+    position: relative;
+}
+.ico-emo-atm::after{
+    content: "\1f3e7";
+    display:inline-block;
+    position: relative;
+}
+.ico-emo-group::after{
+    content: "\1f465";
+    display:inline-block;
+    position: relative;
+        color: blue;
+}
+.ico-emo-family::after{
+    content: "\1f46a";
+    display:inline-block;
+    position: relative;
+}
+.ico-emo-ring::after{
+    content: "\1f48d";
+    display:inline-block;
+    position: relative;
+}
+.ico-emo-shirt::after{
+    content: "\1f455";
+    display:inline-block;
+    position: relative;
+}
+.ico-emo-jeans::after{
+    content: "\1f456";
+    display:inline-block;
+    position: relative;
+}
+.ico-emo-crown::after{
+    content: "\1f451";
+    display:inline-block;
+    position: relative;
+}
+.ico-emo-thumbs-up::after{
+    content: "\267d";
+    display:inline-block;
+    position: relative;
+}
+.ico-emo-thumbs-down::after{
+    content: "\1f451";
+    display:inline-block;
+    position: relative;
+}   
+.ico-folder::after{
+    content: "\1f4c1";
+    display:inline-block;
+    position: relative;
+}
+.ico-books::after{
+    content: "\1f4da";
+    display:inline-block;
+    position: relative;
+}
+.ico-phone::after{
+    content: "\1f4f1";
+    display:inline-block;
+    position: relative;
+}
+.ico-newyork::after{
+    content: "\1f5fd";
+    display:inline-block;
+    position: relative;
+}
+.ico-tower::after{
+    content: "\1f5fc";
+    display:inline-block;
+    position: relative;
+}
+.ico-refresh::after{
+    content: "\1f504";
+    display: inline-block;
+    position: relative;
+}
+.ico-camera::after{
+    content: "\1f4f7";
+    display: inline-block;
+    position: relative;
+}
+.ico-sheet::after{
+    content: "\1f4c4";
+    display:inline-block;
+    position: relative;
+}
+.ico-card::after{
+    content: "\1f4b3";
+    display:inline-block;
+    position: relative;
+}
+.ico-disc::after{
+    content: "\1f4bf";
+    display:inline-block;
+    position: relative;
+}
+.ico-dog::after{
+    content: "\1f415";
+    display:inline-block;
+    position: relative;
+}
+.ico-fork::after{
+    content: "\1f374";
+    display:inline-block;
+    position: relative;
+}
+.ico-rain::after{
+    content: "\2614";
+    display:inline-block;
+    position: relative;
+}
+.ico-boxed-check::after{
+    content: "\2611";
+    display:inline-block;
+    position: relative;
+}
+.ico-hot-tea::after{
+    content: "\2615";
+    display:inline-block;
+    position: relative;
+}    
+.ico-pushpin::after{
+    content: "\1f4cc";
+    display:inline-block;
+    position: relative;   
+}
+
+/* vertical bars */
+.ico-vertical-line::after{
+    content: "\007C";
+    display:inline-block;
+    position: relative;
+}
+.ico-vertical-bar::after{
+    content: "\2758";
+    display:inline-block;
+    position: relative;
+    font-weight: bold;
+}    
+.ico-attachment::after{
+    content: "\1F4CE";
+    display:inline-block;
+    position: relative;
+    color: inherit;
+}

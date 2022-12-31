@@ -1,0 +1,175 @@
+
+
+/* .......... Form Fields on Form Tables */
+
+:where(.form-field.stretch .form-table) {
+    width: 100%;
+}
+
+:where(.form-field.stretch .form-row) {
+    display: flex;
+    justify-content: space-between;
+    align-items: stretch;
+}
+
+
+:where(.form-field.stretch .form-row .form-table) {
+    width: auto;
+}
+
+:where(.form-field.stretch .form-row.col-2 .form-table) {
+    --widthA: calc(100% - 10px);
+    --widthB: calc(var(--widthA) / 2);
+    width: calc(var(--widthB));
+}
+
+:where(.form-field.stretch .form-row.col-3 .form-table) {
+    --widthA: calc(100% - 10px);
+    --widthB: calc(var(--widthA) / 3);
+    width: calc(var(--widthB));
+}
+
+:where(.form-field.stretch .form-tab) {
+    display: table;
+}
+
+:where(.form-field.stretch .form-tab .form-table) {
+    display: table-cell;
+}
+
+:where(.form-field.stretch .form-tab .form-table:nth-child(1)) {
+    width: -moz-content-width;
+    white-space: nowrap;
+    margin-right: 5px;
+}
+
+/* ............. Form Tables */
+ 
+.form-table {
+    display: table;
+    position: relative;
+    margin-top: 5px;
+    margin-bottom: 5px;
+    border-collapse: separate;
+}
+
+:where(.form-table > fieldset){
+    display: table-cell;
+    border-collapse: separate;
+    font-size: inherit;
+}
+
+:where(.form-table > input) {
+    display: table-cell;
+    border-collapse: separate;
+    font-size: inherit;
+}
+
+:where(.form-table > textarea) {
+    display: table-cell;
+    border-collapse: separate;
+    font-size: inherit;
+}
+
+:where(.form-table > select) {
+    display: table-cell;
+    border-collapse: separate;
+    font-size: inherit;
+}
+
+:where(.form-table > span) {
+    display: table-cell;
+    border-collapse: separate;
+    font-size: inherit;
+}
+
+:where(.form-table > .span-btns) {
+    display: table-cell;
+    border-collapse: separate;
+    font-size: inherit;
+    width: 1%;
+    white-space: nowrap;
+    border-collapse: collapse;
+    position: relative;
+    vertical-align: middle;
+    font-weight: 300;
+    font-family: calibri;
+    color: white;
+}
+
+:where(.form-table > .span-btns:empty) {
+    padding: 6 8px;
+}
+
+:where(.form-table > .span-btns:not(:empty)) {
+    padding: 0 0;
+}
+
+:where(.form-table > .span-btns.btns) {
+    padding: 6 8px;
+}
+
+:where(.form-table > .span-btns:not(:empty) > button) {
+    padding: 4px;
+    width: 100%;
+    display: inline;
+    background-color: inherit;
+    border: none;
+}
+
+:where(.form-table > .span-btns:not(:empty) > input[type='submit']) {
+    padding: 4px;
+    width: 100%;
+    display: inline;
+    background-color: inherit;
+    border: none;
+}
+
+:where(.form-table:not(.free-colors) > .span-btns) {
+    background-color: #99a5a5;
+}
+
+/* old classes- field */
+
+/* fieldset and input fields*/
+
+:where(fieldset:not(.table) input.field,
+fieldset:not(.table) select.field,
+fieldset:not(.table) textarea.field,
+fieldset:not(.table) span.field) {
+    border: none;
+    width: 100%;
+    box-shadow: none;
+    background-color: transparent;
+}
+
+:where(fieldset input.field:hover,
+fieldset input.field:focus,
+fieldset select.field:hover,
+fieldset select.field:focus,
+fieldset textarea.field:hover,
+fieldset textarea.field:focus) {
+    border: none;
+    background-color: transparent;
+    width: 100%;
+    box-shadow: 0px 0px 0px transparent;
+    outline: none;
+}
+
+:where(fieldset input[field],
+fieldset select[field],
+fieldset textarea[field]) {
+    background-color: transparent;
+    border: none;
+    border-radius: inherit;
+    width: 100%;
+    box-shadow: none;
+    resize: none;
+    transition: .2s;
+}
+
+:where(fieldset input[field]:not(.no-radius),
+fieldset select[field]:not(.no-radius),
+fieldset textarea[field]:not(.no-radius)) {
+    border-radius: inherit;
+}

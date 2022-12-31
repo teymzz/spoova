@@ -1,0 +1,941 @@
+/* text control */
+
+.text-caps {
+    text-transform: capitalize;
+}
+
+.text-lows {
+    text-transform: lowercase;
+}
+
+.text-upps {
+    text-transform: uppercase;
+}
+
+/* font families ............................................................ */
+.helvetica {
+    font-family: helvetica;
+}
+
+.roboto {
+    font-family: roboto;
+}
+
+.calibri {
+    font-family: calibri;
+}
+
+.verdana {
+    font-family: verdana;
+}
+
+/* text fonts styles ...............................................................*/
+
+.font-i,
+.i {
+    font-style: italic;
+}
+
+.font-pre,
+.pre {
+    display: block;
+    width: inherit;
+    white-space: pre-wrap;
+}
+
+.font-menu {
+    font: menu;
+}
+
+.font-bold,
+.bold {
+    font-weight: bold;
+}
+
+.font-italic,
+.italic {
+    font-style: italic;
+}
+
+.font-norm {
+    font-weight: normal;
+}
+
+/* fonts sizes ...............................................................*/
+.font-0 {
+    font: 0/0 a;
+}
+
+.font-8 {
+    font-size: 8px;
+}
+
+.font-9 {
+    font-size: 9px;
+}
+
+.font-10 {
+    font-size: 10px;
+}
+
+.font-11 {
+    font-size: 11px;
+}
+
+.font-12 {
+    font-size: 12px;
+}
+
+.font-13 {
+    font-size: 13px;
+}
+
+.font-14 {
+    font-size: 14px;
+}
+
+.font-15 {
+    font-size: 15px;
+}
+
+.font-16 {
+    font-size: 16px;
+}
+
+.font-17 {
+    font-size: 17px;
+}
+
+.font-18 {
+    font-size: 18px;
+}
+
+.font-19 {
+    font-size: 19px;
+}
+
+.font-20 {
+    font-size: 20px;
+}
+
+.font-21 {
+    font-size: 21px;
+}
+
+.font-22 {
+    font-size: 22px;
+}
+
+.font-23 {
+    font-size: 23px;
+}
+
+.font-24 {
+    font-size: 24px;
+}
+
+.font-25 {
+    font-size: 25px;
+}
+
+.font-em-d1 {
+    font-size: .1em;
+}
+
+.font-em-d11 {
+    font-size: .11em;
+}
+
+.font-em-d12 {
+    font-size: .12em;
+}
+
+.font-em-d15 {
+    font-size: .15em;
+}
+
+.font-em-d17 {
+    font-size: .17em;
+}
+
+.font-em-d19 {
+    font-size: .19em;
+}
+
+.font-em-d2 {
+    font-size: .2em;
+}
+
+.font-em-d21 {
+    font-size: .21em;
+}
+
+.font-em-d22 {
+    font-size: .22em;
+}
+
+.font-em-d25 {
+    font-size: .25em;
+}
+
+.font-em-d27 {
+    font-size: .27em;
+}
+
+.font-em-d29 {
+    font-size: .29em;
+}
+
+.font-em-d3 {
+    font-size: .3em;
+}
+
+.font-em-d31 {
+    font-size: .31em;
+}
+
+.font-em-d32 {
+    font-size: .32em;
+}
+
+.font-em-d35 {
+    font-size: .35em;
+}
+
+.font-em-d37 {
+    font-size: .37em;
+}
+
+.font-em-d39 {
+    font-size: .39em;
+}
+
+.font-em-d4 {
+    font-size: .4em;
+}
+
+.font-em-d41 {
+    font-size: .41em;
+}
+
+.font-em-d42 {
+    font-size: .42em;
+}
+
+.font-em-d45 {
+    font-size: .45em;
+}
+
+.font-em-d47 {
+    font-size: .47em;
+}
+
+.font-em-d49 {
+    font-size: .49em;
+}
+
+.font-em-d5 {
+    font-size: .5em;
+}
+
+.font-em-d51 {
+    font-size: .51em;
+}
+
+.font-em-d52 {
+    font-size: .52em;
+}
+
+.font-em-d55 {
+    font-size: .55em;
+}
+
+.font-em-d57 {
+    font-size: .57em;
+}
+
+.font-em-d59 {
+    font-size: .59em;
+}
+
+.font-em-d6 {
+    font-size: .6em;
+}
+
+.font-em-d61 {
+    font-size: .61em;
+}
+
+.font-em-d62 {
+    font-size: .62em;
+}
+
+.font-em-d65 {
+    font-size: .65em;
+}
+
+.font-em-d67 {
+    font-size: .67em;
+}
+
+.font-em-d69 {
+    font-size: .69em;
+}
+
+.font-em-d7 {
+    font-size: .7em;
+}
+
+.font-em-d71 {
+    font-size: .71em;
+}
+
+.font-em-d72 {
+    font-size: .72em;
+}
+
+.font-em-d75 {
+    font-size: .75em;
+}
+
+.font-em-d77 {
+    font-size: .77em;
+}
+
+.font-em-d79 {
+    font-size: .79em;
+}
+
+.font-em-d8 {
+    font-size: .8em;
+}
+
+.font-em-d81 {
+    font-size: .81em;
+}
+
+.font-em-d82 {
+    font-size: .82em;
+}
+
+.font-em-d85 {
+    font-size: .85em;
+}
+
+.font-em-d87 {
+    font-size: .87em;
+}
+
+.font-em-d89 {
+    font-size: .89em;
+}
+
+.font-em-d9 {
+    font-size: .9em;
+}
+
+.font-em-d91 {
+    font-size: .91em;
+}
+
+.font-em-d92 {
+    font-size: .92em;
+}
+
+.font-em-d95 {
+    font-size: .95em;
+}
+
+.font-em-d97 {
+    font-size: .97em;
+}
+
+.font-em-d99 {
+    font-size: .99em;
+}
+
+.font-em-1 {
+    font-size: 1em;
+}
+
+.font-em-1d1 {
+    font-size: 1.1em;
+}
+
+.font-em-1d2 {
+    font-size: 1.2em;
+}
+
+.font-em-1d3 {
+    font-size: 1.3em;
+}
+
+.font-em-1d5 {
+    font-size: 1.5em;
+}
+
+.font-em-1d7 {
+    font-size: 1.7em;
+}
+
+.font-em-1d9 {
+    font-size: 1.9em;
+}
+
+.font-em-2 {
+    font-size: 2em;
+}
+
+.font-em-2d1 {
+    font-size: 2.1em;
+}
+
+.font-em-2d2 {
+    font-size: 2.2em;
+}
+
+.font-em-2d3 {
+    font-size: 2.3em;
+}
+
+.font-em-2d5 {
+    font-size: 2.5em;
+}
+
+.font-em-2d7 {
+    font-size: 2.7em;
+}
+
+.font-em-2d9 {
+    font-size: 2.9em;
+}
+
+.font-em-3 {
+    font-size: 3em;
+}
+
+.font-em-3d1 {
+    font-size: 3.1em;
+}
+
+.font-em-3d2 {
+    font-size: 3.2em;
+}
+
+.font-em-3d3 {
+    font-size: 3.3em;
+}
+
+.font-em-3d5 {
+    font-size: 3.5em;
+}
+
+.font-em-3d7 {
+    font-size: 3.7em;
+}
+
+.font-em-3d9 {
+    font-size: 3.9em;
+}
+
+.font-em-4 {
+    font-size: 4em;
+}
+
+.font-em-4d1 {
+    font-size: 4.1em;
+}
+
+.font-em-4d2 {
+    font-size: 4.2em;
+}
+
+.font-em-4d3 {
+    font-size: 4.3em;
+}
+
+.font-em-4d5 {
+    font-size: 4.5em;
+}
+
+.font-em-4d7 {
+    font-size: 4.7em;
+}
+
+.font-em-4d9 {
+    font-size: 4.9em;
+}
+
+.font-em-4 {
+    font-size: 4em;
+}
+
+.font-em-4d2 {
+    font-size: 4.2em;
+}
+
+.font-em-4d5 {
+    font-size: 4.5em;
+}
+
+.font-em-4d7 {
+    font-size: 4.7em;
+}
+
+.font-em-4d9 {
+    font-size: 4.9em;
+}
+
+.font-em-5 {
+    font-size: 5em;
+}
+
+.font-em-5d1 {
+    font-size: 5.1em;
+}
+
+.font-em-5d2 {
+    font-size: 5.2em;
+}
+
+.font-em-5d3 {
+    font-size: 5.3em;
+}
+
+.font-em-5d5 {
+    font-size: 5.5em;
+}
+
+.font-em-5d7 {
+    font-size: 5.7em;
+}
+
+.font-em-5d9 {
+    font-size: 5.9em;
+}
+
+.font-em-6 {
+    font-size: 6em;
+}
+
+.font-rem-d1 {
+    font-size: .1rem;
+}
+
+.font-rem-d11 {
+    font-size: .11rem;
+}
+
+.font-rem-d12 {
+    font-size: .12rem;
+}
+
+.font-rem-d13 {
+    font-size: .13rem;
+}
+
+.font-rem-d15 {
+    font-size: .15rem;
+}
+
+.font-rem-d17 {
+    font-size: .17rem;
+}
+
+.font-rem-d19 {
+    font-size: .19rem;
+}
+
+.font-rem-d2 {
+    font-size: .2rem;
+}
+
+.font-rem-d21 {
+    font-size: .21rem;
+}
+
+.font-rem-d22 {
+    font-size: .22rem;
+}
+
+.font-rem-d23 {
+    font-size: .23rem;
+}
+
+.font-rem-d25 {
+    font-size: .25rem;
+}
+
+.font-rem-d27 {
+    font-size: .27rem;
+}
+
+.font-rem-d29 {
+    font-size: .29rem;
+}
+
+.font-rem-d3 {
+    font-size: .3rem;
+}
+
+.font-rem-d31 {
+    font-size: .31rem;
+}
+
+.font-rem-d32 {
+    font-size: .32rem;
+}
+
+.font-rem-d33 {
+    font-size: .33rem;
+}
+
+.font-rem-d35 {
+    font-size: .35rem;
+}
+
+.font-rem-d37 {
+    font-size: .37rem;
+}
+
+.font-rem-d39 {
+    font-size: .39rem;
+}
+
+.font-rem-d4 {
+    font-size: .4rem;
+}
+
+.font-rem-d41 {
+    font-size: .41rem;
+}
+
+.font-rem-d42 {
+    font-size: .42rem;
+}
+
+.font-rem-d43 {
+    font-size: .43rem;
+}
+
+.font-rem-d45 {
+    font-size: .45rem;
+}
+
+.font-rem-d47 {
+    font-size: .47rem;
+}
+
+.font-rem-d49 {
+    font-size: .49rem;
+}
+
+.font-rem-d5 {
+    font-size: .5rem;
+}
+
+.font-rem-d51 {
+    font-size: .51rem;
+}
+
+.font-rem-d52 {
+    font-size: .52rem;
+}
+
+.font-rem-d53 {
+    font-size: .53rem;
+}
+
+.font-rem-d55 {
+    font-size: .55rem;
+}
+
+.font-rem-d57 {
+    font-size: .57rem;
+}
+
+.font-rem-d59 {
+    font-size: .59rem;
+}
+
+.font-rem-d6 {
+    font-size: .6rem;
+}
+
+.font-rem-d61 {
+    font-size: .61rem;
+}
+
+.font-rem-d62 {
+    font-size: .62rem;
+}
+
+.font-rem-d63 {
+    font-size: .63rem;
+}
+
+.font-rem-d65 {
+    font-size: .65rem;
+}
+
+.font-rem-d67 {
+    font-size: .67rem;
+}
+
+.font-rem-d69 {
+    font-size: .69rem;
+}
+
+.font-rem-d7 {
+    font-size: .7rem;
+}
+
+.font-rem-d71 {
+    font-size: .71rem;
+}
+
+.font-rem-d72 {
+    font-size: .72rem;
+}
+
+.font-rem-d73 {
+    font-size: .73rem;
+}
+
+.font-rem-d75 {
+    font-size: .75rem;
+}
+
+.font-rem-d77 {
+    font-size: .77rem;
+}
+
+.font-rem-d79 {
+    font-size: .79rem;
+}
+
+.font-rem-d8 {
+    font-size: .8rem;
+}
+
+.font-rem-d81 {
+    font-size: .81rem;
+}
+
+.font-rem-d82 {
+    font-size: .82rem;
+}
+
+.font-rem-d83 {
+    font-size: .83rem;
+}
+
+.font-rem-d85 {
+    font-size: .85rem;
+}
+
+.font-rem-d87 {
+    font-size: .87rem;
+}
+
+.font-rem-d89 {
+    font-size: .89rem;
+}
+
+.font-rem-d9 {
+    font-size: .9rem;
+}
+
+.font-rem-d91 {
+    font-size: .91rem;
+}
+
+.font-rem-d92 {
+    font-size: .92rem;
+}
+
+.font-rem-d93 {
+    font-size: .93rem;
+}
+
+.font-rem-d95 {
+    font-size: .95rem;
+}
+
+.font-rem-d97 {
+    font-size: .97rem;
+}
+
+.font-rem-d99 {
+    font-size: .99rem;
+}
+
+.font-rem-1 {
+    font-size: 1rem;
+}
+
+.font-rem-1d1 {
+    font-size: 1.1rem;
+}
+
+.font-rem-1d2 {
+    font-size: 1.2rem;
+}
+
+.font-rem-1d3 {
+    font-size: 1.3rem;
+}
+
+.font-rem-1d5 {
+    font-size: 1.5rem;
+}
+
+.font-rem-1d7 {
+    font-size: 1.7rem;
+}
+
+.font-rem-1d9 {
+    font-size: 1.9rem;
+}
+
+.font-rem-2 {
+    font-size: 2rem;
+}
+
+.font-rem-2d1 {
+    font-size: 2.1rem;
+}
+
+.font-rem-2d2 {
+    font-size: 2.2rem;
+}
+
+.font-rem-2d3 {
+    font-size: 2.3rem;
+}
+
+.font-rem-2d5 {
+    font-size: 2.5rem;
+}
+
+.font-rem-2d7 {
+    font-size: 2.7rem;
+}
+
+.font-rem-2d9 {
+    font-size: 2.9rem;
+}
+
+.font-rem-3 {
+    font-size: 3rem;
+}
+
+.font-rem-3d1 {
+    font-size: 3.1rem;
+}
+
+.font-rem-3d2 {
+    font-size: 3.2rem;
+}
+
+.font-rem-3d3 {
+    font-size: 3.3rem;
+}
+
+.font-rem-3d5 {
+    font-size: 3.5rem;
+}
+
+.font-rem-3d7 {
+    font-size: 3.7rem;
+}
+
+.font-rem-3d9 {
+    font-size: 3.9rem;
+}
+
+.font-rem-4 {
+    font-size: 4rem;
+}
+
+.font-rem-4d1 {
+    font-size: 4.1rem;
+}
+
+.font-rem-4d2 {
+    font-size: 4.2rem;
+}
+
+.font-rem-4d3 {
+    font-size: 4.3rem;
+}
+
+.font-rem-4d5 {
+    font-size: 4.5rem;
+}
+
+.font-rem-4d7 {
+    font-size: 4.7rem;
+}
+
+.font-rem-4d9 {
+    font-size: 4.9rem;
+}
+
+.font-rem-5 {
+    font-size: 5rem;
+}
+
+.font-rem-5d1 {
+    font-size: 5.1rem;
+}
+
+.font-rem-5d2 {
+    font-size: 5.2rem;
+}
+
+.font-rem-5d3 {
+    font-size: 5.3rem;
+}
+
+.font-rem-5d5 {
+    font-size: 5.5rem;
+}
+
+.font-rem-5d7 {
+    font-size: 5.7rem;
+}
+
+.font-rem-5d9 {
+    font-size: 5.9rem;
+}
+
+.font-rem-6 {
+    font-size: 6rem;
+}
+
+/* font weights ............................................... */
+.fb-2{
+  font-weight:200;
+}
+.fb-3{
+  font-weight:300;
+}
+.fb-4{
+  font-weight:400;
+}
+.fb-5{
+  font-weight:500;
+}
+.fb-6{
+  font-weight:600;
+}
+.fb-7{
+  font-weight:700;
+}
+.fb-8{
+  font-weight:800;
+}
+.fb-9{
+  font-weight:900;
+}

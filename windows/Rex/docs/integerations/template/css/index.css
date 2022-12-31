@@ -1,0 +1,29 @@
+.content-field fieldset {
+    margin-bottom: .5em;
+}
+
+.content-field fieldset input {
+    padding: 12px 0;
+}
+
+.content-field {
+    width: 50vw;
+}
+
+.control-btns {
+    min-width: 120px;
+}
+
+code.main {
+    margin-left: 0;
+}
+
+.form-field .i-flex-full input {
+    transition: color .4s ease-in-out, box-shadow .4s ease-in-out !important;
+}
+
+@media screen and (max-width:1000px) {
+    .content-field {
+        width: 100%;
+    }
+}

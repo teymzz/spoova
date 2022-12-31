@@ -1,0 +1,280 @@
+<style>
+
+/* all */
+:where(*){
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: helvetica;
+}
+
+:where(.px-full){
+    width: 100%;
+    height:100%;
+}
+:where(.px-100){
+    width: 100px;
+    height:100px;
+}
+
+/* positions */
+
+:where(.relative){
+    position: relative;
+}
+:where(.absolute){
+    position: absolute;
+}
+:where(.fixed){
+    position: fixed;
+}
+
+/* displays */
+:where(.box){
+    display:inline-block;
+}
+
+:where(.grid-center){
+    display: grid;
+    place-items:center;
+}
+
+:where(.flex){
+    display: flex;
+}
+
+.mid {
+    justify-content: center;
+    align-items: center;
+}
+
+:where(.flow-hide){
+    overflow: hidden;
+}
+
+/* margins */
+
+.mxl-10 {
+    margin-left: 10px;
+}
+
+.mxr-10 {
+    margin-right: 10px;
+}
+
+/* border */
+:where(.rad-r){
+    border-radius: 100vh;
+}
+
+/* fonts */
+:where(.font-em-d6){
+    font-size: .6em;
+}
+:where(.font-em-d8){
+    font-size: .8em;
+}
+:where(.font-em-d85){
+    font-size: .85em;
+}
+:where(.font-em-1d2){
+    font-size: 1.2em;
+}
+:where(.font-em-1d5){
+    font-size: 1.5em;
+}
+
+/* wigi colors */
+:where(.c-red){
+    color: red;
+}
+:where(.c-grey){
+    color: rgb(128, 128, 128);
+}
+:where(.c-blue){
+    color: blue;
+}
+
+/* opacity levels for overlays - dark mode */
+
+.ov-d1 {
+    background-color: rgba(0, 0, 0, 0.1);
+}
+
+.ov-d2 {
+    background-color: rgba(0, 0, 0, 0.2);
+}
+
+.ov-d3 {
+    background-color: rgba(0, 0, 0, 0.3);
+}
+
+.ov-d4 {
+    background-color: rgba(0, 0, 0, 0.4);
+}
+
+.ov-d5 {
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+.ov-d6 {
+    background-color: rgba(0, 0, 0, 0.6);
+}
+
+.ov-d7 {
+    background-color: rgba(0, 0, 0, 0.7);
+}
+
+.ov-d8 {
+    background-color: rgba(0, 0, 0, 0.8);
+}
+
+.ov-l1 {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+.ov-l2 {
+    background-color: rgba(255, 255, 255, 0.2);
+}
+
+.ov-l3 {
+    background-color: rgba(255, 255, 255, 0.3);
+}
+
+.ov-l4 {
+    background-color: rgba(255, 255, 255, 0.4);
+}
+
+.ov-l5 {
+    background-color: rgba(255, 255, 255, 0.5);
+}
+
+.ov-l6 {
+    background-color: rgba(255, 255, 255, 0.6);
+}
+
+.ov-l7 {
+    background-color: rgba(255, 255, 255, 0.7);
+}
+
+.ov-l8 {
+    background-color: rgba(255, 255, 255, 0.8);
+}
+
+.ico-spin{
+    display: inline-block;
+  }
+  
+.ico-spin:not(.ico), .ico-spin:not(.ico)::after{
+    animation: icospin 2s linear infinite;
+    -webkit-animation: icospin 2s linear infinite;
+}
+
+.animate-clockwise{
+    animation: icospin 2s linear infinite;
+    -webkit-animation: icospin 2s linear infinite;
+}
+
+@keyframes icospin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+@-webkit-keyframes icospin {
+    0% { -webkit-transform: rotate(0deg); }
+    100% { -webkit-transform: rotate(360deg); }
+}
+
+/* wigi */
+:where(.widget-wall.spoova){
+    display: grid; 
+    place-items: center;
+    position:fixed; 
+    z-index: 10;
+    height:100vh;
+    width:100vw; 
+    top:0; left:0; 
+    bottom:0; right:0; 
+    background-color:black;
+    font-size: 2em;
+    margin-right: 10px;
+    z-index: 2000000;
+}
+
+:where(.widget .roller){
+    top:0; 
+    left:0; 
+    border-style:dashed; 
+    border-width: 6px;
+    width: 100px;
+    height: 100px;
+}
+
+:where(.widget .roller-text){
+    top:.32em; 
+    left:.3em; 
+    z-index: 10000;
+    width: 80px;
+    height: 80px;
+}
+
+:where(.wi .w-1 .roller){
+    border-width: 1px;
+}
+
+:where(.wi .w-2 .roller){
+    border-width: 2px;
+}
+
+:where(.wi .w-3 .roller){
+    border-width: 3px;
+}
+
+:where(.wi .w-4 .roller){
+    border-width: 4px;
+}
+
+:where(.wi .w-5 .roller){
+    border-width: 5px;
+}
+
+:where(.wi .w-6 .roller){
+    border-width: 6px;
+}
+
+:where(.wi .w-7 .roller){
+    border-width: 7px;
+}
+
+:where(.wi .w-8 .roller){
+    border-width: 8px;
+}
+
+:where(.wi .w-9 .roller){
+    border-width: 9px;
+}
+
+:where(.wi .w-10 .roller){
+    border-width: 10px;
+}
+
+:where(.wi .w-red .roller){
+    border-color: rgb(211, 0, 0);
+}
+
+:where(.wi .w-blue .roller){
+    border-color: blue;
+}  
+
+:where(.wi .w-black .roller){
+    border-color: rgb(0, 0, 0);
+}
+
+:where(.wi .w-black-l .roller){
+    border-color:rgb(41, 41, 41);  
+}
+
+:where(.wi .w-black-ll .roller){
+    border-color:rgb(79, 79, 79);
+}
+</style>
