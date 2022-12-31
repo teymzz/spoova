@@ -1,0 +1,2516 @@
+:root {
+    /* neutral colors */
+    --black: rgb(0, 0, 0);
+    --black-l: rgb(41, 41, 41);
+    --black-ll: rgb(79, 79, 79);
+    --white: rgb(255, 255, 255);
+    --white-d: rgb(252, 252, 252);
+    --white-dd: rgb(242, 242, 242);
+    --off-white: rgb(248, 248, 248);
+    /* primary colors */
+    --blue: rgb(0, 0, 255);
+    --blue-d: rgb(0, 0, 220);
+    --blue-dd: rgb(0, 0, 197);
+    --red: rgb(255, 0, 0);
+    --red-d: rgb(240, 1, 1);
+    --red-dd: rgb(211, 0, 0);
+    --yellow: rgb(255, 255, 0);
+    --yellow-d: rgb(235, 235, 0);
+    --yellow-dd: rgb(204, 204, 0);
+    /* secondary colors */
+    --green: rgb(0, 128, 0);
+    --green-l: rgb(1, 181, 1);
+    --green-ll: rgb(0, 223, 0);
+    --orange: rgb(255, 165, 0);
+    --orange-d: rgb(228, 149, 2);
+    --orange-dd: rgb(206, 134, 1);
+    --purple: rgb(128, 0, 128);
+    --purple-d: rgb(120, 0, 120);
+    --purple-dd: rgb(110, 0, 110);
+    /* metal / medal colors */
+    --bronze: rgb(205, 127, 50);
+    --bronze-d: rgb(194, 120, 46);
+    --bronze-dd: rgb(165, 102, 39);
+    --silver: rgb(192, 192, 192);
+    --silver-d: rgb(177, 177, 177);
+    --silver-dd: rgb(160, 160, 160);
+    --gold: rgb(255, 215, 0);
+    --gold-d: rgb(238, 203, 2);
+    --gold-dd: rgb(216, 184, 1);
+    /* common colors */
+    --brown: rgb(165, 42, 42);
+    --brown-l: rgb(230, 60, 60);
+    --brown-ll: rgb(201, 50, 50);
+    --brown-d: rgb(153, 38, 38);
+    --brown-dd: rgb(140, 36, 36);
+    --indigo: rgb(75, 0, 130);
+    --indigo-d: rgb(92, 2, 157);
+    --indigo-dd: rgb(105, 0, 181);
+    --pink: rgb(255, 182, 193);
+    --pink-d: rgb(240, 158, 172);
+    --pink-dd: rgb(230, 134, 150);
+    --violet: rgb(238, 130, 238);
+    --violet-d: rgb(228, 119, 228);
+    --violet-dd: rgb(194, 88, 194);
+    /* other colors */
+    --aqua: rgb(0, 255, 255);
+    --aqua-d: rgb(8, 235, 235);
+    --aqua-dd: rgb(12, 206, 206);
+    --crimson: rgb(157, 34, 53);
+    --crimson-d: rgb(197, 18, 54);
+    --crimson-dd: rgb(165, 21, 50);
+    --grey: rgb(128, 128, 128);
+    --grey-d: rgb(114, 114, 114);
+    --grey-dd: rgb(87, 87, 87);
+    --ivory: rgb(255, 255, 240);
+    --ivory-d: rgb(240, 240, 228);
+    --ivory-dd: rgb(221, 221, 207);
+    --lime: rgb(0, 255, 0);
+    --lime-d: rgb(7, 228, 7);
+    --lime-dd: rgb(4, 190, 4);
+    --magenta: rgb(255, 0, 255);
+    --magenta-d: rgb(231, 5, 231);
+    --magenta-dd: rgb(204, 7, 204);
+    --maroon: rgb(128, 0, 0);
+    --maroon-d: rgb(123, 0, 0);
+    --maroon-dd: rgb(104, 1, 1);
+    --olive: rgb(128, 128, 0);
+    --olive-d: rgb(112, 112, 0);
+    --olive-dd: rgb(102, 102, 3);
+    --orange-red: rgb(255, 69, 0);
+    --orange-red-d: rgb(230, 66, 6);
+    --orange-red-dd: rgb(215, 61, 5);
+    --sea-green: rgb(46, 139, 87);
+    --sea-green-d: rgb(40, 121, 75);
+    --sea-green-dd: rgb(32, 94, 58);
+    --sea-blue: rgb(0, 105, 148);
+    --sea-blue-d: rgb(1, 100, 139);
+    --sea-blue-dd: rgb(2, 83, 116);
+    --sky-blue: rgb(135, 206, 235);
+    --sky-blue-d: rgb(124, 192, 219);
+    --sky-blue-dd: rgb(114, 175, 199);
+    --tan: rgb(210, 180, 140);
+    --tan-d: rgb(184, 157, 123);
+    --tan-dd: rgb(156, 134, 106);
+    --teal: rgb(0, 128, 128);
+    --teal-d: rgb(3, 109, 109);
+    --teal-dd: rgb(2, 87, 87);
+}
+
+
+/*background-------colors*/
+
+.bc,
+.bc:hover,
+.bcc,
+.bcc:hover {
+    transition: .3s ease-in-out;
+}
+
+.bcc:hover {
+    opacity: .85;
+}
+
+
+/*background-------colors*/
+
+.bc,
+.bc:hover,
+.bcc,
+.bcc:hover {
+    transition: .3s ease-in-out;
+}
+
+.bcc:hover {
+    opacity: .85;
+}
+
+
+/* neutral colors */
+
+.bc-white {
+    background-color: var(--white);
+}
+
+.bc-white-d {
+    background-color: var(--white-d);
+}
+
+.bc-white-dd {
+    background-color: var(--white-dd);
+}
+
+.bc-off-white {
+    background-color: var(--off-white);
+}
+
+.bc-black {
+    background-color: var(--black);
+}
+
+.bc-black-l {
+    background-color: var(--black-l);
+}
+
+.bc-black-ll {
+    background-color: var(--black-ll);
+}
+
+
+/* primary colors */
+
+.bc-red {
+    background-color: var(--red);
+}
+
+.bc-red-d {
+    background-color: var(--red-d);
+}
+
+.bc-red-dd {
+    background-color: var(--red-dd);
+}
+
+.bc-green {
+    background-color: var(--green);
+}
+
+.bc-green-l {
+    background-color: var(--green-l);
+}
+
+.bc-green-ll {
+    background-color: var(--green-ll);
+}
+
+.bc-blue {
+    background-color: var(--blue);
+}
+
+.bc-blue-d {
+    background-color: var(--blue-d);
+}
+
+.bc-blue-dd {
+    background-color: var(--blue-dd);
+}
+
+
+/* primary colors dark */
+
+.bc-dark-red {
+    background-color: var(--dark-red);
+}
+
+.bc-dark-green {
+    background-color: var(--dark-green);
+}
+
+.bc-dark-blue {
+    background-color: var(--dark-blue);
+}
+
+
+/*common background-colors*/
+
+.bc-brown {
+    background-color: var(--brown);
+}
+
+.bc-brown-l {
+    background-color: var(--brown-l);
+}
+
+.bc-brown-ll {
+    background-color: var(--brown-ll);
+}
+
+.bc-brown-d {
+    background-color: var(--brown-d);
+}
+
+.bc-brown-dd {
+    background-color: var(--brown-dd);
+}
+
+.bc-indigo {
+    background-color: var(--indigo);
+}
+
+.bc-indigo-d {
+    background-color: var(--indigo-d);
+}
+
+.bc-indigo-dd {
+    background-color: var(--indigo-dd);
+}
+
+.bc-orange {
+    background-color: var(--orange);
+}
+
+.bc-orange-d {
+    background-color: var(--orange-d);
+}
+
+.bc-orange-dd {
+    background-color: var(--orange-dd);
+}
+
+.bc-pink {
+    background-color: var(--pink);
+}
+
+.bc-pink-d {
+    background-color: var(--pink-d);
+}
+
+.bc-pink-dd {
+    background-color: var(--pink-dd);
+}
+
+.bc-purple {
+    background-color: var(--purple);
+}
+
+.bc-violet {
+    background-color: var(--violet);
+}
+
+.bc-violet-d {
+    background-color: var(--violet-d);
+}
+
+.bc-violet-dd {
+    background-color: var(--violet-dd);
+}
+
+.bc-yellow {
+    background-color: var(--yellow);
+}
+
+.bc-yellow-d {
+    background-color: var(--yellow-d);
+}
+
+.bc-yellow-dd {
+    background-color: var(--yellow-dd);
+}
+
+
+/*metal / medal background-colors*/
+
+.bc-bronze {
+    background-color: var(--bronze);
+}
+
+.bc-bronze-d {
+    background-color: var(--bronze-d);
+}
+
+.bc-bronze-dd {
+    background-color: var(--bronze-dd);
+}
+
+.bc-silver {
+    background-color: var(--silver);
+}
+
+.bc-silver-d {
+    background-color: var(--silver-d);
+}
+
+.bc-silver-dd {
+    background-color: var(--silver-dd);
+}
+
+.bc-gold-dd {
+    background-color: var(--gold-dd);
+}
+
+.bc-gold {
+    background-color: var(--gold);
+}
+
+.bc-gold-d {
+    background-color: var(--gold-d);
+}
+
+
+/* other background-colors */
+
+.bc-aqua {
+    background-color: var(--aqua);
+}
+
+.bc-aqua-d {
+    background-color: var(--aqua-d);
+}
+
+.bc-aqua-dd {
+    background-color: var(--aqua-dd);
+}
+
+.bc-crimson {
+    background-color: var(--crimson);
+}
+
+.bc-crimson-d {
+    background-color: var(--crimson-d);
+}
+
+.bc-crimson-dd {
+    background-color: var(--crimson-dd);
+}
+
+.bc-cyan {
+    background-color: var(--cyan);
+}
+
+.bc-cyan-d {
+    background-color: var(--cyan-d);
+}
+
+.bc-cyan-dd {
+    background-color: var(--cyan-dd);
+}
+
+.bc-grey {
+    background-color: var(--grey);
+}
+
+.bc-grey-d {
+    background-color: var(--grey-d);
+}
+
+.bc-grey-dd {
+    background-color: var(--grey-dd);
+}
+
+.bc-ivory {
+    background-color: var(--ivory);
+}
+
+.bc-ivory-d {
+    background-color: var(--ivory-d);
+}
+
+.bc-ivory-dd {
+    background-color: var(--ivory-dd);
+}
+
+.bc-lime {
+    background-color: var(--lime);
+}
+
+.bc-lime-d {
+    background-color: var(--lime-d);
+}
+
+.bc-lime-dd {
+    background-color: var(--lime-dd);
+}
+
+.bc-magenta {
+    background-color: var(--magenta);
+}
+
+.bc-magenta-d {
+    background-color: var(--magenta-d);
+}
+
+.bc-magenta-dd {
+    background-color: var(--magenta-dd)
+}
+
+.bc-maroon {
+    background-color: var(--maroon);
+}
+
+.bc-maroon-d {
+    background-color: var(--maroon-d);
+}
+
+.bc-maroon-dd {
+    background-color: var(--maroon-dd);
+}
+
+.bc-olive {
+    background-color: var(--olive);
+}
+
+.bc-olive-d {
+    background-color: var(--olive-d);
+}
+
+.bc-olive-dd {
+    background-color: var(--olive-dd);
+}
+
+.bc-orange-red {
+    background-color: var(--orange-red);
+}
+
+.bc-orange-red-d {
+    background-color: var(--orange-red-d);
+}
+
+.bc-orange-red-dd {
+    background-color: var(--orange-red-dd);
+}
+
+.bc-sea-green {
+    background-color: var(--sea-green);
+}
+
+.bc-sea-green-d {
+    background-color: var(--sea-green-d);
+}
+
+.bc-sea-green-dd {
+    background-color: var(--sea-green-dd);
+}
+
+.bc-sky-blue {
+    background-color: var(--sky-blue);
+}
+
+.bc-sky-blue-d {
+    background-color: var(--sky-blue-d);
+}
+
+.bc-sky-blue-dd {
+    background-color: var(--sky-blue-dd);
+}
+
+.bc-tan {
+    background-color: var(--tan);
+}
+
+.bc-tan-d {
+    background-color: var(--tan-d);
+}
+
+.bc-tan-dd {
+    background-color: var(--tan-dd);
+}
+
+.bc-teal {
+    background-color: var(--teal);
+}
+
+.bc-teal-d {
+    background-color: var(--teal-d);
+}
+
+.bc-teal-dd {
+    background-color: var(--teal-dd);
+}
+
+
+/*hover: background-------colors*/
+
+
+/* hover: neutral colors */
+
+.bh-white:hover {
+    background-color: var(--white);
+}
+
+.bh-white-d:hover {
+    background-color: var(--white-d);
+}
+
+.bh-white-dd:hover {
+    background-color: var(--white-dd);
+}
+
+.bh-off-white:hover {
+    background-color: var(--off-white);
+}
+
+.bh-black:hover {
+    background-color: var(--black);
+}
+
+.bh-black-l:hover {
+    background-color: var(--black-l);
+}
+
+.bh-black-ll:hover {
+    background-color: var(--black-ll);
+}
+
+
+/* hover: primary colors */
+
+.bh-red:hover {
+    background-color: var(--red);
+}
+
+.bh-red-d:hover {
+    background-color: var(--red-d);
+}
+
+.bh-red-dd:hover {
+    background-color: var(--red-dd);
+}
+
+.bh-green:hover {
+    background-color: var(--green);
+}
+
+.bh-green-l:hover {
+    background-color: var(--green-l);
+}
+
+.bh-green-ll:hover {
+    background-color: var(--green-ll);
+}
+
+.bh-blue:hover {
+    background-color: var(--blue);
+}
+
+.bh-blue-d:hover {
+    background-color: var(--blue-d);
+}
+
+.bh-blue-dd:hover {
+    background-color: var(--blue-dd);
+}
+
+
+/* hover: primary colors dark */
+
+.bh-dark-red:hover {
+    background-color: var(--dark-red);
+}
+
+.bh-dark-green:hover {
+    background-color: var(--dark-green);
+}
+
+.bh-dark-blue:hover {
+    background-color: var(--dark-blue);
+}
+
+
+/* hover:common background-colors*/
+
+.bh-brown:hover {
+    background-color: var(--brown);
+}
+
+.bh-brown-l:hover {
+    background-color: var(--brown-l);
+}
+
+.bh-brown-ll:hover {
+    background-color: var(--brown-ll);
+}
+
+.bh-brown-d:hover {
+    background-color: var(--brown-d);
+}
+
+.bh-brown-dd:hover {
+    background-color: var(--brown-dd);
+}
+
+.bh-indigo:hover {
+    background-color: var(--indigo);
+}
+
+.bh-indigo-d:hover {
+    background-color: var(--indigo-d);
+}
+
+.bh-indigo-dd:hover {
+    background-color: var(--indigo-dd);
+}
+
+.bh-orange:hover {
+    background-color: var(--orange);
+}
+
+.bh-orange-d:hover {
+    background-color: var(--orange-d);
+}
+
+.bh-orange-dd:hover {
+    background-color: var(--orange-dd);
+}
+
+.bh-pink:hover {
+    background-color: var(--pink);
+}
+
+.bh-pink-d:hover {
+    background-color: var(--pink-d);
+}
+
+.bh-pink-dd:hover {
+    background-color: var(--pink-dd);
+}
+
+.bh-purple:hover {
+    background-color: var(--purple);
+}
+
+.bh-violet:hover {
+    background-color: var(--violet);
+}
+
+.bh-violet-d:hover {
+    background-color: var(--violet-d);
+}
+
+.bh-violet-dd:hover {
+    background-color: var(--violet-dd);
+}
+
+.bh-yellow:hover {
+    background-color: var(--yellow);
+}
+
+.bh-yellow-d:hover {
+    background-color: var(--yellow-d);
+}
+
+.bh-yellow-dd:hover {
+    background-color: var(--yellow-dd);
+}
+
+
+/* hover:metal / medal background-colors*/
+
+.bh-bronze:hover {
+    background-color: var(--bronze);
+}
+
+.bh-bronze-d:hover {
+    background-color: var(--bronze-d);
+}
+
+.bh-bronze-dd:hover {
+    background-color: var(--bronze-dd);
+}
+
+.bh-silver:hover {
+    background-color: var(--silver);
+}
+
+.bh-silver-d:hover {
+    background-color: var(--silver-d);
+}
+
+.bh-silver-dd:hover {
+    background-color: var(--silver-dd);
+}
+
+.bh-gold:hover {
+    background-color: var(--gold);
+}
+
+.bh-gold-d:hover {
+    background-color: var(--gold-d);
+}
+
+.bh-gold-dd:hover {
+    background-color: var(--gold-dd);
+}
+
+
+/* hover: other background-colors */
+
+.bh-aqua:hover {
+    background-color: var(--aqua);
+}
+
+.bh-aqua-d:hover {
+    background-color: var(--aqua-d);
+}
+
+.bh-aqua-dd:hover {
+    background-color: var(--aqua-dd);
+}
+
+.bh-crimson:hover {
+    background-color: var(--crimson);
+}
+
+.bh-crimson-d:hover {
+    background-color: var(--crimson-d);
+}
+
+.bh-crimson-dd:hover {
+    background-color: var(--crimson-dd);
+}
+
+.bh-cyan:hover {
+    background-color: var(--cyan);
+}
+
+.bh-cyan-d:hover {
+    background-color: var(--cyan-d);
+}
+
+.bh-cyan-dd:hover {
+    background-color: var(--cyan-dd);
+}
+
+.bh-grey:hover {
+    background-color: var(--grey);
+}
+
+.bh-grey-d:hover {
+    background-color: var(--grey-d);
+}
+
+.bh-grey-dd:hover {
+    background-color: var(--grey-dd);
+}
+
+.bh-ivory:hover {
+    background-color: var(--ivory);
+}
+
+.bh-ivory-d:hover {
+    background-color: var(--ivory-d);
+}
+
+.bh-ivory-dd:hover {
+    background-color: var(--ivory-dd);
+}
+
+.bh-lime:hover {
+    background-color: var(--lime);
+}
+
+.bh-lime-d:hover {
+    background-color: var(--lime-d);
+}
+
+.bh-lime-dd:hover {
+    background-color: var(--lime-dd);
+}
+
+.bh-magenta:hover {
+    background-color: var(--magenta);
+}
+
+.bh-magenta-d:hover {
+    background-color: var(--magenta-d);
+}
+
+.bh-magenta-dd:hover {
+    background-color: var(--magenta-dd)
+}
+
+.bh-maroon:hover {
+    background-color: var(--maroon);
+}
+
+.bh-maroon-d:hover {
+    background-color: var(--maroon-d);
+}
+
+.bh-maroon-dd:hover {
+    background-color: var(--maroon-dd);
+}
+
+.bh-olive:hover {
+    background-color: var(--olive);
+}
+
+.bh-olive-d:hover {
+    background-color: var(--olive-d);
+}
+
+.bh-olive-dd:hover {
+    background-color: var(--olive-dd);
+}
+
+.bh-orange-red:hover {
+    background-color: var(--orange-red);
+}
+
+.bh-orange-red-d:hover {
+    background-color: var(--orange-red-d);
+}
+
+.bh-orange-red-dd:hover {
+    background-color: var(--orange-red-dd);
+}
+
+.bh-sea-green:hover {
+    background-color: var(--sea-green);
+}
+
+.bh-sea-green-d:hover {
+    background-color: var(--sea-green-d);
+}
+
+.bh-sea-green-dd:hover {
+    background-color: var(--sea-green-dd);
+}
+
+.bh-sky-blue:hover {
+    background-color: var(--sky-blue);
+}
+
+.bh-sky-blue-d:hover {
+    background-color: var(--sky-blue-d);
+}
+
+.bh-sky-blue-dd:hover {
+    background-color: var(--sky-blue-dd);
+}
+
+.bh-tan:hover {
+    background-color: var(--tan);
+}
+
+.bh-tan-d:hover {
+    background-color: var(--tan-d);
+}
+
+.bh-tan-dd:hover {
+    background-color: var(--tan-dd);
+}
+
+.bh-teal:hover {
+    background-color: var(--teal);
+}
+
+.bh-teal-d:hover {
+    background-color: var(--teal-d);
+}
+
+.bh-teal-dd:hover {
+    background-color: var(--teal-dd);
+}
+
+
+/*font or text-------colors*/
+
+
+/* neutral colors */
+
+.c-white {
+    color: var(--white);
+}
+
+.c-white-d {
+    color: var(--white-d);
+}
+
+.c-white-dd {
+    color: var(--white-dd);
+}
+
+.c-off-white {
+    color: var(--off-white);
+}
+
+.c-black {
+    color: var(--black);
+}
+
+.c-black-l {
+    color: var(--black-l);
+}
+
+.c-black-ll {
+    color: var(--black-ll);
+}
+
+
+/* primary colors */
+
+.c-red {
+    color: var(--red);
+}
+
+.c-red-d {
+    color: var(--red-d);
+}
+
+.c-red-dd {
+    color: var(--red-dd);
+}
+
+.c-green {
+    color: var(--green);
+}
+
+.c-green-l {
+    color: var(--green-l);
+}
+
+.c-green-ll {
+    color: var(--green-ll);
+}
+
+.c-blue {
+    color: var(--blue);
+}
+
+.c-blue-d {
+    color: var(--blue-d);
+}
+
+.c-blue-dd {
+    color: var(--blue-dd);
+}
+
+
+/* primary colors dark */
+
+.c-dark-red {
+    color: var(--dark-red);
+}
+
+.c-dark-green {
+    color: var(--dark-green);
+}
+
+.c-dark-blue {
+    color: var(--dark-blue);
+}
+
+
+/* common colors*/
+
+.c-brown {
+    color: var(--brown);
+}
+
+.c-brown-l {
+    color: var(--brown-l);
+}
+
+.c-brown-ll {
+    color: var(--brown-ll);
+}
+
+.c-brown-d {
+    color: var(--brown-d);
+}
+
+.c-brown-dd {
+    color: var(--brown-dd);
+}
+
+.c-indigo {
+    color: var(--indigo);
+}
+
+.c-indigo-d {
+    color: var(--indigo-d);
+}
+
+.c-indigo-dd {
+    color: var(--indigo-dd);
+}
+
+.c-orange {
+    color: var(--orange);
+}
+
+.c-orange-d {
+    color: var(--orange-d);
+}
+
+.c-orange-dd {
+    color: var(--orange-dd);
+}
+
+.c-pink {
+    color: var(--pink);
+}
+
+.c-pink-d {
+    color: var(--pink-d);
+}
+
+.c-pink-dd {
+    color: var(--pink-dd);
+}
+
+.c-purple {
+    color: var(--purple);
+}
+
+.c-violet {
+    color: var(--violet);
+}
+
+.c-violet-d {
+    color: var(--violet-d);
+}
+
+.c-violet-dd {
+    color: var(--violet-dd);
+}
+
+.c-yellow {
+    color: var(--yellow);
+}
+
+.c-yellow-d {
+    color: var(--yellow-d);
+}
+
+.c-yellow-dd {
+    color: var(--yellow-dd);
+}
+
+
+/* metal / medal colors*/
+
+.c-bronze {
+    color: var(--bronze);
+}
+
+.c-bronze-d {
+    color: var(--bronze-d);
+}
+
+.c-bronze-dd {
+    color: var(--bronze-dd);
+}
+
+.c-silver {
+    color: var(--silver);
+}
+
+.c-silver-d {
+    color: var(--silver-d);
+}
+
+.c-silver-dd {
+    color: var(--silver-dd);
+}
+
+.c-gold {
+    color: var(--gold);
+}
+
+.c-gold-d {
+    color: var(--gold-d);
+}
+
+.c-gold-dd {
+    color: var(--gold-dd);
+}
+
+
+/* hover: other colors */
+
+.c-aqua {
+    color: var(--aqua);
+}
+
+.c-aqua-d {
+    color: var(--aqua-d);
+}
+
+.c-aqua-dd {
+    color: var(--aqua-dd);
+}
+
+.c-crimson {
+    color: var(--crimson);
+}
+
+.c-crimson-d {
+    color: var(--crimson-d);
+}
+
+.c-crimson-dd {
+    color: var(--crimson-dd);
+}
+
+.c-cyan {
+    color: var(--cyan);
+}
+
+.c-cyan-d {
+    color: var(--cyan-d);
+}
+
+.c-cyan-dd {
+    color: var(--cyan-dd);
+}
+
+.c-grey {
+    color: var(--grey);
+}
+
+.c-grey-d {
+    color: var(--grey-d);
+}
+
+.c-grey-dd {
+    color: var(--grey-dd);
+}
+
+.c-ivory {
+    color: var(--ivory);
+}
+
+.c-ivory-d {
+    color: var(--ivory-d);
+}
+
+.c-ivory-dd {
+    color: var(--ivory-dd);
+}
+
+.c-lime {
+    color: var(--lime);
+}
+
+.c-lime-d {
+    color: var(--lime-d);
+}
+
+.c-lime-dd {
+    color: var(--lime-dd);
+}
+
+.c-magenta {
+    color: var(--magenta);
+}
+
+.c-magenta-d {
+    color: var(--magenta-d);
+}
+
+.c-magenta-dd {
+    color: var(--magenta-dd)
+}
+
+.c-maroon {
+    color: var(--maroon);
+}
+
+.c-maroon-d {
+    color: var(--maroon-d);
+}
+
+.c-maroon-dd {
+    color: var(--maroon-dd);
+}
+
+.c-olive {
+    color: var(--olive);
+}
+
+.c-olive-d {
+    color: var(--olive-d);
+}
+
+.c-olive-dd {
+    color: var(--olive-dd);
+}
+
+.c-orange-red {
+    color: var(--orange-red);
+}
+
+.c-orange-red-d {
+    color: var(--orange-red-d);
+}
+
+.c-orange-red-dd {
+    color: var(--orange-red-dd);
+}
+
+.c-sea-green {
+    color: var(--sea-green);
+}
+
+.c-sea-green-d {
+    color: var(--sea-green-d);
+}
+
+.c-sea-green-dd {
+    color: var(--sea-green-dd);
+}
+
+.c-sky-blue {
+    color: var(--sky-blue);
+}
+
+.c-sky-blue-d {
+    color: var(--sky-blue-d);
+}
+
+.c-sky-blue-dd {
+    color: var(--sky-blue-dd);
+}
+
+.c-tan {
+    color: var(--tan);
+}
+
+.c-tan-d {
+    color: var(--tan-d);
+}
+
+.c-tan-dd {
+    color: var(--tan-dd);
+}
+
+.c-teal {
+    color: var(--teal);
+}
+
+.c-teal-d {
+    color: var(--teal-d);
+}
+
+.c-teal-dd {
+    color: var(--teal-dd);
+}
+
+
+/*hover: font or text-------colors*/
+
+
+/* hover: neutral colors */
+
+.ch-white:hover {
+    color: var(--white);
+}
+
+.ch-white-d:hover {
+    color: var(--white-d);
+}
+
+.ch-white-dd:hover {
+    color: var(--white-dd);
+}
+
+.ch-off-white:hover {
+    color: var(--off-white);
+}
+
+.ch-black:hover {
+    color: var(--black);
+}
+
+.ch-black-l:hover {
+    color: var(--black-l);
+}
+
+.ch-black-ll:hover {
+    color: var(--black-ll);
+}
+
+
+/* hover: primary colors */
+
+.ch-red:hover {
+    color: var(--red);
+}
+
+.ch-red-d:hover {
+    color: var(--red-d);
+}
+
+.ch-red-dd:hover {
+    color: var(--red-dd);
+}
+
+.ch-green:hover {
+    color: var(--green);
+}
+
+.ch-green-l:hover {
+    color: var(--green-l);
+}
+
+.ch-green-ll:hover {
+    color: var(--green-ll);
+}
+
+.ch-blue:hover {
+    color: var(--blue);
+}
+
+.ch-blue-d:hover {
+    color: var(--blue-d);
+}
+
+.ch-blue-dd:hover {
+    color: var(--blue-dd);
+}
+
+
+/* hover: primary colors dark */
+
+.ch-dark-red:hover {
+    color: var(--dark-red);
+}
+
+.ch-dark-green:hover {
+    color: var(--dark-green);
+}
+
+.ch-dark-blue:hover {
+    color: var(--dark-blue);
+}
+
+
+/* hover:common colors*/
+
+.ch-brown:hover {
+    color: var(--brown);
+}
+
+.ch-brown-l:hover {
+    color: var(--brown-l);
+}
+
+.ch-brown-ll:hover {
+    color: var(--brown-ll);
+}
+
+.ch-brown-d:hover {
+    color: var(--brown-d);
+}
+
+.ch-brown-dd:hover {
+    color: var(--brown-dd);
+}
+
+.ch-indigo:hover {
+    color: var(--indigo);
+}
+
+.ch-indigo-d:hover {
+    color: var(--indigo-d);
+}
+
+.ch-indigo-dd:hover {
+    color: var(--indigo-dd);
+}
+
+.ch-orange:hover {
+    color: var(--orange);
+}
+
+.ch-orange-d:hover {
+    color: var(--orange-d);
+}
+
+.ch-orange-dd:hover {
+    color: var(--orange-dd);
+}
+
+.ch-pink:hover {
+    color: var(--pink);
+}
+
+.ch-pink-d:hover {
+    color: var(--pink-d);
+}
+
+.ch-pink-dd:hover {
+    color: var(--pink-dd);
+}
+
+.ch-purple:hover {
+    color: var(--purple);
+}
+
+.ch-violet:hover {
+    color: var(--violet);
+}
+
+.ch-violet-d:hover {
+    color: var(--violet-d);
+}
+
+.ch-violet-dd:hover {
+    color: var(--violet-dd);
+}
+
+.ch-yellow:hover {
+    color: var(--yellow);
+}
+
+.ch-yellow-d:hover {
+    color: var(--yellow-d);
+}
+
+.ch-yellow-dd:hover {
+    color: var(--yellow-dd);
+}
+
+
+/* hover:metal / medal colors*/
+
+.ch-bronze:hover {
+    color: var(--bronze);
+}
+
+.ch-bronze-d:hover {
+    color: var(--bronze-d);
+}
+
+.ch-bronze-dd:hover {
+    color: var(--bronze-dd);
+}
+
+.ch-silver:hover {
+    color: var(--silver);
+}
+
+.ch-silver-d:hover {
+    color: var(--silver-d);
+}
+
+.ch-silver-dd:hover {
+    color: var(--silver-dd);
+}
+
+.ch-gold:hover {
+    color: var(--gold);
+}
+
+.ch-gold-d:hover {
+    color: var(--gold-d);
+}
+
+.ch-gold-dd:hover {
+    color: var(--gold-dd);
+}
+
+
+/* hover: other colors */
+
+.ch-aqua:hover {
+    color: var(--aqua);
+}
+
+.ch-aqua-d:hover {
+    color: var(--aqua-d);
+}
+
+.ch-aqua-dd:hover {
+    color: var(--aqua-dd);
+}
+
+.ch-crimson:hover {
+    color: var(--crimson);
+}
+
+.ch-crimson-d:hover {
+    color: var(--crimson-d);
+}
+
+.ch-crimson-dd:hover {
+    color: var(--crimson-dd);
+}
+
+.ch-cyan:hover {
+    color: var(--cyan);
+}
+
+.ch-cyan-d:hover {
+    color: var(--cyan-d);
+}
+
+.ch-cyan-dd:hover {
+    color: var(--cyan-dd);
+}
+
+.ch-grey:hover {
+    color: var(--grey);
+}
+
+.ch-grey-d:hover {
+    color: var(--grey-d);
+}
+
+.ch-grey-dd:hover {
+    color: var(--grey-dd);
+}
+
+.ch-ivory:hover {
+    color: var(--ivory);
+}
+
+.ch-ivory-d:hover {
+    color: var(--ivory-d);
+}
+
+.ch-ivory-dd:hover {
+    color: var(--ivory-dd);
+}
+
+.ch-lime:hover {
+    color: var(--lime);
+}
+
+.ch-lime-d:hover {
+    color: var(--lime-d);
+}
+
+.ch-lime-dd:hover {
+    color: var(--lime-dd);
+}
+
+.ch-magenta:hover {
+    color: var(--magenta);
+}
+
+.ch-magenta-d:hover {
+    color: var(--magenta-d);
+}
+
+.ch-magenta-dd:hover {
+    color: var(--magenta-dd)
+}
+
+.ch-maroon:hover {
+    color: var(--maroon);
+}
+
+.ch-maroon-d:hover {
+    color: var(--maroon-d);
+}
+
+.ch-maroon-dd:hover {
+    color: var(--maroon-dd);
+}
+
+.ch-olive:hover {
+    color: var(--olive);
+}
+
+.ch-olive-d:hover {
+    color: var(--olive-d);
+}
+
+.ch-olive-dd:hover {
+    color: var(--olive-dd);
+}
+
+.ch-orange-red:hover {
+    color: var(--orange-red);
+}
+
+.ch-orange-red-d:hover {
+    color: var(--orange-red-d);
+}
+
+.ch-orange-red-dd:hover {
+    color: var(--orange-red-dd);
+}
+
+.ch-sea-green:hover {
+    color: var(--sea-green);
+}
+
+.ch-sea-green-d:hover {
+    color: var(--sea-green-d);
+}
+
+.ch-sea-green-dd:hover {
+    color: var(--sea-green-dd);
+}
+
+.ch-sky-blue:hover {
+    color: var(--sky-blue);
+}
+
+.ch-sky-blue-d:hover {
+    color: var(--sky-blue-d);
+}
+
+.ch-sky-blue-dd:hover {
+    color: var(--sky-blue-dd);
+}
+
+.ch-tan:hover {
+    color: var(--tan);
+}
+
+.ch-tan-d:hover {
+    color: var(--tan-d);
+}
+
+.ch-tan-dd:hover {
+    color: var(--tan-dd);
+}
+
+.ch-teal:hover {
+    color: var(--teal);
+}
+
+.ch-teal-d:hover {
+    color: var(--teal-d);
+}
+
+.ch-teal-dd:hover {
+    color: var(--teal-dd);
+}
+
+
+/* set transparent backround */
+
+.bt:not(.bc),
+.bt:hover {
+    background-color: transparent;
+}
+
+
+/* set transparent color */
+
+.ct:not(.bc),
+.ct:hover {
+    background-color: transparent;
+}
+
+
+/*border -------border-border-colors*/
+
+
+/* border width */
+
+.bd-1 {
+    border: solid 1px;
+}
+
+.bd-2 {
+    border: solid 2px;
+}
+
+.bd-3 {
+    border: solid 13x;
+}
+
+.bd-4 {
+    border: solid 4px;
+}
+
+.bd-5 {
+    border: solid 5px;
+}
+
+.bd-6 {
+    border: solid 6px;
+}
+
+.bd-7 {
+    border: solid 7px;
+}
+
+.bd-8 {
+    border: solid 8px;
+}
+
+.bd-9 {
+    border: solid 9px;
+}
+
+.bd-10 {
+    border: solid 10px;
+}
+
+.bd-11 {
+    border: solid 11px;
+}
+
+.bd-12 {
+    border: solid 12px;
+}
+
+
+/* neutral border-colors */
+
+.bd-i {
+    border-color: inherit;
+}
+
+.bd-c {
+    border-color: currentColor;
+}
+
+.bd-ih:hover {
+    border-color: inherit;
+}
+
+.bd-ch:hover {
+    border-color: currentColor;
+}
+
+.bd-white {
+    border-color: var(--white);
+}
+
+.bd-white-d {
+    border-color: var(--white-d);
+}
+
+.bd-white-dd {
+    border-color: var(--white-dd);
+}
+
+.bd-off-white {
+    border-color: var(--off-white);
+}
+
+.bd-black {
+    border-color: var(--black);
+}
+
+.bd-black-l {
+    border-color: var(--black-l);
+}
+
+.bd-black-ll {
+    border-color: var(--black-ll);
+}
+
+
+/* primary border-colors */
+
+.bd-red {
+    border-color: var(--red);
+}
+
+.bd-red-d {
+    border-color: var(--red-d);
+}
+
+.bd-red-dd {
+    border-color: var(--red-dd);
+}
+
+.bd-green {
+    border-color: var(--green);
+}
+
+.bd-green-l {
+    border-color: var(--green-l);
+}
+
+.bd-green-ll {
+    border-color: var(--green-ll);
+}
+
+.bd-blue {
+    border-color: var(--blue);
+}
+
+.bd-blue-d {
+    border-color: var(--blue-d);
+}
+
+.bd-blue-dd {
+    border-color: var(--blue-dd);
+}
+
+
+/* primary border-colors dark */
+
+.bd-dark-red {
+    border-color: var(--dark-red);
+}
+
+.bd-dark-green {
+    border-color: var(--dark-green);
+}
+
+.bd-dark-blue {
+    border-color: var(--dark-blue);
+}
+
+
+/* common border-colors*/
+
+.bd-brown {
+    border-color: var(--brown);
+}
+
+.bd-brown-l {
+    border-color: var(--brown-l);
+}
+
+.bd-brown-ll {
+    border-color: var(--brown-ll);
+}
+
+.bd-brown-d {
+    border-color: var(--brown-d);
+}
+
+.bd-brown-dd {
+    border-color: var(--brown-dd);
+}
+
+.bd-indigo {
+    border-color: var(--indigo);
+}
+
+.bd-indigo-d {
+    border-color: var(--indigo-d);
+}
+
+.bd-indigo-dd {
+    border-color: var(--indigo-dd);
+}
+
+.bd-orange {
+    border-color: var(--orange);
+}
+
+.bd-orange-d {
+    border-color: var(--orange-d);
+}
+
+.bd-orange-dd {
+    border-color: var(--orange-dd);
+}
+
+.bd-pink {
+    border-color: var(--pink);
+}
+
+.bd-pink-d {
+    border-color: var(--pink-d);
+}
+
+.bd-pink-dd {
+    border-color: var(--pink-dd);
+}
+
+.bd-purple {
+    border-color: var(--purple);
+}
+
+.bd-violet {
+    border-color: var(--violet);
+}
+
+.bd-violet-d {
+    border-color: var(--violet-d);
+}
+
+.bd-violet-dd {
+    border-color: var(--violet-dd);
+}
+
+.bd-yellow {
+    border-color: var(--yellow);
+}
+
+.bd-yellow-d {
+    border-color: var(--yellow-d);
+}
+
+.bd-yellow-dd {
+    border-color: var(--yellow-dd);
+}
+
+
+/* metal border-colors*/
+
+.bd-bronze {
+    border-color: var(--bronze);
+}
+
+.bd-bronze-d {
+    border-color: var(--bronze-d);
+}
+
+.bd-bronze-dd {
+    border-color: var(--bronze-dd);
+}
+
+.bd-silver {
+    border-color: var(--silver);
+}
+
+.bd-silver-d {
+    border-color: var(--silver-d);
+}
+
+.bd-silver-dd {
+    border-color: var(--silver-dd);
+}
+
+.bd-gold {
+    border-color: var(--gold);
+}
+
+.bd-gold-d {
+    border-color: var(--gold-d);
+}
+
+.bd-gold-dd {
+    border-color: var(--gold-dd);
+}
+
+
+/* hover: other border-colors */
+
+.bd-aqua {
+    border-color: var(--aqua);
+}
+
+.bd-aqua-d {
+    border-color: var(--aqua-d);
+}
+
+.bd-aqua-dd {
+    border-color: var(--aqua-dd);
+}
+
+.bd-crimson {
+    border-color: var(--crimson);
+}
+
+.bd-crimson-d {
+    border-color: var(--crimson-d);
+}
+
+.bd-crimson-dd {
+    border-color: var(--crimson-dd);
+}
+
+.bd-cyan {
+    border-color: var(--cyan);
+}
+
+.bd-cyan-d {
+    border-color: var(--cyan-d);
+}
+
+.bd-cyan-dd {
+    border-color: var(--cyan-dd);
+}
+
+.bd-grey {
+    border-color: var(--grey);
+}
+
+.bd-grey-d {
+    border-color: var(--grey-d);
+}
+
+.bd-grey-dd {
+    border-color: var(--grey-dd);
+}
+
+.bd-ivory {
+    border-color: var(--ivory);
+}
+
+.bd-ivory-d {
+    border-color: var(--ivory-d);
+}
+
+.bd-ivory-dd {
+    border-color: var(--ivory-dd);
+}
+
+.bd-lime {
+    border-color: var(--lime);
+}
+
+.bd-lime-d {
+    border-color: var(--lime-d);
+}
+
+.bd-lime-dd {
+    border-color: var(--lime-dd);
+}
+
+.bd-magenta {
+    border-color: var(--magenta);
+}
+
+.bd-magenta-d {
+    border-color: var(--magenta-d);
+}
+
+.bd-magenta-dd {
+    border-color: var(--magenta-dd)
+}
+
+.bd-maroon {
+    border-color: var(--maroon);
+}
+
+.bd-maroon-d {
+    border-color: var(--maroon-d);
+}
+
+.bd-maroon-dd {
+    border-color: var(--maroon-dd);
+}
+
+.bd-olive {
+    border-color: var(--olive);
+}
+
+.bd-olive-d {
+    border-color: var(--olive-d);
+}
+
+.bd-olive-dd {
+    border-color: var(--olive-dd);
+}
+
+.bd-orange-red {
+    border-color: var(--orange-red);
+}
+
+.bd-orange-red-d {
+    border-color: var(--orange-red-d);
+}
+
+.bd-orange-red-dd {
+    border-color: var(--orange-red-dd);
+}
+
+.bd-sea-green {
+    border-color: var(--sea-green);
+}
+
+.bd-sea-green-d {
+    border-color: var(--sea-green-d);
+}
+
+.bd-sea-green-dd {
+    border-color: var(--sea-green-dd);
+}
+
+.bd-sky-blue {
+    border-color: var(--sky-blue);
+}
+
+.bd-sky-blue-d {
+    border-color: var(--sky-blue-d);
+}
+
+.bd-sky-blue-dd {
+    border-color: var(--sky-blue-dd);
+}
+
+.bd-tan {
+    border-color: var(--tan);
+}
+
+.bd-tan-d {
+    border-color: var(--tan-d);
+}
+
+.bd-tan-dd {
+    border-color: var(--tan-dd);
+}
+
+.bd-teal {
+    border-color: var(--teal);
+}
+
+.bd-teal-d {
+    border-color: var(--teal-d);
+}
+
+.bd-teal-dd {
+    border-color: var(--teal-dd);
+}
+
+
+/*hover: border-------border-colors*/
+
+
+/* hover: neutral border-colors */
+
+.bdh-white:hover {
+    border-color: var(--white);
+}
+
+.bdh-off-white:hover {
+    border-color: var(--off-white);
+}
+
+.bdh-off-white-d:hover {
+    border-color: var(--off-white-d);
+}
+
+.bdh-off-white-dd:hover {
+    border-color: var(--off-white-dd);
+}
+
+.bdh-black:hover {
+    border-color: var(--black);
+}
+
+.bdh-black-l:hover {
+    border-color: var(--black-l);
+}
+
+.bdh-black-ll:hover {
+    border-color: var(--black-ll);
+}
+
+
+/* hover: primary border-colors */
+
+.bdh-red:hover {
+    border-color: var(--red);
+}
+
+.bdh-red-d:hover {
+    border-color: var(--red-d);
+}
+
+.bdh-red-dd:hover {
+    border-color: var(--red-dd);
+}
+
+.bdh-green:hover {
+    border-color: var(--green);
+}
+
+.bdh-green-l:hover {
+    border-color: var(--green-l);
+}
+
+.bdh-green-ll:hover {
+    border-color: var(--green-ll);
+}
+
+.bdh-blue:hover {
+    border-color: var(--blue);
+}
+
+.bdh-blue-d:hover {
+    border-color: var(--blue-d);
+}
+
+.bdh-blue-dd:hover {
+    border-color: var(--blue-dd);
+}
+
+
+/* hover: primary border-colors dark */
+
+.bdh-dark-red:hover {
+    border-color: var(--dark-red);
+}
+
+.bdh-dark-green:hover {
+    border-color: var(--dark-green);
+}
+
+.bdh-dark-blue:hover {
+    border-color: var(--dark-blue);
+}
+
+
+/* hover:common border-colors*/
+
+.bdh-brown:hover {
+    border-color: var(--brown);
+}
+
+.bdh-brown-l:hover {
+    border-color: var(--brown-l);
+}
+
+.bdh-brown-ll:hover {
+    border-color: var(--brown-ll);
+}
+
+.bdh-brown-d:hover {
+    border-color: var(--brown-d);
+}
+
+.bdh-brown-dd:hover {
+    border-color: var(--brown-dd);
+}
+
+.bdh-indigo:hover {
+    border-color: var(--indigo);
+}
+
+.bdh-indigo-d:hover {
+    border-color: var(--indigo-d);
+}
+
+.bdh-indigo-dd:hover {
+    border-color: var(--indigo-dd);
+}
+
+.bdh-orange:hover {
+    border-color: var(--orange);
+}
+
+.bdh-orange-d:hover {
+    border-color: var(--orange-d);
+}
+
+.bdh-orange-dd:hover {
+    border-color: var(--orange-dd);
+}
+
+.bdh-pink:hover {
+    border-color: var(--pink);
+}
+
+.bdh-pink-d:hover {
+    border-color: var(--pink-d);
+}
+
+.bdh-pink-dd:hover {
+    border-color: var(--pink-dd);
+}
+
+.bdh-purple:hover {
+    border-color: var(--purple);
+}
+
+.bdh-violet:hover {
+    border-color: var(--violet);
+}
+
+.bdh-violet-d:hover {
+    border-color: var(--violet-d);
+}
+
+.bdh-violet-dd:hover {
+    border-color: var(--violet-dd);
+}
+
+.bdh-yellow:hover {
+    border-color: var(--yellow);
+}
+
+.bdh-yellow-d:hover {
+    border-color: var(--yellow-d);
+}
+
+.bdh-yellow-dd:hover {
+    border-color: var(--yellow-dd);
+}
+
+
+/* hover:metal / medal border-colors*/
+
+.bdh-bronze:hover {
+    border-color: var(--bronze);
+}
+
+.bdh-bronze-d:hover {
+    border-color: var(--bronze-d);
+}
+
+.bdh-bronze-dd:hover {
+    border-color: var(--bronze-dd);
+}
+
+.bdh-silver:hover {
+    border-color: var(--silver);
+}
+
+.bdh-silver-d:hover {
+    border-color: var(--silver-d);
+}
+
+.bdh-silver-dd:hover {
+    border-color: var(--silver-dd);
+}
+
+.bdh-gold:hover {
+    border-color: var(--gold);
+}
+
+.bdh-gold-d:hover {
+    border-color: var(--gold-d);
+}
+
+.bdh-gold-dd:hover {
+    border-color: var(--gold-dd);
+}
+
+
+/* hover: other border-colors */
+
+.bdh-aqua:hover {
+    border-color: var(--aqua);
+}
+
+.bdh-aqua-d:hover {
+    border-color: var(--aqua-d);
+}
+
+.bdh-aqua-dd:hover {
+    border-color: var(--aqua-dd);
+}
+
+.bdh-crimson:hover {
+    border-color: var(--crimson);
+}
+
+.bdh-crimson-d:hover {
+    border-color: var(--crimson-d);
+}
+
+.bdh-crimson-dd:hover {
+    border-color: var(--crimson-dd);
+}
+
+.bdh-cyan:hover {
+    border-color: var(--cyan);
+}
+
+.bdh-cyan-d:hover {
+    border-color: var(--cyan-d);
+}
+
+.bdh-cyan-dd:hover {
+    border-color: var(--cyan-dd);
+}
+
+.bdh-grey:hover {
+    border-color: var(--grey);
+}
+
+.bdh-grey-d:hover {
+    border-color: var(--grey-d);
+}
+
+.bdh-grey-dd:hover {
+    border-color: var(--grey-dd);
+}
+
+.bdh-ivory:hover {
+    border-color: var(--ivory);
+}
+
+.bdh-ivory-d:hover {
+    border-color: var(--ivory-d);
+}
+
+.bdh-ivory-dd:hover {
+    border-color: var(--ivory-dd);
+}
+
+.bdh-lime:hover {
+    border-color: var(--lime);
+}
+
+.bdh-lime-d:hover {
+    border-color: var(--lime-d);
+}
+
+.bdh-lime-dd:hover {
+    border-color: var(--lime-dd);
+}
+
+.bdh-magenta:hover {
+    border-color: var(--magenta);
+}
+
+.bdh-magenta-d:hover {
+    border-color: var(--magenta-d);
+}
+
+.bdh-magenta-dd:hover {
+    border-color: var(--magenta-dd)
+}
+
+.bdh-maroon:hover {
+    border-color: var(--maroon);
+}
+
+.bdh-maroon-d:hover {
+    border-color: var(--maroon-d);
+}
+
+.bdh-maroon-dd:hover {
+    border-color: var(--maroon-dd);
+}
+
+.bdh-olive:hover {
+    border-color: var(--olive);
+}
+
+.bdh-olive-d:hover {
+    border-color: var(--olive-d);
+}
+
+.bdh-olive-dd:hover {
+    border-color: var(--olive-dd);
+}
+
+.bdh-orange-red:hover {
+    border-color: var(--orange-red);
+}
+
+.bdh-orange-red-d:hover {
+    border-color: var(--orange-red-d);
+}
+
+.bdh-orange-red-dd:hover {
+    border-color: var(--orange-red-dd);
+}
+
+.bdh-sea-green:hover {
+    border-color: var(--sea-green);
+}
+
+.bdh-sea-green-d:hover {
+    border-color: var(--sea-green-d);
+}
+
+.bdh-sea-green-dd:hover {
+    border-color: var(--sea-green-dd);
+}
+
+.bdh-sky-blue:hover {
+    border-color: var(--sky-blue);
+}
+
+.bdh-sky-blue-d:hover {
+    border-color: var(--sky-blue-d);
+}
+
+.bdh-sky-blue-dd:hover {
+    border-color: var(--sky-blue-dd);
+}
+
+.bdh-tan:hover {
+    border-color: var(--tan);
+}
+
+.bdh-tan-d:hover {
+    border-color: var(--tan-d);
+}
+
+.bdh-tan-dd:hover {
+    border-color: var(--tan-dd);
+}
+
+.bdh-teal:hover {
+    border-color: var(--teal);
+}
+
+.bdh-teal-d:hover {
+    border-color: var(--teal-d);
+}
+
+.bdh-teal-dd:hover {
+    border-color: var(--teal-dd);
+}

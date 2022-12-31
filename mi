@@ -1,0 +1,4 @@
+#!/usr/bin/php
+<?php
+
+include_once "core\spoova.php";

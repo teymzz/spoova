@@ -1,0 +1,254 @@
+
+
+form {
+     margin: 0px;
+}
+
+/* input flex classes */
+
+[class*="i-flex"] {
+     display: inline-flex;
+ }
+
+:where(button[class*="i-flex"]){
+     align-items: center;
+     justify-content: center;
+ }
+ 
+:where(div[role="group"].i-flex legend) {
+     font-size: inherit;
+     float: none;
+ }
+ 
+ 
+ :where([class *= "i-flex"]) {
+     border: solid 1px rgb(239, 239, 239, 0.1);
+ }
+ 
+ :where([class *= "i-flex"] label){
+     background-color: #efefef;   
+ }
+ 
+ :where([class *= "i-flex"] input:required){
+    outline: none;
+    box-shadow: none;
+ }
+ 
+ :where(.i-flex-full .flex-child) {
+     min-height: 30px;
+     transition: .2s;
+     border: none;
+ }
+ 
+ :where(.i-flex-full [class *= "flex"]) {
+     border-radius: 0;
+ }
+ 
+ :where([class *= "i-flex"].bd) {
+     border: solid 1px #efefef;
+ }
+
+ :where([class *= "i-flex"] [class *= "flex"].bd-r:not(.bd)) {
+     border-right: solid 1px #efefef;
+ }
+ 
+ :where([class*="i-flex"] [class*="flex"]) {
+     min-height: 30px;
+     transition: .2s;
+     border: none;
+ }
+
+ 
+:where(.live .i-flex-full .flex-child:focus-within) {
+     outline: solid 2px #efefef;
+     outline-offset: -2px #efefef;
+     cursor: text;
+ }
+ 
+:where(.live .i-flex-full .flex-full:focus-within) {
+     outline: solid 2px #efefef;
+     outline-offset: -2px;
+     cursor: text;
+ }
+
+/* ...............Form Paddings */
+
+input[class*="flex"] {
+
+     padding-left: .35em;
+     padding-right: .35em;
+
+}
+
+.fm-d2 input[class*="flex"] {
+
+     padding-top: .2em;
+     padding-bottom: .2em;
+
+}
+
+.fm-d2 button[class*="flex"] {
+
+     padding-top: .2em;
+     padding-bottom: .2em;
+
+}
+
+.fm-d5 input[class*="flex"] {
+
+     padding-top: .5em;
+     padding-bottom: .5em;
+
+}
+
+.fm-d5 button[class*="flex"] {
+
+     padding-top: .5em;
+     padding-bottom: .5em;
+
+}
+
+/* ...............Input spacings : default */
+
+:where(.form-field > [class*="flex"]:first-child) {
+     margin-top: .5em;
+}
+:where(.form-field > [class*="flex"]:not(:last-child)) {
+     margin-bottom: .5em;
+}
+
+/* ...............Input spacings */
+
+.sp-d5 > [class*="flex"]:first-child {
+     margin-top: .5em;
+}
+
+.sp-d5 > [class*="flex"]:not(:last-child) {
+     margin-bottom: .5em;
+}
+
+
+.sp-d7 > [class*="flex"]:first-child {
+     margin-top: .7em;
+}
+.sp-d7 > [class*="flex"]:not(:last-child) {
+     margin-bottom: .7em;
+}
+
+.sp-1 > [class*="flex"]:first-child {
+     margin-top: 1em;
+}
+.sp-1 > [class*="flex"]:not(:last-child) {
+     margin-bottom: 1em;
+}
+
+/* ...............Flex legend control */
+:where([class*="flex"] > legend) {
+     font-size: inherit;
+     float: none;
+}
+
+/*textarea fields .............................................*/
+
+:where(textarea.textarea:focus) {
+     box-shadow: 0px 0px 2px #aaa;
+     border: solid thin #aaa;
+}
+ 
+textarea:focus {
+     box-shadow: none;
+     outline: none;
+}
+ 
+ 
+/*span submits .............................................*/
+ 
+span.submit {
+     border: solid thin;
+     border-color: #aaa;
+     color: #757575;
+     padding: 4px;
+     border-radius: 4px;
+}
+ 
+span.submit:hover {
+     cursor: pointer;
+}
+ 
+/*button submits .............................................*/
+ 
+:where(input[type="submit"], input[type="button"]) {
+     color: inherit;
+}
+ 
+button {
+     color: inherit;
+}
+ 
+button.submit {
+     border: solid thin;
+     border-color: #aaa;
+     color: #757575;
+     background-color: transparent;
+     padding: 4px;
+     border-radius: 4px;
+}
+ 
+button.submit:hover {
+     cursor: pointer;
+}
+
+
+/* Form input Hacks .......................................................................................*/
+
+:where(input::placeholder) {
+     color: rgb(130, 130, 130);
+}
+ 
+:where(input.fip::placeholder) {
+     color: inherit;
+}
+ 
+:where(input:-ms-reval, input:-ms-clear) {
+     display: none; /* remove auto eye and auto cancel buttons */
+}
+ 
+input:-webkit-autofill:focus {
+     animation-delay: 0s;
+     animation-name: autofill;
+     animation-fill-mode: both;
+     -webkit-animation-delay: 1s;
+     /* Safari support - any positive time runs instantly */
+     -webkit-animation-name: autofill;
+     -webkit-animation-fill-mode: both;
+}
+ 
+@keyframes autofill {
+     0%,
+     100% {
+         -webkit-text-fill-color: inherit;
+         background: transparent;
+     }
+}
+ 
+ :where(input.auto-white:-webkit-autofill,
+ input.auto-white:-webkit-autofill:hover,
+ input.auto-white:-webkit-autofill:focus,
+ input.auto-white:-webkit-autofill:active) {
+     box-shadow: 0 0 0 30px rgba(0, 0, 0, 0) inset !important;
+     -webkit-box-shadow: 0 0 0 30px rgba(0, 0, 0, 0) inset !important;
+ }
+ 
+ :where(input[type=text]) {
+     font-size: inherit;
+ }
+ 
+ :where(input:not([type=submit]):focus) {
+     box-shadow: #a6a6a6 0px 0px 0px;
+     outline: none;
+ }
+ 
+ input.sp-inputs {
+     position: relative;
+     top: 2px;
+ }

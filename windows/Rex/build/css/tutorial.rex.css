@@ -1,0 +1,141 @@
+#style:root
+
+     body{
+          color: rgb(111, 110, 110);
+          background-color : rgba(var(--white-dd));
+     }
+
+     .tutorial{
+          min-height:100vh;
+     }
+
+     .pre-area{
+          font: menu;
+          font-size: .85em;
+          display: inline-block;
+          width:100%;
+      }
+
+     .pre-area:not([class*="bc-"]){
+          background-color : rgba(var(--white-dd));
+      }
+  
+     .pre-area.fix {
+         font-size: 1em;
+    }
+     
+     pre.pre-code {
+          overflow: auto hidden;
+          font-size: .95em; 
+          margin-bottom:0;
+          padding-top:1em;
+     } 
+     
+     pre.pre-code:not([class*="c-"]) {
+          color: #4f58a0;
+     } 
+     
+     pre .comment {
+          color: #909090;
+     }
+  
+     .lacier.active {
+          background-color: #3ecb32;
+          color: white;
+          box-shadow: 0 0 2px 3px #32bc27 inset;
+     }
+  
+     .lacier.active .c-lime-dd{
+          color: white;
+     }  
+
+     ul > li > a{
+          color:inherit;
+     }   
+
+     ul > li > a:hover{
+          color:inherit;
+     }  
+
+     [class*="foot-note"] {
+         color: rgb(32, 130, 130);
+     }
+
+     :where(.d85){
+          font-size: .85em;
+     }
+     :where(.d87){
+          font-size: .87em;
+     }
+     :where([class*="foot-note"]){
+          font-size: .87em;
+     }
+     :where([class*="foot-note"] .head){
+          font-weight: 600;
+     }
+
+     [class*="rule-dashed"] {
+          border-bottom: dashed .1em;
+     }   
+     
+     [class*="hyperlink"] {
+          border-bottom: dashed .1em;
+     }
+
+     .olist {
+          font-family: calibri;
+          color:#9d6216;
+     }
+
+     .control{
+          right: 10px;
+          top: 10px;
+          opacity: 1;
+          display: inline-block;
+          transition: opacity .8s ease-in-out;
+          z-index: 10;
+      }
+
+      .control .controller.fade-out{
+          transition: transform .2s ease-in-out, opacity .3s ease-in-out ;
+          transform: rotate(360deg);
+      }
+
+      .control .controller:not(.bi-x).fade-out{
+          opacity: 0;
+      }
+      
+      .blurry{
+          z-index: 0;
+      }
+
+      @media (min-width: 1001px){
+
+          .control{
+               display: none;
+          }
+
+          .nav-left{
+               left: 0;
+          }
+
+          .tutorial{
+               width: calc(100% - 300px);
+               float:right;
+          }
+          .blurry{
+               display: none !important;
+           }
+     }
+
+
+#style;
+
+#style:css 
+
+     /* body {
+          color: rgb(111, 110, 110);
+          background-color: #f1f1f1;
+     } */
+
+#style;

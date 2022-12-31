@@ -1,0 +1,166 @@
+/* boxes .............................................. */
+
+.px-10 {
+    width: 10px;
+    height: 10px;
+}
+
+.px-15 {
+    width: 15px;
+    height: 15px;
+}
+
+.px-20 {
+    width: 20px;
+    height: 20px;
+}
+
+.px-30 {
+    width: 30px;
+    height: 30px;
+}
+
+.px-40 {
+    width: 40px;
+    height: 40px;
+}
+
+.px-50 {
+    width: 50px;
+    height: 50px;
+}
+
+.px-60 {
+    width: 60px;
+    height: 60px;
+}
+
+.px-80 {
+    width: 80px;
+    height: 80px;
+}
+
+.px-100 {
+    width: 100px;
+    height: 100px;
+}
+
+.px-110 {
+    width: 110px;
+    height: 110px;
+}
+
+.px-115 {
+    width: 115px;
+    height: 115px;
+}
+
+.px-120 {
+    width: 120px;
+    height: 120px;
+}
+
+.px-130 {
+    width: 130px;
+    height: 130px;
+}
+
+.px-140 {
+    width: 140px;
+    height: 140px;
+}
+
+.px-150 {
+    width: 150px;
+    height: 150px;
+}
+
+.px-180 {
+    width: 180px;
+    height: 180px;
+}
+
+.px-200 {
+    width: 200px;
+    height: 200px;
+}
+
+.px-250 {
+    width: 250px;
+    height: 250px;
+}
+
+.px-300 {
+    width: 300px;
+    height: 300px;
+}
+
+.px-350 {
+    width: 350px;
+    height: 350px;
+}
+
+.px-400 {
+    width: 400px;
+    height: 400px;
+}
+
+.px-450 {
+    width: 450px;
+    height: 450px;
+}
+
+/*customs inline boxes ................................................*/
+
+.box{
+    display: inline-block;
+}
+
+[class*="box-"]{
+    display: inline-block;
+}
+
+:where(.box, [class*="box-"]){
+    height: auto;
+    line-height: 1.42857143;
+    box-sizing: border-box;
+    transition: width .2s ease-in-out, 
+                padding .2s ease-in-out,
+                margin .2s ease-in-out,;
+}
+
+.i-trans{
+    transition: initial;
+}
+
+.box-dotted {
+    border: dotted 2px #aaa;
+    border-radius: 2px;
+}
+
+.box-dashed {
+    border: dotted 2px #aaa;
+    border-radius: 2px;
+}
+
+/* badges */
+:where(.numb-box,
+.num-box-sup) {
+    display: inline-block;
+    box-sizing: border-box;
+    border: solid thin;
+    position: relative;
+    padding-left: 5px;
+    padding-right: 5px;
+    padding-top: 0px;
+    padding-bottom: 0px;
+    border-radius: 50px;
+    font-size: 10;
+    font-weight: bold;
+    background-color: #aaa inherit;
+    color: inherit;
+}
+
+.numb-box-sup {
+    top: -4px;
+}

@@ -1,0 +1,611 @@
+<?
+
+
+
+/**   
+    A) STARTING A NEW DEFAULT CONNECTION USING CONFIG FILE 
+
+      1: create a config file e.g dbconfig.php
+      2: set the following parameters
+
+         $_DBSOCKET = (online)? '' : '';
+         $_DBPORT   = (online)? '' : '';
+         $_DBSERVER = (online)? '' : '';	
+         $_DBUSER   = (online)? '' : '';	
+         $_DBPASS   = (online)? '' : '';	
+         $_DBNAME   = (online)? '' : '';
+
+      3: online means credentials for live server
+      4: include your dbconfig.php file before connection
+      5: The variables above will update the following constants
+         DBNAME, DBUSER, DBPASS, DBSERVER, DBPORT, DBSOCKET
+
+      6: //initialize your database controller
+         $dbcon = new \core\classes\DB;
+
+         You can now open connection in two ways
+      
+         @method 2 - declaring parameters using constants
+
+            $db = $dbcon->openDB(DBNAME, DBUSER, DBPASS, DBSERVER, DBPORT, DBSOCKET);
+            
+            //Not all parameters is required to be supplied
+            
+         @method 1 - using constants - shorthand
+
+            $db = $dbcon->openDB();
+
+            //Note: only used this if no default parameters (constants) set needs to be changed
+
+    B) STARTING A NEW CONNECTION (MORE DETAILS)-----------------------------------------------------------------------------------------------------------
+
+    In the running or testing the connection below, the following parameters will be used where necessary.
+
+    $dbname   = "mydb";
+    $dbuser   = "root";
+    $dbpass   = "";
+    $dbserver = "localhost";
+    $dbport   = "3308"; //depends on server used
+    $dbsocket = "";
+
+
+    STEP 1) connect to database controller
+
+    $dbcon = new \core\classes\DB(); // @param: ["MySQLi" | "PDO" | ""]
+
+      @ "MySQLI" -> use MySQLI
+      @ "PDO" -> use PDO 
+      @ ""    -> if parameter is not set, default option (PDO) is set in \core\dbsets.php (only line 33 of this file should be edited)
+
+
+    STEP 2) open a new connection with controller ( either method 1 or method 2 below, NOT BOTH )
+    
+    @method 1:
+    $db = $dbcon->openDB($dbname, $dbuser, $dbpass, $dbserver, $dbport, $dbsocket);
+
+
+    @method 2:
+    $db = $dbcon->openDB(); // uses configuration file - already explained under section A.
+
+    EXAMPLE 1 - connecting with parameters above
+
+    $dbcon = new \core\classes\DB(); //using PDO as Default
+
+    $db = $dbcon->openDB($dbname, $dbuser, $dbpass, $dbserver, $dbport, $dbsocket);  //using parameters set above
+  
+    
+    EXAMPLE 2 - connecting with your default parameters set in dbconfig.php
+
+    $dbcon = new \core\classes\DB(); //using PDO as Default
+
+    $db = $dbcon->openDB();  //using your database setup file
+
+    C) RUNNING QUERIES (QUERY METHOD) ----------------------------------------------------------------------------------------------------
+
+     1: $db->query($sql,$params);
+
+      @ $sql   : This is the sql query and must be set
+      @ $param : This is array of binded paramters. This is set only if $sql contains binded paramters, values in respective order.
+      
+     2: $db->process(); 
+        
+        for performing operations that are not CRUD
+
+
+    Example 3i - creating a new database (database tool)
+
+      Database tool is connected by using $db->openTool();
+      
+      @params: DBUSER, DBPASS, DBSERVER, DBPORT, DBSOCKET
+
+      Note: 
+      
+      1: It does not use DBNAME unlike openDB() method and it is only used for performing operations that does not include database selection. This makes it possible to be used for creating database.
+
+      2: Since we have not created $dbname (i.e "mydb" above), lets create the database
+
+      @method 1 - using tool using default connection
+
+      if($dbtool = $db->openTool()){
+         $dbtool->createDB($dbname) //create database if it does not exist. (only on offline server)
+      }
+
+      @method 2 - using openDB()
+
+      if($dbtool = $db->openDB('',$dbuser,$dbpass,$dbserver,$dbport,$dbsocket)){
+         $dbtool->createDB($dbname) //create database if it does not exist. (only on offline server)
+      }
+      
+      //after @method 1 or @method 2
+
+      if(!$db->error_exists()){
+
+         //database successfully created - we can now connect to $dbname
+         $db = $dbcon->openDB($dbname, $dbuser, $dbpass, $dbserver, $dbport); //connect to database 
+
+      }else{
+
+         //database not created
+         print " database not created. Reason: ".$db->getError("core");
+
+      }
+
+      NOTE: Lets connect to our new database "mydb" above and create a table named "users" in the database
+
+    Example 3ii - $db->query() and $db->process();
+
+      $db = $dbcon->openDB(); //open connection
+
+      $db->query("
+         CREATE TABLE IF NOT EXISTS `users` (
+         `id` int(11) NOT NULL AUTO_INCREMENT,
+         `fullname` varchar(100) NOT NULL,
+         `username` varchar(50) NOT NULL,
+         `password` varchar(50) NOT NULL,
+         PRIMARY KEY (`id`),
+         UNIQUE KEY `username` (`username`)
+      )");
+
+      if(!$db->process()){
+
+         // execute our query  
+         print " table successfully created - we can now use table ";
+
+      }else{
+
+         //table not created
+         print " table not created. Reason: ".$db->getError("core");
+
+      }
+
+
+    C) PERFORMING CRUD OPERATIONS (connection set in Example 3ii will now be used for further operations)
+
+       I) FETCHING FROM DATABASE ($db->read())
+
+          $db->read($limit1, $limit2) //This is explained Example 5ii
+       
+          Example 4 - reading from database table users 
+
+          $db->query("select * from users where username = 'kenwood' and password = '123xyz' " );
+
+          if($results = $db->read()){
+             
+             //this will run if at least one result is found
+
+             var_dump($results);
+
+          }elseif(!$db->error_exist()){
+            
+            //this will run if no result is found
+            print "no result found";
+
+          }else{
+
+            //this will run if query failed because of error
+            var_dump($db->getError(true));     
+
+          }
+          
+          This format above can be written as:
+          
+          $db->query("select * from users where username = 'kenwood' and password = '123xyz' " );
+          $db->read();
+          $results = $db->results(); // This will return the same result as $db->read();
+          
+          However, $db->results() can be used to remodify query results. Samples are:
+         
+          $db->results();  //return all result data found
+          $db->results(0); //return result at index 0 (or first result)
+          $db->results(0, 'count(*)') //return count(*) at first index
+          $db->results(":shuffle"); //return all results but reshuffle them 
+          $db->results(5); //return the result at index 5 or return false
+          $db->results(5, 'name'); //pick index 5 and then return the value of 'name' in it or return false
+          $db->results(':5'); // return the first five values of result. This will return false only if no data result was initially found
+          $db->results(':5', ':shuffle'); // same as above but data will be shuffled every time
+
+          Example 5i - reading from database table (users) with binded paramters
+
+          $db->query("select * from users where username = ? and password = ? ", ['kenwood','123xyz']);
+
+          if($result = $db->read()){
+             
+             //this will run if at least one result is found
+
+             var_dump($result);
+             print $db->getrows(); //print number of rows
+
+          }elseif(!$db->error_exist()){
+            
+            //this will run if no result is found
+            print "no result found";
+
+          }else{
+
+            //this will run if query failed because of error
+            var_dump($db->getError(true));     
+
+          }  
+
+          Example 5ii - reading from database table users setting a limit
+
+          $db->read() // no limit
+
+          $db->read(10) // limit 10 => fetches 10 results
+          $db->read(0,10) // limit 10 => fetches 10 results (skips the first count - same as above) 
+          $db->read(1,10) // read from 2 to 10  => fetches 9 results (skips the first count)          
+          $db->read(5,10) // read from 6 to 10  => fetches 5 results (skips the first count)
+          
+          NOTE: 1) if limit is already set in your $sql query do not use the method mentioned in this example. Simply use $db->read();
+                2) This method can be applied for all read examples as long as the $sql query does not contain a limit
+          
+
+       II) Inserting into database table users ( ($db->prepare_insert() or $db->insert_into()) and $db->insert()), Example 6
+          
+           @method 1 :
+
+           $db->query("insert into users", ['kenwood','123xyz']);
+
+           $db->prepare_insert();
+
+           if($db->insert()){
+              
+              //this query executed successfully
+
+           }elseif($db->error_exists()){
+             
+             //something is wrong
+             print_r($db->error() );
+
+           }
+
+           @method 2 (recommended) :
+
+           $db->insert_into("users", ['kenwood','123xyz']);
+
+           if($db->insert()){
+              
+              //this query executed successfully
+
+           }elseif($db->error_exists()){
+             
+             //something is wrong
+             print_r($db->error() );
+
+           }           
+
+
+
+       III) delete from database table users ($db->delete()), Example 7i
+
+            $db->query("delete from users where username = 'kenwood' ");
+
+            if($db->delete()){
+               
+               //delete executed successfully
+
+            }elseif($db->error_exists()){
+              
+              //something is wrong : not deleted
+              print_r($db->error());
+
+            }
+
+       IV) update from database ($db->delete()), Example 7ii (b - recommended)
+
+           a) $db->query("update users set username = 'tina', password = '123abc' where username= 'kenwood' ");
+
+              if($db->update()){
+                 
+                 //update executed successfully
+
+              }elseif($db->error_exists()){
+                
+                //something is wrong : not updated
+                print_r($db->error());
+
+              }
+
+
+           b) $db->query("update users set username = ?, password = ? where username= ? ",['tina','123abc','kenwood']);
+
+              if($db->update()){
+                 
+                 //update executed successfully
+
+              }elseif($db->error_exists()){
+                
+                //something is wrong : not updated
+                print_r($db->error());
+
+              }
+
+
+
+
+    D) SWITCHING BETWEEN DATABASE
+
+       $db->switchDB($dbname,$dbuser,$dbpass,$dbserver,$dbport,$dbsocket); // switch to a new database
+
+       $db->switchDB("D"); // switch back to your default database to default connection
+        
+       $db->conResponse(); // connection response
+
+       Example
+
+       if($db->switchDB("anotherdatabase",$dbuser,$dbpass,$dbserver,$dbport,$dbsocket)){
+
+         $db->conResponse(); // returns successful
+
+       }else{
+
+         $db->conResponse(); // returns database switch failed
+
+       }
+
+
+    E) OTHER METHODS FOR PERFORMING CRUD OPERATIONS 
+       (THIS METHODS THOUGH FASTER, MAY PROVE DIFFICULT TO COMPREHEND, USE PREVIOUS EXAMPLES ABOVE INSTEAD)
+       (THIS METHODS THOUGH LIKELY NOT, YET MAY BE DEPRECATED OR UPDATED IN FUTURE, PREVIOUS EXAMPLES USING QUERY METHOD IS MORE STABLE)      
+
+     1 READ OR FETCH DATA FROM DATABASE 
+
+       i) method 1 
+          
+          $db->select("*")
+             ->from("users");
+
+          if(!$result = $db->read(1)){
+              $result = $db->getError();
+          } 
+
+
+       ii) method 2 
+          
+           $datas =['myID','myName'];
+
+           $db->select("*")
+              ->from("users")
+              ->where('id=? and name=?');
+
+           $db->setData($datas);
+
+           if(!$result = $db->read(1)){
+              $result = $db->getError();
+           }
+
+
+
+     2) INSERT INTO DATABASE
+     
+        i) method 1
+
+           $uid = uniqid('user');
+           $data['USERNAME']  = "ladexiy";
+           $data['TOKEN']     =  $uid;
+           $data['FULLNAME']  = "Alexander Oden";
+           $data['FIRSTNAME'] = "Alexander";
+           $data['LASTNAME']  = "Oden";
+
+           $db->insert_into("users")->setData($data);
+           $db->prepare_insert();
+
+           $message = $db->insert();
+           echo json_encode($message);
+           $db->close();
+     
+        ii) method 2 - (note: using $data from method 1 above)
+
+           $db->insert_into("users",$data);
+           $message = $db->insert();
+           echo json_encode($message);
+           $db->close();           
+
+        iii) method 3
+           
+           $uid = uniqid('user');
+           $columns = array('USERNAME', 'TOKEN', 'FULLNAME', 'FIRSTNAME', 'LASTNAME');
+           $values  = array('ladexy' ,$uid, 'Alexander Oden', 'Alexander','Oden');
+           
+           $db->insert_into("users")
+              ->columns($columns)
+              ->values($values)
+              ->prepare_insert();
+
+           $message = $db->insert();
+           echo json_encode($message);
+           $db->close();
+
+        iv) method 4
+           
+           $uid = uniqid('user');
+           $db->insert_into("users")
+              ->columns('USERNAME','TOKEN','FULLNAME','FIRSTNAME','LASTNAME')
+              ->values('ladexy',$uid,'Alexander Oden','Alexander','Oden')
+              ->prepare_insert();
+
+           $message = $db->insert();
+           echo json_encode($message);
+           $db->close();
+      
+     
+
+     3) UPDATE DATABASE
+
+        i) method 1
+           
+           $data = ["MALE",$userid];
+
+           $db->do_update("users")
+              ->set("gender=?")
+              ->where('id=?');
+
+           $db->setData($data);
+           
+           if($result = $db->update()){
+                 $nresult['message'] = 'updated successfully';
+            }else{
+                 $nresult['message'] = 'updated failed';      
+            }
+
+           echo json_encode($nresult);
+           $db->close();
+           
+
+     4) DELETE FROM DATABASE
+
+        i) method 1
+           
+           $db->do_delete()->from($tbname)->where(" contentClass= '?' ");  
+           $db->setData($data);
+           $db->delete();
+
+        ii) method 2
+           
+           $db->do_delete()->from($tbname)->where(" contentClass= 'new' ");
+           $db->delete();
+
+        iii) method 3
+           
+           $db->do_delete('users, profile, settings')->from("users")->joins("blah..",'LEFT JOIN')->on(" x='y' "); //not tested
+           $db->delete();
+
+        iv) method 4
+
+           $data = array($xyz);
+           $db->do_delete()->from($tbname)->where(" contentClass= '?' ");  
+           $db->setData($data);
+           $db->delete();
+
+        if($result = $db->delete()){
+           $nresult['message'] = 'updated successfully';
+        }else{
+           $nresult['message'] = 'updated failed';      
+        }
+        $nresult = json_encode($nresult);
+        echo $nresult;
+        $db->close();
+
+      
+    DOCUMENTATION ENDS HERE  DOCUMENTATION ENDS HERE  DOCUMENTATION ENDS HERE  DOCUMENTATION ENDS HERE  DOCUMENTATION ENDS HERE  DOCUMENTATION ENDS HERE
+    DOCUMENTATION ENDS HERE  DOCUMENTATION ENDS HERE  DOCUMENTATION ENDS HERE  DOCUMENTATION ENDS HERE  DOCUMENTATION ENDS HERE  DOCUMENTATION ENDS HERE
+    DOCUMENTATION ENDS HERE  DOCUMENTATION ENDS HERE  DOCUMENTATION ENDS HERE  DOCUMENTATION ENDS HERE  DOCUMENTATION ENDS HERE  DOCUMENTATION ENDS HERE
+    DOCUMENTATION ENDS HERE  DOCUMENTATION ENDS HERE  DOCUMENTATION ENDS HERE  DOCUMENTATION ENDS HERE  DOCUMENTATION ENDS HERE  DOCUMENTATION ENDS HERE
+    DOCUMENTATION ENDS HERE  DOCUMENTATION ENDS HERE  DOCUMENTATION ENDS HERE  DOCUMENTATION ENDS HERE  DOCUMENTATION ENDS HERE  DOCUMENTATION ENDS HERE
+    DOCUMENTATION ENDS HERE  DOCUMENTATION ENDS HERE  DOCUMENTATION ENDS HERE  DOCUMENTATION ENDS HERE  DOCUMENTATION ENDS HERE  DOCUMENTATION ENDS HERE
+    DOCUMENTATION ENDS HERE  DOCUMENTATION ENDS HERE  DOCUMENTATION ENDS HERE  DOCUMENTATION ENDS HERE  DOCUMENTATION ENDS HERE  DOCUMENTATION ENDS HERE
+    DOCUMENTATION ENDS HERE  DOCUMENTATION ENDS HERE  DOCUMENTATION ENDS HERE  DOCUMENTATION ENDS HERE  DOCUMENTATION ENDS HERE  DOCUMENTATION ENDS HERE
+    DOCUMENTATION ENDS HERE  DOCUMENTATION ENDS HERE  DOCUMENTATION ENDS HERE  DOCUMENTATION ENDS HERE  DOCUMENTATION ENDS HERE  DOCUMENTATION ENDS HERE
+    DOCUMENTATION ENDS HERE  DOCUMENTATION ENDS HERE  DOCUMENTATION ENDS HERE  DOCUMENTATION ENDS HERE  DOCUMENTATION ENDS HERE  DOCUMENTATION ENDS HERE
+
+
+
+    ( PLEASE IGNORE ALL DOCUMENTATIONS WRITTEN BELOW !!! ) - STRICTLY UNDER DEVELOPMENT
+    
+    STATE METHODS
+    
+    queryState()   //declares a query
+    saveState()    //saves current query state
+    stateSet()     //check if a query state exists
+    stateFind()    //returns 'error', 'data' depending on parameter supplied
+    stateMessage() //return the last message of the current state
+    stateError()   //return an array of errors existing in declared state 
+    states()       //returns all specific state value if it exists
+    endState()     //unset state pointer / selector (optional)
+    
+    F. SAVING STATE AND GETTING QUERY STATE
+
+       $db->query("select * from users where username = ?",['fred']);
+       $results = $db->read();
+
+       $db->saveState('state_name');
+       
+       if($db->stateSet('state_name')){
+          if($stateResults = $db->stateFind("fetches")){
+            foreach($stateResults as $result){
+
+              //do this
+              
+            }
+          }elseif ($db->stateFind("error")) {
+            print $db->stateError(true)['message'];
+            #or $db->stateError();
+          }
+       }
+       
+       Note:: In the sample above the stateSet method
+              does not have a colon preceding its value because
+              we're not preparing data for execution unlike sample below. 
+
+    G. SAVING QUERIES STATE AND RUNNING SAVED STATES
+
+       $db->query("select * from users where username = ?",['fred']);
+       $db->saveState('state_name_one'); 
+       
+       ## or in one line:
+       #  $db->queryState("select * from users where username = ?",['fred'], 'state_name');
+
+       $db->query("select * from comments where username = ?",['fred']);
+       $db->saveState('state_name_two');
+
+       if($db->stateSet(':state_name_one')){
+        
+        //notice the colon above before state_name_one. This prepares the query for execution 
+        
+        if($users = $db->read()){
+
+            print 'user found';
+
+        } elseif(!$db->error_exists()){
+
+            print 'user not found';
+
+        }else{
+            
+            print 'some error occured'. $db->error();
+
+        }
+
+       if($db->stateSet(':state_name_two')){
+        
+        if(($users = $db->read()){
+
+            print 'comments found';
+
+        } elseif(!$db->error_exists()){
+
+            print 'no comments found';
+
+        }else{
+            
+            print 'some error occured'. $db->error();
+
+        }
+        
+
+       }
+
+
+
+    H. ERRORS AND ERROR LEVELS - PLEASE IGNORE!!! 
+       
+       These error levels are intended for ajax responses but are
+       under development phase. 
+       
+       -----------------------------------------------------------+
+       errors and their errorLevel------------------------------- +
+       0 ------ no error found                                    +
+       1------- no database connection                            +
+       2------- failed query                                      +
+       3------- invalid request protocol                          +
+       4------- invalid object protocol                           +
+       5------- invalid url / file                                +
+       6------- empty, void data request                          +
+       7------- incomplete or missing data request                +
+       8------- account exists  (an account is found)             +
+       9------- account invalid (an account is not found)         +
+       10------ no user not logged in                             +
+       11------ unknown error / custom message------------------- +
+       -----------------------------------------------------------+
+
+*/
