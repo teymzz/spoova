@@ -67,7 +67,7 @@ class Input{
    *                 'pregmatch' => 'pattern'
    *                ]
    * @param boolean $check_space
-   * @return void
+   * @return bool|string
    */
   public function set($value, array $config, $check_space = false){
     
@@ -164,7 +164,7 @@ class Input{
    * configures the class to return values for each data validation
    *
    * @param boolean $value
-   * @return void
+   * @return boolean
    */
   public function strict(bool $value = true){
     return $this->strict = $value;
@@ -337,9 +337,9 @@ class Input{
    * checks if value is within the length(s) supplied
    *
    * @param array|integer $length
-   * @return void
+   * @return bool
    */
-  private function validate_length($length){
+  private function validate_length($length) : bool{
     
     $value = $this->value;
     if($length != null){

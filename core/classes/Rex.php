@@ -30,7 +30,7 @@ final class Rex extends Resx implements Resin{
      *
      * @param string $url rex template url
      * @param array|\Closure $callback callback function
-     * @return void
+     * @return string
      */
     public static function gett($url = '', $callback = ''){
         Res::gett(...func_get_args());   
@@ -41,7 +41,7 @@ final class Rex extends Resx implements Resin{
      *
      * @param string $url rex template url
      * @param array|\Closure $callback => callback function
-     * @return void
+     * @return string
      */
     public static function postt($url = '', $callback = ''){
         Res::postt(...func_get_args());   
@@ -52,7 +52,7 @@ final class Rex extends Resx implements Resin{
      * 
      * @param string $url rex template url
      * @param array|\Closure $callback callback function
-     * @return void
+     * @return string
      */
     public static function get($url = '', $callback = ''){
         Res::get(...func_get_args());   
@@ -63,7 +63,7 @@ final class Rex extends Resx implements Resin{
      * 
      * @param string $url rex template url
      * @param array|\Closure $callback callback function
-     * @return void
+     * @return string
      */
     public static function post($url = '', $callback = ''){
 

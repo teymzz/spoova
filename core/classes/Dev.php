@@ -44,7 +44,7 @@ class Dev{
      * @param string $editUrl
      * @param string $spUrl
      * @param integer $update_interval
-     * @return void
+     * @return void|bool
      */
     public static function backup(string $editUrl, string $spUrl = '', $update_interval = 60){
 
@@ -84,7 +84,7 @@ class Dev{
         //get installer path to same project file
         if(!$spUrl){
             // Attach app installer path
-            $spUrl     = approot.DS.'spoova'.DS.$edit_path;
+            $spUrl = approot.DS.'spoova'.DS.$edit_path;
         }
     
         if(!is_file($spUrl)){

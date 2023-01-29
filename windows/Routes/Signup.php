@@ -36,7 +36,7 @@ class Signup extends UserFrame {
     /**
      * Add name of routes
      *
-     * @return void
+     * @return array
      */
     public static function addRoutes(array $array = []) : array {
 

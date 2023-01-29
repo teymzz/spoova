@@ -57,7 +57,7 @@ class Ajax {
    * @param string $type option ':json' sets content-type to 'application/json'
    * @return boolean
    */
-  public static function isAjax(string $type = ''){
+  public static function isAjax(string $type = '') : bool {
     
     $request = $_SERVER['HTTP_X_REQUESTED_WITH']?? '';
 
@@ -78,7 +78,7 @@ class Ajax {
    * @param int $ecode response code
    * @return Ajax
    */
-  public static function withJson($emessage = null, int $ecode = 401) {
+  public static function withJson($emessage = null, int $ecode = 401) : Ajax {
 
     header('content-type:application/json');
 
@@ -151,9 +151,9 @@ class Ajax {
   /**
    * Returns the response code set
    *
-   * @return void
+   * @return int|string
    */
-  public function getcode(){
+  public function getcode() : int|string {
     return $this->response_code;
   }
 

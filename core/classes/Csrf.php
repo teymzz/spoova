@@ -125,7 +125,7 @@ class Csrf {
     /**
      * Csrf invalid file to be loaded
      *
-     * @return void
+     * @return string
      */
     public static function page() {
       return 'csrf_invalid';
@@ -288,7 +288,7 @@ class Csrf {
      * Set error response
      *
      * @param string $type [optional] - [default|invalid|expired]
-     * @return void
+     * @return null|string
      */
     private static function getError(string $type){
       return self::$emessage[$type];

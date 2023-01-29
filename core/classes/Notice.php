@@ -39,9 +39,9 @@ class Notice
      * returns the value of the default key set
      *
      * @param string $key
-     * @return void
+     * @return string|false
      */
-    public function getFlash(string $key) {
+    public function getFlash(string $key) : string|false {
         return $_SESSION[self::FLASH_KEY][$key]['value'] ?? false;
     }
     
@@ -49,7 +49,7 @@ class Notice
      * Returns true if a flash key exists
      *
      * @param string $key
-     * @return void
+     * @return bool
      */
     public function hasFlash(string $key) : bool{
         return isset($_SESSION[self::FLASH_KEY][$key]);
@@ -59,9 +59,9 @@ class Notice
      * if $key exists, returns $inline_message or default message set 
      *
      * @param string $key flash key
-     * @return void
+     * @return string
      */    
-    public function flash($key, $inline_message = ''){
+    public function flash($key, $inline_message = '') : string {
         
         if(isset($_SESSION[self::FLASH_KEY])){
             if(isset($_SESSION[self::FLASH_KEY][$key])){

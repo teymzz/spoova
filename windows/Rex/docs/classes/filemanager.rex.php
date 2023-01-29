@@ -38,7 +38,7 @@
                                 <li> <a href="#readfile"> readFile </a> </li>
                                 <li> <a href="#readfile"> readAll </a> </li>
                                 <li> <a href="#textwrite"> textWrite </a> </li>
-                                <li> <a href="#textupdate"> textLine </a> </li>
+                                <li> <a href="#textline"> textLine </a> </li>
                                 <li> <a href="#textreplace"> textReplace </a> </li>
                                 <li> <a href="#textupdate"> textUpdate </a> </li>
                                 <li> <a href="#textdelete"> textDelete </a> </li>
@@ -106,7 +106,7 @@
                                         <pre class="pre-code">
     $filemanager  = new FileManager();
 
-    $filemanager->setUrl('directory'); <span class="comment"> // set base path</span>
+    $filemanager->setUrl('directory'); <span class="comment"> // set base directory or path</span>
                                         </pre>
                                     </div>
                                 </div>
@@ -130,7 +130,7 @@
                                     <div class="box-full">
                                         <div class="pxv-6 bc-off-white"><code>Example: getting directories</code></div>
                                         <pre class="pre-code">
-    $filemanager->setUrl('some_path'); <span class="comment"> // set base path</span>
+    $filemanager->setUrl('some_path'); <span class="comment"> // set base directory</span>
     
     $filemanager->getFolders(); <span class="comment"> // returns the available directories</span>
                                         </pre>
@@ -154,11 +154,13 @@
                     
                                 <div class="pre-area shadow">
                                     <div class="box-full">
-                                        <div class="pxv-6 bc-off-white"><code>Example: getting directories</code></div>
+                                        <div class="pxv-6 bc-off-white"><code>Example: getting file in directories</code></div>
                                         <pre class="pre-code">
-    $filemanager->setUrl('some_path'); <span class="comment"> // set base path</span>
+    $filemanager->setUrl('some_path'); <span class="comment"> // set base directory</span>
     
-    $filemanager->getFiles(); <span class="comment"> // returns the available directories</span>
+    $filemanager->getFiles(); <span class="comment"> // returns the full path of files available file in directory</span>
+    $filemanager->getFiles(false); <span class="comment"> // returns only names of files (and extension) in a directory</span>
+    $filemanager->getFiles(false, false); <span class="comment"> // returns only names of files in a directory without the extension name</span>
                                         </pre>
                                     </div>
                                 </div>
@@ -357,10 +359,7 @@
         where: 
 
         separator  : An optional character separator used to separate keys and values. 
-                    By default, this is set as column <code>:</code>. When set as true, 
-                    the readFile checks if the key supplied exists within the file and returns
-                    a bool of true or false                                     
-    </span>
+                    By default, this is set as colon <code>:</code>.</span>
                                         </pre>
                                     </div>
                                 </div>
@@ -405,7 +404,7 @@
 
         key : line key
         value  : value of supplied key
-        options: array containing postions of where text should be written 
+        options: array containing postions of where text should be written. [before, after]
     </span>
                                         </pre>
                                     </div>
@@ -457,7 +456,7 @@
         where: 
 
         number : number of lines to be added
-        options: array containing postions of where line should be written 
+        options: array containing postions of where line should be written [before, after]
     </span>
                                         </pre>
                                     </div>
@@ -520,7 +519,7 @@
                         </div> <br>
                     </div>
 
-                    <div id="textreplace" class="">
+                    <div id="textupdate" class="">
                         <div class="">
                             <div class="font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
                                 <div class="flex-full midv"> 

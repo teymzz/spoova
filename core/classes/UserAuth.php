@@ -2,7 +2,8 @@
  
  namespace spoova\core\classes;
 
- use \User;
+use spoova\core\classes\DB\DBHandler;
+use \User;
 
 /**
  * This class handles user account authentications 

@@ -1,7 +1,9 @@
 <?php
   
-  namespace spoova\core\classes;
-  
+namespace spoova\core\classes;
+
+use spoova\core\classes\DB\DBMigrator;
+
  /**
   * @package spoova\core\classes
   */

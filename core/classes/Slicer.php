@@ -166,7 +166,7 @@ class Slicer extends Directives{
       *
       * @param string $body loaded template data
       * @param bool $return directs the method to store or return rendered body
-      * @return void
+      * @return string|void
       */
      private static function process($body, $return){ 
         static $count = 0;
@@ -447,12 +447,9 @@ class Slicer extends Directives{
     private static function sort_styles(&$body){    
 
       if(SETTER::EXISTS(':STYLES')) {
-        //var_dump(GET(':STYLES', '#1234'));
         $body = str_ireplace('@styles', GET(':STYLES', '#1234'), $body);
       }
       
-      //return $body;
-
     }
     
 
@@ -489,7 +486,7 @@ class Slicer extends Directives{
      *
      * @param string $anchor placeholder's content
      * @param string $placeholder the matched braces
-     * @return string
+     * @return string|false
      */
     private static function handleLocalVariables($anchor, $placeholder){
         $explode = explode("??", $placeholder);
@@ -594,7 +591,7 @@ class Slicer extends Directives{
     }
     
     /**
-     * When finalize is set as data returned will run the final steps on templating.
+     * When finalize is set as true, data returned will run the final steps on templating.
      * This means that the data returned will no longer be subjected to further slicing
      *
      * @param boolean $finalize

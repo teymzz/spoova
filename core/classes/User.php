@@ -1,10 +1,9 @@
 <?php
 
 use spoova\core\classes\DB;
-use spoova\core\classes\DBHandler;
+use spoova\core\classes\DB\DBHandler;
 use spoova\core\classes\UserAuth;
 use spoova\core\classes\UserDB;
-use spoova\core\classes\UserIdControl;
 use spoova\core\classes\UserIdResolver;
 
 class User extends Session{
@@ -231,7 +230,6 @@ class User extends Session{
             self::logout(false); 
         }
     }
-
 
 }
 

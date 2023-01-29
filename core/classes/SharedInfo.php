@@ -8,6 +8,8 @@
  */
 namespace spoova\core\classes;
 
+use spoova\core\classes\DB\DBHandler;
+
 /**
  * - Contains information shared by current connection
  * - Reads and sets information from the init configuration file
@@ -190,7 +192,7 @@ abstract class SharedInfo{
    * get defined constant from string
    *
    * @param string $core
-   * @return void
+   * @return mixed
    */
   protected static function getDefined(string $core){
      if(defined($core)) return constant($core);

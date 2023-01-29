@@ -2,9 +2,6 @@
 
 namespace spoova\windows\Frames;
 
-use Session;
-use Window;
-use spoova\core\classes\Rex;
 use spoova\windows\Models\Access\AccessModel;
 use User;
 

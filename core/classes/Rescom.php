@@ -18,7 +18,7 @@ abstract class Rescom extends Rescon
    *
    * @param string $name type of file (e.g Frame, Model, Window, WinModel, Route, API e.t.c)
    * @param array|string $args argument supplied on command
-   * @return void
+   * @return string|false
    */
   static function mkFile(string $name, $args){
     $class = 'spoova\core\commands\Make\Mk'.$name;

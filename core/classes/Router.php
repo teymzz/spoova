@@ -18,6 +18,7 @@ class Router extends Slicer{
     /**
      * @param \core\classes\Request $request
      * @param \core\classes\Response $response
+     * @return void
      */
     public function __construct(Request $request, Response $response)
     {
@@ -226,12 +227,6 @@ class Router extends Slicer{
           </div>
         ';
       }
-    }
-  
-    public function data(){
-  
-      return $this->data;
-  
     }
 
 }

@@ -26,6 +26,9 @@
           font-size: .85em;
           display: inline-block;
           width:100%;
+      }
+
+     .pre-area:not([class*="bc-"]){
           background-color : rgba(var(--white-dd));
       }
   
@@ -372,7 +375,7 @@ window.onload = function() {
             <div class="font-em-1d2">
 
                 
- <div class="font-menu pvs-4"> <a href="http://localhost/spoova/tutorial">Tutorial</a> <span class="bi-chevron-right"></span> <a href="http://localhost/spoova/tutorial/wmv">Wmv</a> <span class="bi-chevron-right"></span> <a href="http://localhost/spoova/tutorial/wmv/calls">Calls</a>  </div>
+ <div class="font-menu pvs-4"> <a href="http://localhost/spoova/docs">Docs</a> <span class="bi-chevron-right"></span> <a href="http://localhost/spoova/docs/wmv">Wmv</a> <span class="bi-chevron-right"></span> <a href="http://localhost/spoova/docs/wmv/calls">Calls</a>  </div>
 
 
                 <div class="start font-em-d85">
@@ -1314,7 +1317,7 @@ window.onload = function() {
             </div>
     
             
- <div class="font-menu pvs-4"> <a href="http://localhost/spoova/tutorial">Tutorial</a> <span class="bi-chevron-right"></span> <a href="http://localhost/spoova/tutorial/wmv">Wmv</a> <span class="bi-chevron-right"></span> <a href="http://localhost/spoova/tutorial/wmv/calls">Calls</a>  </div>
+ <div class="font-menu pvs-4"> <a href="http://localhost/spoova/docs">Docs</a> <span class="bi-chevron-right"></span> <a href="http://localhost/spoova/docs/wmv">Wmv</a> <span class="bi-chevron-right"></span> <a href="http://localhost/spoova/docs/wmv/calls">Calls</a>  </div>
 
       
             

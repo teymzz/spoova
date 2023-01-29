@@ -33,15 +33,26 @@ class FileManager extends Enlist{
     /**
      * Get the folders existing in the url supplied
      *
+     * @param boolean $fullPath 
+     *  - false returns only the folder names
      * @return array
     */
-    public function getFolders(){
+    public function getFolders(bool $fullPath = true){
       if($this->url == null){ return $this->response('invalid url supplied'); }
 
       $url   = $this->url;
+      if(strpos(strlen($url), '/') === false){
+        $url .="/";
+      }
 
       $all   = glob($url."*");
       $dirs  = array_filter($all, 'is_dir'); //only directories
+
+      if(!$fullPath){
+        $dirs = array_map(function($folder){
+          return pathinfo($folder, PATHINFO_BASENAME);
+        }, $dirs);
+      }
 
       return $dirs;
     }
@@ -49,16 +60,31 @@ class FileManager extends Enlist{
     /**
      * Get the files existing in the url supplied
      *
+     * @param boolean $fullPath 
+     *  - false returns only the file names
+     * @param boolean $addExtension false removes extension name of files 
      * @return array
     */
-    public function getFiles(){
+    public function getFiles(bool $fullPath = true, $addExtension = true){
 
       if($this->url == null){ return $this->response('invalid url supplied'); }
       
       $url   = $this->url;
+      if(strpos(strlen($url), '/') === false){
+        $url .="/";
+      }
       
       $all   = glob($url."*");
       $files = array_filter($all, 'is_file');
+
+      if(!$fullPath){
+        $files = array_map(function($file) use($addExtension) {
+
+          if(!$addExtension) return pathinfo($file, PATHINFO_FILENAME);
+          return pathinfo($file, PATHINFO_BASENAME);
+          
+        }, $files);
+      }
 
       return $files;
     }
@@ -262,9 +288,9 @@ class FileManager extends Enlist{
      *
      * @Note: This will create directories if it does not exist
      * @param array|string[] $urls list of paths to be created
-     * @return void
+     * @return bool
      */
-    public function openFiles(array|string $urls) {
+    public function openFiles(array|string $urls) : bool {
 
       if(func_num_args() > 1){
         $urls = func_get_args();
@@ -292,6 +318,7 @@ class FileManager extends Enlist{
 
       } else {
         trigger_error('supplied url cannot contain arrays');
+        return false;
       }
 
     }
@@ -435,6 +462,8 @@ class FileManager extends Enlist{
      *
      * @param array|string $keys line key or array of lines keys
      * @param void $dels anchors/contains array of keys deleted keys
+     * @param string $separator A key to value separator
+     *  - A separator should not exist twice on a single line
      * @return bool true if any text was deleted
      */
     public function textDelete($keys, &$dels = [], $separator = ":"){
@@ -492,10 +521,12 @@ class FileManager extends Enlist{
     /**
      * Read Entire File
      *
-     * @param string $separator
+     * @param string $separator A key to value separator (e.g 'key: value' or  'key= value' )
+     *  - A separator should not exist twice on a single line
      * @return array
+     *   - Note that a delimiter of semicolon (i.e ";") will be trimmed off
      */
-    public function readAll($separator) {
+    public function readAll(string $separator = ':') {
 
       if(!is_readable($this->url)){
         trigger_error("url ".$this->url." is not readable");
@@ -836,9 +867,9 @@ class FileManager extends Enlist{
      * @param bool $del true deletes zip file path after decompressing it.     
      * @param bool $strict true prevents previous errors from stopping code execution
      * @notice - This decompresses an unencypted zipped file from a defined url to the url's direct parent directory. 
-     * @return void
+     * @return Filemanager
      */
-    public function decompress(bool $del = false, bool $strict = false){
+    public function decompress(bool $del = false, bool $strict = false) : FileManager {
 
       //prevent or allow further code execution if has previous error
       if($this->error && !$strict) return $this;
@@ -864,7 +895,8 @@ class FileManager extends Enlist{
           if($zip->open($curdir)){
               $zip->extractTo($foldername);
               $zip->close();
-              if($del) unlink($curdir);
+              if($del) unlink($curdir);            
+              return $this; 
           } else {
             $this->error = ('cannot open zip file to decompress');
             return $this;        
@@ -905,9 +937,9 @@ class FileManager extends Enlist{
      * @param string $newdir new directory
      * @param string $newname new file name
      * @param bool $strict true prevents previous errors from stopping code execution
-     * @return void
+     * @return Filemanager
      */
-    public function copyTo(string $newdir, string $newname = '', bool $strict = false){
+    public function copyTo(string $newdir, string $newname = '', bool $strict = false) : Filemanager {
 
       //prevent or allow further code execution if has previous error
       if($this->error && !$strict) return $this;
@@ -945,9 +977,9 @@ class FileManager extends Enlist{
      * @param string $newdir new directory
      * @param string $newname new file name
      * @param bool $strict true prevents previous errors from stopping code execution
-     * @return void
+     * @return Filemanager
      */
-    public function moveTo(string $newdir, string $newname = '', bool $strict = false){
+    public function moveTo(string $newdir, string $newname = '', bool $strict = false) : FileManager {
       
       //prevent or allow further code execution if has previous error
       if($this->error && !$strict) return $this;
@@ -1081,16 +1113,16 @@ class FileManager extends Enlist{
     /**
      * Returns an error message if an error exists during file transfer
      *
-     * @return void
+     * @return boolean
      */
-    public function fails(){
+    public function fails() : bool {
       return $this->error? true : false;
     }
 
     /**
      * Returns true if no error exists during file transfer
      *
-     * @returns bool
+     * @returns boolean
      */
     public function succeeds(): bool{
       return !$this->error? true : false;

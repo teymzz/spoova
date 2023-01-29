@@ -26,7 +26,7 @@
                             <div class="fb-6 c-olive mvb-6"><span class="bi-circle-fill c-silver-d"></span> Php Libraries</div>
                             
                             <div class="mvs-10">
-                                The following are lists of libraries that have been added to the framework's project pack: <br> 
+                                The following are lists of libraries that should be added to the framework's project pack if the Mailer class is needed: <br> 
                             </div>
 
                             <ul>
@@ -38,12 +38,16 @@
                                     This tool converts external and embeded css to inline css.
                                 </li>
                             </ul>
+
+                            The Css Emogrifier may not naturally work, because the <code>__construct()</code> method is set to private. Developers have to set this 
+                            method to public before it can be successfully used.
                         </div> <br>
 
                         <div class="css-libraries bc-white-dd pxv-10 shadow-2-strong rad-4">
                             <div class="fb-6 c-olive mvb-6"><span class="bi-circle-fill c-silver-d"></span> Css Libraries</div>
                             Although spoova has its own internal css files, yet it uses some of the features of mdb5 bootstrap css library for its project application. 
-                            Other libraries may be added manually into the <code>res/</code> folder.
+                            Other libraries may be added locally into the <code>res/css</code> directory. The local path or cdn links of the libraries can be 
+                            included globally within the <code>res/res.php</code> file.
                         </div> <br>
 
                         <div class="css-libraries bc-white-dd pxv-10 shadow-2-strong rad-4">
@@ -56,9 +60,8 @@
                             <div class="fb-6 c-sea-blue-d mvb-6"><span class="ico-thick-update c-sea-blue-d"></span> Updating Libraries</div>
 
                             <p>
-                                Core composer plugins can be updated from the <code>core</code> directory because the vendor folder stays within this environment. It is however important to 
-                                keep the emogrifer unmodified because it has been intergerated with the framework and any modification through update or upgrade may render the <code>Mailer</code> 
-                                class broken.
+                                Core composer php plugins can be updated from the <code>core</code> directory because the vendor folder stays within this environment. It is however important to 
+                                remember to update the emogrifer plugin <code>__construct()</code> function to public if it was set to private.
                             </p>
 
                             <p> 

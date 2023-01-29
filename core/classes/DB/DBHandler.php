@@ -1,8 +1,10 @@
 <?php
-namespace spoova\core\classes;
+namespace spoova\core\classes\DB;
 
 use DBStatus;
 use ReflectionClass;
+use spoova\core\classes\DB;
+use spoova\core\classes\UserAuth;
 
 /**
  * Database handler for managing or modifying connections
@@ -106,14 +108,14 @@ class DBHandler Implements DBHelpers{
    *
    * @return string
    */
-  public function currentDB(){
+  public function currentDB() : string {
     return $this->conn->currentDB();
   }
 
   /**
    * return a success or error response for a new connection
    *
-   * @return void
+   * @return string
    */
   public function conResponse(){
     return $this->conn->conResponse();
@@ -122,7 +124,7 @@ class DBHandler Implements DBHelpers{
   /**
    * Connection type as MySQLi or PDO
    *
-   * @return void
+   * @return string
    */
   public function conType(){
     return $this->conn->conType();
@@ -621,7 +623,7 @@ trait DBInsert{
    * sets the insertion columns
    * 
    * @param string func_get_args(), database table columns for inserting data 
-   * @return void
+   * @return DBHandler
    */
 	public function columns(){
 
@@ -651,7 +653,7 @@ trait DBInsert{
    * sets the insert values
    * 
    * @param string func_get_args(), values to be inserted into columns 
-   * @return void
+   * @return DBHandler
    */
 	public function values(){
 
@@ -699,40 +701,61 @@ trait DBInsert{
 
     // This line calls error for no connection found!!!
     if($this->conn == null){
-    return  $this->call_error("no connection found");
+      return  $this->call_error("no connection found");
     }
+
     $data = $this->data;
     $i = 0;
 
-    foreach($data as $key => $values){
-      
-      $i++;
-      $values = trim($values);
-      $Fields[]   = $key;
-      $FVals[]    = "?";
-      } 
-      MyIsset($ConstructedKeys); MyIsset($ConstructedValues);
-      $ConstructedKeys   = implode("`,`",$Fields) ;
-      $ConstructedValues = implode(",", $FVals);
-      
-      $ConstructedKeys   = "`".$ConstructedKeys."`";
-      $keys    = $ConstructedKeys;
-      $dbvalue = $ConstructedValues;
-      $dbvalue = str_replace("'now()'","now()", $ConstructedValues);
+    $Fields = $FVals = [];
 
-      //$key after setting values and it matches the number of keys, it will build a string and 
-      //append it to slquery after which $db->insert() will then insert the values;
+    $Fields = array_keys($data);
+    $values = array_values($data);
 
-      $this->sqlquery = $this->sqlquery." ($keys) values($dbvalue)"; //sets sql insert (full query)
+    $values = array_map(function($value){
+
+      return (array) $value;
+
+    }, $values);
+
+    $output = []; $params = [];
+
+    $columnCount  = count($values[0]);
+
+    for($i = 0; $i < $columnCount; $i++){
+      $output[] = array_column($values, $i);
+    }
+
+    $placeholders = array_map(function($val) use(&$params){
+      $count = count($val);
+
+      $val = array_map(function($v){
+        if(is_string($v)){
+          return str_replace("'now()'","now()", $v);
+        }
+        return $v;
+      }, $val);
+
+      array_push($params, ...$val);
+      return '('.rtrim(str_repeat('?, ', $count), ' ,').')';
+
+    }, $output);
+
+    $keys = "`".implode("`,`",$Fields)."`" ;
+    $values = (implode(', ',$placeholders));
+
+    $this->data = $params;
+
+    $this->sqlquery = $this->sqlquery." ($keys) values {$values}"; //sets sql insert (full query)
               
   }
 
   /**
    * Performs insert operation
    *
-   * @return array|bool
+   * @return bool
    */
-	public function insert(){
+	public function insert() : bool{
         
     if($this->usedata){ $this->prepare_insert(); }
     $sql['sql'] = $this->sqlquery;  //sets sql['sql']
@@ -755,7 +778,7 @@ trait DBInsert{
     }else{
 
       $this->connID = $this->conn->insert_id();
-      return array('success'=>true,'message'=>'insert sucessful'); //return a json message of true----do later(not done yet)
+      return true;
     
     } 
    
@@ -1070,12 +1093,17 @@ trait DBDATA{
   }
     
 	private function trimAll($data){
+    
 		if($data == null){ return array(); }
+
     $filtered = array();
-      foreach ($data as $key => $value) {
-        $filtered[$key] = trim($value);
-      }
-      return $filtered;
+
+    foreach ($data as $key => $value) {
+      $filtered[$key] = $value;
+    }
+
+    return $filtered;
+
   }
 
 }
@@ -1195,13 +1223,14 @@ trait Helpers {
    * @param string $tbname if supplied returns columns in table $tbname of database $dbname
    *        - $db->tables($dbname, $tbname) fetches columns in table name of custom database $dbname. 
    * 
-   * @return bool|array
+   * @return array
    */
   public function tables(string $dbname = '', string $tbname = ''){
 
     if(func_num_args() == 0){
       $dbname = $this->currentDB();
     }
+
     $db = $this->clone();
 
 
@@ -1382,7 +1411,8 @@ trait Helpers {
   /**
    * Drop a table or Column
    *
-   * @param array|string $tableName name of table to be dropped
+   * @param array|bool|string $tableName name of table to be dropped
+   *  -if $tableName is bool current connected database will be dropped 
    * @param bool|string $column in $tableName of table to be dropped
    *     - string value will drop column if it exists
    *     - boolean (true) will drop database
@@ -1393,24 +1423,32 @@ trait Helpers {
    * @return bool
    *  - true is returned if table is successfully dropped
    */
-  public function drop(array|string $tableName, string|bool $columnName = null) : bool {
+  public function drop(array|bool|string $tableName, string|bool $columnName = null) : bool {
 
-    if($columnName === true){
-
-
-      $tableName = (array) $tableName;
-      $tables = implode(', ', $tableName);
-
-      $sql = "DROP DATABASE IF EXISTS `{$tables}`";
-
-
-    }elseif(is_string($columnName)) {
-
-      $sql = "ALTER TABLE `{$tableName}` DROP COLUMN {$columnName}";
-
-    }
-  
     $db = $this->clone();
+    $sql= '';
+    if($tableName === true){
+      $sql = "DROP DATABASE IF EXISTS `".$db->currentDB()."`";
+    }else{
+
+      if($columnName === true){
+  
+  
+        $tableName = (array) $tableName;
+        $tables = implode(', ', $tableName);
+  
+        $sql = "DROP TABLE IF EXISTS `{$tables}`";
+  
+  
+      }elseif(is_string($columnName)) {
+  
+        $sql = "ALTER TABLE `{$tableName}` DROP COLUMN {$columnName}";
+  
+      }
+    
+    }
+
+
     $db->query($sql);
     return $db->process();
 

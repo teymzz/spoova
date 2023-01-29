@@ -1,6 +1,6 @@
 <?php
 
-namespace spoova\core\classes;
+namespace spoova\core\classes\DB;
 
 /**
  * This class forms the basis of all connection handlers
@@ -41,7 +41,7 @@ Interface DBHelpers{
      * returns the last database connection response
      * This message is returned only when database connection failed
      *
-     * @return void
+     * @return string
      */
     public function conResponse();
     

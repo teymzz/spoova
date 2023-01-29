@@ -114,9 +114,9 @@ class Enlist{
 	 *
 	 * @param array $extension allowed file extensions
 	 * @param boolean $fullpath show full file path when set as true
-	 * @return void
+	 * @return array
 	 */
-	public function dirFiles($extension = [], $fullpath = false){
+	public function dirFiles($extension = [], $fullpath = false) : array {
 		$url  = $this->url;
 		$files = [];
 		$ext = (array) $extension;
@@ -140,9 +140,9 @@ class Enlist{
 	 * Renaming directive
 	 *
 	 * @param boolean $finalExt
-	 * @return void
+	 * @return array
 	 */
-	public function reName($finalExt=true){
+	public function reName($finalExt = true) : array {
 
 	  if(!$this->active){ return false; }
 	  $url  = $this->url;
@@ -152,7 +152,7 @@ class Enlist{
 	  $action = $this->action;
 	  $espace = $this->espace;
 	  $reNumber = $this->reNumber;
-       $files = [];
+      $files = [];
 
 	  foreach(glob($url.'/*') as $ifile) {
 
@@ -165,6 +165,7 @@ class Enlist{
 	  natsort($files);
 
       $fUrls = []; $count = 0;
+
 	  foreach ($files as $file) {
 	  	$fileExt = ($finalExt === true)? pathinfo($file,PATHINFO_EXTENSION) : $finalExt;
 
@@ -209,7 +210,7 @@ class Enlist{
 	/**
 	 * Sets error encountered during processing
 	 *
-	 * @param [type] $error
+	 * @param string $error
 	 * @return void
 	 */
 	public function error($error){

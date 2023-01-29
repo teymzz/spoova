@@ -50,7 +50,7 @@ class SETTER {
      *   - if $lock is bool:true locked cannot be modified or unset
      *   - if $lock is string value, it will be used as a secure key
      *   - if $lock is string locked cannot be modified or unset unless hash string is supplied
-     * @return void 
+     * @return |false 
      */
     static function SET(string $key, $value, bool|string $lock = false){
 
@@ -83,7 +83,7 @@ class SETTER {
      *   -when value is DBWhereSetter::TABLE default table is set
      *   -when value is DBWhereSetter::PREFIX sql prefix is set
      *   -when value is DBWhereSetter::SUFFIX sql suffix is set
-     * @return void 
+     * @return void|false
      */
     static function MOD(string $key, $value, $secureKey = ''){
 
@@ -122,7 +122,7 @@ class SETTER {
      * 
      * @param string $value - DBSetter constants
      * @param string $secureKey - secure key for fetching previously stored secure value
-     * @return void 
+     * @return string|false 
      */
     static function GET(string $key, $secureKey = ''){
 
@@ -147,7 +147,7 @@ class SETTER {
      * Check if a key exists
      * 
      * @param string $value - DBSetter constants
-     * @return void 
+     * @return boolean 
      */
     static function EXISTS(string $key) : bool {
 
@@ -164,7 +164,6 @@ class SETTER {
     static function CLOSE() {
 
         self::$vars = [];
-        return ;
 
     }
 

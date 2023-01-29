@@ -1,8 +1,7 @@
 <?php
 
 namespace spoova\core\commands;
-use spoova\core\classes\FileManager;
-use spoova\core\classes\DBConfig;
+use spoova\core\classes\DB\DBConfig;
 
 class Config extends Entry{
 
@@ -178,7 +177,7 @@ class Config extends Entry{
      * @param string $environment offline or online
      * @param array $dbvalues new configuration settings
      * @param string $url custom init path
-     * @return void
+     * @return void|false
      */
     private function setup_db(string $environment, array $dbvalues, string $url) {
 
@@ -428,10 +427,6 @@ class Config extends Entry{
 
         self::error(" config install is not recognized... ");
         self::log(' use instead :: >> init install ');
-
-        return ;
-        //Installations will be handled by the installation class
-        $Installer = new Install(...func_get_args());
         
     }
 
@@ -445,7 +440,7 @@ class Config extends Entry{
      * Separates a syntax from a string of text where syntaxes are identified by double forward arrows (>>)
      *
      * @param string $syntax
-     * @return string
+     * @return void
      */
     private function log_syntax($syntax){
 

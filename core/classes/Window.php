@@ -179,7 +179,7 @@ use spoova\windows\Routes\Docs\Wmv;
      * @param bool|string $type optional [false|ajax|json|(true|ajax:json)]
      * @param array $emessage error message returned when request is not ajax
      * @param array $ecode error code returned when request is not ajax
-     * @return void
+     * @return void|false
      * 
      * @Notice supplying arguments ($emessage) declares that the page request must be through ajax only
      */

@@ -186,7 +186,7 @@ class Installer{
     /**
      * intall database environment setup
      * 
-     * @return config texts
+     * @return bool|void config texts
      * @param  string $type[default | custom]
      */
     private function dbConfig(){
@@ -243,6 +243,7 @@ class Installer{
         $dbsocket = $dbsock_on; //both environments
       
         if($arg !== 'refresh'){
+
           //test database connection
           if(!arrVoid($dbname, $dbuser,$dbpass,$dbserver,$dbport,$dbsocket) || isset($_POST['newdb'])){
               $dbcon = new spoova\core\classes\DB;
@@ -314,11 +315,6 @@ class Installer{
         );
 
         //configure default
-        // $fp = fopen(getDefined('_core').'dbconfig.php', 'w');
-        // fwrite($fp, preg_replace('/[[:blank:]]+/',' ',$dbText));
-        // fclose($fp);
-        // sleep(1);
-
         
         if(isset($_POST['use_dbconfig']) || $arg === 'refresh'){
             sleep(1); 
@@ -347,9 +343,8 @@ class Installer{
         } 
         
         sleep(1);
-        //redirectTo(":referer"); 
+        
         redirect('install', 'java');      
-        // sleep(5); //wait for redirection
     }    
 
     /**
@@ -995,7 +990,8 @@ class Installer{
     /**
      * initialize configuration file
      *
-     * @return void
+     * @return bool|void
+     *  - return true if all process is executed successfully
      */
     private function init(){
         $initPath = getDefined('_icore')."init";

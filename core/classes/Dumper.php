@@ -2,10 +2,8 @@
 
 namespace spoova\core\classes;
 
-use Reflection;
 use ReflectionClass;
 use ReflectionMethod;
-use Traversable;
 
 class Dumper{
 
@@ -75,25 +73,6 @@ class Dumper{
         ini_set('xdebug.var_display_max_depth', -1);
         ini_set('xdebug.var_display_max_children', -1);
         ini_set('xdebug.var_display_max_data', -1);
-    }
-
-
-    private static function handleDataObject(DataObject $args) {
-
-        print '<summary><span>Data Object</span></summary>';
-
-        foreach($args as $property => $value){
-            $traversable = (is_object($value) && ($value instanceof \Traversable))? ' (Traversable)' : '';
-            print '<details>';
-            print '<summary><span>'.$property.$traversable.'</span></summary>';
-            print '<div class="dumper">';
-            var_dump($value);
-            print '</div>';
-            print '</summary>';
-            print '</details>';
-        }
-
-
     }
 
     private static function handleVariableObject($args) {

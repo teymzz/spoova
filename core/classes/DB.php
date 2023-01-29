@@ -2,6 +2,10 @@
 
 namespace spoova\core\classes;
 
+use spoova\core\classes\DB\DBBridge;
+use spoova\core\classes\DB\DBHandler;
+use spoova\core\classes\DB\DBHelpers;
+
 class DB implements DBHelpers{
   
   private ?DBBridge $conn = null; //dbconnection
@@ -53,7 +57,7 @@ class DB implements DBHelpers{
    * open a new database connection
    *
    * @param object $conName instance of core\classes\DBBridge
-   * @return void
+   * @return void|DBHandler
    */
   private function open_connection( $conName ){
 
@@ -70,7 +74,7 @@ class DB implements DBHelpers{
     
     $conName = $this->reloadName($conName);
 
-  	$conClass =  __NAMESPACE__ ."\\". $conName;
+  	$conClass =  __NAMESPACE__ ."\DB\\". $conName;
 
     if( @class_exists($conClass) ) {
 
@@ -82,12 +86,6 @@ class DB implements DBHelpers{
       $this->error = 'connection class not found!';
 
     }
-
-    //  $this->conName = '';
-    //  $this->isConnected = false;
-    //  $this->currentDB = '';   
-    //  $this->dbcon = '';
-    //  return $this->dbh = null;
 
   }
 
@@ -115,7 +113,7 @@ class DB implements DBHelpers{
   /**
    * Connection error only specific to DB class
    *
-   * @return void
+   * @return string
    */
   public function error(){
     return $this->error?? '';
@@ -137,7 +135,7 @@ class DB implements DBHelpers{
    * check dbport supplied is of a socket value
    *
    * @param string $value dbport or dbsocket value
-   * @return void
+   * @return string
    */
   private function testSock($value = ''){
     $value = ltrim($value, ":");
@@ -147,7 +145,7 @@ class DB implements DBHelpers{
   }
 
   /**
-   * Undocumented function
+   * Update connection 
    *
    * @param DBBridge $connection
    * @return null|DBHandler
@@ -230,7 +228,7 @@ class DB implements DBHelpers{
       $dbport = '';
     }
 
-    $conClass =  __NAMESPACE__ ."\\". $conName;
+    $conClass =  __NAMESPACE__ ."\DB\\". $conName;
     
     $params = [];
 
@@ -302,7 +300,7 @@ class DB implements DBHelpers{
        return false;
     }
 
-    $conClass =  __NAMESPACE__ ."\\". $conName;
+    $conClass =  __NAMESPACE__ ."\DB\\". $conName;
 
     if(count(func_get_args()) > 0){ 
       $conn = new $conClass('', $dbuser, $dbpass, $dbserver, $dbport, $dbsocket);

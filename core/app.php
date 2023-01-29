@@ -10,7 +10,7 @@ if(!defined('approot')) define('approot', dirname(docroot));
 
 //define app details
 !defined('SP_VERSION')? define('SP_VERSION', '0.0.1') : '';
-!defined('SP_SPOOV')? define('SP_SPOOV', approot.DS.'spoova'.DS) : '';
+!defined('SP_SPOOVA')? define('SP_SPOOVA', approot.DS.'spoova'.DS) : '';
 
 //define spack file path
 !defined('SP_SPACK')? define('SP_SPACK', approot.DS.'spoova'.DS.'core/custom/spack_'.SP_VERSION) : '';

@@ -1,16 +1,17 @@
 <?php
-namespace spoova\core\classes;
+namespace spoova\core\classes\DB;
 
 use mysqli;
+use mysqli_sql_exception;
 
 class MiSQL extends DBBridge{
 
   /**
    * Open a new MySQLi connection
    *
-   * @return void
+   * @return boolean
    */
-  protected function open_connection(){
+  protected function open_connection() : bool {
 
     //set the real connection type
     $this->conType = "MYSQLI";
@@ -19,11 +20,11 @@ class MiSQL extends DBBridge{
       $this->isFailed    = false;
 
       mysqli_report(MYSQLI_REPORT_STRICT);
-      $db = @(new \mysqli($this->DBSERVER, $this->DBUSER, $this->DBPASS, $this->DBNAME, intval($this->DBPORT), $this->DBSOCKET));
+      $db = @(new mysqli($this->DBSERVER, $this->DBUSER, $this->DBPASS, $this->DBNAME, intval($this->DBPORT), $this->DBSOCKET));
       
 
       if(!$db){
-        throw new \mysqli_sql_exception(mysqli_connect_error());
+        throw new mysqli_sql_exception(mysqli_connect_error());
       }
 
       $this->dbConnection = true;
@@ -61,7 +62,7 @@ class MiSQL extends DBBridge{
      try{ 
        $this->isFailed = false;
        $dbport = intval($dbport);
-       $db = new \mysqli($dbserver, $dbuser, $dbpass, $dbname, $dbport, $dbsocket);
+       $db = new mysqli($dbserver, $dbuser, $dbpass, $dbname, $dbport, $dbsocket);
 
        if(!$db){throw new \Exception(mysqli_connect_error());} 
        
@@ -105,6 +106,7 @@ class MiSQL extends DBBridge{
     }
 
     $data = is_array($this->data)? $this->data : [];
+
     if(count($data) > 0) {call_user_func_array(array($stmt,'bind_param'), $bindVals);} 
 
     if($stmt->execute()){
