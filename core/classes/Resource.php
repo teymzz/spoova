@@ -390,7 +390,7 @@ class Resource Extends Rescom{
      *
      * @param string $script inclusion format (as file url | script tags) 
      * @param boolean $type
-     * @return void
+     * @return void|false
      */
     private static function execute(string $script,$type=false){
        
@@ -486,7 +486,7 @@ class Resource Extends Rescom{
      *
      * @param string $url file url to be processed
      * @param boolean $store true stores url supplied
-     * @return void
+     * @return string
      */
     public static function callFile(string $url, $store=true){
       $store = (bool) $store;
@@ -528,7 +528,7 @@ class Resource Extends Rescom{
      *
      * @param string $name
      * @param string|void $url
-     * @return void
+     * @return void|false
      */
     public static function addFile($name, $url=null){
        
@@ -625,7 +625,7 @@ class Resource Extends Rescom{
      * @param args > 1 :
      *  -- $dpath as file path to be used for export (applied only on absolute urls)
      *  -- $usename as group name(s) to be exported (name(s) (array | string) of group(s) to be exported)
-     * @return void
+     * @return array
      */
     public static function export($dpath = null, $usename = null){
     	$values = ':lists';
@@ -639,7 +639,7 @@ class Resource Extends Rescom{
     
     /*
      * applies a prefix on urls when importing
-     * @return void
+     * @return array|void
      */
     private static function prefixer($dpath=null,$usename=null,$execute=true){
 

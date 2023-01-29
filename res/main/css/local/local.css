@@ -546,6 +546,14 @@ ul > li.link-padds > span) {
     padding: 4px;
 }
 
+[class*="form-btn"] {
+    --padd-x: .1em;
+    --padd-v: .1em;
+    --padd-p: 5%;
+    display: inline-block;
+    padding: calc(var(--padd-v) + 10px) calc(var(--padd-x) + var(--padd-p));
+}
+
 [class*="form-btn"]:active {
     opacity: .2;
 }

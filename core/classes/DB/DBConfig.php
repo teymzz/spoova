@@ -1,6 +1,8 @@
 <?php
 
-namespace spoova\core\classes;
+namespace spoova\core\classes\DB;
+
+use spoova\core\classes\FileManager;
 
 /**
  * @package spoova\core\classes\DBConfig

@@ -19,12 +19,13 @@
                         <div class="">
                             The WMV pattern is an achitecture built upon the ideology of MVC pattern.
                             It follows a series of predefined structures that makes up the WMV itself. This system 
-                            can be classified into three categories which are <code>Routes</code>, <code>Frames</code> 
-                            and <code>APIs</code>.
+                            can be entirely classified into five categories which are <code>Routes</code>, <code>Frames</code>, 
+                            <code>Models</code>, <code>APIs</code> and <code>Rex</code> files, where the <code>Rex</code> files are template files 
+                            controlled mostly with template directives and compiled using compiler functions.
 
-                            The WMV depends on a structure where the <code>Model</code> is created before a 
+                            The WMV depends on a structure where a <code>Model</code> is created before a 
                             <code>View</code> is rendered. In order to work with wmv framework, 
-                            A window file must be created. Window files are classes that are extended to a root Window manager class.
+                            a window file must be created. Window files are classes that are extended to a root Window manager class.
                             Hence, they inherit properties of the Window parent which has url management, request access and template 
                             loading features. 
                         </div> 
@@ -47,8 +48,8 @@
                             root <code>Window</code> class. By default, when running our application, whenever a page is loaded,
                             the url is transferred to the windows management structure. This will try to resolve the url by looking for 
                             a route file within the windows/Routes folder. If a window entry class file matching a url's entry 
-                            name does not exist, spoova will return a 404 error. It is however worth to be emphasized that all window files should be initialized with an 
-                            upper case character. Spoova favors 3 different logics for loading window files. 
+                            name does not exist, spoova will return a 404 error. It is however worth emphasizing that all window file names should be initialized with an 
+                            upper case character. The Spoova framework favors 3 different logics for loading window files. 
                             These logics are : <br>
                             <ul class="mvt-10">
                                 <li><a href="#basic-logic"><span class="c-orange-dd">Basic Logic</span></a></li>
@@ -74,11 +75,11 @@
  </pre>
                                         </div> <br>
                                         
-                                        If this is done, then the application will assume that a <code>windows/Routes/Basic.php</code> file controls the entire application by 
-                                        taking the full ownership and control of how urls run. This means that every url will first land on that <code>windows/Routes/Basic.php</code> file which 
-                                        then determines how that url is handled. In this manner, the Basic file is the sole distributor and manager of all urls. Without it, pages will 
-                                        not be able to load. Also, it is worth noting that in this logic, all urls are opened and considered as valid. The management of invalid urls and their 
-                                        response codes are left for developers to handle.
+                                        If this is done, then the application will assume that a <code>windows/Routes/Basic.php</code> file controls the entire application. If the 
+                                        file (i.e class) exists within the predefined path, then the class will take the full ownership and control of how urls run. This means that 
+                                        every url will first land on that <code>windows/Routes/Basic.php</code> file which will then determine how such url is handled. In this manner, 
+                                        the Basic file is the sole distributor and manager of all urls. Without it, pages will not be able to load. Also, it is worth noting that in this logic, 
+                                        all urls are opened and considered as valid. The management of invalid urls and their response codes are left for developers to handle.
                                     </div>
                                 </div>
                             </div> <br>
@@ -89,11 +90,12 @@
                                 <div class="index-logic">
                                     <div class="subject c-olive"><i class="bi-circle-fill"></i> Index Logic</div>
                                     <div class="desc mvt-10">
-                                        Index logic is built upon the basic logic. In this logic, the <code class="calibri">Window/Routes/Index.php</code>
-                                        file is allowed to run its pages through a method <code class="calibri">"root"</code>. This serves as a door to manage 
-                                        urls. If the <code class="calibri">root()</code> method does not exist within the <code>windows/Routes/Index.php</code> file and 
-                                        the current requested page url is not an index page, that is, <code class="calibri">http://host_name/</code> or <code class="calibri">http://host_name/index</code>, then 
-                                        a 404 error will be returned. The structure below is an example of how to set up an index logic. 
+                                        Index logic is built upon the basic logic. In this logic, the <code class="calibri">windows/Routes/Index.php</code>
+                                        file takes the full ownership and control of how urls are handled. When an index page 
+                                        (e.g <code class="calibri">http://host_name/</code> or <code class="calibri">http://host_name/index</code>) is visited, index class will resolve 
+                                        the index page by calling its <code class="calibri">root()</code> method. However when other urls whose entry names are not index are called, 
+                                        then spoova will try to resolve the urls by looking for a file with the root name within the <code class="calibri">windows/Routes</code> directory.
+                                        If the file does not exist, then spoova will return a 404 error page. The structure below is an example of how to set up an index logic. 
                                         <br>
                                         <div class="pre-area shadow mvs-10">
  <div class="pxv-10 bc-silver">index.php</div>
@@ -141,14 +143,22 @@
                                         </div> <br>
                                         
                                         <div class="font-em-d9">
-                                         In the code above, by setting the <code>index.php</code> file to 
-                                         <code>Server::run('index')</code>, the application will try to call the <code>windows\Routes\Index.php</code>. 
-                                         If the file exists and the currently requested url is an index page, the <code>windows\Routes\Index.php</code>file will in turn call its <code>root()</code> method.
-                                         However, if a different url is called whose entry point name is not "index", rather than call the <code>root()</code> method, 
-                                         spoova will check if the route exists first and try to use it to handle its relative url through <code>self::callRoute()</code> which ensures that 
-                                         the window tries to load every page using a class entry window name that exists within the windows directory. If the url handler or window router file 
-                                         does not exist, then a 404 reponse is returned through the <code>self::close()</code> method. In any given url, The <code>window('root')</code> or <code>window(':')</code> 
-                                         is always the name that comes after the domain url. In localhost, it is the name that comes after the project folder name.
+                                            <p>
+                                                In the code above, by setting the <code>index.php</code> file to 
+                                                <code>Server::run('index')</code>, the application will try to call the <code>windows\Routes\Index.php</code>. 
+                                                If the file exists and the currently requested url is an index page, the <code>windows\Routes\Index.php</code>file will in turn call its <code>root()</code> method.
+                                                However, if a different url is called whose entry point name is not "index", rather than call the <code>root()</code> method, 
+                                                spoova will check if the route file exists first within the <code class="calibri">windows\Routes</code> directory and try to use the class to 
+                                                resolve the url. The <code>self::callRoute()</code> method ensures that 
+                                                the window tries to load every page using a class entry window name that exists within the <code class="calibri">windows\Routes</code> directory. If the url handler or window router file 
+                                                does not exist, then a 404 reponse is returned through the <code>self::close()</code> method. 
+                                            </p>
+
+                                            <p>
+                                                In any given url, an entry name returned by <code>window('root')</code> or <code>window(':')</code> 
+                                                is always the name that comes after the domain url. In localhost, it is the name that comes after the project folder name.
+                                            </p>
+                                         
                                         </div>
 
 
@@ -161,10 +171,9 @@
                                 <div class="standard-logic">
                                     <div class="subject c-olive"><i class="bi-circle-fill"></i> Standard Logic</div>
                                     <div class="desc mvt-10">
-                                        This logic also uses the <code class="calibri">Window/Routes/Index.php</code> as its index entry point. Unlike other 
-                                        logics, this logic suggests that all urls must have a window entry point or server entry file that takes ownership of the its 
-                                        relative sub-urls. For example, a home webpage must have its respective <code>Home</code> window class. The window class 
-                                        can then take ownership of its sub-urls. This means that a url <code>home</code> and <code>home/user/...</code> for example, will be handled 
+                                        Unlike other logics, standard logic suggests that all urls must have a window entry point or server entry file that takes ownership of the its 
+                                        relative sub-urls. For example, a home webpage must have its respective <code>Home</code> window class within the <code class="calibri">windows/Routes</code>
+                                        directory. The window class can then take ownership of its sub-urls. This means that a url <code>home</code> and <code>home/user/...</code> for example, will be handled 
                                         by a root window file <code>"Home"</code>. The root class will be the master that will determine how its relative paths are loaded. 
                                         If the root window file does not exist, then a 404 error page is returned. In any given url there is always a window or entry point as explained
                                         <a href="@route('::about_wmv')"><span class="c-olive hyperlink">here</span></a>. The standard logic will then use the window entry point's 
@@ -247,9 +256,9 @@
                             In the creation of windows project, all window files (classes) must have the following features :
                             <br><br>
                             <ul>
-                                <li>A window file must exist within the <code>window/</code> directory or subdirectory</li>
+                                <li>A window file must exist within the <code>windows/</code> directory or subdirectory</li>
                                 <li>A window file (class) must be extended to the root <code>Window</code> class</li>
-                                <li>A window file (class) must have a public <code>__construct</code> function (entry point).</li>
+                                <li>A window file (class) must have a public <code>__construct()</code> method (entry point).</li>
                                 <li>A window file (class) must have a closing structure</li>
                             </ul>
                         </div> 
@@ -265,7 +274,7 @@
                         
                         <div>
                             Frames are used to bind window files together. The provide similar data shared across window files. 
-                            Although, a Frames are extensions of Window class itself, they act as bridges or gaps between the root Window class 
+                            Although, Frames are extensions of Window class itself, they act as bridges or gaps between the root Window class 
                             and a Window child class. When a class is extended to a frame class, it inherits both the properties of the root window class
                             along with the specific frame class. The purpose of frame is to separate windows files that have different data from each other.
                             All window files sharing the same Frame will have data belonging to their specific frames. 
@@ -281,7 +290,7 @@
                                 <li>A frame file (class) should contain only data essential for its children classes</li>
                                 
                                 <li>A frame file (class) should not be used to render template engines.</li>
-                                <li>A frame file (class) may be attached to an account channel, thereby including data specific only to that account.</li>    
+                                <li>A frame file (class) may be attached to a specific session channel, thereby including data specific only to that session.</li>    
                             </ul>
                             
                         </div>
@@ -307,6 +316,8 @@
                                 <li> <a href="@route('.frames')">Window Frames</a> </li>
                                 <li> <a href="@route('.routes')">Window Routes</a> </li>
                                 <li> <a href="@route('::apis')">Window APIs</a> </li>
+                                <li> <a href="@route('::models')">Window Models</a> </li>
+                                <li> <a href="@route('::rex')">Window Rex</a> </li> 
                                 <li> <a href="@route('.methods')">Window Methods</a> </li>
                                 <li> <a href="@route('.inverse')">Window Inverse</a> </li>
                                 <li> <a href="@route('.errors')">Window Errors</a> </li>

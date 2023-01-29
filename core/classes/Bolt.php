@@ -11,7 +11,7 @@ class Bolt {
     /**
      * handle all template requests
      *
-     * @return void
+     * @return bool|string
      */
     static function request($request_name, $reqest_key) {
 

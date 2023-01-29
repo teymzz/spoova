@@ -2,8 +2,6 @@
 
 namespace spoova\core\classes;
 
-use Form;
-
 /**
  * @package spoova\core\classes
  */
@@ -127,6 +125,7 @@ class Request
       }
       
     }
+
     $csrf = $data['CSRF_TOKEN'] ?? '';
     //apply csrfToken when needed
 
@@ -134,13 +133,6 @@ class Request
       $isValid = Csrf::auth($csrf);
       if(!$isValid) $data = [];
     }
-
-
-    //$isValid = Csrf::isValid($csrf);
-
-    // if((!$isValid) && Csrf::isStrict()) {
-    //   $this->block = true;
-    // }
     
     if($args > 0) {
 
@@ -165,7 +157,13 @@ class Request
     
   }
   
-  public function load(bool $strict = false){
+  /**
+   * Loads request data into Request class
+   *
+   * @param boolean $strict
+   * @return Request
+   */
+  public function load(bool $strict = false) : Request {
     $strict = $strict ? [':strict'] : [];
     $this->data(...$strict);
     return $this;
@@ -207,24 +205,14 @@ class Request
 
   }
 
-  // /**
-  //  * Returns only authenticated data
-  //  *  -Note: data returned is only set after an authentication is done;
-  //  * 
-  //  * @return array
-  //  */
-  // public function authData() {
-  //   return $this->data;
-  // }
-
   /**
    * Determines if an authentication should be made when data
    * is being fetched using the data() method
    *
    * @param bool $auth allow or disallow authentication
-   * @return void
+   * @return Request
    */
-  public function auth(bool $auth = true){
+  public function auth(bool $auth = true) : Request {
     $this->auth  = $auth;
     return $this;
   }
@@ -248,7 +236,7 @@ class Request
    * @param boolean $strict
    * @return Request
    */
-  public function strict(bool $strict = true){
+  public function strict(bool $strict = true) : Request {
     $this->auth = true;
     $this->strict = $strict;
     Csrf::strict($strict);

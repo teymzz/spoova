@@ -28,7 +28,7 @@
               <div class="fb-6">Introduction</div>
               <div class="">
                   Helper directives are predefined template directives that are used within 
-                  template files. These directives are preceeded by an <code>@</code> symbol. 
+                  rex template files. These directives are preceeded by an <code>@</code> symbol. 
                   They are listed below:
                   <br><br>
 

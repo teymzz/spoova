@@ -21,7 +21,7 @@
 
                         <div class="">
                             The <code>Jwstoken</code> class is a tool that is used to generate 
-                            jwstokens. The following are avialable methods in the jwstoken class
+                            JWS tokens. The following are available methods in the Jwstoken class
                         </div> <br> 
 
                             <ol>
@@ -221,14 +221,14 @@
     <div class="pxv-6 bc-off-white"><code>Example: payload</code></div>
     <pre class="pre-code">
     $payload = [
-                'data'=>'mydata', <span class="comment">// some extra data supplied</span>
+        'data'=>'mydata',    <span class="comment">// some extra data supplied</span>
 
-                'nbf'=>time() + 60, <span class="comment">// time when token becomes active (60secs)</span>
+        'nbf'=>time() + 60,  <span class="comment">// time when token becomes active (60secs)</span>
 
-                'exp'=>time() + 120, <span class="comment">// time when token becomes expired (2minutes after created)</span>
+        'exp'=>time() + 120, <span class="comment">// time when token becomes expired (2minutes after created)</span>
 
-                'iss' => 'user', <span class="comment">// user who issued token </span>
-                ];
+        'iss' => 'user',     <span class="comment">// user who issued token </span>
+    ];
 
     $jws->payload($payload);
     </pre>
@@ -281,12 +281,12 @@
                                     <div class="box-full">
                                         <div class="pxv-6 bc-off-white"><code>Syntax: expires</code></div>
                                         <pre class="pre-code">
-                                        $jws->expires(time); 
-                                            <span class="comment">
-                                                where:
-                                                
-                                                time: expire time in seconds.
-                                            </span>
+  $jws->expires(time); 
+    <span class="comment">
+      where:
+        
+      time: expire time in seconds.
+    </span>
                                         </pre>
                                     </div>
                                 </div>
@@ -295,7 +295,7 @@
                                     <div class="box-full">
                                         <div class="pxv-6 bc-off-white"><code>Example: expires</code></div>
                                         <pre class="pre-code">
-    $jws->expires(120); <span class="comment"> // sets expire time to 2 minutes </span>
+  $jws->expires(120); <span class="comment"> // sets expire time to 2 minutes </span>
                                         </pre>
                                     </div>
                                 </div>
@@ -333,13 +333,13 @@
                                     <div class="box-full">
                                         <div class="pxv-6 bc-off-white"><code>Example: Signing a payload</code></div>
                                         <pre class="pre-code">
-    $jws = new JWSToken;
-
-    $jws->payload($payload); <span class="comment">//check <a href="#payload">payload</a> for $payload supplied</span>
-
-    $jws->sign('password123'); <span class="comment">//sign and generate a payload with sha256</span>
-
-    $jws->sign('password123', 'md5'); <span class="comment">//sign and generate a payload with md5</span>
+  $jws = new JWSToken;
+  
+  $jws->payload($payload); <span class="comment">//check <a href="#payload">payload</a> for $payload supplied</span>
+  
+  $jws->sign('password123'); <span class="comment">//sign and generate a payload with sha256</span>
+  
+  $jws->sign('password123', 'md5'); <span class="comment">//sign and generate a payload with md5</span>
                                         </pre>
                                     </div>
                                 </div>
@@ -367,8 +367,8 @@
                                     <div class="box-full">
                                         <div class="pxv-6 bc-off-white"><code>Syntax: token</code></div>
                                         <pre class="pre-code">
-    $jws->token(); <span class="comment"> // return a generated token </span>
-    $jws->token(token); <span class="comment"> // set a token </span>
+  $jws->token(); <span class="comment"> // return a generated token </span>
+  $jws->token(token); <span class="comment"> // set a token </span>
 
         <span class="comment">
             where: 
@@ -383,11 +383,11 @@
                                     <div class="box-full">
                                         <div class="pxv-6 bc-off-white"><code>Example: Generating a token</code></div>
                                         <pre class="pre-code">
-    $jws->payload($payload); <span class="comment">// check <a href="#payload">payload</a> for $payload supplied</span>
+  $jws->payload($payload); <span class="comment">// check <a href="#payload">payload</a> for $payload supplied</span>
     
-    $jws->sign('secret_key'); <span class="comment"> // lock and sign payload with a secret key</span>
+  $jws->sign('secret_key'); <span class="comment"> // lock and sign payload with a secret key</span>
     
-    var_dump( $jws->token() ); <span class="comment"> // output generated token</span>
+  var_dump( $jws->token() ); <span class="comment"> // output generated token</span>
                                         </pre>
                                     </div>
                                 </div>
@@ -420,7 +420,7 @@
                                     <div class="box-full">
                                         <div class="pxv-6 bc-off-white"><code>Syntax: isValid</code></div>
                                         <pre class="pre-code">
-    $jws->isValid(secretkey, hash_algo); <span class="comment"> // returns bool of true if token is valid </span>
+  $jws->isValid(secretkey, hash_algo); <span class="comment"> // returns bool of true if token is valid </span>
                                         </pre>
                                     </div>
                                 </div>
@@ -429,22 +429,22 @@
                                     <div class="box-full">
                                         <div class="pxv-6 bc-off-white"><code>Example 1: isValid</code></div>
                                         <pre class="pre-code">
-    $jws->payload($payload); <span class="comment">// check <a href="#payload">payload</a> for $payload supplied</span>
+  $jws->payload($payload); <span class="comment">// check <a href="#payload">payload</a> for $payload supplied</span>
     
-    $jws->sign('secret', 'sha256');
+  $jws->sign('secret', 'sha256');
 
-    $token = $jws->token(); <span class="comment">// generate a token.</span>
+  $token = $jws->token(); <span class="comment">// generate a token.</span>
 
-    var_dump( $jws->isValid($token) ); <span class="comment">// returns: true</span>
+  var_dump( $jws->isValid($token) ); <span class="comment">// returns: true</span>
                                         </pre>
                                     </div>
 
                                     <div class="box-full">
                                         <div class="pxv-6 bc-off-white"><code>Example 2: isValid</code></div>
                                         <pre class="pre-code">
-    <span class="comment">// $token as some generated token</span>
+  <span class="comment">// $token as some generated token</span>
 
-    var_dump( $jws->token($token)->isValid('password', 'md5') ); <span class="comment">// note: hash algo (i.e md5) must match algo used for generating token</span>
+  var_dump( $jws->token($token)->isValid('password', 'md5') ); <span class="comment">// note: hash algo (i.e md5) must match algo used for generating token</span>
                                         </pre>
                                     </div>
                                 </div>
@@ -470,13 +470,13 @@
                                     <div class="box-full">
                                         <div class="pxv-6 bc-off-white"><code>Syntax: decrypt</code></div>
                                         <pre class="pre-code">
-    $jws->decrypt(token, secretkey, hash_algo); 
-            <span class="comment"> 
-                note: 
-                
-                if token is not a valid token or cannot be decrypted, the method returns an 
-                empty data.
-            </span>
+  $jws->decrypt(token, secretkey, hash_algo); 
+<span class="comment"> 
+    note: 
+    
+    if token is not a valid token or cannot be decrypted, the method returns an 
+    empty data.
+</span>
                                         </pre>
                                     </div>
                                 </div>
@@ -485,23 +485,23 @@
                                     <div class="box-full">
                                         <div class="pxv-6 bc-off-white"><code>Example 1: decrypt</code></div>
                                         <pre class="pre-code">
-    $jws = new JWSToken;
+  $jws = new JWSToken;
 
-    $jws->sign($payload, 'pass123', 'md5'); <span class="comment">// check <a href="#payload">payload</a> for $payload supplied</span>
+  $jws->sign($payload, 'pass123', 'md5'); <span class="comment">// check <a href="#payload">payload</a> for $payload supplied</span>
     
-    $token = $jws->token();
+  $token = $jws->token();
 
-    $decrypt = $jws->decrypt($token, 'pass123', 'md5');
+  $decrypt = $jws->decrypt($token, 'pass123', 'md5');
 
-    if($decrypt) {
+  if($decrypt) {
 
-        var_dump($decrypt);
+    var_dump($decrypt);
 
-    } else {
+  } else {
         
-        var_dump($jws->error);
+    var_dump($jws->error);
 
-    }
+  }
                                         
                                         </pre>
                                     </div>
@@ -509,21 +509,21 @@
                                     <div class="box-full">
                                         <div class="pxv-6 bc-off-white"><code>Example 2: decrypt</code></div>
                                         <pre class="pre-code">
-    $jws = new JWSToken;
+  $jws = new JWSToken;
 
-    $jws->set('JWS', 'md5');
+  $jws->set('JWS', 'md5');
 
-    <span class="comment">//$token as some generated token</span>
+  <span class="comment">//$token as some generated token</span>
 
-    if( $jws->token($token)->isValid('pass', 'md5') ) {
+  if( $jws->token($token)->isValid('pass', 'md5') ) {
 
-        var_dump( $jws->decrypt() ); <span class="comment"> // returns payload data or null</span>
+      var_dump( $jws->decrypt() ); <span class="comment"> // returns payload data or null</span>
 
-    } else {
+  } else {
 
-        var_dump( $jws->error );
+      var_dump( $jws->error );
 
-    }
+  }
                                         </pre>
                                     </div>
                                 </div>
@@ -556,11 +556,10 @@
                                     <div class="box-full">
                                         <div class="pxv-6 bc-off-white"><code>Syntax: expired</code></div>
                                         <pre class="pre-code">
-                                        $jws->expired(secretkey, hash_algo); <span class="comment">// returns true or false</span> 
-                                        
-                                        <span class="comment no-select">
-                                        // Note: when a testing has not been done, it returns an empty string.
-                                        </span>
+    $jws->expired(secretkey, hash_algo); <span class="comment">// returns true or false</span> 
+    <span class="comment no-select">
+    // Note: when a testing has not been done, it returns an empty string.
+    </span>
                                         </pre>
                                     </div>
                                 </div>
@@ -569,13 +568,13 @@
                                     <div class="box-full">
                                         <div class="pxv-6 bc-off-white"><code>Example: expired</code></div>
                                         <pre class="pre-code">
-    <span class="comment">// hash_algo used for generating token should be supplied</span>
+  <span class="comment">// hash_algo used for generating token should be supplied</span>
 
-    if( $jws->token($token)->expired('pass', 'md5') ) {
+  if( $jws->token($token)->expired('pass', 'md5') ) {
 
     <span class="comment">// run code</span>
 
-    }
+  }
                                         </pre>
                                     </div>
                                 </div>
@@ -603,7 +602,7 @@
                                     <div class="box-full">
                                         <div class="pxv-6 bc-off-white"><code>Syntax: pending</code></div>
                                         <pre class="pre-code">
-                                            $jws->pending(secretkey, hash_algo); <span class="comment">// returns true or false</span> 
+  $jws->pending(secretkey, hash_algo); <span class="comment">// returns true or false</span> 
                                         </pre>
                                     </div>
                                 </div>
@@ -639,20 +638,7 @@
                             <div class="">
                                 This function returns an array of error messages if a token is not valid.
                                 <br><br>
-                        
-                                <div class="pre-area">
-                                    <div class="box-full">
-                                        <div class="pxv-6 bc-off-white"><code>Syntax: error</code></div>
-                                        <pre class="pre-code">
-                                        $jws->pending(secretkey, hash_algo); <span class="comment">// returns true or false</span> 
-
-                                        <span class="comment no-select">
-                                            // Note: when a testing has not been done, it returns an empty string.
-                                        </span>
-                                        </pre>
-                                    </div>
-                                </div>
-
+                                
                                 <div class="pre-area">
                                     <div class="box-full">
                                         <div class="pxv-6 bc-off-white"><code>Example: error</code></div>

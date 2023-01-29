@@ -113,7 +113,7 @@ class MkRoute extends MkBase{
                     /**
                      * Add name of routes
                      *
-                     * @return void
+                     * @return array
                      */
                     public static function addRoutes(array \$array = []) : array {
     

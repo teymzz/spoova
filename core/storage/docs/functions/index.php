@@ -427,7 +427,7 @@ window.onload = function() {
                       <li> <a href="<?= route('::core#isabsolutepath'); ?>"> isAbsolutePath </a> </li>
                       <li> <a href="<?= route('::core#invoked'); ?>"> invoked </a> </li>
                       <li> <a href="<?= route('::core#windowincludes'); ?>"> windowIncludes </a> </li>
-                      <li> <a href="<?= route('::core#w'); ?>"> windowExcludes </a> </li>
+                      <li> <a href="<?= route('::core#windowexcludes'); ?>"> windowExcludes </a> </li>
                       <li> <a href="<?= route('::core#authdirect'); ?>"> authDirect </a> </li>
                       <li> <a href="<?= route('::core#guestdirect'); ?>"> guestDirect </a> </li>
                       <li> <a href="<?= route('::core#redirect'); ?>"> redirect </a> </li>

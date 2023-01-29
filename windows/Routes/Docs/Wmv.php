@@ -38,7 +38,7 @@ use spoova\windows\Frames\UserFrame;
         }
 
         function about_wmv(){
-            $pointer = self::mapurl('Tutorial/Wmv/About_wmv', ' <span class="bi-chevron-right"></span> ');
+            $pointer = self::mapurl('Docs/Wmv/About_wmv', ' <span class="bi-chevron-right"></span> ');
 
             $vars = [
                 'title' => 'Tutorial - About WMV',
@@ -48,7 +48,7 @@ use spoova\windows\Frames\UserFrame;
         }
 
         function shutters() {
-            $pointer = self::mapurl('Tutorial/Wmv/Shutters', ' <span class="bi-chevron-right"></span> ');
+            $pointer = self::mapurl('Docs/Wmv/Shutters', ' <span class="bi-chevron-right"></span> ');
 
             $vars = [
                 'title' => 'Tutorial - Shutters',
@@ -58,7 +58,7 @@ use spoova\windows\Frames\UserFrame;
         }
 
         function calls() {
-            $pointer = self::mapurl('Tutorial/Wmv/Calls', ' <span class="bi-chevron-right"></span> ');
+            $pointer = self::mapurl('Docs/Wmv/Calls', ' <span class="bi-chevron-right"></span> ');
 
             $vars = [
                 'title' => 'Tutorial - WMV Calls',
@@ -68,7 +68,7 @@ use spoova\windows\Frames\UserFrame;
         }
 
         function middlewares() {
-            $pointer = self::mapurl('Tutorial/Wmv/Middlewares', ' <span class="bi-chevron-right"></span> ');
+            $pointer = self::mapurl('Docs/Wmv/Middlewares', ' <span class="bi-chevron-right"></span> ');
 
             $vars = [
                 'title' => 'Tutorial - WMV Middlewares',
@@ -78,7 +78,7 @@ use spoova\windows\Frames\UserFrame;
         }
 
         function frames() {
-            $pointer = self::mapurl('Tutorial/Wmv/Frames', ' <span class="bi-chevron-right"></span> ');
+            $pointer = self::mapurl('Docs/Wmv/Frames', ' <span class="bi-chevron-right"></span> ');
 
             $vars = [
                 'title' => 'Tutorial - WMV Frames',
@@ -88,7 +88,7 @@ use spoova\windows\Frames\UserFrame;
         }
 
         static function routes($array = []) {
-            $pointer = self::mapurl('Tutorial/Wmv/Routes', ' <span class="bi-chevron-right"></span> ');
+            $pointer = self::mapurl('Docs/Wmv/Routes', ' <span class="bi-chevron-right"></span> ');
 
             $vars = [
                 'title' => 'Tutorial - WMV Routes',
@@ -100,50 +100,74 @@ use spoova\windows\Frames\UserFrame;
         }
 
         static function apis($array = []) {
-            $pointer = self::mapurl('Tutorial/Wmv/APIs', ' <span class="bi-chevron-right"></span> ');
+            $pointer = self::mapurl('Docs/Wmv/APIs', ' <span class="bi-chevron-right"></span> ');
 
             $vars = [
                 'title' => 'Tutorial - WMV Routes',
                 'pointer' => $pointer,
             ];
             
-            self::load('docs.wmv.apis', fn() =>compile());
+            self::load('docs.wmv.apis', fn() =>compile($vars));
 
         }
 
         static function methods($array = []) {
-            $pointer = self::mapurl('Tutorial/Wmv/Methods', ' <span class="bi-chevron-right"></span> ');
+            $pointer = self::mapurl('Docs/Wmv/Methods', ' <span class="bi-chevron-right"></span> ');
 
             $vars = [
                 'title' => 'Tutorial - WMV Methods',
                 'pointer' => $pointer,
             ];
             
-            self::load('docs.wmv.methods', fn() =>compile());
+            self::load('docs.wmv.methods', fn() =>compile($vars));
+
+        }
+
+        static function models($array = []) {
+            $pointer = self::mapurl('Docs/Wmv/Models', ' <span class="bi-chevron-right"></span> ');
+
+            $vars = [
+                'title' => 'Tutorial - Window Models',
+                'pointer' => $pointer,
+            ];
+            
+            self::load('docs.wmv.models', fn() =>compile($vars));
+
+        }
+
+        static function rex($array = []) {
+            $pointer = self::mapurl('Docs/Wmv/Rex', ' <span class="bi-chevron-right"></span> ');
+
+            $vars = [
+                'title' => 'Tutorial - Window Rex',
+                'pointer' => $pointer,
+            ];
+            
+            self::load('docs.wmv.rex', fn() =>compile($vars));
 
         }
 
         static function inverse($array = []) {
-            $pointer = self::mapurl('Tutorial/Wmv/Errors', ' <span class="bi-chevron-right"></span> ');
+            $pointer = self::mapurl('Docs/Wmv/Inverse', ' <span class="bi-chevron-right"></span> ');
 
             $vars = [
                 'title' => 'Tutorial - Window Url Inverse',
                 'pointer' => $pointer,
             ];
             
-            self::load('docs.wmv.inverse', fn() =>compile());
+            self::load('docs.wmv.inverse', fn() => compile($vars));
 
         }
 
         static function errors($array = []) {
-            $pointer = self::mapurl('Tutorial/Wmv/Errors', ' <span class="bi-chevron-right"></span> ');
+            $pointer = self::mapurl('Docs/Wmv/Errors', ' <span class="bi-chevron-right"></span> ');
 
             $vars = [
                 'title' => 'Tutorial - Handling Window Errors',
                 'pointer' => $pointer,
             ];
             
-            self::load('docs.wmv.errors', fn() =>compile());
+            self::load('docs.wmv.errors', fn() =>compile($vars));
 
         }
 
@@ -154,6 +178,8 @@ use spoova\windows\Frames\UserFrame;
                 '.calls'  => DomUrl('docs/wmv/calls'),
                 '.frames' => DomUrl('docs/wmv/frames'),
                 '.routes' => DomUrl('docs/wmv/routes'),
+                '.models' => DomUrl('docs/wmv/models'),
+                '.rex'    => DomUrl('docs/wmv/rex'),
                 '.methods' => DomUrl('docs/wmv/methods'),
                 '.middlewares' => DomUrl('docs/wmv/middlewares'),
                 '.errors' => DomUrl('docs/wmv/errors'),

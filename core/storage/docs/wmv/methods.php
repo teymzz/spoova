@@ -5,7 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" type="image/png" href="http://localhost/spoova/res/main/images/icons/favicon.png">
-    <title></title>
+    <title>Tutorial - WMV Methods</title>
     <meta name="viewport" content="width=device-width, initial-scale=.9, maximum-scale=1.0, user-scalable=1" />
 <meta name="description" content="website_description" />
 <link rel="icon" href="http://localhost/spoova/res/main/images/icons/favicon.png" />
@@ -26,6 +26,9 @@
           font-size: .85em;
           display: inline-block;
           width:100%;
+      }
+
+     .pre-area:not([class*="bc-"]){
           background-color : rgba(var(--white-dd));
       }
   
@@ -155,14 +158,14 @@
    --black-ll: 79, 79, 79;
 }
 
-.bc-white-d.--theme-esc{
+.--theme-dark .bc-white-d.--theme-esc{
     --white-d: 21, 24, 51;
     --white-dd: 23, 28, 56;
     --silver-d: var(--white-dd);
     color: rgb(203, 198, 198);
 }
 
-.bc-white-d.--theme-esc .flex-full > *{
+.--theme-dark .bc-white-d.--theme-esc .flex-full > *{
     --white: 255, 255, 255;
     --white-d: 250, 250, 250;
     --white-dd: 240, 240, 240;
@@ -372,7 +375,7 @@ window.onload = function() {
             <div class="font-em-1d2">
 
                 
- <div class="font-menu pvs-4">   </div>
+ <div class="font-menu pvs-4"> <a href="http://localhost/spoova/docs">Docs</a> <span class="bi-chevron-right"></span> <a href="http://localhost/spoova/docs/wmv">Wmv</a> <span class="bi-chevron-right"></span> <a href="http://localhost/spoova/docs/wmv/methods">Methods</a>  </div>
 
 
                 <div class="start font-em-d8">
@@ -416,7 +419,7 @@ window.onload = function() {
                     </ul>
 
                     
- <div class="font-menu pvs-4">   </div>
+ <div class="font-menu pvs-4"> <a href="http://localhost/spoova/docs">Docs</a> <span class="bi-chevron-right"></span> <a href="http://localhost/spoova/docs/wmv">Wmv</a> <span class="bi-chevron-right"></span> <a href="http://localhost/spoova/docs/wmv/methods">Methods</a>  </div>
 
 
                 </div>

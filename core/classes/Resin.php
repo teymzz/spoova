@@ -14,7 +14,7 @@ Interface Resin{
      *
      * @param string $url rex template url
      * @param array|string|\Closure $callback template handler function
-     * @return void
+     * @return string
      */
     public static function load($url, $callback);
 
@@ -23,7 +23,7 @@ Interface Resin{
      *
      * @param string $url rex template url
      * @param array|string|\Closure $callback template handler function
-     * @return void
+     * @return Res|string
      */
     public static function gett($url, $callback);
 
@@ -32,7 +32,7 @@ Interface Resin{
      *
      * @param string $url rex template url
      * @param array|string|\Closure $callback template handler function
-     * @return void
+     * @return Res|string
      */
     public static function postt($url, $callback);
 
@@ -41,7 +41,7 @@ Interface Resin{
      * 
      * @param string $url rex template url
      * @param array|string|\Closure $callback template handler function
-     * @return void
+     * @return Res|string
      */
     public static function get($url, $callback);
 
@@ -53,7 +53,7 @@ Interface Resin{
      * @return void     *    parameter 1 (string)         => file name in the rex folder
      *    parameter 2 (string|closure) => string or callback function 
      *
-     * @return string routed component
+     * @return Res|string routed component
      */
     public static function post($url, $callback);
 

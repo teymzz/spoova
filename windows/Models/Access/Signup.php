@@ -3,7 +3,6 @@
 namespace spoova\windows\Models\Access;
 
 use Form;
-use spoova\windows\Frames\AccessFrame;
 use spoova\windows\Models\Access\AccessModel;
 
 class Signup extends AccessModel {

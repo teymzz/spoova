@@ -20,7 +20,7 @@ function br($var = '', int $break = 1) : string {
   //isCli is defined in settings
   $br = isCli() ? PHP_EOL : "<br>";
 
-  return $var.str_repeat($br, $break);
+  return  $var.str_repeat($br, $break);
   
 }
 
@@ -184,6 +184,127 @@ function fromJson($value, bool $bool = true){
   }
   return json_decode(...$args);
 }
+
+if(!function_exists('toSingular')){
+  /**
+   * Removes trailing letter "s" from a string or array of strings
+   *
+   * @param array|string $name
+   * @return array|string
+   */
+  function toSingular(array|string $name){
+
+    if(is_array($name)){
+      return array_map(function($value){
+        return ((substr($value, -1) === 's')? substr($value, 0, strlen($value) - 1) : $value);
+      }, $name);
+    }
+    return ((substr($name, -1) === 's')? substr($name, 0, strlen($name) - 1) : $name);
+  }
+}
+
+if(!function_exists('enplode')){
+
+  /**
+   * Join array element with a string and wrap string within a defined character.
+   *
+   * @param array|string $separator [optional]
+   *  - array should contain two values : a separator, then followed by a wrapper character
+   *  - string as separator character
+   * @param array|null $array The array of strings to implode
+   * @param bool $strict 
+   *  A bool of true includes wrapper even if the array is empty 
+   *  A bool of false removes wrapper if the array is empty 
+   * @return string
+   */
+  function enplode(array|string $separator="", ?array $array = [], bool $strict = false) : string {
+      
+    $container = (array) $separator;
+    $divider = (string) $container[0];
+    $wrapper = (string) $container[1]?? '';
+
+    if(count($container) > 2){
+        trigger_error('maximum array count of 2 for argument(#1)  on enplode() exceeded!');
+        return '';
+    }
+
+    $implode = implode($divider, $array);
+
+    return ($implode || $strict)? $wrapper.$implode.$wrapper : '';
+
+  }
+}
+
+if(!function_exists('inflect')){
+  /**
+   * Add or remove trailing letter "s" to string 
+   * depending on count supplied
+   *
+   * @param array|string $text
+   * 
+   * @param int $count 
+   * @param boolean $strict defines extra functionality
+   * 
+   *  - If $strict is false, a character "s" will only be appended to $text if $count > 1.
+   *  - If $strict is true and $count > 1, a character "s" is added to $text only if $text does not have character "s" or "S" as the lasting character.
+   *  - If $strict is true and $count < 2, a lasting character "s" or "S" will be removed from $text if it exists, else the supplied $text is returned.
+   * 
+   * @return array|string
+   */
+  function inflect(array|string $text, int $count, bool $strict = false){
+
+    if($strict){
+
+      if(is_array($text)){
+        
+        if($count < 2){
+          return array_map(function($value){
+           if(is_string($value)) return ((strtolower(substr($value, -1)) === 's')? substr($value, 0, strlen($value) - 1) : $value);
+          }, $text);
+        }else{
+          return array_map(function($value){
+           if(is_string($value)) return ((strtolower(substr($value, -1)) !== 's')? $value."s" : $value);
+          }, $text);        
+        }
+
+      } else {
+
+        if($count < 2){
+          return ((strtolower(substr($text, -1)) === 's')? substr($text, 0, strlen($text) - 1) : $text);
+        }else{
+          return ((strtolower(substr($text, -1)) !== 's')? $text."s" : $text);
+        }
+        
+      }
+
+    }else{
+
+      if(is_array($text)){
+        
+        if($count < 2){
+          return $text;
+        }else{
+          return array_map(function($value){
+            return ((strtolower(substr($value, -1)) !== 's')? $value."s" : $value);
+          }, $text);        
+        }
+
+      } else {
+
+        if($count < 2){
+          return $text;
+        }else{
+          return ((strtolower(substr($text, -1)) !== 's')? $text."s" : $text);
+        }
+        
+      }
+
+    }
+
+    return ((substr($text, -1) === 's')? substr($text, 0, strlen($text) - 1) : $text);
+  }
+}
+
 
 /**
  * Returns the current script name

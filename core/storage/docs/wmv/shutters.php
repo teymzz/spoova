@@ -26,6 +26,9 @@
           font-size: .85em;
           display: inline-block;
           width:100%;
+      }
+
+     .pre-area:not([class*="bc-"]){
           background-color : rgba(var(--white-dd));
       }
   
@@ -155,14 +158,14 @@
    --black-ll: 79, 79, 79;
 }
 
-.bc-white-d.--theme-esc{
+.--theme-dark .bc-white-d.--theme-esc{
     --white-d: 21, 24, 51;
     --white-dd: 23, 28, 56;
     --silver-d: var(--white-dd);
     color: rgb(203, 198, 198);
 }
 
-.bc-white-d.--theme-esc .flex-full > *{
+.--theme-dark .bc-white-d.--theme-esc .flex-full > *{
     --white: 255, 255, 255;
     --white-d: 250, 250, 250;
     --white-dd: 240, 240, 240;
@@ -372,7 +375,7 @@ window.onload = function() {
             <div class="font-em-1d2">
 
                 
- <div class="font-menu pvs-4"> <a href="http://localhost/spoova/tutorial">Tutorial</a> <span class="bi-chevron-right"></span> <a href="http://localhost/spoova/tutorial/wmv">Wmv</a> <span class="bi-chevron-right"></span> <a href="http://localhost/spoova/tutorial/wmv/shutters">Shutters</a>  </div>
+ <div class="font-menu pvs-4"> <a href="http://localhost/spoova/docs">Docs</a> <span class="bi-chevron-right"></span> <a href="http://localhost/spoova/docs/wmv">Wmv</a> <span class="bi-chevron-right"></span> <a href="http://localhost/spoova/docs/wmv/shutters">Shutters</a>  </div>
 
 
                 <div class="start font-em-d8">
@@ -383,24 +386,26 @@ window.onload = function() {
                     <div class="">
                         The shutter system was designed to close every window using the <code>Window::close()</code> method.
                         By default, when a window file does not exist and the corresponding url is called, the shutter automatically closes
-                        unless a standard logic method is not applied on the Index window file which tells the system that such url should be closed. 
+                        unless a logic is applied on the Index window file which tells the system that such url should be closed. 
                         This behaviour is one designed to prevent any access to a non-existing window 
                         in which the resulting effect will be a blank page. 
 
-                        However, when a window file exists and is called, the shutters are left opened to be manually closed by the respective window class. 
+                        However, when a window file exists and is called, the shutters are left opened to be manually closed by the respective window class 
+                        or method. 
                         The closing of windows is a technicality that must be properly understood well in order to be able to close 
-                        windows especially when using the <a href="<?= route('.calls'); ?>" title="<?= route('.calls'); ?>"><span class="hyperlink c-olive">call methods</span></a>. An improper 
+                        windows efficiently especially when using the <a href="<?= route('.calls'); ?>" title="<?= route('.calls'); ?>"><span class="hyperlink c-olive">call shutter methods</span></a>. An improper 
                         closing of windows can leave some urls opened unknowingly. Hence, developers must have a good knowledge of handling 
                         urls to be able to properly close them. <br><br>
 
                         <p>
-                          In WinViM, there are two methods specifically designed to close windows. These are the <code>close()</code> and <code>sleep()</code> 
+                          In Windows-View-Model architecture (WinViM), there are two methods specifically designed to close windows. These are the <code>close()</code> and <code>sleep()</code> 
                           methods. The sleep method is only used for development purpose as it only closes a url while monitoring it using the inbuilt live server.
                           When the url becomes alive, then the page is re-routed automatically from a 404 page to the respective page. This method is not applicable on a 
-                          live environment. It is only introduced to keep development of web pages faster in local environments.
+                          live environment. It is only introduced for test purposes. Also, at most times, both the <code>close()</code> and <code>sleep()</code> methods will not be 
+                          manually called in situations where shutters are used because by default, shutters naturally shuts a page down if a url cannot be resolved. 
                         </p>
 
-                        The windows class has some basic structures in place to handle urls which makes the job of handling urls easier to deal with. These control structures
+                        The window class has some basic structures in place to handle urls which makes the job of handling urls easier to deal with. These control structures
                         are the <code>call methods</code> mentioned earlier. They have been positioned to handle url in a specifically designed way. These methods when used naturally closes 
                         any url that does not match supplied lists of acceptable urls. However, they can also be pended to allow for more url permissions. The most important concept 
                         here is that when these methods are pended, then developers must employ a great deal of care when closing the urls. These methods are explained 
@@ -420,7 +425,7 @@ window.onload = function() {
                   </div>
                 </div>
                  
- <div class="font-menu pvs-4"> <a href="http://localhost/spoova/tutorial">Tutorial</a> <span class="bi-chevron-right"></span> <a href="http://localhost/spoova/tutorial/wmv">Wmv</a> <span class="bi-chevron-right"></span> <a href="http://localhost/spoova/tutorial/wmv/shutters">Shutters</a>  </div>
+ <div class="font-menu pvs-4"> <a href="http://localhost/spoova/docs">Docs</a> <span class="bi-chevron-right"></span> <a href="http://localhost/spoova/docs/wmv">Wmv</a> <span class="bi-chevron-right"></span> <a href="http://localhost/spoova/docs/wmv/shutters">Shutters</a>  </div>
 
             </div>
         </section>

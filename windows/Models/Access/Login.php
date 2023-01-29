@@ -60,9 +60,9 @@ class Login extends AccessModel     {
 
             $data = Form::Data();
     
-            $params =  [$data['username'], $data['username']];
+            $params =  [$data['email'], $data['username']];
     
-            $db->query('select * from '.User::tableName().' where username = ? or email = ?', $params)->read();
+            $db->query('select * from '.User::tableName().' where email = ?', $params)->read();
     
             if($db->results()){
                 return true;

@@ -23,12 +23,30 @@ class DBConstruct {
         }else{
             return '*';
         }
-        //$field = str_replace("'*',", "*")
+
         if($field && $trailingComma){
             return $field.',';
         }
 
         return $field;
+
+    }
+
+    /**
+     * Build a binded parameter structure from an array format
+     *
+     * @param array $fields array of field name and new value pairs
+     * @param array $params referenced binded parameters
+     * @param string $placeholder referenced placeholder structure
+     * @return void
+     */
+    static function bindedParams(array $fields, &$params = [], &$placeholder = ''){
+
+        if($fields){
+            $placeholder = implode("= ?, ", array_keys($fields))." = ?";
+            
+            $params = array_values($fields);
+        }
 
     }
 

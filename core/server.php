@@ -44,8 +44,6 @@ if( !defined('server') ) {
 
 	}
 
-	//
-	//
 	/**
 	 * This function is used to map images, css and javascript absolute 
 	 * urls to http protocol urls valid urls

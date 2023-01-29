@@ -42,7 +42,7 @@ class Login extends AccessFrame {
     /**
      * Add name of routes
      *
-     * @return void
+     * @return array
      */
     public static function addRoutes(array $array = []) : array {
 

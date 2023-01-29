@@ -32,7 +32,7 @@ function setOffline(&$var, $value){
  *
  * @param string $reqType [post|get]
  * @param array $values
- * @return void
+ * @return string
  */
 function reqValue($reqType = 'get', array $values = []){
 

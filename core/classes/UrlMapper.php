@@ -21,7 +21,7 @@ class UrlMapper {
      *
      * @param string $path path to be mapped
      * @param string $pointer navigation pointer
-     * @return void
+     * @return array
      */
     function map($path, $pointer = '/'){
 
@@ -35,6 +35,7 @@ class UrlMapper {
             $linked .= $pointer.'<a href="'.trim($this->urlbase.$prev, '/').'">'.$path.'</a>';
         }
         return explode($pointer, $linked, 2)[1];
+
     }
 
 }

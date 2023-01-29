@@ -26,6 +26,9 @@
           font-size: .85em;
           display: inline-block;
           width:100%;
+      }
+
+     .pre-area:not([class*="bc-"]){
           background-color : rgba(var(--white-dd));
       }
   
@@ -372,7 +375,7 @@ window.onload = function() {
             <div class="font-em-1d2">
 
                 
- <div class="font-menu pvs-4"> <a href="http://localhost/spoova/tutorial">Tutorial</a> <span class="bi-chevron-right"></span> <a href="http://localhost/spoova/tutorial/wmv">Wmv</a> <span class="bi-chevron-right"></span> <a href="http://localhost/spoova/tutorial/wmv/middlewares">Middlewares</a>  </div>
+ <div class="font-menu pvs-4"> <a href="http://localhost/spoova/docs">Docs</a> <span class="bi-chevron-right"></span> <a href="http://localhost/spoova/docs/wmv">Wmv</a> <span class="bi-chevron-right"></span> <a href="http://localhost/spoova/docs/wmv/middlewares">Middlewares</a>  </div>
 
 
                 <div class="start font-em-d85">
@@ -382,14 +385,14 @@ window.onload = function() {
                     <div class="shutters-intro">
                         
                         <div class="font-em-d87">
-                           Middlewares are activities that must run before a class or method is called. 
+                           Middlewares are operations that must run before a class or method is called. 
                            They are mostly executed through class methods. Their activity can affect the performace of 
                            window files. While middlewares can be applied to shutters from the <code>super()</code> method of
                            <a href="<?= DomUrl('docs/wmv/frames') ?>" class="hyperlink">Frame</a> files, it is mostly preferred 
                            to use them in other class method in which a shutter method is applied. Their flexible structure makes 
                            it possible for methods or windows to inherit them. While shutters have been discussed earlier, here, we 
                            will focus on how to apply middlewares to shutters. Middlewares can be applied through the <code>ONCALL()</code> method or 
-                           by passing the the <code>SELF::ONCALL</code> key into a specific shutter list of accepted urls. It can also be applied 
+                           by passing the <code>SELF::ONCALL</code> constant key into a specific shutter list of accepted urls. It can also be applied 
                            by setting a preload function on urls using the <code>self::preload()</code> method. When supplied, 
                            these functions will execute before the method or class is resolved.
                             <br><br>
@@ -398,10 +401,10 @@ window.onload = function() {
                                 <div class="c-orange font-em-1d1 bc-white-dd pxv-10">self::preload()</div> <br> 
                                 <div class="">
                                     This method can be applied to specific urls the immediately a url is resolved but not before it is authenticated. 
-                                    A url becomes must first be resolved before it is allowed to render. Between the reolving and rendering of a url, 
+                                    A url becomes must first be resolved before it is allowed to render. Between the resolving and rendering of a url, 
                                     middlewares are allowed to act as bridge to determine how a url responds.   
                                     (i.e visited). The <code>preload()</code> method takes a list of direct urls as its first argument and a boot function as its second argument.
-                                    A syntax and and example is shown below: <br><br>
+                                    A syntax and an example is shown below: <br><br>
                                     
                           
                                     <div class="pre-area shadow">
@@ -451,7 +454,7 @@ window.onload = function() {
                                     <div class="font-menu mvt-10">
                                     Using the example above as reference, if the url <code>docs/user/settings</code> or 
                                     <code>docs/user/profiles</code> is visited, the text <code>"method applied"</code> 
-                                    will be printed on the page. 
+                                    will be printed on the page before the content of the page itself is rendered. 
                                     </div> <br>
                             
                                 </div>
@@ -461,7 +464,7 @@ window.onload = function() {
                             <div class="font-em-d87">
                                 <div class="c-orange font-em-1d1 bc-white-dd pxv-10">SELF::ONCALL()</div> <br> 
                                 <div class="">
-                                    This method is a preload method can be applied on any of the four shutter methods. The first argument declares the type of middleware 
+                                    This method is a preload method that can be applied on any of the four shutter methods. The first argument declares the type of middleware 
                                     to be applied. These options are: <br><br>
                                     
                                     <ul>
@@ -470,9 +473,6 @@ window.onload = function() {
                                         <li> <code>CASTED::BASE</code> </li>
                                         <li> <code>CASTED::PATH</code> </li>
                                         <li> <code>CASTED::E404</code> </li>
-                                        <li> <code>CASTED::GLOBALCAST</code> </li>
-                                        <li> <code>CASTED::GLOBALBASE</code> </li>
-                                        <li> <code>CASTED::GLOBALPATH</code> </li>
                                     </ul>
                                    
                                    Each of these options defines the shutter environment in which a boot function can execute its operations. 
@@ -485,7 +485,7 @@ window.onload = function() {
                           
                             <div class="pre-area shadow">
                                     <div class="">
-                                        <div class="no-select bc-silver-d pxv-10">SELF::ONCALL</div>
+                                        <div class="no-select bc-silver-d pxv-10">SELF::ONCALL()</div>
         <pre class="pre-code">
   <span class="comment">#sample stucture 1: <span class="c-brown-ll">self::ONCALL(option, urls)</span></span>
 
@@ -502,49 +502,49 @@ window.onload = function() {
                           
                             <div class="pre-area shadow">
                                     <div class="">
-                                        <div class="no-select bc-silver-d pxv-10">SELF::ONCALL</div>
+                                        <div class="no-select bc-silver-d pxv-10">SELF::ONCALL()</div>
         <pre class="pre-code" style="color: rgb(var(--sea-blue-dd));">
       class {
 
-            function __construct() {
+        function __construct() {
 
-                SELF::ONCALL(CASTED::CALL, [
-                    
-                    'home/user/settings' => function(){
-                                                <span class="comment">// run this for settings</span>
-                                            },
-                    
-                    'home/user/profiles' => function(){
-                                                <span class="comment">// run this for profiles</span>
-                                            },
-                    ]);
+            SELF::ONCALL(CASTED::CALL, [
+                
+                'home/user/settings' => function(){
+                                            <span class="comment">// run this for settings</span>
+                                        },
+                
+                'home/user/profiles' => function(){
+                                            <span class="comment">// run this for profiles</span>
+                                        },
+                ]);
 
-                SELF::ONCALL(CASTED::BASE, [
-                    
-                    'home/user' => function(){
-                                                <span class="comment">// run this for user</span>
-                                            },
-                    
-                    'home/room' => function(){
-                                                <span class="comment">// run this for room</span>
-                                            },
-                    ]);
+            SELF::ONCALL(CASTED::BASE, [
+                
+                'home/user' => function(){
+                                            <span class="comment">// run this for user</span>
+                                        },
+                
+                'home/room' => function(){
+                                            <span class="comment">// run this for room</span>
+                                        },
+                ]);
 
-                SELF::CALL([
-                    
-                    'home/user/settings' => 'root',
-                    'home/user/profiles' => 'profiles',
+            SELF::CALL([
+                
+                'home/user/settings' => 'root',
+                'home/user/profiles' => 'profiles',
 
-                    ], false);
+                ], false);
 
-                SELF::BASE([
-                    
-                    'home/user' => 'user',
-                    'home/room' => 'room',
+            SELF::BASECALL([
+                
+                'home/user' => 'user',
+                'home/room' => 'room',
 
-                    ]);
+                ]);
 
-            }
+        }
 
       }
        </pre>
@@ -573,14 +573,25 @@ window.onload = function() {
                                         If <code>SELF::BASECALL()</code> can resolve any of its urls, the <code>SELF::ONCALL(CASTED::BASE)</code> function will be called for the relative url. If basecall 
                                         cannot resolve its url also, then a 404 error page is returned.
                                     </li>                                
-                                </ul> 
+                                </ul>
+                                
+                                <div class="">
+                                    <p>
+                                        According to the explanation made above, this means that <code>CASTED::BASE</code>, <code>CASTED::CALL</code>, <code>CASTED::PATH</code> and <code>CASTED::ROOT</code> will 
+                                        respond similarly only to their respective or relative shutter methods. However, the <code>CASTED::E404</code> defines that a middleware should only be applied when a 404 error page occurs.
+                                    </p>
+
+                                    <p>
+
+                                    </p>
+                                </div>
 
                                
                                 <div class="c-teal">
-                                    While the method above may be useful, it can be a tedious process and setting up boot functions this way can cause a lot of confusion even if it is handled separately. 
+                                    While the approach above may be useful, it can be a tedious process and setting up boot functions this way can cause a lot of confusion even if it is handled separately. 
                                     We can however shorten this function, making it more comprehensible by passing <code>SELF::ONCALL</code> key on the shutter itself. 
                                 </div>
-                            </div>
+                            </div> <br>
 
                             <div class="font-em-d87">
                                 <div class="c-orange font-em-1d1 bc-white-dd pxv-10">SELF::ONCALL</div> <br> 
@@ -618,9 +629,9 @@ window.onload = function() {
 
                             <div class="font-em-d87">
                                 The code structure above is more concise and 
-                                understandable than when we applied the <code>SELF::ONCALL</code> method. The only difference is that here, 
+                                understandable than when we applied the <code>SELF::ONCALL()</code> method. The only difference is that here, 
                                 our function is more localized and will not extend to a subsequent call method. For example, if the <code>SELF::CALL()</code> 
-                                method above was pended, then another <code>SELF::CALL()</code> method below it will not inherit the function. 
+                                method above was pended, then another <code>SELF::CALL()</code> or any shutter method below it will not inherit the <code>SELF::ONCALL</code> constant. 
                             </div>
 
 
@@ -631,7 +642,7 @@ window.onload = function() {
             </div>
     
             
- <div class="font-menu pvs-4"> <a href="http://localhost/spoova/tutorial">Tutorial</a> <span class="bi-chevron-right"></span> <a href="http://localhost/spoova/tutorial/wmv">Wmv</a> <span class="bi-chevron-right"></span> <a href="http://localhost/spoova/tutorial/wmv/middlewares">Middlewares</a>  </div>
+ <div class="font-menu pvs-4"> <a href="http://localhost/spoova/docs">Docs</a> <span class="bi-chevron-right"></span> <a href="http://localhost/spoova/docs/wmv">Wmv</a> <span class="bi-chevron-right"></span> <a href="http://localhost/spoova/docs/wmv/middlewares">Middlewares</a>  </div>
 
       
             

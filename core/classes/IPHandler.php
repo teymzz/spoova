@@ -34,7 +34,7 @@ class IPHandler
       * Returns the information of an ip using geoplugin.net
       *
       * @param string $customIP
-      * @return void
+      * @return mixed
       */
      public function geoInfo($customIP = null){
           
@@ -42,10 +42,10 @@ class IPHandler
           if(!filter_var($user_ip,FILTER_VALIDATE_IP)){ return false; }
           
           try{
-          $geo = unserialize(@file_get_contents("http://www.geoplugin.net/php.gp?ip=$user_ip"));
-          return $geo;
+               $geo = unserialize(@file_get_contents("http://www.geoplugin.net/php.gp?ip=$user_ip"));
+               return $geo;
           }catch(\Exception $e){
-          return false;
+               return false;
           }
      }
 

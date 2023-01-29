@@ -64,7 +64,7 @@
 </div>       
                                 <div class="font-em-d87 mvt-10">
                                     Although the <code>$Request->data()</code> is expected to return form data sent from request or an empty array if 
-                                    no csrf token is set, if the strict directive is applied, the request page will return an error page preventing any further action.
+                                    no csrf token is set, if the strict method is applied, the request page will return a csrf default error page preventing any further action.
                                 </div>
                             </div>
                         </p>
@@ -124,21 +124,18 @@
 </div>       
                                 <div class="font-em-d87 mvt-10">
                                     In the above, the csrf token expires in "5 seconds". This pushes the data to return empty data but because the strict method
-                                    is set upon it, the request returns an error page.
-                                    <!-- <code>strict()</code> or <code>expires()</code> method is previously called on the request. 
-                                    The <code>strict()</code> method prevents the page from loading data returning an error page if the csrf token requested is not 
-                                    a valid one.     -->
+                                    is set upon it, the request returns an error page if the token expires or becomes invalid.
                                 </div>
                             </div>
                         </p>
 
                         <p>
                             
-                            <div class="font-em-1d5 c-orange">Data Authentication</div>  
+                            <div id="data-validation" class="font-em-1d5 c-orange">Data Validation</div>  
 
                             <div class="mvs-10">
                                 The first level of authentication encountered is the csrf token validation which determines if data forwarded is accepted 
-                                or rejected. When data fowarded is accepted having passed through the first stage successfully. Then it is futher required 
+                                or rejected. When data fowarded is accepted having passed through the first stage successfully, then it proceeds
                                 to validate each form input data required to be validated. This is done through the Model class. The <code>Model</code> class 
                                 not only enables us authenticate form data but it also allows us to save the data into the database. Other features of this class 
                                 include input-column mapping which allows the form input name to properly select its relative database column field where the data is expected to 
@@ -221,8 +218,8 @@
                                 method defines the authentication needed for each field. The <code>mapform()</code> maps the input field with 
                                 attribute name of "username" to "user" field in database and a similar thing is done for the password field. This 
                                 may be needed to protect the database field names. When all data is authenticated, <code>tablename()</code> sets the 
-                                database table where the data supplied is inserted. The <code>isAuthenticated()</code> returns true by defualt if no 
-                                error occurs. However, this function is determined to be called only of <code>Form::isAuthenticated()</code> method is called.
+                                database table where the data supplied is inserted. The <code>isAuthenticated()</code> returns true by default if no 
+                                error occurs. However, this function is determined to be called only if <code>Form::isAuthenticated()</code> method is called.
                                 The <code>Form::isAuthenticated()</code> by default calls the <code>Form::isValidated()</code> method. This process is explained below
                             </div> <br>
                         </p>
@@ -260,12 +257,13 @@
                             <div class="font-em-d87 mvt-10">
                                 In few lines above we've been able to perform several operations such as checking for button submission,
                                 restricting invalid forms, validating form data and saving the data into database. The <code>LoginModel</code> 
-                                defines what table and what field the validated data is inserted in the database. In the above, the data returned is loaded into 
-                                the <code>Form</code> class using <code>loadData()</code> method. The form is then validated using the <code>Form::isValidated()</code> 
-                                method. Lastly the form is saved into the database table "users" defined within the <code>LoginModel</code>. Although, 
-                                in all of these processes, no error was obtained, this is because the <code>Form::errors()</code> allows us to fetch all required errors 
+                                defines what table and what field the validated data is inserted in the database. In the above, the request data returned by 
+                                <code>$Request->data()</code> is loaded directly into 
+                                the <code>Form</code> class using <code>loadData()</code> method. The data is then validated using the <code>Form::isValidated()</code> 
+                                method. Lastly, the form is saved into the database table "users" defined within the <code>tableName()</code> method of <code>LoginModel</code> class. 
+                                Although, in all of these processes, no error was obtained, this is because the <code>Form::errors()</code> allows us to fetch all required errors 
                                 depending on the stage where the error occurred. All form input errors only are obtained by reference through the <code>$inputErrors</code> while 
-                                all errors returned by the method are obtained into the <code>$errors</code> variable. Form errors are further explained under form errors.
+                                the entire errors returned by the <code>errors()</code> method are obtained into the <code>$errors</code> variable. Form errors are further explained under form errors.
                                 Since the <code>Form::isAuthenticated()</code> can naturally call the model's <code>isAuthenticated()</code> method, The code line 
                                 <code>(Form::isValidated() && Form::isSaved())</code> can be returned from the model's <code>isAuthenticated()</code> method and called simply by 
                                 writing <code>Form::isAuthenticated()</code>
@@ -273,7 +271,7 @@
                         </p>
 
                         <p>
-                            <div class="font-em-1d5 c-orange">Form Rules</div>  
+                            <div id="form-rules" class="font-em-1d5 c-orange">Form Rules</div>  
 
                             <div class="">
                                 There are several rules that can be applied in form input validation. Once these rules are defined within a Model, the model uses such rules 

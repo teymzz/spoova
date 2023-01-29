@@ -2,7 +2,7 @@
 
 namespace spoova\core\commands;
 use spoova\core\classes\DB;
-use spoova\core\classes\DBConfig;
+use spoova\core\classes\DB\DBConfig;
 use spoova\core\classes\FileManager;
 
 /**
@@ -330,7 +330,7 @@ class Install extends Entry{
      * Load offline parameters from supplied dbconfig url
      *
      * @param string $dbconfig_url
-     * @return void
+     * @return array|void|false
      */
     private function loadDB($dbconfig_url = ''){
 

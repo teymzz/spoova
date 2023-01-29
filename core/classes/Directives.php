@@ -310,7 +310,7 @@ abstract class Directives{
      * Checks if the current url matches a particular window base
      *
      * @param string $body
-     * @return void
+     * @return string
      */
     protected static function directivesInPath($body): string {
         //get all imports
@@ -329,7 +329,7 @@ abstract class Directives{
      * Checks if the current url matches the entire request url
      *
      * @param string $body
-     * @return void
+     * @return string
      */
     protected static function directivesIsPath($body): string {
         //get all imports
@@ -1363,7 +1363,7 @@ abstract class Directives{
      * Include a template file
      *
      * @param string $body
-     * @return void
+     * @return string|void
      */
     protected static function directivesTemplate($body){
 

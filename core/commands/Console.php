@@ -101,9 +101,9 @@ use spoova\core\commands\Cli;
    * Sorts all declared syntaxes found in arrays or strings
    *
    * @param array $outputs
-   * @return void
+   * @return array
    */
-  final public static function syntaxBuild(array $outputs){
+  final public static function syntaxBuild(array $outputs) : array{
             
     $newouput = [];
 
@@ -349,14 +349,14 @@ use spoova\core\commands\Cli;
    */
   public function __call($method, $args){ 
 
-    // if($args){
+    if($args){
       
-    //   array_unshift($args, $method);
+      array_unshift($args, $method);
      
-    //   self::error('command "'.implode(" ", $args).'" not recognized');        
-    // }
+      self::error('command "'.implode(" ", $args).'" not recognized');        
+    }
 
-    //return;  
+    return;  
 
   }
 
@@ -412,16 +412,16 @@ use spoova\core\commands\Cli;
   /**
    * Processs commands before execution
    *
-   * @return void
+   * @return boolean
    */
-  protected function process_commands(){
+  protected function process_commands() : bool {
 
     $total_commands = count(self::commands());
 
     if($total_commands > static::max_commands_level){
 
         Cli::textView(Cli::br(1).Cli::danger('Console Error:', '|1').("invalid number of maximum(".static::max_commands_level.") arguments supplied").Cli::br(2));
-        return;
+        return false;
 
     }
 

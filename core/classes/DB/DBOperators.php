@@ -1,11 +1,13 @@
 <?php
 
-namespace spoova\core\classes;
+namespace spoova\core\classes\DB;
+
+use spoova\core\classes\Collectibles;
 
 interface DBOperators {
 
     /**
-     * Select where
+     * Sets "where" condition on modek sql structure
      *
      * @return DBCollection|DBCollectibles
      */
@@ -21,26 +23,19 @@ interface DBOperators {
     /**
      * delete from database
      *
-     * @return DBCollection|DBCollectibles
+     * @return bool
      */
-    static function delete(int $limit = null) : DBCollection|DBCollectibles;
+    static function delete(int $limit = null) : bool; 
 
     /**
      * Update dabase
      *
-     * @return DBCollection|DBCollectibles
+     * @return bool
      */
-    static function update() : DBCollection|DBCollectibles;
+    static function update(array $fields) : bool;
 
     /**
-     * Join database
-     *
-     * @return DBCollection|DBCollectibles
-     */
-    static function on() : DBCollection|DBCollectibles;
-
-    /**
-     * Undocumented function
+     * A relationship based on the current session id
      *
      * @return DBCollection|DBCollectibles
      */
