@@ -2,42 +2,51 @@
 
 namespace spoova\core\classes;
 
-use DBStatus;
 use Traversable;
-use User;
 
 class Collectibles {
 
     public static $data;
     private static $privateData;
     private static $model;
-    private static $modelName;
+    private static string $modelName;
     public static $staticError;
     public static $collectionItems = false;
     public static $privatize = false;
 
-    public function __construct($data, ?Model $model = null, $modelName = null, bool $privatize = false)
+    /**
+     *
+     * @param mixed $data
+     * @param Model|null $model
+     * @param string $modelName name for accessing data
+     * @param boolean $privatize
+     */
+    public function __construct($data, ?Model $model = null, string $modelName = null, bool $privatize = false)
     {
 
         static::$data = $data;
         self::$model = $model;
         $modelName = $modelName?: 'Collection';
         self::$privatize = $privatize;
-
+        
+        $this->error = '';
+        
         self::$modelName = $modelName;
         if(!$privatize){
             $this->{$modelName} = new Collection(static::$data, $model, false);
-
+            
+            
             if(Static::$staticError) {            
-                $this->Error = Static::$staticError;
-                $this->{$modelName}->Error = $this->Error;
-                $this->Error = Static::$staticError;
+                $this->error = Static::$staticError;
+                $this->{$modelName}->error = $this->error;
+                $this->error = Static::$staticError;
             }            
         }else{            
             self::$privateData = new Collection(static::$data, $model, false);
+            self::$privateData->error = '';
             if(Static::$staticError) {
-                $this->Error = Static::$staticError;
-                self::$privateData->Error = Static::$staticError;
+                $this->error = Static::$staticError;
+                self::$privateData->error = Static::$staticError;
             }
         }
 
@@ -86,13 +95,13 @@ class Collectibles {
      * @param int|string $key index key of data to be removed
      * @return Collectibles
      */
-    public function pluck(int|string $key){
+    public function pull(int|string $key) : Collectibles {
 
         if(isset(static::$data[$key])){
             //return static::$data[$key];
             return  (new Collectibles(static::$data[$key], self::$model, self::$modelName));
         }else{
-            self::setError("invalid index key {{$key}} called on pluck");
+            self::setError("invalid index key {{$key}} called on pull");
         }
 
         return new Static([false], self::$model, self::$modelName);
@@ -133,20 +142,20 @@ class Collectibles {
     /**
      * Accesses the last read collection and returns the data
      *
-     * @return traversable|array
+     * @return array|bool|traversable
      */
-    public function Collection() : Traversable | array {
-
-        if(isset($this->Error)) $this->{self::$modelName}->Error = $this->Error;
+    public function collection() : array | bool | Traversable {
+        if(property_exists($this, 'error')) {
+            $this->{self::$modelName}->error = $this->error;
+        }
         return $this->{self::$modelName}?? [];
     }
 
     public function __get($name){
         if($name == self::$modelName){
-            unset($this->Error);
+            unset($this->error);
             return self::$privateData;
         }else{
-            $model = self::$model::tableName();
             return EInfo::view("Undefined property \"{$name}\" called on ".get_class(self::$model).'()');
         }
     }

@@ -1,6 +1,6 @@
 <?php
 
-    namespace spoova\core\classes;
+    namespace spoova\core\classes\DB;
 
     Interface  DBInterface  {
 
@@ -20,7 +20,7 @@
          * For Executing non crud queries
          *
          * @param string $sql sql query
-         * @return void
+         * @return bool|array
          */
         public function process_query($sql);
 
@@ -36,7 +36,7 @@
         /**
          * executes insert queries
          *
-         * @param [type] $sql
+         * @param string $sql
          * @return void
          */
         public function insert_query($sql);

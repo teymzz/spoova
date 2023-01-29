@@ -1,5 +1,5 @@
 <?php
-namespace spoova\core\classes;
+namespace spoova\core\classes\DB;
 
 class MiPDO extends DBBridge{
   
@@ -30,9 +30,9 @@ class MiPDO extends DBBridge{
   /**
    * Open a new pdo connection
    *
-   * @return void
+   * @return bool
    */
-  protected function open_connection(){      
+  protected function open_connection() : bool {      
 
     $this->conName  = "PDO"; //reset the connection name to PDO
 

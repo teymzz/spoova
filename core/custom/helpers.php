@@ -3,11 +3,14 @@
 /* Custom Helper Functions: Mainly for classes */
 // NOTICE : These functions should not be modified
 
+use spoova\core\classes\Collectibles;
+use spoova\core\classes\Collection;
 use spoova\core\classes\Url;
-use spoova\core\classes\DBBot;
 use spoova\core\classes\DomUrl;
 use spoova\core\classes\EInfo;
+use spoova\core\classes\ModelOptimizer;
 use spoova\core\classes\SETTER;
+use spoova\core\classes\Spoova;
 use spoova\core\classes\UserDB;
 
 if(!function_exists('scheme')){
@@ -77,7 +80,7 @@ if(!function_exists('webClass')){
    * @throws error if class does not exist
    *
    * @param string $className
-   * @return void
+   * @return object|void
    */
   function webClass(string $className){
     $args = func_get_args();
@@ -224,6 +227,21 @@ if(!function_exists('windowExcludes')){
   }
 }
 
+if(!function_exists('Optimize')){
+
+  /**
+   * This is an helper tool for the ModelOptimizer Class
+   *
+   * @param Collectibles|Collection $data
+   * @return ModelOptimizer|Collection
+   */
+  function Optimize(Collectibles|Collection $data, bool $strict = true): ModelOptimizer|Collection {
+
+    return ModelOptimizer::optimize($data, $strict);
+
+  }
+}
+
 if(!function_exists('session')){
 
   /**
@@ -263,7 +281,8 @@ if(!function_exists('formUrl')){
 
 if(!function_exists('isGuest')){
   /**
-   * This function works with User Class
+   * This function works with User Class to check 
+   * if a session id is not active
    * 
    * @return bool
    */
@@ -274,7 +293,8 @@ if(!function_exists('isGuest')){
 
 if(!function_exists('isUser')){
   /**
-   * This function works with User Class
+   * This function works with User Class to check 
+   * if a session id is active
    * 
    * @return bool
    */
@@ -751,4 +771,27 @@ if(!function_exists('HTERDOC')) {
     Window::open();
   }
   
+}
+
+if(!function_exists('spoovaLoaded')){
+
+  /**
+   * Checks if spoova is configured and all connection is set
+   *
+   * @param mixed $arg1
+   * @param mixed $arg2
+   * 
+   * @return mixed
+   *   - if no argument is supplied, a boolean of true or false is returned 
+   *   - if arguments are supplied then first argument is returned if configured, else second argument is returned.
+   */
+  function spoovaLoaded($arg1 = null, $arg2 = null){
+    
+    if(func_get_args() > 0){
+      return (Spoova::isConfigured())? $arg1 : $arg2;
+    }
+    return Spoova::isConfigured();
+
+  }
+
 }

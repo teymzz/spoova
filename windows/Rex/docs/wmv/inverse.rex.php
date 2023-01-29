@@ -18,10 +18,10 @@
                     <div class="resource-intro">
                         <div class="">
                             Spoova is a url-loose framework because it handles url comparison as a non-strict type. 
-                            This means that a url <code>"Home"</code> and <code>"home"</code> are regarded to mean the same thing. 
+                            This means that a url <code class="calibri">"Home"</code> and <code class="calibri">"home"</code> are regarded to mean the same thing. 
                             There are certain situations that developers may want to be strict in defining window urls, especially 
-                            in situations where urls are generated using <code>base64_decode()</code> function. In this case,
-                            handle case sensitive urls might be an issue. In order to fix this issue, spoova introduces two method 
+                            in situations where urls are generated using <code class="calibri">base64_encode()</code> function. In this case,
+                            handling case sensitive urls might be an issue. In order to fix this issue, spoova introduces two method 
                             by which case sensitive urls can be defined. 
                         </div> 
                     </div> <br>
@@ -31,9 +31,9 @@
                         <div class="c-olive">SELF::STRICT</div>
 
                         <div class="mvt-10">
-                            The <code>SELF::STRICT</code> key, when defined on a shutter, will set all urls to case sensitive. The value must be 
-                            set as a boolean of <code>true</code>. Once declared within a shutter, the shutter will remember to set all urls to case sensitive 
-                            unless an inverse is declared which naturally negates the <code>SELF::STRICT</code> key.
+                            The <code class="calibri">SELF::STRICT</code> key, when defined on a shutter, will set all urls to case sensitive. The value must be 
+                            set as a boolean of <code class="calibri">true</code>. Once declared within a shutter, the shutter will remember to set all urls to case sensitive 
+                            unless an inverse is declared which naturally negates the <code class="calibri">SELF::STRICT</code> key.
                         </div>
 
                         <div class="pre-area mvt-10">
@@ -66,11 +66,11 @@
 
                     <div class="">
 
-                        <div class="c-olive">Inverse operator (<code>!</code>)</div>
+                        <div class="c-olive">Inverse operator (<code class="calibri">!</code>)</div>
 
                         <div class="mvt-10">
                            The inverse operator, when declared upon any shutter url, defines that such url must be declared as strict type (i.e case sensitive). Since it is an inverse 
-                           operator, in a situation where a <code>SELF::STRICT</code> is already defined on a shutter, then applying the inverse <code>!</code> operator will declare such
+                           operator, in a situation where a <code class="calibri">SELF::STRICT</code> is already defined on a shutter, then applying the inverse <code class="calibri">!</code> operator will declare such
                            url as non-strict (or case insensitive). This relationship is explained below
                         </div>
 
@@ -132,6 +132,10 @@
                             <code>SELF::STRICT</code> on urls was altered using the same operator. It is important to note that the <code>window()</code> 
                             method has also been integerated with the inverse method. Hence, the inverse operator can be used within the window method, for example, 
                             as <code>window('!:user')</code>. The window function will understand to return the value with the inverse operator as its first character.
+                            For example assuming our root entry point on a window url is <code>home</code>, then while <code>window(':user')</code> will return <code>home/user</code> 
+                            which will be compared as case-insensitive, 
+                            <code>window('!:user')</code> will return <code>!home/user</code> which will be compared as a case-sensitive url unless this behaviour is inversely altered with 
+                            <code>SELF::STRICT</code> constant.
                         </div>
 
                     </div>

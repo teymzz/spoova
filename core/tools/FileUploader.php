@@ -93,7 +93,7 @@ class FileUploader{
    *
    * @param array $files 
    * @param string $type - options [image | file]
-   * @return void
+   * @return void|bool
    */
   public function start($files = [], $type = null){
 
@@ -187,7 +187,7 @@ class FileUploader{
    * Sets or Returns useful information of the current file
    *
    * @param boolean $param True returns file information, false sets file information
-   * @return void
+   * @return string
    */
   public function GetFileData($param = false){
     $size = $this->GetFileSize();
@@ -215,9 +215,9 @@ class FileUploader{
    * @param array $validfiles valid  or accepted mime-type
    * @param string $location  file destination
    * @param boolean $boolean  true creates new directory if it does not exist
-   * @return void
+   * @return bool
    */
-  public function uploadFile($validfiles, $location, $boolean = true){
+  public function uploadFile($validfiles, $location, $boolean = true) : bool {
 
     $FileType = $this->FileType;
     

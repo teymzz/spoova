@@ -85,9 +85,9 @@ class Controller{
   /**
    * loads the routes supplied from addRoute method
    *
-   * @return void
+   * @return array
    */
-  final static public function loadRoutes(Controller $Class = null){
+  final static public function loadRoutes(Controller $Class = null) : array {
 
     if(!$Class) { $Class = "Window"; }
    
@@ -101,6 +101,7 @@ class Controller{
     }
 
     return $routes;
+
   }
   
 }

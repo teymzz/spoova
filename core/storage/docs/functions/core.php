@@ -528,14 +528,14 @@ window.onload = function() {
             </div>
             
             <div class="mvt-10">
-            The <code>windowIncludes</code> is a case-sensitive function that is used to check if the current url matches the  
-            list of supplied url. Since index pages can either be empty (i.e "") or "index", a frontslash ("/") can be used to denote 
+            The <code>windowIncludes</code> is a case-sensitive function that is used to check if the current base url matches the  
+            list of supplied urls. Since index pages can either be empty (i.e "") or "index", a frontslash ("/") can be used to denote 
             an index page.
             </div> <br>      
             <!-- code line started -->
             <div class="pre-area shadow">
                 <pre class="pre-code">
-  if( invoked('some/url') ){
+  if( windowIncludes('some/url') ){
 
      <span class="comment">// currently in url some url</span>
 

@@ -6,7 +6,8 @@ use Iterator;
 use Reflection;
 use ReflectionClass;
 use ReflectionMethod;
-use User;
+use stdClass;
+
 
 class Collection implements Iterator{ 
 
@@ -151,6 +152,57 @@ class Collection implements Iterator{
      */
     public static function list(array $data = []){
         return (new Collectibles($data))->protect(Collection::protected());
+    }
+
+    /**
+     * Fetchs an index from data list
+     *
+     * @param integer|string $index
+     * @param integer|string|array $value
+     * 
+     * @return bool|stdClass
+     *      - A bool of false is returned if $index does not exist in the data list.
+     *      - A stdClass object is returned if $index exists in data list and $value is not supplied.
+     *      - If $value (string) is supplied and $value exist in $index data list, the relative value is returned, else, false is returned.
+     *      - If $value (array) is supplied each array values is tested as sub index of $index datalist. If subindex does not exist in $index, a false value is assigned to the index in array data returned
+     */
+    public function get(int|string $index, string|array $value = null): stdClass|array|bool|string
+    {
+        if($value){
+            if(is_array($value)){
+                $valueFlip = array_flip($value);
+ 
+                return array_map(function($val) use($index, $value) {
+                    $key = $value[$val];
+                    if(isset($this->data[$index])){
+                       return  $this->data[$index]->{$key} ?? false;
+                    }else{
+                        return false;
+                    }
+                }, $valueFlip);
+            }elseif($value && isset($this->data[$index])){
+                    return $this->data[$index]->{$value} ?? false;
+            }
+        }elseif(is_array($value)){
+            if(isset($this->data[$index])){
+                $data = [];
+                foreach($this->data[$index] as $key => $value){
+                    $data[$key] = $value;
+                }
+                return $data;
+            }
+
+        }
+        return ($this->data[$index] ?? false);
+    }
+
+    /**
+     * Return any database error encountered
+     *
+     * @return bool|string
+     */
+    public function error() : bool|string|null {
+       return property_exists($this, 'error')? $this->error : false;
     }
 
 }

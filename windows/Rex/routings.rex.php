@@ -43,9 +43,10 @@
                             The light itself is an object (model) that makes view possible. So, under wmv, the model comes first before view. <br>
                             <br>
                             Since model comes first, our model classes must be built first, then lastly rendered as a view. This is because
-                            a view will only show existing models rather than non-existing ones. The <code>WMV</code> architecture is divided into three categories
+                            a view will only show existing models rather than non-existing ones. The <code>WMV</code> architecture is divided into five categories
                             which are <a href="@domurl('docs/wmv/routes')"><code>Routes</code>, <a href="@domurl('docs/wmv/frames')"><code>Frames</code></a> 
-                            and <a href="@domurl('docs/wmv/apis')"><code>APIs</code></a> . These will be discussed later under their heading.
+                            and <a href="@domurl('docs/wmv/apis')"><code>APIs</code></a>, <a href="@domurl('docs/wmv/rex')"><code>Rex</code></a> and <a href=""><code>Models</code></a> . 
+                            These will be discussed later under their headings.
                         </div> 
                     </div> <br>
 

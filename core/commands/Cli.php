@@ -153,7 +153,7 @@ class Cli
      *
      * @param array|string $function 
      * @param array|string $final_callback
-     * @return void
+     * @return bool
      * @notice - when animating, yield false is used to denote that an error has occured
      *         - class methods must be set as public to make it callable
      */
@@ -192,7 +192,6 @@ class Cli
 
         print $message;
 
-        //yield 
         yield from $yield;
 
         if($pause > 0) sleep($pause);
@@ -294,7 +293,7 @@ class Cli
      * @param boolean $print false returns break rather than print
      * @return void
      */
-    static function break(int $linebreaks = 1, $print = true){
+    static function break(int $linebreaks = 1, $print = true) {
         if(!$print) return br('', $linebreaks);
         print br('', $linebreaks);
     }
@@ -303,7 +302,7 @@ class Cli
      * Return a break line in cli
      *
      * @param integer $linebreaks number of breaks
-     * @return void
+     * @return string|void
      */
     static function br(int $linebreaks = 1){
         return br('', $linebreaks);
@@ -377,8 +376,6 @@ class Cli
         while($i < 200){ usleep(50000); $i++; if($i == 200){ $i = 0; break; } }
 
         yield 6; // Stage 5 - function processing
-        //slows progress bar much more      
-        // while($i < 1000){ usleep(50000); $i++; if($i == 1000){ $i = 0; break; } }
 
         // last stage (yield true) completed here
         yield true;

@@ -218,7 +218,7 @@
               <div class="pre-area shadow">
                 <div class="pxv-6">Syntax</div>
                 <pre class="pre-code">
-  php mi add:winmodel &lt;name&gt; &lt;path&gt;
+  php mi add:model &lt;name&gt; &lt;path&gt;
   <span class="comment">
     where: 
 

@@ -38,11 +38,11 @@ class Jsonfy{
 	 * return the key for value one level array 
 	 *
 	 * @param string $name
-	 * @return void
+	 * @return int|string|false
 	 */
-	public function datakey(string $value){
-		if(!in_array($value,$this->data)) return ;
-		return array_search($value,$this->data);
+	public function datakey(string $value) : int|string|false {
+		if(!in_array($value, $this->data)) return false;
+		return array_search($value, $this->data);
 	}
 
 	/**

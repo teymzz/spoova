@@ -70,7 +70,7 @@ class Hasher{
   * nb: consider supplying few algos name when using this method to save memory reponse
   *
   * @param array $hashFuncs
-  * @return void
+  * @return void|false
   */
   public function hashFunc($hashFuncs = []){
     
@@ -78,14 +78,14 @@ class Hasher{
     $hashes = []; 
 
     foreach ($hashFuncs as $hashFunc) {
-    if(function_exists($hashFunc)){
-        $hashes[] = $hashFunc;
-    }else{
-      return false;
-    }
+      if(function_exists($hashFunc)){
+          $hashes[] = $hashFunc;
+      }else{
+        return false;
+      }
     }
 
-  $this->hashFunc = $hashes;
+    $this->hashFunc = $hashes;
 
   }
   
@@ -101,7 +101,7 @@ class Hasher{
   *       @ $param2 == (int > 0) => number of times for hashing
   *       @ $param2 == (int = 0) => reset hash and return first hash 
   *
-  * @return void
+  * @return string
   *     
   */
   public function hashify($param1 = true, int $param2 = null){
@@ -183,9 +183,9 @@ class Hasher{
   * @param int $length length of hash
   * @param string $key specific characters from which hash key should be generated
   * @param string $hashAlgos any hashing algorithm
-  * @return void
+  * @return string
   */
-  public function randomHash($length = null, $key = null, $hashAlgos = null){
+  public function randomHash($length = null, $key = null, $hashAlgos = null) : string {
     
     if($key != null){ $this->keySpace = $key; }
 

@@ -107,7 +107,7 @@ final class Res extends Resource implements Resin{
 
     * @param string $url res template url
     * @param array|string|\Closure $callback template handler function
-    * @return void
+    * @return string
     */
     public static function load($url = '', $callback = ''){
         self::init();       
@@ -120,7 +120,7 @@ final class Res extends Resource implements Resin{
      *
      * @param string $url rex template url
      * @param array|string|\Closure $callback template handler function
-     * @return void
+     * @return string
      */
     public static function gett($url = '', $callback = ''){
       self::freeVars();
@@ -148,7 +148,7 @@ final class Res extends Resource implements Resin{
      * @param array|string|\Closure $callback template handler function
      *  -If string is supplied, it must be a valid rex file that will be rendered into request url
      *  -If Closure or array is supplied,  
-     * @return void
+     * @return Res|void
      */
     public static function get($url = '', $callback = ''){
       self::app();
@@ -163,7 +163,8 @@ final class Res extends Resource implements Resin{
      * 
      * @param string $url rex template url
      * @param array|string|\Closure $callback template handler function
-     * @return void     *    parameter 1 (string)         => file name in the rex folder
+     * @return void     
+     *    parameter 1 (string)         => file name in the rex folder
      *    parameter 2 (string|closure) => string or callback function 
      *
      * @return string routed component
@@ -188,7 +189,6 @@ final class Res extends Resource implements Resin{
 
       if($view) echo self::$router->data();
       self::freeVars();
-      return;
   
     }
 
@@ -199,7 +199,7 @@ final class Res extends Resource implements Resin{
     * @param mixed $callback template handler function
     * @return string
     */
-    public static function markup($url, $callback){
+    public static function markup($url, $callback) : string|false {
             
         self::$inload = true;
         self::$parse = true;
@@ -214,14 +214,14 @@ final class Res extends Resource implements Resin{
 
     * @param string $url res template file url
     * @param mixed $callback res template handler function
-    * @return void
+    * @return string
     */
-    private static function engine($url, $callback){ 
+    private static function engine($url, $callback) : string|false { 
 
       // //set call scope if first argument is instance of router
       if((func_get_args()[0]?? false) instanceof Router){
         self::$call_scope = 'router';
-        return;
+        return '';
       }
 
       //process arguments if first argument is not instance of router
@@ -304,7 +304,7 @@ final class Res extends Resource implements Resin{
                 $string[0] = new $string[0];
               }else{
                 trigger_error( 'array must contain at least 1 callback' );
-                return;
+                return '';
               }
             }
 
@@ -372,15 +372,18 @@ final class Res extends Resource implements Resin{
               $content = ob_get_clean();
               print $content;
 
-              
-
             }
   
         }
-
+        return '';
     } 
 
-    //resolve routing if method is validated and run by Router
+    /**
+     * Resolves routing if method is validated and run by Router
+     *
+     * @param Router $router
+     * @return Res|void
+     */
     private static function loadRoute(Router $router){ 
       
       //prevent the use of view outside load scope
@@ -398,17 +401,20 @@ final class Res extends Resource implements Resin{
 
     }
 
+    /**
+     * Restrict method to "view" scope
+     *
+     * @return Res|void
+     */
     private static function loadView(){
       
       //set the self if not already set
       if(!self::$self){ self::$self = new self; }
 
-      if(self::isView()){
-        //print self::$body;        
-      }else{
+      if(!self::isView()){
         $self = self::$self;
         if(self::$body !== false) return $self;   
-      }    
+      }
 
     }    
 
@@ -436,7 +442,7 @@ final class Res extends Resource implements Resin{
      * Sets the scope of call
      *
      * @param boolean $view
-     * @return bool|void
+     * @return string|false
      */
     static function setView($view = true){
       if(!self::isRouter()){ 
@@ -448,6 +454,7 @@ final class Res extends Resource implements Resin{
         return false;
       }
       if(!self::$viewType) self::$viewType = 'view';
+      return '';
     }
 
     /**
@@ -455,7 +462,7 @@ final class Res extends Resource implements Resin{
      *
      * @param string|array $arg1 body or arguments
      * @param array|string $arg2 arguments or body
-     * @return void
+     * @return string|false
      */
     static function compile($arg1 = '', $arg2 = ''){      
       
@@ -468,18 +475,18 @@ final class Res extends Resource implements Resin{
         $body = $arg1;        
         if(func_num_args() > 1 and !is_array($arg2)){
            trigger_error("Both arguments of compile cannot be null or array. One must be a string, while the other an array.");
-           return;
+           return '';
         }
         $locals = (array) $arg2;
       } else {
         $body = $arg2;
         if($arg1 === null){
            trigger_error("argument 1 cannot be null or void.");
-           return ;          
+           return '';          
         }
         if(!is_array($arg1)){
            trigger_error("Both arguments of compile cannot be null or array. One must be a string, while the other an array.");
-           return ;
+           return '';
         }
         $locals = (array) $arg1;
       }

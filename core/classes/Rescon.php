@@ -23,7 +23,7 @@ abstract class Rescon extends Resx{
      * init configurations are loaded once from here
      *
      * @param [string | integer] $interval watchdog interval
-     * @return void
+     * @return string|void|false
      */
     public static function watch($interval = '::lock'){ 
 
@@ -104,8 +104,7 @@ abstract class Rescon extends Resx{
      * @return boolean
      */
     public static function isOn(){
-      $on = self::$off === false ? true : false;
-      return $on;
+      return (self::$off === false) ? true : false;
     }
 
     /**
@@ -182,7 +181,7 @@ abstract class Rescon extends Resx{
      * Watches or monitors a page (live server)
      *
      * @param string $interval
-     * @return void
+     * @return string
      */
     protected static function watchFile($interval = '::lock', $return = false){ 
       

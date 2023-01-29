@@ -623,7 +623,7 @@ class Session extends spoova\core\classes\SharedInfo {
    *  
    *
    * @param boolean|null $secure
-   * @return void
+   * @return bool|null
    */
   public static function secure(bool $secure = null){
 
@@ -658,7 +658,7 @@ class Session extends spoova\core\classes\SharedInfo {
    *   - Notice: Cookie value cannot be empty. User::login() will generate this by default.
    * 
    * @param string $dbTable database table name of cookie and session id field
-   * @return void
+   * @return void|false
    */
   private function remUser($dbTable){
 
@@ -705,7 +705,7 @@ class Session extends spoova\core\classes\SharedInfo {
   
         }else if($db->error_exists()) {
   
-          // trigger_error($db->error());
+          trigger_error($db->error());
   
         }
 

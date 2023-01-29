@@ -589,26 +589,28 @@ still translates as zero.</div>
                                         <li> 
                                             
                                             <a href="<?= DomUrl('docs/database/insert') ?>">drop()</a> <br>
-                                            <div class="c-black-ll pvs-10">This method drops a database field or column. Examples are shown below</div> 
+                                            <div class="c-black-ll pvs-10">This method drops a database, database field or column. Examples are shown below</div> 
 
                                             <div class="pre-area">
                                                 <pre class="pre-code">
   $db = (new DB)->openDB();
   
-  if($db->drop('table_name', true)) {
+  if($db->drop(true)) {
+  <span class="comment no-select">
+    //current connected database dropped successfully!
+  </span>
+  }
   
+  if($db->drop('table_name', true)) {
   <span class="comment no-select">
     //table dropped successfully!
   </span>
-  
   }
   
   if($db->drop('table_name', 'column_name')) {
-  
   <span class="comment no-select">
     //column dropped successfully
   </span>
-  
   }
   
 </pre>

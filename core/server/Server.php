@@ -49,7 +49,7 @@ class Server extends Base{
     } elseif($type === 'standard') {
       Serve::standardlogic();
     } else {
-      Serve::baselogic($type);
+      Serve::baselogic(ucfirst($type));
     }
 
   }

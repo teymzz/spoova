@@ -1,5 +1,5 @@
 <?php
-namespace spoova\core\classes;
+namespace spoova\core\classes\DB;
 
 /**
  * This class is exepected to bridge the gap between
@@ -153,7 +153,7 @@ abstract class DBBridge implements DBInterface, DBHelpers{
    * Return the object instance of the current connection
    * This can be mysqli or pdo
    *
-   * @return void
+   * @return object
    */
   public function dbcon(){
      return $this->conn;
@@ -183,7 +183,7 @@ abstract class DBBridge implements DBInterface, DBHelpers{
    *
    * @return string
    */
-  public function currentDB(){
+  public function currentDB() : string {
     return $this->currentDB;
   }
 
@@ -204,7 +204,7 @@ abstract class DBBridge implements DBInterface, DBHelpers{
    * @param string $dbserver (optional)
    * @param string $dbport (optional)
    * @param string $dbsocket (optional)
-   * @return void
+   * @return true if connection successful
    */
   public function switchDB(
     
@@ -250,7 +250,7 @@ abstract class DBBridge implements DBInterface, DBHelpers{
   /**
    * Returns the number of rows affeted by the last query
    *
-   * @return void
+   * @return int|string
    */
   public function num_rows(){
     return $this->num_rows;

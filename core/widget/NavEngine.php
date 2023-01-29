@@ -536,7 +536,7 @@ class NavEngine extends NavBuild{
      * Returns or Displays the current menu array data
      *
      * @param boolean $view - true sets prints out the array
-     * @return void
+     * @return array
      */
     public function view(bool $view = false){
         

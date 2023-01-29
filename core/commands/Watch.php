@@ -19,7 +19,7 @@ class Watch extends Entry{
         $args = array_values($args);
 
         if(method_exists($this, $arg)){    
-            //Cli::runAnime([[$this, $arg], ...$args]);
+            
             $this->$arg(...$args);
         
             return;

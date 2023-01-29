@@ -61,7 +61,7 @@ class ImageClass extends FileUploader{
     /**
      * Executes activities previouslu declare d
      *
-     * @return void
+     * @return mixed
      */
     public function runImage(){
       if($this->imageSet != null && $this->mvalidateImage()==true){
@@ -201,7 +201,7 @@ class ImageClass extends FileUploader{
      * prints processed image to the page
      *
      * @param [type] $class class attribute
-     * @return void
+     * @return string|false
      */
     public function imageDisplay($class=null){
       
@@ -212,7 +212,7 @@ class ImageClass extends FileUploader{
         $nImage = "<img src='$image' style='width:$width; height:$height' class='$class'>";
         return $nImage; 
       }else{
-          return $this->validImage = false;
+        return $this->validImage = false;
       }
 
     }
@@ -240,7 +240,7 @@ class ImageClass extends FileUploader{
      * Safe delete of an image
      *
      * @param string $im_url image path
-     * @return void
+     * @return bool
      */
     public function imageDelete($im_url=null){
 
@@ -260,9 +260,9 @@ class ImageClass extends FileUploader{
      *
      * @param string $f file path
      * @param boolean $fix true tries to fix image
-     * @return void
+     * @return bool
      */
-    public function check_jpeg($f, $fix = false){
+    public function check_jpeg($f, $fix = false) : bool {
 
       # check for jpeg file header and footer - also try to fix it
       if ( false !== (@$fd = fopen($f, 'r+b' )) ){

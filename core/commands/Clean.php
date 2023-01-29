@@ -56,16 +56,14 @@ class Clean extends Entry{
      * @return void
      */
     public function storage(){
-
-        //Cli::textView(Cli::emos('hot').'Command: clear storage', 2, 2); 
         
         yield from Cli::play(10, 2, 'Clearing storage', 2, 1);
         
         $this->deleteAll(_core.'storage');
 
-        // array_map('unlink', array_filter((array) glob(_core.'storage/*') ) );
         Cli::textView(Cli::success('storage cleared successfully', 2));
         Cli::break(1);
+        
     }
 
     private function deleteAll($dir){

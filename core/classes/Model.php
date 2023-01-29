@@ -4,7 +4,7 @@ namespace spoova\core\classes;
 
 use User;
 use DBStatus;
-use Session;
+use spoova\core\classes\DB\DBModel;
 use spoova\core\tools\Input;
 
 /**
@@ -285,9 +285,9 @@ use spoova\core\tools\Input;
                 if($ruleName === self::RULE_UNIQUE) {
 
                     if(isset($rule[1]['tableName'])){
-                        $tableName = $rule['tableName'];
+                        $tableName = strtolower($rule['tableName']);
                     } else {
-                        $tableName = static::tableName();
+                        $tableName = static::table();
                     }
 
                     /* select from database table where field (or $attribute) has $value */
@@ -329,14 +329,13 @@ use spoova\core\tools\Input;
         $attribute = (array) $attribute;
         $message = sprintf($this->errorMessage($rule), ...$attribute);
 
-        //foreach($params as $param => $value){
         if(count($params) > 1){
             if(is_array($params[1])){
                 EInfo::view('invalid array supplied to "addError" on '.$params[0]);
             }
             $message = str_replace("{{$params[0]}}", $params[1], $message);
         }
-        //}
+
         $attribute = $attribute[0];
         if($attribute) $this->MODEL_ErrorLog[$attribute][] = $message; 
 
@@ -450,7 +449,8 @@ use spoova\core\tools\Input;
      */
     final public function saved(array $update = [], bool $show_error = false) : bool{
 
-        if($data = $this->formdata()){
+        if($data = $this->formdata()){ 
+
             //update existing columns with new value
             foreach($update as $column => $newvalue){
                 if(!is_array($newvalue) && array_key_exists($column, $data)){
@@ -460,17 +460,14 @@ use spoova\core\tools\Input;
 
             $dbh = User::auth()->dbh();
             
-            $dbh->insert_into(static::tableName(), $data);
-            
-            if(!$dbh->insert()){
-                if($show_error) print DBStatus::err();
+            $dbh->insert_into(static::table(), $data);
+            $insert = $dbh->insert();
+
+            if(!$insert){
+                if($show_error) return EInfo::view(DBStatus::err());
                 return false;
             }
-
-            if(in_array(User::config('COOKIE_FIELDNAME'), $data)){
-                die('yeah!');
-                //Session::stream()->remember();
-            }
+            
             return true;
 
         }

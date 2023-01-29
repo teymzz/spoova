@@ -26,7 +26,7 @@ class AccessModel extends Model {
 
                 if($Request->has('login')) {
                     $Model = Login::class; 
-                    $userid = 'username';
+                    $userid = 'email';
                 }elseif($Request->has('signup')){
                     $Model = Signup::class;
                     $userid = 'email';
@@ -56,19 +56,20 @@ class AccessModel extends Model {
      */
     public static function mapform(): array {
 
-        return [
-            'pass' => 'password',
-            'user' => 'username'
-        ];
+        return [];
 
     }
 
-    //AtV3Tjmi4YmpJFX9aSsFAv6GWMsz2yyPua4aJPhTE3pR
+    /**
+     * Sets validation rules for form data
+     *
+     * @return array
+     */
     public function rules(): array { return []; }
 
     public static function tableName(): string {
 
-        return 'users';
+        return User::tableName();
         
     }
 

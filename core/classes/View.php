@@ -35,7 +35,7 @@
      *
      * @param string|array $arg1 body or arguments
      * @param array|string $arg2 arguments or body
-     * @return void
+     * @return string|false
      */
     function compile($arg1 = '', $arg2 = ''){
         return Res::compile(...func_get_args());

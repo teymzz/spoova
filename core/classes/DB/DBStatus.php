@@ -1,6 +1,6 @@
 <?php
 
-use spoova\core\classes\DBBridge;
+use spoova\core\classes\DB\DBBridge;
 
 class DBStatus extends DBBridge{
   
@@ -54,7 +54,7 @@ class DBStatus extends DBBridge{
   /**
    * return last query executed
    *
-   * @return void
+   * @return string
    */
   static function query(){
     return self::$basequery;
