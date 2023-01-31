@@ -441,7 +441,10 @@
     where: 
 
       tablename => name of database table
+
+      Ex: <span class="c-orange-dd">php mi config:userTable users</span>  <span class="no-select">// set database user info table</span>
   </span>
+
                 </pre>
 
               </div>
@@ -469,11 +472,13 @@
               <div class="pre-area shadow">
                 <div class="pxv-6 bc-silver">Syntax</div>
                 <pre class="pre-code">
-  php mi config:usersTable tablename
+  php mi config:cookieField tablename
   <span class="comment">
     where: 
 
       tablename => name of database table
+
+      Ex: <span class="c-orange-dd">php mi config:cookieField cookie </span>  <span class="no-select">//set cookie column in user info table </span>
   </span>
                 </pre>
               </div>
@@ -504,6 +509,9 @@
     where: 
 
       column => name id column
+
+      Ex: <span class="c-orange-dd">php mi config:idField email</span>  <span class="no-select">//set user id column name in user table</span>
+
   </span>
                 </pre>
 
@@ -521,7 +529,8 @@
             <div>
 
                 <div class="pvs-10">
-                  If meta tags are configured by default to be loaded by the resource class, when importing static files using any of the resource importers (e.g <code>&lt;?= Res::import() &gt;</code>, <code>@(Res())@</code>), the resource class
+                  If meta tags are configured by default to be loaded by the resource class automatically, when importing static files using any of the resource 
+                  importer function, method or directives (e.g <code>&lt;?= Res::import() &gt;</code>, <code>@(Res())@</code>), the resource class
                   will build meta tags using the configuration set in <code>icore/filemeta.php</code> file and the predefined meta tags will be added only once to the webpage. 
                 </div>
 
@@ -534,7 +543,9 @@
 
       on  => switches automatic importation on 
       off => switches automatic importation off
-                </span>
+
+      Ex: <span class="c-orange-dd">php mi config:meta on</span>  <span class="no-select">//set meta tags autoloading from <span class="c-teal">icore/filemeta.php</span> configuration on </span>
+  </span>
                 </pre>
 
               </div>
@@ -559,7 +570,9 @@
   <span class="comment">
     where: 
 
-      -list  => optional directive to display more information on ci commands
+      -list  => optional directive to display more information on cli commands
+
+      Ex: <span class="c-orange-dd">php mi cli -lists </span>
   </span>
                 </pre>
 
@@ -614,9 +627,15 @@
   <span class="comment">
     where: 
 
-      command  => cli command name (e.g add:controller)
+      command  => cli command name (e.g add:window)
+
+      Ex1: <span class="c-orange-dd">php mi info add:window</span>  <span class="no-select">//displays description for "add:window" command</span>
+      Ex2: <span class="c-orange-dd">php mi info add:routes</span>  <span class="no-select">//displays description for "add:routes" command</span>
+      Ex3: <span class="c-orange-dd">php mi info "watch status"</span>  <span class="no-select">//displays description for "watch status" command</span>
   </span>
-                </pre>
+      <span class="c-teal"><span class="bi-circle-fill"></span> You can view a list of available commands using <code>php mi cli -lists</code></span>
+               </pre>
+
 
               </div>
             </div> 
@@ -680,7 +699,9 @@
   <span class="comment">
     where: 
 
-      project_name    => name of new project application
+      project_name => name of new project application
+
+      Ex: <span class="c-orange-dd">php mi project lumen</span>  <span class="no-select">// create separate project name "lumen"</span>
   </span>
                   </pre>
 
@@ -749,13 +770,20 @@
               <div class="pre-area shadow">
                 <div class="pxv-6 bc-silver">Syntax</div>
                 <pre class="pre-code">
-  php mi watch [online|offline|disabled]
+  php mi watch [online|offline|disabled|status]
   <span class="comment">
     where: 
 
       online    => sets watch for both offline and online environments
       offline   => sets watch for offline environment only
       disabled  => disables the watch entirely for both environments
+      status    => get the current configuration status of watch
+
+      Ex1: <span class="c-orange-dd">php mi watch online  </span>  <span class="no-select">//set watch to online and offline environments </span>
+      Ex2: <span class="c-orange-dd">php mi watch offline </span>  <span class="no-select">//set watch to offline environment </span>
+      Ex3: <span class="c-orange-dd">php mi watch disabled</span>  <span class="no-select">//set watch to disabled mode </span>
+      Ex3: <span class="c-orange-dd">php mi watch status</span>    <span class="no-select">//get current watch status.</span>
+
   </span>
                 </pre>
 
