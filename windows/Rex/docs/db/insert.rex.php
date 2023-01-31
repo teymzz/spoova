@@ -89,13 +89,23 @@
             </pre>
                 </div> <br><br> 
 
+                <div class="pre-area shadow">
+<div class="pxv-10 bc-silver">Example 5 : Multiple Data insertion</div>
+            <pre class="pre-code">
+  $db->insert_into('users', [ 'id' => [1, 2, 3], 'username'=>['Felix','Richard','Brymo']])
+     ->insert();
+            </pre>
+                </div> <br><br> 
+
 
             </li> 
 
                 <div class="foot-note">
                     <span class="head">Footnote:</span><br>
                     Method 3 above seems to be the easiest, but when handling complex queries, it is preferred 
-                    to use the query approach in Example 4 above.
+                    to use the query approach in Example 4 above. Also, when inserting multiple data, we can use the approach in method 5 above where 
+                    data will be splitted into different rows relative to their field (or column) names. It is important to ensure that the data supplied 
+                    for columns in method 5 above have equal number of array values to prevent value misplacement or errors.
                     <br>
                 </div> <br>
                 

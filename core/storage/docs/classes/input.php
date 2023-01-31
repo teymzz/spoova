@@ -1,3 +1,5 @@
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -372,60 +374,40 @@ window.onload = function() {
 
     <div class="box-full pxl-2 bc-white-dd pull-right">
     
-        <section class="pxv-20 tutorial bc-white">
+        <section class="pxv-20 tutorial mails bc-white">
             <div class="font-em-1d2">
 
                 
- <div class="font-menu pvs-4"> <a href="http://localhost/spoova/docs">Docs</a> <span class="bi-chevron-right"></span> <a href="http://localhost/spoova/docs/classes">Classes</a> <span class="bi-chevron-right"></span> <a href="http://localhost/spoova/docs/classes/imageclass">Imageclass</a>  </div>
+ <div class="font-menu pvs-4"> <a href="http://localhost/spoova/docs">Docs</a> <span class="bi-chevron-right"></span> <a href="http://localhost/spoova/docs/classes">Classes</a> <span class="bi-chevron-right"></span> <a href="http://localhost/spoova/docs/classes/input">Input</a>  </div>
 
 
                 <div class="start font-em-d8">
 
-                    <div class="font-em-1d5 c-orange">ImageClass</div> <br>  
+                    <div class="font-em-1d5 c-orange">Input</div> <br>  
                     
                     <div class="helper-classes">
                         <div class="fb-6">Introduction</div> <br>
                         <div class="">
 
                         <div class="">
-                            The <code>ImageClass</code> is an extension of the <a href="<?= DomUrl('docs/classes/fileuploader') ?>">FileUploader</a>  class. All methods 
-                            belonging to the FileUploader can be applied on the ImageClass. Other available methods 
-                            are:
+                            The input class is a special tool that helps to validate input. It 
+                            is mostly used when validating form inputs. All validation are 
+                            directly processed and returned through the <code>set</code> method. 
+                            The following are methods available in the input class.
                         </div> <br> 
 
                             <ol>
-                                <li> <a href="#setimage"> setImage </a> </li>
-                                <li> <a href="#setwidth"> setWidth </a> </li>
-                                <li> <a href="#resizeimage"> resizeImage </a> </li>
-                                <li> <a href="#runimage"> runImage </a> </li>
-                                <li> <a href="#imagedisplay"> imageDisplay </a> </li>
-                                <li> <a href="#imagedelete"> imageDelete </a> </li>
-                                <li> <a href="#check_jpeg"> check_jpeg </a> </li>
-                                <li> <a href="#newdata"> newData </a> </li>
-                                <li> <a href="#imagedestroy"> imageDestroy </a> </li>
+                            <li> <a href="#set"> set </a> </li>
+                            <li> <a href="#strict"> strict </a> </li>
+                            <li> <a href="#default_type"> default_type </a> </li>
+                            <li> <a href="#default_length"> default_length </a> </li>
+                            <li> <a href="#default_range"> default_range </a> </li>
+                            <li> <a href="#arrgetsvoid"> arrGetsVoid </a> </li>
+                            <li> <a href="#voidkey"> voidKey </a> </li>
                             </ol>
                             
                         </div> 
-                    </div>  
-
-                    <div class="">
-                        For the purpose of this documentation we shall be using the following data
-                        <br><br>
-                        <div class="pre-area shadow">
-                            <div class="box-full">
-                                <div class="pxv-6 bc-off-white"><code>test data</code></div>
-                                <pre class="pre-code">
-<span class="c-green"> 
-    $_FILES['name']  = 'Foo'; 
-    $_FILES['type']  = 'image/png'; 
-    $_FILES['size']  = 5000000; //5mb
-    $_FILES['tmp_name']   = '/tmp/files/image.png'; 
-    $_FILES['error'] = ''; 
-</span>
-                                </pre>
-                            </div>
-                        </div> 
-                    </div> <br>
+                    </div>
 
                     <div id="initialize" class="">
                         <div class="">
@@ -436,142 +418,165 @@ window.onload = function() {
                                 </div>
                             </div> <br>
                             <div class="">
-                                The file uploader class can be easily initialized as shown below.
-                                <br><br>
-                                
-                                <div class="pre-area shadow">
-                                    <div class="box-full">
-                                        <div class="pxv-6 bc-off-white"><code>Sample: Initializing ImageClass</code></div>
-                                        <pre class="pre-code">
-    $ImageClass  = new ImageClass;
-                                        </pre>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div> <br>
-
-                    <div id="start" class="">
-                        <div class="">
-                            <div class="">
-                                <div class="pre-area shadow">
-                                    <div class="box-full">
-                                        <div class="pxv-6 bc-off-white"><code>Syntax: start</code></div>
-                                        <pre class="pre-code">
-    $ImageClass->start($files, $type);
-    <span class="comment no-select">
-      where:
-        
-       <span class="c-sky-blue-dd">$files:</span> $_FILES or files data array
-       <span class="c-sky-blue-dd">$type:</span> type of file. options [file|image]. An option 'image' allows internal processing of images supplied.
-    </span>
-                                        </pre>
-                                    </div>
-                                </div>
-
-                            </div>
-                        </div> <br>
-
-                        We shall be looking at a series of examples below.
-                        <br><br>
+                            The <code>input</code> class can be easily initialized as shown below.
+                            <br><br>
                             
-                        <div class="pre-area shadow">
-                            <div class="box-full">
-                                <div class="pxv-6 bc-off-white"><code>Example: setting files</code></div>
-                                <pre class="pre-code">
-    $ImageClass->start($_FILES); <span class="comment">// set files for upload</span>
-
-    $ImageClass->start($_FILES, 'image'); <span class="comment">// set image files for upload</span>
-
-    $destination = "images/";
-
-    if( $ImageClass->uploadFiles(['jpg']) ) {
-        $newFileName = $ImageClass->newfile;
-    }else{
-        $newFileName = '';
-    }
-
-    $newFilePath = $destination.'/'.$newFileName;
-
-                                </pre>
+                            <div class="pre-area shadow">
+                                <div class="box-full">
+                                    <div class="pxv-6 bc-off-white"><code>Sample: Initializing Input</code></div>
+                                    <pre class="pre-code">
+    $input  = new Input;
+                                    </pre>
+                                </div>
                             </div>
-                        </div>
-                    
-                    </div> <br>
 
-                    <div id="setimage" class="">
+                            </div>
+                        </div> <br><br>
+                    </div>
+
+                    <div id="set" class="">
                         <div class="">
                             <div class="font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
                                 <div class="flex-full midv"> 
                                     <span class=" mxr-8 c-lime-dd">
                                         <span class="numb-box">1.</span>
-                                    </span> setImage
+                                    </span> set
                                 </div>
                             </div> <br>
-                            <div class="">
-                            The <code>setImage()</code> sets an image for processing<br><br>
 
-                        <div class="pre-area shadow">
-                            <div class="box-full">
-                                <div class="pxv-6 bc-off-white"><code>Syntax: setImage</code></div>
-                                <pre class="pre-code">
-    $ImageClass->setImage($path); 
-    <span class="comment">
+                            <div class="">
+                                The <code>set</code> method is used to set parameters 
+                                into the input class.
+                                <br><br>
+                            
+                                <div class="pre-area shadow">
+                                    <div class="box-full">
+                                        <div class="pxv-6 bc-off-white"><code>Syntax: set</code></div>
+                                        <pre class="pre-code">
+    $input->set($value, $config, $bool);
+    <span class="comment no-select">
       where:
         
-        <span class="c-sky-blue-dd">$path:</span> path of image
+        $value : value to be tested 
+        $config: configuration parameters or options that define action to be performed 
+        $bool  : a boolean of true tells input class to disallow spaces when validating input value set.                            
     </span>
-                                </pre>
-                            </div>
-                        </div>    
+                                        </pre>
+                                    </div>
+                                </div>
 
+                            </div>
+                        </div> <br>
+
+                        <div class="exampes-intro font-menu font-em-d8">
+                            We shall be looking at a series of examples below.
+                        </div> <br>
+                            
                         <div class="pre-area shadow">
                             <div class="box-full">
-                                <div class="pxv-6 bc-off-white"><code>Example: setImage</code></div>
+                                <div class="pxv-6 bc-off-white"><code>Example: validating strings</code></div>
                                 <pre class="pre-code">
-    $ImageClass->setImage($newFilePath);                         
+    $text1 = 'foo';
+    $text2 = 'foo bar';
+
+    $text1 = $input->set($text1, ['type' => 'string']); <span class="comment">// returns foo</span>
+
+    $text2 = $input->set($text2, ['type' => 'string']); <span class="comment">// returns bar</span>
+
+    <span class="comment">//check spaces</span>
+    $text1 = $input->set($text1, ['type' => 'string'], true); <span class="comment">// returns foo</span>
+    $text2 = $input->set($text2, ['type' => 'string'], true); <span class="comment">// returns null because test string contains spaces</span>                              
                                 </pre>
                             </div>
                         </div>
-                        
-                            </div>
-                        </div> <br>
-                    </div>
 
-                    <div id="setwidth" class="">
+                        <div class="font-menu pvs-10">
+                            The following are list of available options and their descriptions: <br>
+                            <br>
+                            <div class="">
+                                <div class="">
+                                    <code>type</code> - defines the type of validation. Options are [string | text | email | integer | number | phone | url | pregmatch]
+                                </div>
+                                <div class="">
+                                    <code>length</code> - defines the maximum number of characters to be allowed
+                                </div>
+                                <div class="">
+                                    <code>range</code> - defines an array list which a value must be a member of. 
+                                </div> <br>
+                            </div>
+                            The following examples best describe how these options can be applied for validation <br>
+                        </div>
+
+                        <div class="pre-area shadow">
+                            <div class="box-full">
+                                <div class="pxv-6 bc-off-white"><code>Example: Input Types</code></div>
+                                <pre class="pre-code">
+    $input->set('site@gmail.com', ['type' => 'email']); <span class="comment">// returns site@gmail.com</span>
+    $input->set('site.com', ['type' => 'email']); <span class="comment">// returns null</span>
+
+
+    $input->set('10', ['type' => 'number']); <span class="comment">// returns 10</span>
+    $input->set('hi', ['type' => 'number']); <span class="comment">// returns null</span>
+
+
+    $input->set('0701323323', ['type' => 'phone']); <span class="comment">// returns 0701323323</span>
+    $input->set('07812', ['type' => 'phone']); <span class="comment">// returns null : This uses a regex pattern</span>
+
+    
+    $input->set('20', ['type' => 'number', range => ['5', '15', '20']]); <span class="comment">// returns 20</span>                              
+    $input->set('20', ['type' => 'number', range => ['5', '15', '25']]); <span class="comment">// returns null</span> 
+
+
+    $input->set('foo', ['type' => 'string', 'length' => 10]); <span class="comment">// returns 10, character is less than 10</span>                              
+    $input->set('foobar123', ['type' => 'string', 'length' => ['0', '5']]); <span class="comment">// returns null, character is greater than 5</span>    
+
+
+    $input->set('foo', ['type' => 'text', 'length' => 10]); <span class="comment">// returns foo</span>                              
+    $input->set('foobar123', ['type' => 'text']); <span class="comment">// returns null, value contains number</span> 
+    
+
+    $input->set('http://site.com', ['type' => 'url']); <span class="comment">// returns http://site.com</span>                              
+    $input->set('site', ['type' => 'url']); <span class="comment">// returns null, value is not a valid url</span> 
+                                </pre>
+                            </div>
+                        </div>
+                    </div> <br>
+
+                    <div id="strict" class="">
                         <div class="">
                             <div class="font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
                                 <div class="flex-full midv"> 
                                     <span class=" mxr-8 c-lime-dd">
                                         <span class="numb-box">2.</span>
-                                    </span> setWidth
+                                    </span> strict
                                 </div>
                             </div> <br>
-                            <div class="">
-                            The <code>setwidth()</code> sets the output width of an image<br><br>
 
-                        <div class="pre-area shadow">
-                            <div class="box-full">
-                                <div class="pxv-6 bc-off-white"><code>Syntax: setWidth</code></div>
-                                <pre class="pre-code">
-    $ImageClass->width($width, $height, $quality, $fileOut); 
+                            <div class="">
+                                The <code>strict()</code> method is a directive that prevents the input class from proceeding with 
+                                subsequent validations if an error is encountered in previous validations <br><br>
+
+                                <div class="pre-area shadow">
+                                    <div class="box-full">
+                                        <div class="pxv-6 bc-off-white"><code>Syntax: strict validation</code></div>
+                                        <pre class="pre-code">
+    $input->strict(bool);
     <span class="comment">
       where:
-        
-       <span class="c-sky-blue-dd">$width:</span> image width in pixels
-       <span class="c-sky-blue-dd">$height:</span> image height in pixels
-       <span class="c-sky-blue-dd">$quality:</span> optional image quality from 0 - 9. Nine is the maximum.
-       <span class="c-sky-blue-dd">$fileOut:</span> optional output file name.
-    </span>
-                                </pre>
-                            </div>
-                        </div>    
-
+    
+        bool: set the strict type to true or false. Default is true.
+    </span>                            </pre>
+                                    </div>
+                                </div>          
                         <div class="pre-area shadow">
                             <div class="box-full">
-                                <div class="pxv-6 bc-off-white"><code>Example: setWidth</code></div>
+                                <div class="pxv-6 bc-off-white"><code>Example: strict validation</code></div>
                                 <pre class="pre-code">
-    $ImageClass->setWidth(500, 500, 9);                         
+    $input->strict();
+
+    $input->set('foo', ['type'=>'number']); <span class="comment"> // returns null</span>
+    
+    $input->set('foo', ['type'=>'text']); <span class="comment"> // returns null because a previous validation returned null</span>                                  
                                 </pre>
                             </div>
                         </div>
@@ -580,36 +585,42 @@ window.onload = function() {
                         </div> <br>
                     </div>
 
-                    <div id="resizeimage" class="">
+                    <div id="default_type" class="">
                         <div class="">
                             <div class="font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
                                 <div class="flex-full midv"> 
                                     <span class=" mxr-8 c-lime-dd">
                                         <span class="numb-box">3.</span>
-                                    </span> resizeImage
+                                    </span> default_type
                                 </div>
                             </div> <br>
                             <div class="">
-
-                                This method returns is used to resize an image.
-                                <br><br>
+                                    
+                                Sets the default type of inputs to be validated. This can be overidden by setting 
+                                options. <br><br>
                     
                                 <div class="pre-area shadow">
                                     <div class="box-full">
-                                        <div class="pxv-6 bc-off-white"><code>Syntax: resizeImage</code></div>
-                                        <pre class="pre-code">
-    $ImageClass->resizeImage(); <span class="comment"> // sets image class activity </span>
-                                        </pre>
+                    <div class="pxv-6 bc-off-white"><code>Syntax: default_type</code></div>
+                    <pre class="pre-code">
+    $input->default_type($type); <span class="comment"> // set base path</span>
+    <span class="comment"> 
+      where :
+
+        $type: type of validation
+    </span>
+                    </pre>
                                     </div>
                                 </div>
 
                                 <div class="pre-area shadow">
                                     <div class="box-full">
-                                    <div class="pxv-6 bc-off-white"><code>Example: resizeImage </code></div>
+                                        <div class="pxv-6 bc-off-white"><code>Example: default_type</code></div>
                                         <pre class="pre-code">
-    $ImageClass->setImage($newFilePath);
-    $ImageClass-setWidth(500, 500, 9);
-    $ImageClass->resizeImage();
+    $input->default_type('text'); <span class="comment"> // set default type</span>
+
+    $input->set('foo'); <span class="comment">// returns foo</span>
+    $input->set('foo123'); <span class="comment">// returns null</span>
                                         </pre>
                                     </div>
                                 </div>
@@ -617,78 +628,83 @@ window.onload = function() {
                         </div> <br>
                     </div>
 
-                    <div id="runimage" class="">
+                    <div id="default_length" class="">
                         <div class="">
                             <div class="font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
                                 <div class="flex-full midv"> 
                                     <span class=" mxr-8 c-lime-dd">
                                         <span class="numb-box">4.</span>
-                                    </span> runImage
+                                    </span> default_length
                                 </div>
                             </div> <br>
-
                             <div class="">
-                                This method returns the type of current file set.
-                                <br><br>
+                                Sets the default length of inputs to be validated. This can be overidden by setting 
+                                options. <br><br>
                     
                                 <div class="pre-area shadow">
                                     <div class="box-full">
-                                        <div class="pxv-6 bc-off-white"><code>Syntax: runImage</code></div>
+                                        <div class="pxv-6 bc-off-white"><code>Syntax: default_length</code></div>
                                         <pre class="pre-code">
-    $ImageClass->runImage(); <span class="comment"> // executes the activity declared. </span>
+    $input->default_length(length); <span class="comment"> // set base path</span>
+    <span class="comment"> 
+      where :
+
+        length: array or string of acceptable lengths
+    </span>
                                         </pre>
                                     </div>
                                 </div>
+
                                 <div class="pre-area shadow">
                                     <div class="box-full">
-                                        <div class="pxv-6 bc-off-white"><code>Example: runImage</code></div>
+                                        <div class="pxv-6 bc-off-white"><code>Example: default_length</code></div>
                                         <pre class="pre-code">
-    $ImageClass->setImage($newFilePath);
-    $ImageClass-setWidth(500, 500, 9);
-    $ImageClass->resizeImage();
-    $ImageClass->runImage(); <span class="comment">// executes the image resize previously declared</span>
+    $input->default_length(5); <span class="comment"> // set default length</span>
+    
+    $input->set('foo12'); <span class="comment">// returns foo12</span>
+    $input->set('foobar123'); <span class="comment">// returns null</span>
                                         </pre>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                    </div> <br>
+                        </div> <br>
+                    </div>
 
-                    <div id="imagedisplay" class="">
+                    <div id="default_range" class="">
                         <div class="">
                             <div class="font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
                                 <div class="flex-full midv"> 
                                     <span class=" mxr-8 c-lime-dd">
                                         <span class="numb-box">5.</span>
-                                    </span> imageDisplay
+                                    </span> default_range
                                 </div>
                             </div> <br>
-
                             <div class="">
-                                This method displays the processed image to the screen using the html img tag.
-                                <br><br>
-                        
+                                Sets the default ranges for inputs to be validated. This can be overidden by setting 
+                                options. <br><br>
+                    
                                 <div class="pre-area shadow">
                                     <div class="box-full">
-                                        <div class="pxv-6 bc-off-white"><code>Syntax: imageDisplay</code></div>
+                                        <div class="pxv-6 bc-off-white"><code>Syntax: default_range</code></div>
                                         <pre class="pre-code">
-    $ImageClass->imageDisplay(); <span class="comment"> // prints the image to screen </span>
+    $input->default_range($range); <span class="comment"> // set default range</span>
+    <span class="comment"> 
+      where :
+
+        $range: array of acceptable ranges
+    </span>
                                         </pre>
                                     </div>
                                 </div>
+
                                 <div class="pre-area shadow">
                                     <div class="box-full">
-                                        <div class="pxv-6 bc-off-white"><code>Example: imageDisplay</code></div>
-                                        <pre class="pre-code">    
-    $ImageClass->setImage($newFilePath);
-    $ImageClass-setWidth(500, 500, 9);
-    $ImageClass->resizeImage();
+                                        <div class="pxv-6 bc-off-white"><code>Example: default_range</code></div>
+                                        <pre class="pre-code">
+    $input->default_range(['ball', 'cat', 'dog']); <span class="comment"> // set default range</span>
     
-    if($ImageClass->runImage()) {
-
-        echo( $ImageClass->imageDisplay() ); <span class="comment no-select">// displays array data of file. </span>
-
-    }
+    $input->set('cat'); <span class="comment">// returns cat</span>
+    $input->set('bird'); <span class="comment">// returns null</span>
                                         </pre>
                                     </div>
                                 </div>
@@ -696,44 +712,41 @@ window.onload = function() {
                         </div> <br>
                     </div>
 
-                    <div id="imagedelete" class="">
+                    <div id="arrgetsvoid" class="">
                         <div class="">
                             <div class="font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
                                 <div class="flex-full midv"> 
                                     <span class=" mxr-8 c-lime-dd">
                                         <span class="numb-box">6.</span>
-                                    </span> imageDelete
+                                    </span> arrGetsVoid
                                 </div>
                             </div> <br>
+                            
                             <div class="">
-                                This method safely deletes an image if it exists without throwing an error. It returns true if image 
-                                was deleted and false if the image was not able to delete or does not exists.
+                                The <code>arrGetsVoid</code> checks if a supplied array has an empty value for any key
+                                within it.
                                 <br><br>
-                        
+                    
                                 <div class="pre-area shadow">
                                     <div class="box-full">
-                                        <div class="pxv-6 bc-off-white"><code>Syntax: imageDelete</code></div>
+                                        <div class="pxv-6 bc-off-white"><code>Syntax: arrGetsVoid</code></div>
                                         <pre class="pre-code">
-    $ImageClass->imageDelete($path); <span class="comment"> // returns true or false. </span>
-    <span class="comment">
-      where : 
-
-       $path: Optional relative path of image. If not provided, uses relative path defined in <code class="c-orange-dd">setImage()</code> method.
+    Input::arrGetsVoid($array); 
+    <span class="comment no-select"> 
+      where:
+        
+       $array : array lists to be tested
     </span>
                                         </pre>
                                     </div>
                                 </div>
+
                                 <div class="pre-area shadow">
                                     <div class="box-full">
-                                        <div class="pxv-6 bc-off-white"><code>Example: imageDelete</code></div>
+                                        <div class="pxv-6 bc-off-white"><code>Example: arrGetsVoid</code></div>
                                         <pre class="pre-code">
-    $ImageClass->setImage($newFilePath);   <span class="comment">set image relative path</span> 
-
-    if( $ImageClass->imageDelete() ) {
-
-        <span class="comment">//image deleted successfully</span>
-
-    }
+    Input::arrGetsVoid(['name'=>'foo','age'=>'']); <span class="comment">// returns true</span>
+    Input::arrGetsVoid(['name'=>'foo','age'=>'30']); <span class="comment">// returns false</span>
                                         </pre>
                                     </div>
                                 </div>
@@ -741,145 +754,43 @@ window.onload = function() {
                         </div> <br>
                     </div>
 
-                    <div id="check_jpeg" class="">
+                    <div id="voidkey" class="">
                         <div class="">
                             <div class="font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
                                 <div class="flex-full midv"> 
                                     <span class=" mxr-8 c-lime-dd">
                                         <span class="numb-box">7.</span>
-                                    </span> check_jpeg
+                                    </span> voidKey
                                 </div>
                             </div> <br>
                             <div class="">
-                                This method tries to detect if a jpeg image is bad.
+                                The <code>voidKey</code> method returns the corresponding keys that have 
+                                an empty value in a previously tested array. 
+                                This method is useful when handling zip files.
                                 <br><br>
                     
                                 <div class="pre-area shadow">
                                     <div class="box-full">
-                                        <div class="pxv-6 bc-off-white"><code>Syntax: check_jpeg</code></div>
+                                        <div class="pxv-6 bc-off-white"><code>Example: fetch last directory</code></div>
                                         <pre class="pre-code">
-    $ImageClass->check_jpeg($filepath, $fix); <span class="comment"> // returns true or false </span>
-    <span class="comment">
-      where : 
-        
-       $filepath: path of image file 
-       $fix: a bool of true tries to fix the image if possible.
-    </span>
-                                        </pre>
-                                    </div>
-                                </div>
-                                <div class="pre-area shadow">
-                                    <div class="box-full">
-                                        <div class="pxv-6 bc-off-white"><code>Example: check_jpeg</code></div>
-                                        <pre class="pre-code">
-    if( $ImageClass->check_jpeg($newFilePath) ) {
-
-        <span class="comment">jpeg file seems okay.</span>
-
-    }
- 
+    Input::arrGetsVoid(['name'=>'foo', 'age'=>'']);
+    Input::voidKey(); <span class="comment no-select"> // returns ['age']</span>
                                         </pre>
                                     </div>
                                 </div>
                             </div>
                         </div> <br>
-                    </div>
-
-                    <div id="newdata" class="">
-                        <div class="">
-                            <div class="font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
-                                <div class="flex-full midv"> 
-                                    <span class=" mxr-8 c-lime-dd">
-                                        <span class="numb-box">8.</span>
-                                    </span> newdata
-                                </div>
-                            </div> <br>
-                            <div class="">
-                                This method returns the <code>data</code> for current processed file.
-                                <br><br>
+                    </div> 
                     
-                                <div class="pre-area shadow">
-                                    <div class="box-full">
-                                        <div class="pxv-6 bc-off-white"><code>Syntax: newData</code></div>
-                                        <pre class="pre-code">
-    $ImageClass->newData(); <span class="comment"> //  returns array data of valid file or empty array </span>
-                                        </pre>
-                                    </div>
-                                </div>
-                                <div class="pre-area shadow">
-                                    <div class="box-full">
-                                        <div class="pxv-6 bc-off-white"><code>Example: newData</code></div>
-                                        <pre class="pre-code">
-    $ImageClass->setImage($newFilePath);
-    $ImageClass-setWidth(500, 500, 9);
-    $ImageClass->resizeImage();
-    
-    if($ImageClass->runImage()) {
-
-        var_dump( $ImageClass->newData() ); <span class="comment no-select">// displays array data of file. </span>
-
-    }
-                                      </pre>
-                                    </div>
-                                </div>
-                            </div>
-                        </div> <br>
-                    </div>
-
-                    <div id="imagedestroy" class="">
-                        <div class="">
-                            <div class="font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
-                                <div class="flex-full midv"> 
-                                    <span class=" mxr-8 c-lime-dd">
-                                        <span class="numb-box">9.</span>
-                                    </span> uniqueFile
-                                </div>
-                            </div> <br>
-                            <div class="">
-                            This function directs the image class to destroy previous activity
-                            <br><br>
                     
-                            <div class="pre-area shadow">
-                                <div class="box-full">
-                                    <div class="pxv-6 bc-off-white"><code>Syntax: imageDestroy</code></div>
-                                    <pre class="pre-code">
-    $ImageClass->imageDestroy();
-                                    </pre>
-                                </div>
-                            </div>
-
-                            <div class="pre-area shadow">
-                                <div class="box-full">
-                                    <div class="pxv-6 bc-off-white"><code>Example: imageDestroy</code></div>
-                                    <pre class="pre-code">    
-    $ImageClass->setImage($newFilePath);
-    $ImageClass-setWidth(500, 500, 9);
-    $ImageClass->resizeImage();
-    
-    if($ImageClass->runImage()) {
-
-        $data = $ImageClass->newData();
-        $ImageClass->imageDestroy();
-
-    }
-                                    </pre>
-                                </div>
-                            </div>
-
-                            </div>
-                        </div> <br>
-                    </div>
-                    
-                
- <div class="font-menu pvs-4"> <a href="http://localhost/spoova/docs">Docs</a> <span class="bi-chevron-right"></span> <a href="http://localhost/spoova/docs/classes">Classes</a> <span class="bi-chevron-right"></span> <a href="http://localhost/spoova/docs/classes/imageclass">Imageclass</a>  </div>
+ <div class="font-menu pvs-4"> <a href="http://localhost/spoova/docs">Docs</a> <span class="bi-chevron-right"></span> <a href="http://localhost/spoova/docs/classes">Classes</a> <span class="bi-chevron-right"></span> <a href="http://localhost/spoova/docs/classes/input">Input</a>  </div>
 
 
                 </div>
             </div>
         </section>
     </div>
-                
-    
+        
 
 
          <div class="blurry page-overlay ov-d5 hide"></div>

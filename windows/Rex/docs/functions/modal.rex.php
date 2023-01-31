@@ -29,7 +29,7 @@
           <!-- br -->
           <div id="br" class="br"> 
             <br>
-            <div class="font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8">
+            <div class="font-menu lacier fb-6 bc-white-dd flex-full rad-4 pxv-8">
               <div class="flex-full">1. br</div>
             </div> <br>
             
@@ -57,7 +57,7 @@
           <div id="refil" class="refil"> 
             <br>
 
-            <div class="font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8">
+            <div class="font-menu lacier fb-6 bc-white-dd flex-full rad-4 pxv-8">
               <div class="flex-full">2. refil</div>
             </div> <br>
             
@@ -86,7 +86,7 @@
           <!-- encodeUriComponent -->
           <div id="encodeuricomponent" class="encodeuricomponent"> 
             <br>
-            <div class="font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8">
+            <div class="font-menu lacier fb-6 bc-white-dd flex-full rad-4 pxv-8">
               <div class="flex-full">3. encodeUriComponent</div>
             </div> <br>
             
@@ -99,7 +99,7 @@
           <div id="inrange" class="inrange"> 
             <br>
 
-            <div class="font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8">
+            <div class="font-menu lacier fb-6 bc-white-dd flex-full rad-4 pxv-8">
               <div class="flex-full">4. inRange</div>
             </div> <br>
             
@@ -128,7 +128,7 @@
           <div id="randice" class="randice"> 
             <br>
 
-            <div class="font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8">
+            <div class="font-menu lacier fb-6 bc-white-dd flex-full rad-4 pxv-8">
               <div class="flex-full">5. randice</div>
             </div> <br>
               
@@ -156,7 +156,7 @@
           <div id="is_empty" class="is_empty"> 
             <br>
 
-            <div class="font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8">
+            <div class="font-menu lacier fb-6 bc-white-dd flex-full rad-4 pxv-8">
               <div class="flex-full">6. is_empty</div>
             </div> <br>
               
@@ -189,7 +189,7 @@
           <!-- not_empty -->
           <div id="not_empty" class="not_empty"> 
             <br>
-            <div class="font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8">
+            <div class="font-menu lacier fb-6 bc-white-dd flex-full rad-4 pxv-8">
               <div class="flex-full">7. not_empty</div>
             </div> <br>
             
@@ -220,7 +220,7 @@
           <!-- combine -->
           <div id="combine" class="combine"> 
             <br>
-            <div class="font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8">
+            <div class="font-menu lacier fb-6 bc-white-dd flex-full rad-4 pxv-8">
               <div class="flex-full">8. combine</div>
             </div> <br>
             
@@ -253,7 +253,7 @@
           <!-- compare -->
           <div id="compare" class="compare"> 
             <br>
-            <div class="font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8">
+            <div class="font-menu lacier fb-6 bc-white-dd flex-full rad-4 pxv-8">
               <div class="flex-full">9. compare</div>
             </div> <br>
             
@@ -281,7 +281,7 @@
           <!-- arrinside -->
           <div id="arrinside" class="arrinside"> 
             <br>
-            <div class="font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8">
+            <div class="font-menu lacier fb-6 bc-white-dd flex-full rad-4 pxv-8">
               <div class="flex-full">10. arrInside</div>
             </div> <br>
             
@@ -307,7 +307,7 @@
           <!-- arrvoid -->
           <div id="arrvoid" class="arrvoid"> 
             <br>
-            <div class="font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8">
+            <div class="font-menu lacier fb-6 bc-white-dd flex-full rad-4 pxv-8">
               <div class="flex-full">11. arrVoid</div>
             </div> <br>
             
@@ -338,7 +338,7 @@
           <!-- arrgetsvoid -->
           <div id="arrgetsvoid" class="arrgetsvoid"> 
             <br>
-            <div class="font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8">
+            <div class="font-menu lacier fb-6 bc-white-dd flex-full rad-4 pxv-8">
               <div class="flex-full">12. arrGetsVoid</div>
             </div> <br>
             
@@ -368,7 +368,7 @@
           <!-- arrSort -->
           <div id="arrsort" class="arrsort"> 
             <br>
-            <div class="font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8">
+            <div class="font-menu lacier fb-6 bc-white-dd flex-full rad-4 pxv-8">
               <div class="flex-full">13. arrSort</div>
             </div> <br>
             
@@ -394,7 +394,7 @@
           <!-- array_trim -->
           <div id="array_trim" class="array_trim"> 
             <br>
-            <div class="font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8">
+            <div class="font-menu lacier fb-6 bc-white-dd flex-full rad-4 pxv-8">
               <div class="flex-full">14. array_trim</div>
             </div> <br>
             
@@ -419,7 +419,7 @@
           <!-- array_get -->
           <div id="array_get" class="array_get"> 
             <br>
-            <div class="font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8">
+            <div class="font-menu lacier fb-6 bc-white-dd flex-full rad-4 pxv-8">
               <div class="flex-full">15. array_get</div>
             </div> <br>
             
@@ -447,7 +447,7 @@
           <!-- array_object -->
           <div id="array_object" class="array_object"> 
             <br>
-            <div class="font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8">
+            <div class="font-menu lacier fb-6 bc-white-dd flex-full rad-4 pxv-8">
               <div class="flex-full">16. array_object</div>
             </div> <br>
             
@@ -475,7 +475,7 @@
           <!-- array_delete -->
           <div id="array_delete" class="array_delete"> 
             <br>
-            <div class="font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8">
+            <div class="font-menu lacier fb-6 bc-white-dd flex-full rad-4 pxv-8">
               <div class="flex-full">17. array_delete</div>
             </div> <br>
             
@@ -504,7 +504,7 @@
           <!-- array_unset -->
           <div id="array_unset" class="array_unset"> 
             <br>
-            <div class="font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8">
+            <div class="font-menu lacier fb-6 bc-white-dd flex-full rad-4 pxv-8">
               <div class="flex-full">18. array_unset</div>
             </div> <br>
             
@@ -529,7 +529,7 @@
           <!-- reItemize -->
           <div id="reitemize" class="reitemize"> 
             <br>
-            <div class="font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8">
+            <div class="font-menu lacier fb-6 bc-white-dd flex-full rad-4 pxv-8">
               <div class="flex-full">19. reItemize</div>
             </div> <br>
             

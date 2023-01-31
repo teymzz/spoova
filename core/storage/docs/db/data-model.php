@@ -605,7 +605,7 @@ window.onload = function() {
                                 <code>posts</code> table has a foreign key field of <code>user_id</code>. From the sample above, the 
                                 comment table will look within itself for where post_id foreign key is equivalent to posts table local key "id" 3. 
                                 then the posts table will bind the parent "users" by using the parent foreign key field name "user_id". 
-                                This relationship can thus be defined as a complex relationship, one that is defined for a GrandParent, Parent and Child. 
+                                This relationship can thus be defined as a complex relationship, one that is defined for a Child, Parent and GrandParent. 
                                 In the event that the foreign key of the post table on comments table above is not <code>post_id</code>, this can be modified by supplying a third
                                 argument of the foreign key field name on the <code>of()</code> method.
                             </div> <br>
@@ -790,7 +790,7 @@ window.onload = function() {
                                     its respective child models. Also, unlike the <code>of()</code> and <code>ofUser()</code> methods that use 
                                     the Model's name as a property to obtain data, when accessing data under any of the known predefined relationships, 
                                     the first parameter of any relationship is used to obtain the collected data. For example, the <code>admin</code> 
-                                    property was used to access the data because the first argument of <code>matchOneFrom()</code> is the <code>Admin::class</code>. 
+                                    property was used to access the data because the first argument of <code>matchOne()</code> is the <code>Admin::class</code>. 
                                     In situations where the foreign key is not "user_id", we can supply the foreign key as the second parameter. 
                                     Also if the local key is not "id", we can supply the local key as the third argument just as below:
                                 </div>
@@ -836,7 +836,9 @@ assume that the database table name is <code>post</code>  rather than <code>post
     }
 
     static function tableName() : string{
+        
         return 'posts';
+
     }
 
 
@@ -1372,8 +1374,11 @@ assume that the database table name is <code>post</code>  rather than <code>post
                                 <div class="pxv-10 bc-silver">Setting up "byRecent" condition</div>
  <pre class="pre-code">
   <span class="c-grey-dd no-select">1.</span> User::posts()->byRecent()->read()->posts;
+
   <span class="c-grey-dd no-select">2.</span> User::posts()->byRecent('date')->read()->posts;
+
   <span class="c-grey-dd no-select">3.</span> User::posts()->byRecent([Posts::class, 'post'])->read()->posts;
+
   <span class="c-grey-dd no-select">4.</span> User::posts()->byRecent(['posts', 'post'])->read()->posts;
  </pre>
                             </div>
@@ -1716,7 +1721,7 @@ assume that the database table name is <code>post</code>  rather than <code>post
                                     The collection data above was optimized before calling the <code>get()</code> method. Since no data index "0"
                                     exists, the optimizer will ensure that the <code>get()</code> method returns a false value by default. In case we  
                                     want to obtain the list of array we supplied (i.e firstname and lastname), we can set the Optimizer mode as false. This 
-                                    will ensure that if array is supplied as sub indexes, then each of the array supplied will become an index assigned the false value. 
+                                    will ensure that if array is supplied as sub indexes, then each of the array supplied will become an index assigned the <code>false</code> value. 
                                     An example is shown below: 
                                 </div>  
 

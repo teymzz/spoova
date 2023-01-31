@@ -122,7 +122,7 @@
                                 <code>$result3</code> will translate as <code>Felix</code> <br> 
                                 
                                 <br>
-                                Note : In this manner, we are able to pull data easily from a the data obtained. If such key does not exist, <code>$result2</code> or <code>$result3</code> will be set as an empty value.
+                                Note : In this manner, we are able to pull data easily from the data obtained. If such key does not exist, <code>$result2</code> or <code>$result3</code> will be set as an empty value.
                             </div> <br>
 
                             <!-- Data Trimming -->
@@ -150,7 +150,7 @@
                                 less depending on the total number of results obtained. <br>
                                 
                                 <br>
-                                Note : In this manner, we are able to trim data easily from a the data obtained. 
+                                Note : In this manner, we are able to trim data easily from the data obtained. 
                             </div> <br>
 
                             <!-- Data Shuffling -->

@@ -79,9 +79,8 @@
                                         <div class="pxv-6 bc-off-white"><code>keywords</code></div>
                                         <pre class="pre-code">
                                             <span class="comment">
-    key      : a unique id string for a notice
-
-    message  : a string of text stored for displayed
+    key : a unique id string for a notice
+    message : a string of text stored for displayed
                                             </span>
                                         </pre>
                                     </div>
@@ -165,10 +164,7 @@
 
     $message = $notice->getFlash('greeting');  
 
-    var_dump( $message ); <span class="comment no-select">// welcome to our site</span>
-                                        <span class="comment no-select">
-                                        Note: This depends on session. 
-                                        </span>
+    var_dump( $message ); <span class="comment no-select">// Welcome to our site</span>
                                         </pre>
                                     </div>
                                 </div>
@@ -176,7 +172,7 @@
                                     <div class="box-full">
                                         <div class="pxv-6 bc-off-white"><code>Example: setFlash (Real Application)</code></div>
                                         <pre class="pre-code">
-    <div class="pxv-10 bc-off-white c-green"> <code>File1 - insert.php</code> </div>
+    <div class="pxv-10 bc-off-white c-green"> <code>url1 - insert</code> </div>
                     
     $db = (new DB())->openDB(); <span>open a database class.</span>
 
@@ -188,7 +184,7 @@
         redirect('display');
 
     }
-    <div class="pxv-10 bc-off-white c-green"> <code>File2 - display.php</code> </div>
+    <div class="pxv-10 bc-off-white c-green"> <code>url2 - display</code> </div>
 
     if($notice->hasFlash('notice')){
         
@@ -201,10 +197,9 @@
     }
 
     <span class="comment no-select">
-        Note: In the above, when a data is successfully stored, it redirects back to the 
-        <code>display.php</code> which displays the last message set only only. If no message is found,  
-        <code>display.php</code> page will show the notice message once after which it will redirect back 
-        to the insert page.;
+    In the above, when a data is successfully stored using <code>setFlash()</code>, it redirects to 
+    <code>display</code> url which displays the last message set. If no message is found,  
+    then a redirection will be made back to <code>insert</code> url.
     </span>
                                         </pre>
                                     </div>

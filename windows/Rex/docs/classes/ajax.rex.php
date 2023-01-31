@@ -599,7 +599,6 @@
     <div class="pxv-6 bc-silver"><code>Syntax: response()</code></div>
     <pre class="pre-code font-menu font-em-d85">
     response($code, $message, $modifier);
-
       <span class="comment">
         where: 
 

@@ -104,25 +104,19 @@
                                 <div class="box-full">
                                     <div class="pxv-6 bc-off-white"><code>Syntax: start</code></div>
                                     <pre class="pre-code">
-        $FileUploader->start(files, type);
-
-        <span class="comment no-select">
-        where:
+    $FileUploader->start($files, $type);
+    <span class="comment no-select">
+      where:
             
-            files: $_FILES or files data array
-            type: type of file. options [file|image]
-                    A type of 'image' allows internal processing of images supplied.
-        </span>
+       $files: $_FILES or files data array
+       $type: When set as 'image', it allows internal validation of images selected.
+    </span>
                                     </pre>
                                 </div>
                             </div>
 
                             </div>
-                        </div> <br>
-
-                        We shall be looking at a series of examples below.
-                        <br><br>
-                            
+                        </div>
                         <div class="pre-area shadow">
                             <div class="box-full">
                                 <div class="pxv-6 bc-off-white"><code>Example: setting files</code></div>
@@ -155,11 +149,11 @@
                                     <div class="box-full">
                                         <div class="pxv-6 bc-off-white"><code>Syntax: filesize</code></div>
                                         <pre class="pre-code">
-    $FileUploader->filesize(size); 
+    $FileUploader->filesize($size); 
         <span class="comment">
-            where:
+      where:
             
-            size: maximum file size in bytes
+        $size: maximum file size in bytes
         </span>
                                         </pre>
                                     </div>
@@ -198,13 +192,7 @@
                                     <div class="box-full">
                                         <div class="pxv-6 bc-off-white"><code>Syntax: GetFileName</code></div>
                                         <pre class="pre-code">
-    $FileUploader->GetFileName(type); <span class="comment"> // returns </span>
-    
-    <span class="comment"> 
-        where :
-
-            type: type of validation
-                                        </span>
+    $FileUploader->GetFileName(); <span class="comment"> // returns name of file</span>
                                         </pre>
                                     </div>
                                 </div>
@@ -214,7 +202,7 @@
                                         <div class="pxv-6 bc-off-white"><code>Example: GetFileName</code></div>
                                         <pre class="pre-code">
     $FileUploader->start($_FILES, 'image');
-    $FileUploader->GetFileName(); <span class="comment"> // Foo</span>
+    $FileUploader->GetFileName(); <span class="comment"> // returns Foo</span>
                                         </pre>
                                     </div>
                                 </div>
@@ -284,7 +272,7 @@
                                         <div class="pxv-6 bc-off-white"><code>Example: GetFileSize</code></div>
                                         <pre class="pre-code">
     $FileUploader->start($_FILES, 'image');
-    $FileUploader->GetFileSize(); <span class="comment"> // 2000000</span>
+    $FileUploader->GetFileSize(); <span class="comment"> // 5000000</span>
                                         </pre>
                                     </div>
                                 </div>
@@ -318,7 +306,7 @@
                                     <div class="pxv-6 bc-off-white"><code>Example: GetFileTemp</code></div>
                                     <pre class="pre-code">
     $FileUploader->start($_FILES, 'image');
-    $FileUploader->GetFileTemp(); <span class="comment"> // 2000000</span>
+    $FileUploader->GetFileTemp(); <span class="comment"> // /tmp/files/image.png</span>
                                     </pre>
                                 </div>
                             </div>
@@ -379,13 +367,12 @@
                                 <div class="box-full">
                                     <div class="pxv-6 bc-off-white"><code>Syntax: GetFileData</code></div>
                                     <pre class="pre-code">
-    $FileUploader->GetFileData(bool); <span class="comment"> //  returns string of supplied data </span>
+    $FileUploader->GetFileData(<span class="c-orange-dd">bool</span>); <span class="comment"> //  returns string of supplied data </span>
     <span class="comment">
-        where: 
+      where: 
 
-        bool : boolean of true returns adds a the new directory and new file name of an uploaded file to the information returned.
-    </span>
-                                    </pre>
+        <span class="c-orange-dd">bool</span> : boolean of true adds the new directory and new file name of an uploaded file to the data string returned.
+    </span>                         </pre>
                                 </div>
                             </div>
 
@@ -419,13 +406,13 @@
                                 <div class="box-full">
                                     <div class="pxv-6 bc-off-white"><code>Syntax: uniqueFile</code></div>
                                     <pre class="pre-code">
-    $FileUploader->uniqueFile(param); 
+    $FileUploader->uniqueFile($param); 
     <span class="comment">
-        where :
+      where :
 
-        param : true permits a unique output name
-                false keeps the source file name
-                string sets a new output name. 
+        $param : <span class="c-orange">true</span> permits a unique output name
+                 <span class="c-orange">false</span> keeps the source file name
+                 <span class="c-orange">string</span> sets a new output name. 
     </span>
                                     </pre>
                                 </div>
@@ -464,15 +451,13 @@
                                     <div class="box-full">
                                         <div class="pxv-6 bc-off-white"><code>Syntax: uploadFile</code></div>
                                         <pre class="pre-code">
-    <span class="comment"> // upload a file</span>
-    $FileUploader->uploadFile(validFiles, destination, makedir); <span class="comment"> // returns : true if file was uploaded</span>
-    
+    $FileUploader->uploadFile($validFiles, $destination, $makedir); <span class="comment"> // returns : true if file was uploaded</span> 
     <span class="comment"> 
-        where :
+      where :
 
-            validFiles: array list of valid or acceptable extensions.
-            destination: destination path of uploaded file.
-            makedir: bool of true creates a new directory if it does not already exist.
+       $validFiles: array list of valid or acceptable extensions.
+       $destination: destination path of uploaded file.
+       $makedir: bool of true creates a new directory if it does not already exist.
     </span>
                                         </pre>
                                     </div>
@@ -518,9 +503,10 @@
     $FileUploader->start($_FILES, 'image');
 
     $upload = $FileUploader->uploadFile(['jpg','png'], dirname(__FILE__).'/images', true); 
+
     if($upload){
 
-        <span class="comment">file uploaded successfully</span>
+        <span class="comment">//file uploaded successfully</span>
 
     } else {
         
@@ -551,11 +537,11 @@
                                     <div class="box-full">
                                     <div class="pxv-6 bc-off-white"><code>Syntax: reconstruct</code></div>
                                         <pre class="pre-code">
-    $FileUploader->reconstruct(data);
+    $FileUploader->reconstruct($data);
     <span class="comment no-select"> 
-        where : 
+      where : 
 
-            data: array of multiple files
+        $data: array of multiple files
     </span>
                                         </pre>
                                     </div>
@@ -569,17 +555,17 @@
     $_FILES['name'][0]  = 'Foo'; 
     $_FILES['name'][1]  = 'Bar';   
 
-    $_FILES[0]['type'][0]  = 'image/png'; 
-    $_FILES[0]['type'][1]  = 'image/png'; 
+    $_FILES['type'][0]  = 'image/png'; 
+    $_FILES['type'][1]  = 'image/png'; 
 
-    $_FILES[0]['size'][0]  = 5000000; //5mb
-    $_FILES[0]['size'][1]  = 2000000; //2mb
+    $_FILES['size'][0]  = 5000000; //5mb
+    $_FILES['size'][1]  = 2000000; //2mb
 
-    $_FILES[0]['tmp_name'][0]   = '/tmp/files/foo.png'; 
-    $_FILES[0]['tmp_name'][1]   = '/tmp/files/bar.png'; 
+    $_FILES['tmp_name'][0]   = '/tmp/files/foo.png'; 
+    $_FILES['tmp_name'][1]   = '/tmp/files/bar.png'; 
         
-    $_FILES[0]['error'][0] = ''; 
-    $_FILES[0]['error'][1] = ''; 
+    $_FILES['error'][0] = ''; 
+    $_FILES['error'][1] = ''; 
     </span>
 
     $files = $FileUploader->reconstruct($_FILES);

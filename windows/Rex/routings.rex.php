@@ -45,7 +45,7 @@
                             Since model comes first, our model classes must be built first, then lastly rendered as a view. This is because
                             a view will only show existing models rather than non-existing ones. The <code>WMV</code> architecture is divided into five categories
                             which are <a href="@domurl('docs/wmv/routes')"><code>Routes</code>, <a href="@domurl('docs/wmv/frames')"><code>Frames</code></a> 
-                            and <a href="@domurl('docs/wmv/apis')"><code>APIs</code></a>, <a href="@domurl('docs/wmv/rex')"><code>Rex</code></a> and <a href=""><code>Models</code></a> . 
+                            <a href="@domurl('docs/wmv/apis')"><code>APIs</code></a>, <a href="@domurl('docs/wmv/rex')"><code>Rex</code></a> and <a href=""><code>Models</code></a> . 
                             These will be discussed later under their headings.
                         </div> 
                     </div> <br>
@@ -90,7 +90,7 @@
                             <br><br> <span class="bi-circle-fill c-silver-d"></span> Since creating empty files which are just needed as a screen to reflect our content might not be the best idea, 
                             by supplyig a double colon <code>::</code> and a path on the file just as line 4, the load function will help to push our data to the webpage while the storage file path will 
                             also be created. The path after the colon (i.e "path.of.file") will be translated 
-                            to <code>path/of/file.rex.php</code> which will then be used as the storage file name (or path). The compile function will not be accepted when the double color <code>::</code> 
+                            to <code>path/of/file.rex.php</code> which will then be used as the storage file name (or path). The compile function will not be accepted when the double colon <code>::</code> 
                             is used because the content is not expected to be rendered from a file.
                             
                             <br><br> <span class="bi-circle-fill c-silver-d"></span> In line 6, the <code>compile()</code> method is used as a directive for rendering the contents of the loaded 

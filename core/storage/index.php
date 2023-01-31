@@ -132,7 +132,6 @@
             <header data-src="<?= DomUrl('res/assets/images/bkg.jpg') ?>">
                 <div class="overlay">
                 <div class="inner">
-                    <?= ( print_r(\spoova\core\classes\spoova::isConnected()) )?? "" ?>
                     <h2 class="title"> spoova </h2>
                     <p>
                     An environmental friendly, simple and light php framework for fast web development

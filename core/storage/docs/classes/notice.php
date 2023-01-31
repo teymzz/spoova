@@ -1,7 +1,3 @@
-
-
-
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -9,7 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" type="image/png" href="http://localhost/spoova/res/main/images/icons/favicon.png">
-    <title>Tutorial - Database Errors</title>
+    <title></title>
     <meta name="viewport" content="width=device-width, initial-scale=.9, maximum-scale=1.0, user-scalable=1" />
 <meta name="description" content="website_description" />
 <link rel="icon" href="http://localhost/spoova/res/main/images/icons/favicon.png" />
@@ -375,163 +371,264 @@ window.onload = function() {
 
 
     <div class="box-full pxl-2 bc-white-dd pull-right">
-        <section class="pxv-20 tutorial database bc-white">
+    
+        <section class="pxv-20 tutorial bc-white">
             <div class="font-em-1d2">
 
                 
- <div class="font-menu pvs-4"> <a href="http://localhost/spoova/tutorial">Tutorial</a> <span class="bi-chevron-right"></span> <a href="http://localhost/spoova/tutorial/database">Database</a> <span class="bi-chevron-right"></span> <a href="http://localhost/spoova/tutorial/database/errors">Errors</a>  </div>
+ <div class="font-menu pvs-4"> <a href="http://localhost/spoova/docs">Docs</a> <span class="bi-chevron-right"></span> <a href="http://localhost/spoova/docs/classes">Classes</a> <span class="bi-chevron-right"></span> <a href="http://localhost/spoova/docs/classes/notice">Notice</a>  </div>
 
 
                 <div class="start font-em-d8">
 
-                    <div class="font-em-1d5 c-orange">Database : Errors</div> <br>
-
-                    <div class="pxs-6">
-                        Running queries sometimes hit a dead end which may be due to different reasons such as: <br>
-                        
-                        <br> Database connection error
-                        <br> Database environment error
-                        <br> Database sql error
-
-                        <br><br>
-                        In order to prevent end users from encountering this errors, developer must be able to handle such errors.
-                        By default, all errors have been softened out. This means that when errors occur, the Database class does not
-                        by default output those errors. Instead, developer must use predefined methods to handle such errors. Spoova
-                        has created two basic methods to test and check errors for any error. By default, spoova also stores its last 
-                        database error in an environment that is accessable at any level of development. We shall be looking at few ways by
-                        which we can handle our database errors
-                    </div> <br>
+                    <div class="font-em-1d5 c-orange">Notice</div> <br>  
                     
-                    <ul class="list-free pxs-6">
-                        <li>
-                            <span class="c-olive">Handling connection errors</span>
+                    <div class="helper-classes">
+                        <div class="fb-6">Introduction</div> <br>
+                        <div class="">
 
-                            <br>
+                        <div class="">
+                            The <code>Notice</code> class is a tool that is used to set flash messages. 
+                            These messages are displayed once and then removed after display. Available  
+                            methods are:
+                        </div> <br>
 
-                            <div class="d87">
-                                The two methods used for handling errors are <code>error_exists()</code> and <code>error()</code>.
-                                Whilst <code>error_exists()</code> checks for error, <code>error()</code> returns the error itself. 
+                            <ol>
+                                <li> <a href="#setFlash"> setFlash </a> </li>
+                                <li> <a href="#getFlash"> getFlash </a> </li>
+                                <li> <a href="#hasFlash"> hasFlash </a> </li>
+                                <li> <a href="#flash"> flash </a> </li>
+                            </ol>
+                            
+                        </div> 
+                    </div>  
+
+
+                    <div id="initialize" class="">
+                        <div class="">
+                            <div class="font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
+                                <div class="flex-full midv"> 
+                                    <span class=" mxr-8 c-lime-dd">
+                                    </span> Initializing class
+                                </div>
+                            </div> <br>
+
+                            <div class="">
+                                The hasher tool can be easily initialized as shown below.
+                                <br><br>
+                            
+                                <div class="pre-area">
+                                    <div class="box-full">
+                                        <div class="pxv-6 bc-off-white"><code>Sample: Initializing Hasher</code></div>
+                                        <pre class="pre-code">
+    $notice  = new Notice;
+                                        </pre>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div> <br><br>
+                    </div>
+
+                    <div id="keywords" class="">
+                        <div class="">
+                            <div class="font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
+                                <div class="flex-full midv"> 
+                                    <span class=" mxr-8 c-lime-dd">
+                                    </span> keywords
+                                </div>
+                            </div> <br>
+                            <div class="">
+                                The following keywords should be noted:
+                                <br><br>
+                                
+                                <div class="pre-area">
+                                    <div class="box-full">
+                                        <div class="pxv-6 bc-off-white"><code>keywords</code></div>
+                                        <pre class="pre-code">
+                                            <span class="comment">
+    key : a unique id string for a notice
+    message : a string of text stored for displayed
+                                            </span>
+                                        </pre>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div> <br><br>
+                    </div>        
+
+                    <div id="hasFlash" class="">
+                        <div class="">
+                            <div class="font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
+                                <div class="flex-full midv"> 
+                                    <span class=" mxr-8 c-lime-dd">
+                                        <span class="numb-box">1.</span>
+                                    </span> hasFlash
+                                </div>
+                            </div> <br>
+                            <div class="">
+                            The <code>hasFlash</code> method is used to a check if a flash 
+                            key exists.
+                            <br><br>
+                            
+                            <div class="pre-area">
+                                <div class="box-full">
+                                    <div class="pxv-6 bc-off-white"><code>Syntax: hasFlash</code></div>
+                                    <pre class="pre-code">
+    $notice->hasFlash(key); <span class="comment">// returns true or false</span>
+                                    </pre>
+                                </div>
                             </div>
 
-                            <br>
-
-                            <div class="box-full font-menu font-em-d85 bc-white-dd shadow">
-<div class="pxv-10 bc-silver">Example 1 : Handling connection errors </div>
-                        <pre class="pre-code">
-  $db = ($dbc = new DB())->openDB();
-  
-  if( $db ) {
-  
-      echo 'Database connected successfully';
-  
-  } else {
-  
-      echo $dbc->error();
-  
-  }
-                        </pre>
-                            </div> <br><br>
-
-                            <div class="d87">
-                                In Example 1 above, when a connection is successful, <code>openDB()</code> method returns a <code>DBHandler</code> class 
-                                else if not successful, it returns an empty value. If an empty value is returned, then an error must have occured. In order
-                                to handle that error, we have to call the <code>error()</code> method from the class itself which returns the last occured error.
-                            </div> <br> 
-                        </li>
-
-                        <li>
-                            <div class="c-olive">Handling environment errors</div>
-                            <div class="d87">
-                                A database may be connected but no database name selected. To work on a specific
-                                database, the name must be selected or specified. We can check if a table is selected through
-                                of <code>active()</code> method while <code>currentDB()</code> returns the currently selected database name.
-                            </div> <br>
-                            <div class="box-full font-menu font-em-d85 bc-white-dd shadow">
-<div class="pxv-10 bc-silver">Example 2 : Handling environment errors</div>
-                        <pre class="pre-code">
-  $db = ($dbc = new DB)->openDB();
-  
-  if($dbc->active()) {
-  
-      <span class="comment">// output the current database selected </span>
-      echo $dbc->currentDB();
-  
-  } else if( $dbc->error() ) {
-      
-      <span class="comment">// some error occured</span>
-      echo $dbc->error();
-  
-  } else {
-  
-      <span class="comment">// No attempt to connect to database yet!</span>
-      
-  }
-                        </pre>
-                            </div> <br><br>
-
-                            <div class="d87">
-                                The method above simply checks if a database is selected
-                                and prints out the database name using <span class="comment">currentDB()</span>.
-                                However, if it does not exist, if an error occured (due to a connection error), 
-                                then the last error should be displayed using the <code>error()</code> method. The beauty of this
-                                approach is that no error gets printed if a connection has not been previously attempted. It is
-                                however important to note that when a default connection e.g <code>dbconfig.php</code> is set, this is
-                                assumed to be a previous connection.
                             </div>
-                            <br>
+                        </div> <br>
+                            
+                        <div class="pre-area">
+                            <div class="box-full">
+                                <div class="pxv-6 bc-off-white"><code>Example: checking flash</code></div>
+                                <pre class="pre-code">
+    $notice->setFlash('greeting', "Welcome"); <span class="comment">// set a notice message</span>
 
-                        </li>
+    if($notice->hasFlash('greeting'))) {
 
-                        <li>
-                            <div class="c-olive">Handling sql errors</div>
-                            <div class="d87">
-                                Sql errors are errors that occur after queries have been attempted for execution. To handle this errors, we 
-                                use the <code>error_exists()</code> and <code>error()</code> methods just as discussed earlier
+        echo 'Greeting exists';
+
+    }
+                                </pre>
+                            </div>
+                        </div>
+                    
+                    </div> <br>
+
+                    <div id="getFlash" class="">
+                        <div class="">
+                            <div class="font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
+                                <div class="flex-full midv"> 
+                                    <span class=" mxr-8 c-lime-dd">
+                                        <span class="numb-box">2.</span>
+                                    </span> getFlash
+                                </div>
                             </div> <br>
-                            <div class="box-full font-menu font-em-d85 bc-white-dd shadow">
-<div class="pxv-10 bc-silver">Example 3 : Handling sql errors </div>
-                        <pre class="pre-code">
-  $db = ($dbc = new DB)->openDB();
 
-  if($db) {
+                            <div class="">
+                                The <code>getFlash()</code> method is used to fetch a previously set flash. 
+                                It throws an error if the flash key does not exist.
+                                <br><br>
 
-    <span class="comment">// handler connected : run sql </span>
-    $db->query('select * from users')->read();
+                                <div class="pre-area">
+                                    <div class="box-full">
+                                        <div class="pxv-6 bc-off-white"><code>Syntax: getFlash</code></div>
+                                        <pre class="pre-code">
+    $notice->getFlash(key); 
+                                        </pre>
+                                    </div>
+                                </div>          
+                                <div class="pre-area">
+                                    <div class="box-full">
+                                        <div class="pxv-6 bc-off-white"><code>Example: setFlash</code></div>
+                                        <pre class="pre-code">
+    $notice->setFlash('greeting', 'Welcome to our site')
 
-    if( $results = $db->results() ) {
+    $message = $notice->getFlash('greeting');  
+
+    var_dump( $message ); <span class="comment no-select">// Welcome to our site</span>
+                                        </pre>
+                                    </div>
+                                </div>
+                                <div class="pre-area">
+                                    <div class="box-full">
+                                        <div class="pxv-6 bc-off-white"><code>Example: setFlash (Real Application)</code></div>
+                                        <pre class="pre-code">
+    <div class="pxv-10 bc-off-white c-green"> <code>url1 - insert</code> </div>
+                    
+    $db = (new DB())->openDB(); <span>open a database class.</span>
+
+    $db->insert_into('users', ['username' => 'foo']);
+
+    if( $db->insert() ){
+
+        $notice->setFlash('notice', 'message stored successfully');
+        redirect('display');
+
+    }
+    <div class="pxv-10 bc-off-white c-green"> <code>url2 - display</code> </div>
+
+    if($notice->hasFlash('notice')){
         
-        <span class="c-lime-dd">var_dump( $results() );</span>
+        echo $notice->getFlash('notice');
 
-    } else if ( $db->error_exists() ) {
+    } else {
 
-        echo $db->error();
+        echo redirect('insert');
 
     }
 
-  } else {
-
-    <span class="comment">// database connection failed</span>
-    echo $dbc->error();
-
-  }    
-                        </pre>
-                            </div> <br><br>
-
-                            <div class="d87">
-                                In Example 3, we used our <code>$db</code> to run a query and tested for errors using
-                                <code>error_exists</code> and <code>error</code> methods respectively. The <code>error()</code>
-                                method can also be used to replace <code>error_exists()</code>. However, using <code>error_exists</code> 
-                                helps to make our code more readable.
+    <span class="comment no-select">
+    In the above, when a data is successfully stored using <code>setFlash()</code>, it redirects to 
+    <code>display</code> url which displays the last message set. If no message is found,  
+    then a redirection will be made back to <code>insert</code> url.
+    </span>
+                                        </pre>
+                                    </div>
+                                </div>            
                             </div>
-                            <br>
-                        </li>
-                    </ul>
+                        </div> <br>
+                    </div>
+
+                    <div id="flash" class="">
+                        <div class="">
+                            <div class="font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
+                                <div class="flex-full midv"> 
+                                    <span class=" mxr-8 c-lime-dd">
+                                        <span class="numb-box">3.</span>
+                                    </span> flash
+                                </div>
+                            </div> <br>
+                            <div class="">
+                                Unlike the <code>getFlash</code> method, <code>flash()</code> returns 
+                                the value of an existing or non-existing key without throwing an error. 
+                                This means that if a key does not exist, a null value is returned instead.
+                                .
+                                <br><br>
+                        
+                                <div class="pre-area">
+                                    <div class="box-full">
+                                        <div class="pxv-6 bc-off-white"><code>Syntax: flash</code></div>
+                                        <pre class="pre-code">
+    $hasher->flash(key); 
+                                        </pre>
+                                    </div>
+                                </div>
+
+                                <div class="pre-area">
+                                    <div class="box-full">
+                                    <div class="pxv-6 bc-off-white"><code>Example: flash</code></div>
+                                    <pre class="pre-code">
+    $notice->setFlash('text','1234');
+
+    echo $notice->flash('text'); <span class="comment">//returns 1234</span>
+    echo $notice->flash('word'); <span class="comment">//returns null</span>
+                                    </pre>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div> <br>
+                    </div> <br>
+
+                    <div class="font-menu"> 
+                        The resource class <code>Res</code> only uses three static relative methods to access 
+                        the notice classe. These methods are <code>setFlash()</code> <code>hasFlash</code> and 
+                        <code>Res::flash()</code> which resolves similarly to the corresponding notice class methods.
+                    </div>
                 </div>
             </div>
         </section>
+
     </div>
     
-    
+
 
 
          <div class="blurry page-overlay ov-d5 hide"></div>

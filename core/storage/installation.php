@@ -357,6 +357,7 @@ window.onload = function() {
                <li> <a href="<?= DomUrl('docs/forms') ?>" class="<?= inPath('active') ?>"><span class="ico ico-spin"></span>Handling Forms</a> </li>
                <li> <a href="<?= DomUrl('docs/useraccounts') ?>" class="<?= inPath('active') ?>"><span class="ico ico-spin"></span>Handling Users</a> </li>
                <li> <a href="<?= DomUrl('docs/database/data-model') ?>" class="<?= inPath('active') ?>"><span class="ico ico-spin"></span>Handling DBModels</a> </li>
+               <li> <a href="<?= DomUrl('docs/database/migrations') ?>" class="<?= inPath('active') ?>"><span class="ico ico-spin"></span>Handling Migrations</a> </li>
                <li> <a href="<?= DomUrl('docs/classes') ?>" class="<?= inPath('active') ?>"><span class="ico ico-spin"></span>Helper Classes</a> </li>
                <li> <a href="<?= DomUrl('docs/functions') ?>" class="<?= inPath('active') ?>"><span class="ico ico-spin"></span>Helper Functions</a> </li>
                <li> <a href="<?= DomUrl('docs/directives') ?>" class="<?= inPath('active') ?>"><span class="ico ico-spin"></span>Helper Directives</a> </li>
@@ -406,7 +407,7 @@ window.onload = function() {
                                <li>From the installation page (i.e install), set up your database enviroment settings </li>
                                <li>For spoova to run efficiently, database configuration along with other basic configurations should be updated with valid credentials. </li>
                                <li>All database configurations are saved into the icore/dbconfig.php file for both offline and online environments </li>
-                               <li>When using the inbuilt web installation tool, you can choose the hard install option on the home page to reset previously defined configurations </li>
+                               <li>When using the inbuilt web installation tool, you can choose the hard install (e.g http://localhost/app/install?refresh) option on the home page to reset previously defined configurations </li>
                            </ul>
                            <div class="bc-silver rad-3 flow-x flex font-em-d85 pvs-10 pxs-10"> 
                             <div class="box bc-red-dd bd-1 bd-red-dd pxv-4 c-white-d"> <span class="bi-exclamation-triangle"></span> Note:</div> 
@@ -440,12 +441,12 @@ window.onload = function() {
                                the page must be manually reloaded after the fatal error is fixed or liveserver re-enabled before the liveserver can propely continue. However, 
                                if an error occurs while the live server is monitoring the page (before sending a reload request), then the live server
                                tries to pause the page from reloading while popping up a debug message it could properly match to the type of error that occured.
-                               Once the error is fixed, the notification is removed and the page resumes its monitoring. 
+                               Once the error is fixed, the notification is removed and the page resumes its monitoring. The pop-up is still known to have few bugs as it might be sometimes glitchy.
                            </li><br>
 
                            <li> <span class="fb-6 c-sky-blue-dd">Resource Meta:</span> <br>
                                Spoova comes with an inbuilt meta tags controller. 
-                               When activated, default environment (i.e ENV) meta tag settings are applied to all pages during resource importation. 
+                               When activated, default environment (i.e $_ENV) meta tag settings are applied to all pages during resource importation. 
                                Resource importation is further discussed under <a href="<?= DomUrl('docs/resource/grouping') ?>"><span class="c-olive ch-olive font-menu calibri fb-6 font-em-d9 hyperlink">Resource class</span></a> .
                            </li> <br>
 
@@ -516,7 +517,7 @@ window.onload = function() {
                                
                                <span class="fb-6 c-orange-dd">icore/dbconfig.php :</span> <br> File should contain the correct definition of your database configuration for offline or online environments (or both) <br><br>
 
-                               <span class="fb-6 c-orange-dd">icore/init :</span> <br> File should contain other configuration.<br><br>
+                               <span class="fb-6 c-orange-dd">icore/init :</span> <br> File should contain other configuration keys and respective values.<br><br>
 
 
                                <div class="flex-in midv shadow rad-4">

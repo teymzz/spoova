@@ -88,7 +88,7 @@ function getDefined(string $core) :string {
  * Checks if a class exists in project folder or its subdirectory using regex
  * 
  *  - Note 1: This does not truely check if the class is callable
- *  - Note 2: The project folder root namespace is attached by defualt
+ *  - Note 2: The project folder root namespace is attached by default
  * @param string $class
  * @return boolean
  */

@@ -186,10 +186,10 @@
     <span class="comment no-select">
     where: 
 
-        name  : name of a given index of an associative array 
-        value : value of a given index of an associative or 2-level multidimentional array 
-        key   : subkey of a 2-level multidimentional array
-        null  : numbered index (e.g 0, 1, 2 ...)
+     name  : name of a given index of an associative array 
+     value : value of a given index of an associative or 2-level multidimentional array 
+     key   : subkey of a 2-level multidimentional array
+     null  : numbered index (e.g 0, 1, 2 ...)
 
     Note: This may look comprehensive but a series of examples will provide guidance 
     </span>
@@ -274,7 +274,7 @@
     <span class="comment no-select">
     where: 
 
-        key : name of a given index of an associative array
+     key : name of a given index of an associative array
     </span>
                                         </pre>
                                     </div>
@@ -387,11 +387,11 @@
                                         <div class="pxv-6 bc-off-white"><code>Syntax: expires</code></div>
                                         <pre class="pre-code">
     $jsonfy->read(key); 
-        <span class="comment">
-            where:
-            
-            key: main array index key.
-        </span>
+    <span class="comment">
+    where:
+        
+     key: main array index key.
+    </span>
                                         </pre>
                                     </div>
                                 </div>
@@ -437,16 +437,15 @@
                                         <div class="pxv-6 bc-off-white"><code>Syntax: data</code></div>
                                         <pre class="pre-code">
     $jsonfy->data(type); 
-
     <span class="comment">
-        where: 
-        
-            type - options [null|json|source|count] 
+    where: 
+    
+     type - options [null|json|source|count] 
 
-                    null - returns array of data stored 
-                    json - returns json string of data stored 
-                    count - returns the total count of data 
-                    source - returns the source data supplied from newData method 
+       null - returns array of data stored 
+       json - returns json string of data stored 
+       count - returns the total count of data 
+       source - returns the source data supplied from newData method 
     </span>
                                         </pre>
                                     </div>

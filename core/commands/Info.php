@@ -71,7 +71,7 @@ class Info extends Entry{
             
  Syntax : '.Cli::color('add:rex', 'red').' [path?].<filename>
  
- '.Cli::alert('Note 1 :').' Path when supplied should be a subdirectory of the rex template folder
+ '.Cli::alert('Note 1 :').' Path when supplied should be a subdirectory of the rex template directory
 
  '.Cli::alert('Note 2 :').' Paths can be supplied using dots while the last name is assumed to be file name',
 
@@ -80,7 +80,7 @@ class Info extends Entry{
             
  Syntax : '.Cli::color('add:route', 'red').' <routeName>
  
- '.Cli::alert('Note 1 :').' Path when supplied should be a subdirectory of the rex template folder
+ '.Cli::alert('Note 1 :').' Path when supplied should be a subdirectory of the windows/Routes directory
 
  '.Cli::alert('Note 2 :').' Paths can be supplied using dots while the last name is assumed to be file name',
 

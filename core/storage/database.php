@@ -357,6 +357,7 @@ window.onload = function() {
                <li> <a href="<?= DomUrl('docs/forms') ?>" class="<?= inPath('active') ?>"><span class="ico ico-spin"></span>Handling Forms</a> </li>
                <li> <a href="<?= DomUrl('docs/useraccounts') ?>" class="<?= inPath('active') ?>"><span class="ico ico-spin"></span>Handling Users</a> </li>
                <li> <a href="<?= DomUrl('docs/database/data-model') ?>" class="<?= inPath('active') ?>"><span class="ico ico-spin"></span>Handling DBModels</a> </li>
+               <li> <a href="<?= DomUrl('docs/database/migrations') ?>" class="<?= inPath('active') ?>"><span class="ico ico-spin"></span>Handling Migrations</a> </li>
                <li> <a href="<?= DomUrl('docs/classes') ?>" class="<?= inPath('active') ?>"><span class="ico ico-spin"></span>Helper Classes</a> </li>
                <li> <a href="<?= DomUrl('docs/functions') ?>" class="<?= inPath('active') ?>"><span class="ico ico-spin"></span>Helper Functions</a> </li>
                <li> <a href="<?= DomUrl('docs/directives') ?>" class="<?= inPath('active') ?>"><span class="ico ico-spin"></span>Helper Directives</a> </li>
@@ -597,19 +598,19 @@ still translates as zero.</div>
   
   if($db->drop(true)) {
   <span class="comment no-select">
-    //current connected database dropped successfully!
+    //currently connected database dropped successfully!
   </span>
   }
   
   if($db->drop('table_name', true)) {
   <span class="comment no-select">
-    //table dropped successfully!
+    //selected table_name of current database dropped successfully!
   </span>
   }
   
   if($db->drop('table_name', 'column_name')) {
   <span class="comment no-select">
-    //column dropped successfully
+    //relative column dropped successfully
   </span>
   }
   
