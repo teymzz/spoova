@@ -69,7 +69,7 @@
 
                     <tr> 
                         <td>MySQL Version Support</td> 
-                        <td> 5.4 </td> 
+                        <td> 5.4 + </td> 
                     </tr>    
 
                     <tr> 
