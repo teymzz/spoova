@@ -34,7 +34,7 @@ class Info extends Entry{
 
             'add'            => 'Creates a new file
             
- Syntax :'.self::mi('add:{options}','','','').Cli::warn('[name] [extends?] [path?]', 1).Cli::color('[-O]','red', 1).Cli::break(1, false).'
+ Syntax :'.self::mi('add:{options}','','','').Cli::warn('<dir?>[name] [extends?] [subdir?] [-O?]', 1).Cli::color('[-O]','red', 1).Cli::break(1, false).'
  '.Cli::emo('ribbon-arrow').' Where: '.cli::alert('{options}').' ~ '.Cli::alert('[controller|window|model|winmodel|rex]')
   .Cli::br(2)
   .Cli::notice(' Struture above may not be true for all options.', 1)
@@ -46,24 +46,30 @@ class Info extends Entry{
             #---------------------            
             'add:api'      => 'Adds an api class into windows folder.
 
- Syntax :'.self::mi('add:api','','','').Cli::warn('[apiName] [\Dir?]', 1).Cli::br(2). 
- Cli::textIndent(Cli::warn('apiName'), 1).' ....... name of api file (or class)'.Cli::br(2). 
- Cli::textIndent(Cli::warn("\\Dir?").' ......... sets file subdirectory path name (uses backslash)', 1),       
+ Syntax :'.self::mi('add:api','','','').Cli::warn('<dir?><name> [extends?] [\Dir?] [-O?]', 1).Cli::br(2). 
+ Cli::textIndent(Cli::warn('dir'), 1).' ........ optional: directory of api file'.Cli::br(2). 
+ Cli::textIndent(Cli::warn('name'), 1).' ....... name of api file (or class)'.Cli::br(2). 
+ Cli::textIndent(Cli::warn('extends'), 1).' .... optional: extend api class to a frame file'.Cli::br(2). 
+ Cli::textIndent(Cli::warn("\\Dir").' .......... optional: add a connected file subdirectory path (uses backslash)', 1),       
+ Cli::textIndent(Cli::warn("\\-O").' ........... optional: overwrite existing file', 1),       
 
             
             #---------------------               
             'add:frame'      => 'Adds a frame into the windows frame folder
 
- Syntax :'.self::mi('add:frame','','','').Cli::warn('<name>', 1).Cli::br(2) 
- .Cli::textIndent(Cli::warn('<name>'). ' ..... name of frame file', 1),
+ Syntax :'.self::mi('add:frame','','','').Cli::warn('<dir?><name> [-O?]', 1).Cli::br(2) 
+ .Cli::textIndent(Cli::warn('dir'). ' ...... optional: directory of frame file', 1).Cli::br(2)
+ .Cli::textIndent(Cli::warn('name'). ' ..... name of frame file', 1).Cli::br(2)
+ .Cli::textIndent(Cli::warn('-O'). ' ....... optional: overwrite existing file', 1),
             
 
             #---------------------            
             'add:model'   => 'Adds a model file (class) into \'windows/models\' directory or subdirectory.
 
- Syntax :'.self::mi('add:model','','','').Cli::warn('<className> [subdir_path?]', 1).Cli::br(2)
- .Cli::textIndent(Cli::warn('<className>').' ..... class name of Model file', 1).Cli::br(2)
- .Cli::textIndent(Cli::warn('<subdir_path>').' ..... a subdirectory path of \'windows/models\' directory', 1)
+ Syntax :'.self::mi('add:model','','','').Cli::warn('<dir/?><name> [-O?]', 1).Cli::br(2)
+ .Cli::textIndent(Cli::warn('dir').' ...... optional: directory of Model file within \'windows/Models\' directory ', 1).Cli::br(2)
+ .Cli::textIndent(Cli::warn('name').' ..... name of Model file within \'windows/Models\' directory ', 1).Cli::br(2)
+ .Cli::textIndent(Cli::warn('-O').' ....... overwrite existing file', 1)
  ,
 
             #---------------------           
@@ -88,11 +94,11 @@ class Info extends Entry{
             #---------------------            
             'add:window'     => 'Adds a window class into windows folder
 
- '.Cli::warn('Syntax').' :'.self::mi('add:window','','','').Cli::warn('<dir/?><windowName>'.Cli::color('<extends?>', 'purple', 1).' '.Cli::danger('[-O?]'), 1).
+ '.Cli::warn('Syntax').' :'.self::mi('add:window','','','').Cli::warn('<dir/?><name>'.Cli::color('<extends?>', 'purple', 1).' '.Cli::danger('[-O?]'), 1).
  Cli::br(2).
  Cli::textIndent(Cli::emo('ribbon-arrow').Cli::warn('<dir/?>', 1). ' ............. optional: subdirectory of windows folder', 2).
  Cli::br(2).
- Cli::textIndent(Cli::emo('ribbon-arrow').Cli::warn('<windowName>', 1). ' ....... name of window Class', 2).
+ Cli::textIndent(Cli::emo('ribbon-arrow').Cli::warn('<name>', 1). ' .............. name of window Class', 2).
  Cli::br(2).
  Cli::textIndent(Cli::emo('ribbon-arrow').Cli::color('<extends?>', 'purple', 1). ' ......... optional: extend to frame path within '.Cli::warn(WIN_FRAMES).' directory', 2).
  Cli::br(2).

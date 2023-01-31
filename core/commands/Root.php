@@ -40,7 +40,7 @@ class Root extends Entry{
         
         Cli::textView($support, 0).Cli::break();
         Cli::textView(Cli::alert('PHP VERSION .......... 8.0 +'), 2, 1, 1);
-        Cli::textView(Cli::alert('MYSQL VERSION ........ 5.2 +'), 2, 1, 1);
+        Cli::textView(Cli::alert('MYSQL VERSION ........ 5.4 +'), 2, 1, 1);
         Cli::textView(Cli::alert('SERVER SUPPORT ....... APACHE'), 2, 1, 1);
         Cli::textView(Cli::alert('ANDROID SERVER ....... KSWEB SERVER'), 2, [1, 2], 1);
 
@@ -57,7 +57,6 @@ class Root extends Entry{
       $clis =  [     
         Cli::emos('point-list', 1).'cli (commands) :' => '',
             
-            '> add' => '',
             '> add' => '',
                                               
             '> backup [project|:clear]'   => '',

@@ -25,7 +25,6 @@ class Desc extends Entry{
         return [
 
             'add'            => 'Creates a new file',
-            'add:controller' => 'Adds a controller class into controllers folder',
             'add:window'     => 'Adds a window class into windows folder',
             'add:model'      => 'Adds a model class into models folder. When path is supplied, 
                the model file is placed into the path supplied.',
@@ -47,15 +46,9 @@ class Desc extends Entry{
 
             'cli'                => 'Displays a list of spoova cli commands',
 
-            'classes'            => 'Displays a list of spoova classes',
-
-            'classes_methods'    => 'Displays a list of spoova methods for a class',
-
             'clean:storage'      => 'Removes all unwanted storage files',
 
             'features'           => 'Displays a list of spoova features',
-
-            'functions'          => 'Displays some spoova function',
 
             'info'           => 'provides information or description about acceptable cli syntaxes or commands',
             
