@@ -94,7 +94,7 @@
             </div>
             
             <div class="mvt-10">
-            This function returns true if a protocol begins with <code>http://</code> class.
+            This function returns true if a protocol begins with <code>http://</code>.
             </div>
   <div class="pre-area">
     <pre class="pre-code">
@@ -109,7 +109,7 @@
             </div>
             
             <div class="mvt-10">
-            Similarly to <code>isHTTP</code>, it returns true if a url begins with <code>https://</code> class.
+            Similarly to <code>isHTTP</code>, it returns true if a url begins with <code>https://</code>.
             </div>      
           </div>
 
@@ -298,13 +298,14 @@
                 14. setVar
               </div> <br>
               <div class="pre-area">
-                <pre class="pre-code" style="font-size:1.1em">
-  <span class="comment">//syntax</span>
-  setVar(main, alternate, replacement);
+                <pre class="pre-code" style="font-size:1.2em">
+   setVar($main, $alternate, $replacement);
   
-  <span class="c-green">main : main test value
-  alternate : alternate value
-  replacement: boolean value to determine if main value is updated with alternate value</span>
+   <span class="comment">where:</span>
+
+   <span class="c-green">$main : main test value
+   $alternate : alternate value
+   $replacement: boolean value to determine if main value is updated with alternate value</span>
                 </pre>
               </div>
             </div> <br>
@@ -323,7 +324,7 @@
 
   setVar($new_variable);
 
-  var_dump($new_variable); <span class="comment">// empty</span>
+  var_dump($new_variable); <span class="comment">// void</span>
 
                       </pre>
   <div class="comment no-select pxv-10 bc-silver"> Example 2 - Defined variables</div>

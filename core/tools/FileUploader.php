@@ -359,7 +359,7 @@ class FileUploader{
     $size = round($bytes, $precision);
     $unit = $units[$pow]; 
     return [$size, $unit];
-}
+  }
 
   /**
   * This function returns the maximum files size that can be uploaded in PHP

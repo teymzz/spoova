@@ -1,7 +1,5 @@
 
 
-
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -9,7 +7,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" type="image/png" href="http://localhost/spoova/res/main/images/icons/favicon.png">
-    <title>Tutorial - Database Errors</title>
+    <title></title>
     <meta name="viewport" content="width=device-width, initial-scale=.9, maximum-scale=1.0, user-scalable=1" />
 <meta name="description" content="website_description" />
 <link rel="icon" href="http://localhost/spoova/res/main/images/icons/favicon.png" />
@@ -327,9 +325,7 @@ window.onload = function() {
         </div>
          
 
-    <!-- @lay('build.co.coords:header') -->
-
-     
+   
 
      
 
@@ -374,164 +370,142 @@ window.onload = function() {
 
 
 
-    <div class="box-full pxl-2 bc-white-dd pull-right">
-        <section class="pxv-20 tutorial database bc-white">
-            <div class="font-em-1d2">
+  <div class="box-full pxl-2 bc-white pull-right">
+    
+    <section class="pxv-20 tutorial mails bc-white">
+      <div class="font-em-1d2">
 
-                
- <div class="font-menu pvs-4"> <a href="http://localhost/spoova/tutorial">Tutorial</a> <span class="bi-chevron-right"></span> <a href="http://localhost/spoova/tutorial/database">Database</a> <span class="bi-chevron-right"></span> <a href="http://localhost/spoova/tutorial/database/errors">Errors</a>  </div>
-
-
-                <div class="start font-em-d8">
-
-                    <div class="font-em-1d5 c-orange">Database : Errors</div> <br>
-
-                    <div class="pxs-6">
-                        Running queries sometimes hit a dead end which may be due to different reasons such as: <br>
-                        
-                        <br> Database connection error
-                        <br> Database environment error
-                        <br> Database sql error
-
-                        <br><br>
-                        In order to prevent end users from encountering this errors, developer must be able to handle such errors.
-                        By default, all errors have been softened out. This means that when errors occur, the Database class does not
-                        by default output those errors. Instead, developer must use predefined methods to handle such errors. Spoova
-                        has created two basic methods to test and check errors for any error. By default, spoova also stores its last 
-                        database error in an environment that is accessable at any level of development. We shall be looking at few ways by
-                        which we can handle our database errors
-                    </div> <br>
-                    
-                    <ul class="list-free pxs-6">
-                        <li>
-                            <span class="c-olive">Handling connection errors</span>
-
-                            <br>
-
-                            <div class="d87">
-                                The two methods used for handling errors are <code>error_exists()</code> and <code>error()</code>.
-                                Whilst <code>error_exists()</code> checks for error, <code>error()</code> returns the error itself. 
-                            </div>
-
-                            <br>
-
-                            <div class="box-full font-menu font-em-d85 bc-white-dd shadow">
-<div class="pxv-10 bc-silver">Example 1 : Handling connection errors </div>
-                        <pre class="pre-code">
-  $db = ($dbc = new DB())->openDB();
-  
-  if( $db ) {
-  
-      echo 'Database connected successfully';
-  
-  } else {
-  
-      echo $dbc->error();
-  
-  }
-                        </pre>
-                            </div> <br><br>
-
-                            <div class="d87">
-                                In Example 1 above, when a connection is successful, <code>openDB()</code> method returns a <code>DBHandler</code> class 
-                                else if not successful, it returns an empty value. If an empty value is returned, then an error must have occured. In order
-                                to handle that error, we have to call the <code>error()</code> method from the class itself which returns the last occured error.
-                            </div> <br> 
-                        </li>
-
-                        <li>
-                            <div class="c-olive">Handling environment errors</div>
-                            <div class="d87">
-                                A database may be connected but no database name selected. To work on a specific
-                                database, the name must be selected or specified. We can check if a table is selected through
-                                of <code>active()</code> method while <code>currentDB()</code> returns the currently selected database name.
-                            </div> <br>
-                            <div class="box-full font-menu font-em-d85 bc-white-dd shadow">
-<div class="pxv-10 bc-silver">Example 2 : Handling environment errors</div>
-                        <pre class="pre-code">
-  $db = ($dbc = new DB)->openDB();
-  
-  if($dbc->active()) {
-  
-      <span class="comment">// output the current database selected </span>
-      echo $dbc->currentDB();
-  
-  } else if( $dbc->error() ) {
-      
-      <span class="comment">// some error occured</span>
-      echo $dbc->error();
-  
-  } else {
-  
-      <span class="comment">// No attempt to connect to database yet!</span>
-      
-  }
-                        </pre>
-                            </div> <br><br>
-
-                            <div class="d87">
-                                The method above simply checks if a database is selected
-                                and prints out the database name using <span class="comment">currentDB()</span>.
-                                However, if it does not exist, if an error occured (due to a connection error), 
-                                then the last error should be displayed using the <code>error()</code> method. The beauty of this
-                                approach is that no error gets printed if a connection has not been previously attempted. It is
-                                however important to note that when a default connection e.g <code>dbconfig.php</code> is set, this is
-                                assumed to be a previous connection.
-                            </div>
-                            <br>
-
-                        </li>
-
-                        <li>
-                            <div class="c-olive">Handling sql errors</div>
-                            <div class="d87">
-                                Sql errors are errors that occur after queries have been attempted for execution. To handle this errors, we 
-                                use the <code>error_exists()</code> and <code>error()</code> methods just as discussed earlier
-                            </div> <br>
-                            <div class="box-full font-menu font-em-d85 bc-white-dd shadow">
-<div class="pxv-10 bc-silver">Example 3 : Handling sql errors </div>
-                        <pre class="pre-code">
-  $db = ($dbc = new DB)->openDB();
-
-  if($db) {
-
-    <span class="comment">// handler connected : run sql </span>
-    $db->query('select * from users')->read();
-
-    if( $results = $db->results() ) {
         
-        <span class="c-lime-dd">var_dump( $results() );</span>
+ <div class="font-menu pvs-4"> <a href="http://localhost/spoova/docs">Docs</a> <span class="bi-chevron-right"></span> <a href="http://localhost/spoova/docs/commands">Commands</a>  </div>
 
-    } else if ( $db->error_exists() ) {
 
-        echo $db->error();
+        <div class="start font-em-d8">
 
-    }
+          <div class="font-em-1d5 c-orange">Resource Commands</div> <br>  
+          
+          <div class="resource-intro">
+            <div class="fb-6">Introduction</div>
+            <div class="">
+              The <code>mkFile()</code> method is the main method that helps in creating files with 
+              structurally predefined expected content code format. <br><br>
+              
+              <div class="font-em-d9">
+                  Syntax: <code>Res::mkFile(type, args)</code> where: <br>
+                  <div class="pxs-10">
+                      type : main command directive <br>
+                      args : arguments supplied on main command,
+                  </div>
+              </div>
+            </div> 
+          </div><br>
+          
+          <div id="core" class="core-helpers">     
+            <div>
+                This command is used for creating Window, Routes, Frames, Models and API and Rex template files. Example of usage is 
+                shown below.
+            </div> <br>
+          </div>         
+          
+          <div id="add-window"> 
+            
+            <div>
+              
+              <div class="pre-area shadow">
+<div class="pxv-6 bc-silver">Sample - creating window file</div>
+                <pre class="pre-code">
+  Res::mkFile('window', ['name', 'path']);
+  php spoova add:controller &lt;name&gt; &lt;path&gt;
+  <span class="comment">
+    where: 
 
-  } else {
+      window => command access key
+      name => name of window file
+      path => path of window file
+  </span>
+                </pre>
 
-    <span class="comment">// database connection failed</span>
-    echo $dbc->error();
+              </div>
+            </div> 
+          </div> <br>
 
-  }    
-                        </pre>
-                            </div> <br><br>
+          <div class="foot-note">
+            <span class="head">Footnote 1:</span>
+            When creating files, the live server should be turned off to prevent creating unintented files.
+            <br>
+            <span class="head">Footnote 2:</span>
+            When creating files, the shell command <code>php spoova add:</code> is replaced with 
+            <code>Res::mkFile()</code>. For example, <code>php spoova add:winmodel</code> becomes <code>Res::mkFile('winmodel')</code>. 
+            The arguments are then supplied as second argument using array values. 
+          </div><br>
+          
+          <div id="add-model"> 
+            
+            <div>
+              <div class="pre-area shadow">
+                <div class="pxv-6 bc-silver">Sample - create model file</div>
+                <pre class="pre-code">
+  Res::mkFile('model', ['name', 'path'];
+  <span class="comment">
+    where: 
 
-                            <div class="d87">
-                                In Example 3, we used our <code>$db</code> to run a query and tested for errors using
-                                <code>error_exists</code> and <code>error</code> methods respectively. The <code>error()</code>
-                                method can also be used to replace <code>error_exists()</code>. However, using <code>error_exists</code> 
-                                helps to make our code more readable.
-                            </div>
-                            <br>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        </section>
-    </div>
-    
-    
+      name => name of window file
+      path => optional path to contoller file
+  </span>
+                </pre>
+              </div>
+            </div> 
+          </div> <br>
+          
+          <div id="add-winmodel"> 
+            
+            <div>
+
+              <div class="pre-area shadow">
+                <div class="pxv-6 bc-silver">Sample - add model into windows directory</div>
+                <pre class="pre-code">
+  Res::mkFile('winmodel', ['name', 'path'];
+  <span class="comment">
+    where: 
+
+      name => name of model file
+      path => optional path to contoller file
+  </span>
+                </pre>
+              </div>
+            </div> 
+          </div> <br>
+          
+          <div id="add-rex"> 
+            
+            <div>
+              <div class="pre-area shadow">
+                <div class="pxv-6 bc-silver">Sample - add a rex template file</div>
+                <pre class="pre-code">
+  Res::mkFile('rex', ['pathname', 'filename'];
+  <span class="comment">
+    where: 
+
+      pathname => optional path to contoller file
+      filename => name of rex file
+  </span>
+                </pre>
+              </div>
+            </div> 
+          </div>     
+
+          <div class="font-em-d87 mvt-10">
+            In these formats, files can be created in a predefined structures. Check the 
+            <a href="<?= DomUrl('docs/cli') ?>"><span class="calbri hyperlink fb-6 c-blue">Cli</span></a> add
+            directives for more commands.
+          </div>
+          
+        </div>
+      </div>
+    </section>
+
+  </div>
+
+  
 
 
          <div class="blurry page-overlay ov-d5 hide"></div>
@@ -539,3 +513,4 @@ window.onload = function() {
 
 </body>
 </html>
+

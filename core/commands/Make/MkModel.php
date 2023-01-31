@@ -152,11 +152,13 @@ class MkModel extends MkBase{
 
                     sleep(1);
 
-                    if(@appExists($fileNameSpace)) {
+                    if(@appExists($modelledSpace.'\\'.$className)) {
                         Cli::textView('class'.Cli::alert($className, 1)." created successfully in ".Cli::warn($fileLoc));
                         Cli::break(2);
                         return true;
                     } else {
+                        print br(appExists($fileNameSpace));
+                        print br($fileNameSpace);
                         Cli::textView('class'.Cli::alert($className, 1)." creation failed to create in ".Cli::danger($nameSpace));
                         Cli::break(2);   
                     }

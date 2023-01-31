@@ -23,18 +23,18 @@
                         <div class="">
                             The input class is a special tool that helps to validate input. It 
                             is mostly used when validating form inputs. All validation are 
-                            directly processed and returned througt the <code>set</code> method. 
-                            The following are methods available in the input class
-                        </div> <br> <br>
+                            directly processed and returned through the <code>set</code> method. 
+                            The following are methods available in the input class.
+                        </div> <br> 
 
                             <ol>
                             <li> <a href="#set"> set </a> </li>
                             <li> <a href="#strict"> strict </a> </li>
-                            <li> <a href="#default_length"> default_length </a> </li>
                             <li> <a href="#default_type"> default_type </a> </li>
+                            <li> <a href="#default_length"> default_length </a> </li>
                             <li> <a href="#default_range"> default_range </a> </li>
                             <li> <a href="#arrgetsvoid"> arrGetsVoid </a> </li>
-                            <li> <a href="#voidKey"> voidKey </a> </li>
+                            <li> <a href="#voidkey"> voidKey </a> </li>
                             </ol>
                             
                         </div> 
@@ -84,14 +84,13 @@
                                     <div class="box-full">
                                         <div class="pxv-6 bc-off-white"><code>Syntax: set</code></div>
                                         <pre class="pre-code">
-    $input->set(value, config, bool);
-
+    $input->set($value, $config, $bool);
     <span class="comment no-select">
-    where:
+      where:
         
-        value: value to be tested 
-        config: configuration parameters or options that define action to be performed 
-        bool  : a boolean of true tells input class to disallow spaces when validating input value set.                            
+        $value : value to be tested 
+        $config: configuration parameters or options that define action to be performed 
+        $bool  : a boolean of true tells input class to disallow spaces when validating input value set.                            
     </span>
                                         </pre>
                                     </div>
@@ -193,12 +192,11 @@
                                         <div class="pxv-6 bc-off-white"><code>Syntax: strict validation</code></div>
                                         <pre class="pre-code">
     $input->strict(bool);
-        <span class="comment">
-            where:
-            
-            bool: set the strict type to true or false. Default is true.
-        </span>
-                                        </pre>
+    <span class="comment">
+      where:
+    
+        bool: set the strict type to true or false. Default is true.
+    </span>                            </pre>
                                     </div>
                                 </div>          
                         <div class="pre-area shadow">
@@ -236,12 +234,11 @@
                                     <div class="box-full">
                     <div class="pxv-6 bc-off-white"><code>Syntax: default_type</code></div>
                     <pre class="pre-code">
-    $input->default_type(type); <span class="comment"> // set base path</span>
-    
+    $input->default_type($type); <span class="comment"> // set base path</span>
     <span class="comment"> 
-        where :
+      where :
 
-            type: type of validation
+        $type: type of validation
     </span>
                     </pre>
                                     </div>
@@ -280,11 +277,10 @@
                                         <div class="pxv-6 bc-off-white"><code>Syntax: default_length</code></div>
                                         <pre class="pre-code">
     $input->default_length(length); <span class="comment"> // set base path</span>
-    
     <span class="comment"> 
-        where :
+      where :
 
-            length: array or string of acceptable lengths
+        length: array or string of acceptable lengths
     </span>
                                         </pre>
                                     </div>
@@ -322,12 +318,11 @@
                                     <div class="box-full">
                                         <div class="pxv-6 bc-off-white"><code>Syntax: default_range</code></div>
                                         <pre class="pre-code">
-    $input->default_range(range); <span class="comment"> // set default range</span>
-    
+    $input->default_range($range); <span class="comment"> // set default range</span>
     <span class="comment"> 
-        where :
+      where :
 
-            range: array of acceptable ranges
+        $range: array of acceptable ranges
     </span>
                                         </pre>
                                     </div>
@@ -359,7 +354,7 @@
                             </div> <br>
                             
                             <div class="">
-                                The <code>arrGetsVoid</code> checks if a supplied array has an empty value 
+                                The <code>arrGetsVoid</code> checks if a supplied array has an empty value for any key
                                 within it.
                                 <br><br>
                     
@@ -367,12 +362,11 @@
                                     <div class="box-full">
                                         <div class="pxv-6 bc-off-white"><code>Syntax: arrGetsVoid</code></div>
                                         <pre class="pre-code">
-    Input::arrGetsVoid(array); 
-
+    Input::arrGetsVoid($array); 
     <span class="comment no-select"> 
-        where:
+      where:
         
-        array : array lists to be tested
+       $array : array lists to be tested
     </span>
                                         </pre>
                                     </div>
@@ -384,12 +378,6 @@
                                         <pre class="pre-code">
     Input::arrGetsVoid(['name'=>'foo','age'=>'']); <span class="comment">// returns true</span>
     Input::arrGetsVoid(['name'=>'foo','age'=>'30']); <span class="comment">// returns false</span>
-
-    <span class="comment no-select"> 
-        where:
-        
-        array : array lists to be tested
-    </span>
                                         </pre>
                                     </div>
                                 </div>
@@ -408,7 +396,7 @@
                             </div> <br>
                             <div class="">
                                 The <code>voidKey</code> method returns the corresponding keys that have 
-                                a empty values in a previously tested array. 
+                                an empty value in a previously tested array. 
                                 This method is useful when handling zip files.
                                 <br><br>
                     
@@ -416,8 +404,8 @@
                                     <div class="box-full">
                                         <div class="pxv-6 bc-off-white"><code>Example: fetch last directory</code></div>
                                         <pre class="pre-code">
-        Input::arrGetsVoid(['name'=>'foo', 'age'=>'']);
-        Input::voidKey(); <span class="comment no-select"> // returns ['age']</span>
+    Input::arrGetsVoid(['name'=>'foo', 'age'=>'']);
+    Input::voidKey(); <span class="comment no-select"> // returns ['age']</span>
                                         </pre>
                                     </div>
                                 </div>
@@ -432,6 +420,5 @@
         </section>
     </div>
         @lay('build.co.coords:footer')
-
 
 @template;

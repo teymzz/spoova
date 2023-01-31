@@ -8,12 +8,12 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="icon" type="image/png" href="http://localhost/trial/res/main/images/icons/favicon.png">
+    <link rel="icon" type="image/png" href="http://localhost/spoova/res/main/images/icons/favicon.png">
     <title>Tutorial - Database update</title>
     <meta name="viewport" content="width=device-width, initial-scale=.9, maximum-scale=1.0, user-scalable=1" />
 <meta name="description" content="website_description" />
-<link rel="icon" href="http://localhost/trial/res/main/images/icons/favicon.png" />
-    <link  rel="stylesheet" type="text/css" href="http://localhost/trial/res/main/css/res.css" x-debug="res-css"><script src='http://localhost/trial/res/main/js/jquery-3.6.0.js'></script><script src='http://localhost/trial/res/main/css/bootstrap/js/bootstrap.min.js'></script><link  rel="stylesheet" type="text/css" href="http://localhost/trial/res/main/css/mdb5/css/mdb.min.css"><script src='http://localhost/trial/res/main/js/config.js'></script><script src='http://localhost/trial/res/main/js/core.js'></script><script src='http://localhost/trial/res/main/js/onLoaded.js'></script><script src='http://localhost/trial/res/main/js/custom.js'></script><script src='http://localhost/trial/res/main/js/device.js'></script><script src='http://localhost/trial/res/main/js/loadImages.js'></script><script src='http://localhost/trial/res/main/js/formValidator.js'></script><script src='http://localhost/trial/res/main/js/jquery.mousewheel.js'></script><script src='http://localhost/trial/res/main/js/anime.js'></script><script src='http://localhost/trial/res/main/js/init.js'></script> 
+<link rel="icon" href="http://localhost/spoova/res/main/images/icons/favicon.png" />
+    <link  rel="stylesheet" type="text/css" href="http://localhost/spoova/res/main/css/res.css" x-debug="res-css"><script src='http://localhost/spoova/res/main/js/jquery-3.6.0.js'></script><script src='http://localhost/spoova/res/main/css/bootstrap/js/bootstrap.min.js'></script><link  rel="stylesheet" type="text/css" href="http://localhost/spoova/res/main/css/mdb5/css/mdb.min.css"><script src='http://localhost/spoova/res/main/js/config.js'></script><script src='http://localhost/spoova/res/main/js/core.js'></script><script src='http://localhost/spoova/res/main/js/onLoaded.js'></script><script src='http://localhost/spoova/res/main/js/custom.js'></script><script src='http://localhost/spoova/res/main/js/device.js'></script><script src='http://localhost/spoova/res/main/js/loadImages.js'></script><script src='http://localhost/spoova/res/main/js/formValidator.js'></script><script src='http://localhost/spoova/res/main/js/jquery.mousewheel.js'></script><script src='http://localhost/spoova/res/main/js/anime.js'></script><script src='http://localhost/spoova/res/main/js/init.js'></script> 
     <style rel="build.css.tutorial"> 
 
      body{
@@ -30,6 +30,9 @@
           font-size: .85em;
           display: inline-block;
           width:100%;
+      }
+
+     .pre-area:not([class*="bc-"]){
           background-color : rgba(var(--white-dd));
       }
   
@@ -159,14 +162,14 @@
    --black-ll: 79, 79, 79;
 }
 
-.bc-white-d.--theme-esc{
+.--theme-dark .bc-white-d.--theme-esc{
     --white-d: 21, 24, 51;
     --white-dd: 23, 28, 56;
     --silver-d: var(--white-dd);
     color: rgb(203, 198, 198);
 }
 
-.bc-white-d.--theme-esc .flex-full > *{
+.--theme-dark .bc-white-d.--theme-esc .flex-full > *{
     --white: 255, 255, 255;
     --white-d: 250, 250, 250;
     --white-dd: 240, 240, 240;
@@ -240,7 +243,7 @@ body.--theme-dark{
  </style>
     
     
-    <script src='http://localhost/trial/res/main/js/switcher.js'></script>
+    <script src='http://localhost/spoova/res/main/js/switcher.js'></script>
     
 </head>
 <body>
@@ -334,7 +337,7 @@ window.onload = function() {
 
           <div class="flex pxv-10">
                <div class="flex-icon theme-btn box bd bd-silver rad-r anc-btn-link flow-hide bc-silver ripple relative" style="transition: none">
-                    <div class="px-40 b-cover ico-spin" data-src="http://localhost/trial/res/main/images/icons/favicon.png" style="transition: none"></div>
+                    <div class="px-40 b-cover ico-spin" data-src="http://localhost/spoova/res/main/images/icons/favicon.png" style="transition: none"></div>
                     <div class="font-em-1d5 px-40 flex mid overlay fb-9 calibri" style="top:-2px; left:.4px; z-index: 1; color:#202dd5;">
                          s 
                     </div>
@@ -354,6 +357,7 @@ window.onload = function() {
                <li> <a href="<?= DomUrl('docs/forms') ?>" class="<?= inPath('active') ?>"><span class="ico ico-spin"></span>Handling Forms</a> </li>
                <li> <a href="<?= DomUrl('docs/useraccounts') ?>" class="<?= inPath('active') ?>"><span class="ico ico-spin"></span>Handling Users</a> </li>
                <li> <a href="<?= DomUrl('docs/database/data-model') ?>" class="<?= inPath('active') ?>"><span class="ico ico-spin"></span>Handling DBModels</a> </li>
+               <li> <a href="<?= DomUrl('docs/database/migrations') ?>" class="<?= inPath('active') ?>"><span class="ico ico-spin"></span>Handling Migrations</a> </li>
                <li> <a href="<?= DomUrl('docs/classes') ?>" class="<?= inPath('active') ?>"><span class="ico ico-spin"></span>Helper Classes</a> </li>
                <li> <a href="<?= DomUrl('docs/functions') ?>" class="<?= inPath('active') ?>"><span class="ico ico-spin"></span>Helper Functions</a> </li>
                <li> <a href="<?= DomUrl('docs/directives') ?>" class="<?= inPath('active') ?>"><span class="ico ico-spin"></span>Helper Directives</a> </li>
@@ -375,7 +379,7 @@ window.onload = function() {
            <div class="font-em-1d2">
 
                 
- <div class="font-menu pvs-4"> <a href="http://localhost/trial/tutorial">Tutorial</a> <span class="bi-chevron-right"></span> <a href="http://localhost/trial/tutorial/database">Database</a> <span class="bi-chevron-right"></span> <a href="http://localhost/trial/tutorial/database/update">Update</a>  </div>
+ <div class="font-menu pvs-4"> <a href="http://localhost/spoova/tutorial">Tutorial</a> <span class="bi-chevron-right"></span> <a href="http://localhost/spoova/tutorial/database">Database</a> <span class="bi-chevron-right"></span> <a href="http://localhost/spoova/tutorial/database/update">Update</a>  </div>
 
 
                 <div class="start">

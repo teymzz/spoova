@@ -59,7 +59,7 @@ class ImageClass extends FileUploader{
     }
     
     /**
-     * Executes activities previouslu declare d
+     * Executes activities previously declared
      *
      * @return mixed
      */
@@ -101,10 +101,10 @@ class ImageClass extends FileUploader{
      * @param int $width
      * @param int $height
      * @param int $quality - options ( 0 - 9 )
-     * @param [type] $fileOut
+     * @param string $fileOut
      * @return void
      */
-    public function setWidth($width ,$height, $quality = null, $fileOut=null){
+    public function setWidth($width, $height, $quality = null, $fileOut = null){
       $this->imageWidth   = $width;
       $this->imageheight  = $height;
       $this->imageQuality = $quality;
@@ -195,15 +195,16 @@ class ImageClass extends FileUploader{
       if($this->imageValid == true){
         return $this->imageData;
       }
+      return [];
     }
     
     /**
      * prints processed image to the page
      *
-     * @param [type] $class class attribute
+     * @param string $class class attribute
      * @return string|false
      */
-    public function imageDisplay($class=null){
+    public function imageDisplay($class = null){
       
       if($this->imageValid == true){
         $width     = $this->imageWidth;
@@ -242,7 +243,7 @@ class ImageClass extends FileUploader{
      * @param string $im_url image path
      * @return bool
      */
-    public function imageDelete($im_url=null){
+    public function imageDelete($im_url = null){
 
       $image = $this->imageSet;
       if(strpos($image, $im_url)){

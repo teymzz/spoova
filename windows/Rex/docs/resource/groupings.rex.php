@@ -65,11 +65,12 @@
 
                             <div class="font-menu font-em-1">
                                 Static urls are imported from the global resource folder <code>res</code>.
-                                Therefore, all local static urls should begin with the res folder name, although 
+                                Therefore, all local static urls should begin with the res folder name although 
                                 a different folder name may be accepted. Before a file can be imported, it can 
-                                be first stored into the storage system. By default, the Resource class stores 
-                                urls into different containers which are either named or unamed. When storing static urls, 
-                                a group name should be first declared else, the url will be stored in an unamed space. There are 
+                                be initially stored into the <code>Res</code> storage system. By default, the Resource class stores 
+                                urls into different containers which are either named or unamed. A named container 
+                                uses a group name to store static urls. However, if a group name is not defined, then such urls will 
+                                be stored in an unamed space. There are 
                                 several methods used for handling resource storage and importation and they are listed below
                                 <br><br>
                                 <ul class="font-em-d85 c-olive">
@@ -113,15 +114,15 @@
 
                                     <div class="font-menu font-em-d95">
                                         Resource naming or grouping is done by giving static resources their own 
-                                        storage group space which may be declared (named) or undeclared (unmamed).
-                                        Example is listed below: <br><br>
+                                        storage group space which may be declared (named) or undeclared (unnamed).
+                                        Example is shown below: <br><br>
                                     </div>
                                     
                                     <div class="box-full pre-area shadow flow-x">
     <pre class="pre-code">
-  Res::name('css');
+  <span class="comment">1.</span> Res::name('css');
 
-  Res::new()->name('js');
+  <span class="comment">2.</span> Res::new()->name('js');
     </pre>
                                     </div> <br><br>
 
@@ -129,7 +130,7 @@
                                         The example above reveals two different ways by which static urls can be grouped 
                                         before they are being stored. While <code>Res::name()</code> is a direct static method of 
                                         naming a new resource group, the <code>Res::new()->name()</code> is an indirect instance method of naming groups.
-                                        To switch to a previously declared group or declare a new group, line one will have to be repeated at each declaration but line 2 supports a chainable 
+                                        If multiple groups are defined, in order to switch to a previously declared group or declare a new group, line one will have to be repeated at each declaration but line 2 supports a chainable 
                                         structure naming convention reducing the number of times the <code>Res</code> class will have to be called just as shown in the example below:
                                     </div> <br> 
 
@@ -144,7 +145,7 @@
                                     </div> <br><br>
 
                                     <div class="d87">
-                                        When adding multiple groups, line 1 & 2 will be harder to manage, hence line 4 is mostly recommended
+                                        When adding multiple groups, line 1 & 2 will be harder to manage, hence line 4 is mostly recommended because it supports a chainable structure.
                                     </div> <br>         
                                 </div>
                             </div>
@@ -493,7 +494,7 @@
                                 <div class="fb-6">#Resource Attributes</div>
                                 <div class="mvt-10">
                                     <div class="font-menu font-em-d95">
-                                        There are cases in which certain our tag may have atrributes attached to them. In order to add attributes to tags, we can 
+                                        There are cases in which certain urls may have atrributes attached to them. In order to add attributes to tags, we can 
                                         employ the use of <code> = </code> & <code> > </code> sign (i.e <code>=></code> ) to point our attributes:
                                     </div> <br>
                                     
@@ -501,7 +502,7 @@
     <pre class="pre-code">
   Res::new()->name('scripts')
   
-     ->url('http://site.com/js-file::js => class:value; id: some_id')
+     ->url('http://site.com/js-file:::js => class:value; id: some_id')
   
      <span class="comment no-select">// &lt;script src="http://site.com/js-file" class="value" id="some_id"&gt;&lt;/script&gt; </span>
     </pre>
@@ -509,7 +510,7 @@
 
                                     <div class="d87">
                                         In example above, we added attributes to our static urls. As revealed above, attributes can be separated using the 
-                                        <code>:</code> semicolon character
+                                        <code>;</code> semicolon character
                                     </div>
                 
                                 </div>
@@ -545,7 +546,7 @@
                                                     Navigate to the core folder of your project file. For example: <code>c:\www\project_folder\core >> </code> 
                                                 </li>
                                                 <li>
-                                                    Run the command <code>php spoova watch <span class="c-green-l">online|offline|disable</span></code> to turn on or off the default live server
+                                                    Run the command <code>php spoova watch <span class="c-green-l">online|offline|disable</span></code> to turn on, off or disable the default live server
                                                 </li>
                                                 <li>
                                                     Online : means to run live server in both online and offline environments
@@ -571,12 +572,12 @@
                                                     Navigate to the core folder of your project file. For example: <code>c:\www\project_folder\core >> </code> 
                                                 </li>
                                                 <li>
-                                                    Run the command <code>php spoova meta <span class="c-green-l">on|off</span></code> to turn on or off the default live server
+                                                    Run the command <code>php spoova meta <span class="c-green-l">on|off</span></code> to turn on or off the meta tags importation.
                                                 </li>
                                             </ul>
 
                                             Once the resource meta is turned on, the resource class will include default configured meta tags when importing static urls to the web page. This action is also 
-                                            visited once.  Manually, the init file can be configured by setting the <code>RESOURCE_META</code> to <code>on</code>
+                                            visited once.  Manually, the init file (i.e <code>icore/init</code> ) can be configured by setting the <code>RESOURCE_META</code> to <code>on</code>
                                         </div>
                                     </div> <br>
                                     
@@ -644,7 +645,7 @@
                                                 The methods below reveal methods by which a groups can be imported into web page.
                                             </div>
     
-                                            <div class="box-full pre-area shadow flow-x"> <br>
+                                            <div class="box-full pre-area shadow flow-x">
     <pre class="pre-code">
   <span class="comment">1.</span> Res::import(':anime');
   <span class="comment">2.</span> Res::import(':design');
@@ -655,7 +656,7 @@
     </pre>
                                             </div> <br>
                                         
-                                            <div class="d87 pvs-10">
+                                            <div class="d9 pvs-10">
                                                 In example above, <code>line 1 & 2</code>  are methods of importing stored groups 
                                                 separately. The use of array in <code>line 3</code> is a concise way of importing 
                                                 multiple groups, without having to call the <code>import()</code> directive every time.
@@ -679,7 +680,7 @@
                                                 </div> 
                                             </div>
                                             <div class="pvs-20">
-                                                To export a stored a group, the <code>Res::export()</code> is used although this can be achieved using 
+                                                To export a stored a group, the <code>Res::export()</code> can be used. This can be also be achieved by using 
                                                 <code>Res::import()</code>. Example below reveals how to export stored urls into variables
                                             </div>
     

@@ -13,7 +13,7 @@
 
         <div class="start font-em-d8">
 
-          <div class="font-em-1d5 c-orange">Functions - Modal</div> <br>  
+          <div class="font-em-1d5 c-orange">Functions - Scripts</div> <br>  
           
           <div class="resource-intro">
             <div class="fb-6">Introduction</div>
@@ -41,8 +41,9 @@
             <div class="pre-area shadow">
 
               <pre class="pre-code">
-  <span class="comment">//alerts 10</span>
-  alert(10);  
+  alert(10);
+
+  <span class="comment">//alerts 10</span>  
               </pre> 
 
             </div>
@@ -66,12 +67,14 @@
             <div class="pre-area shadow">
 
               <pre class="pre-code">
-  <span class="comment">//displays 10 in developer's console</span>
-  javaconsole(10) 
+  javaconsole(10);
 
+  <span class="comment">//displays 10 in developer's console</span> 
+
+
+  javaconsole('me', 50);
 
   <span class="comment">//displays 'me' and 50 in developer's console on separate lines</span>
-  javaconsole('me', 50) 
               </pre>
 
             </div>
@@ -97,8 +100,9 @@
             <div class="pre-area shadow">
 
               <pre class="pre-code">
+  script('console.log('foo')', 1);
+   
   <span class="comment">//displays foo in console</span>
-  script('console.log('foo')', 1) 
               </pre>
 
             </div>

@@ -52,7 +52,9 @@
                             
                             <span class="c-olive fb-6">5.</span> By including the <code class="font-em-d8"><?= to_lgts('@(Res(\'::watch\'))@')?></code> directive in template engines <br><br>
                             
-                            <span class="c-olive fb-6">6.</span> By use the helper function <code class="font-em-d8">monitor()</code>
+                            <span class="c-olive fb-6">6.</span> By the use of helper function <code class="font-em-d8">monitor()</code> in routes.<br><br>
+                            
+                            <span class="c-olive fb-6">7.</span> The template importing directive "@(template())@" can also turned off a template-turned-on live server directive. 
                         </li> <br>
     
                         <li> 

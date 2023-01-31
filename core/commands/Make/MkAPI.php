@@ -194,6 +194,8 @@ class MkAPI extends MkBase{
 
         $use = ($extends)? scheme(WIN_FRAMES.$extends, false) : 'Window';
 
+        $extends = ($extends)?: 'Window';
+
         /* Note:: all space variables have no trail slash */
 
         /* class subnamespace in window\ if subnamespace exists */
@@ -345,7 +347,7 @@ class MkAPI extends MkBase{
 
                 $class = ucfirst($class);
 
-                $this->display(Cli::alert(Cli::emo('eye').' NOTICE:').(' API Route "'.Cli::alert($class).'" created successfully in '.Cli::warn("windows\Routes\\$class.php")));
+                $this->display(Cli::alert('NOTICE:').(' API Route "'.Cli::alert($class).'" created successfully in '.Cli::warn("windows\Routes\\$class.php")));
 
                 if($subdir){
                     
@@ -355,22 +357,24 @@ class MkAPI extends MkBase{
                          //create a new file and add contents
                          if($Filemanager->openFile(true,  $APIFile)){
 
-                              $this->display(Cli::notice(' API Handler file '.Cli::alert(ltrim(ucfirst($handlerClass),'/ ')).' was added'.Cli::valid('successfully'.Cli::emo('checkmark',1), 1)));     
+                              $this->display(Cli::notice(' API Handler file '.Cli::alert(ltrim(WIN_ROUTES.to_backslash($subdir),'/ '))."\\".Cli::alert(ltrim(ucfirst($handlerClass),'/ ')).' was added'.Cli::valid('successfully'.Cli::emo('checkmark',1), 1)));     
                               $file = fopen($APIFile, 'w');
                               fputs($file, $contentSubAPI);
-                              fclose($file);        
+                              fclose($file);    
                               
-                              $eResponse =
-                    
-                              Cli::textIndent(Cli::danger("WARNING!!!")." File created was detected to have some problems").
-                              Cli::break(2, false).
-                              Cli::textIndent(Cli::warn(Cli::emo('eye').' Debug: ', 1).('Check that extended frame class "'.Cli::warn($extends).'" truly exists.')).
-                              Cli::break(2, false);
-                          
-                              //set a response message before shutdown
-                              ErrorHandler::cliMessage($eResponse);
+                              if(!class_exists($fileNameSpace)){
 
-                              new $fileNameSpace();
+                                  $eResponse =
+                                  Cli::textIndent(Cli::danger("WARNING!!!")." File created was detected to have some problems").
+                                  Cli::break(2, false).
+                                  Cli::textIndent(Cli::warn(Cli::emo('eye').' Debug: ', 1).('Check that extended frame class "'.Cli::warn($extends).'" truly exists.')).
+                                  Cli::break(2, false);
+                                
+                                  //set a response message before shutdown
+                                  ErrorHandler::cliMessage($eResponse);
+                                  
+                              }
+
                          }
                          
                     }else{

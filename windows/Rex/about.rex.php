@@ -41,13 +41,13 @@
                                 exist due to the availability of a single entry point. While different urls may have a similar entry point (window), 
                                 there can also exists different urls with different entry points. However, every url must be handled by a window file which sorts 
                                 and manages its relative paths and determines how urls load their contents. The window files are placed 
-                                within the "window" directory. 
+                                within the "windows" directory. 
                             </p>
                             <p>
                                 There are different ways by which a window url can be handled. Spoova's flexibility supports 
                                 multiple ways of loading urls but however, favors a standard logic and provides a great support for it. In order for the logic to 
-                                work, all window files (or entry points) and window subdirectories containing window files are expected to be placed within the "window\Routes" directory including all APIs. 
-                                The standardlogic uses the window files as the base for any url visited. This means that any url visited that does not have its 
+                                work, all window files (or entry points) and window subdirectories containing window files are expected to be placed within the "windows\Routes" directory including all APIs. 
+                                The standard logic uses the window files as the base for any url visited. This means that any url visited that does not have its 
                                 entry point within the Routes folder is considered as an invalid url. This structure helps in file organization and code deployment. 
                                 It also helps to locate files easily with a minimal level of stress.
                             </p>

@@ -377,567 +377,419 @@ window.onload = function() {
       <div class="font-em-1d2">
 
         
- <div class="font-menu pvs-4"> <a href="http://localhost/spoova/tutorial">Tutorial</a> <span class="bi-chevron-right"></span> <a href="http://localhost/spoova/tutorial/functions">Functions</a> <span class="bi-chevron-right"></span> <a href="http://localhost/spoova/tutorial/functions/modal">Modal</a>  </div>
+ <div class="font-menu pvs-4"> <a href="http://localhost/spoova/tutorial">Tutorial</a> <span class="bi-chevron-right"></span> <a href="http://localhost/spoova/tutorial/functions">Functions</a> <span class="bi-chevron-right"></span> <a href="http://localhost/spoova/tutorial/functions/lite">Lite</a>  </div>
 
 
         <div class="start font-em-d8">
 
-          <div class="font-em-1d5 c-orange">Functions - Modal</div> <br>  
+
+          <div class="font-em-1d5 c-orange">Functions - Lite</div> <br>  
           
           <div class="resource-intro">
             <div class="fb-6">Introduction</div>
             <div class="">
-                Helper functions are predefined spoova functions that eases building 
-                web applications. Spoova helper functions are divided into three categories 
-                
-                <br>
+
+                Lite helper functions are predefined spoova functions that eases building 
+                web applications. These functions are mostly applied to strings or arrays
+                while other remaining parts are just custom functions of already existing php 
+                internal functions 
                 
             </div> 
           </div>
-
-          <!-- br -->
-          <div id="br" class="br"> 
+          
+          <!-- base_encode -->
+          <div id="base_encode" class="base_encode"> 
             <br>
-            <div class="font-menu lacier fb-6 bc-white-dd flex-full rad-4 pxv-8">
-              <div class="flex-full">1. br</div>
+            <div class="lacier font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8">
+              <div class="flex-full">1. base_encode</div>
             </div> <br>
             
             <div>
-                The <code>br</code> function breaks a line both within cli and on web pages
+                A coined function for php <code>base64_encode</code>. It removes the equals sign from the 
+                generated hashed value. This does not affect the performance of <code>base64_decode</code> function 
+                when decoding the hashed value.
+            </div> 
+          </div>  
+          
+          <!-- base_decode -->
+          <div id="base_decode" class="base_decode"> 
+            <br>
+            <div class="lacier font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8">
+              <div class="flex-full">2. base_decode</div>
             </div> <br>
             
-            <!-- code line started - refil -->
-            <div class="pre-area shadow">
-
-              <pre class="pre-code">
-  <span class="comment"> >> syntax: br(value, breaks)</span>
-
-  <span class="c-sky-blue-dd">
-      value: string 
-      breaks: number of breaks after
-  </span> 
-              </pre>
-
+            <div>
+                Performs exactly the same function as <code>base64_decode</code>
             </div>
-            <!-- code line ended -->
-          </div>    
+          </div>  
 
-          <!-- refil -->
-          <div id="refil" class="refil"> 
+          <!-- tojson -->
+          <div id="tojson" class="tojson"> 
             <br>
-
-            <div class="font-menu lacier fb-6 bc-white-dd flex-full rad-4 pxv-8">
-              <div class="flex-full">2. refil</div>
+            <div class="lacier font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8">
+              <div class="flex-full">3. toJson</div>
             </div> <br>
             
             <div>
-              If a trimmed value is not empty, <code>refil</code> returns the second argument supplied.
-    
-              <!-- code line started - refil -->
-              <div class="pre-area shadow">
-
-                <pre class="pre-code">
-  <span class="comment"> >> syntax: </span>
-
-      $value = 'foo';
-      $newval = refil($value, 'bar');
-
-      echo $newval  <span class="comment">// returns : bar </span>
-                </pre>
-
-              </div>
-              <!-- code line ended -->
-  
-            </div> <br>
-
-          </div>
-
-          <!-- encodeUriComponent -->
-          <div id="encodeuricomponent" class="encodeuricomponent"> 
-            <br>
-            <div class="font-menu lacier fb-6 bc-white-dd flex-full rad-4 pxv-8">
-              <div class="flex-full">3. encodeUriComponent</div>
-            </div> <br>
-            
-            <div>
-                Encodes url in a way that is similar to Javascript's encodeURIComponent
+                This converts an array or string to json format. It is coined from 
+                php <code>json_encode</code> function.
             </div> 
           </div>         
 
-          <!-- inRange -->
-          <div id="inrange" class="inrange"> 
+          <!-- fromjson -->
+          <div id="fromjson" class="fromjson"> 
             <br>
-
-            <div class="font-menu lacier fb-6 bc-white-dd flex-full rad-4 pxv-8">
-              <div class="flex-full">4. inRange</div>
+            <div class="lacier font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8">
+              <div class="flex-full">4. fromJson</div>
             </div> <br>
             
             <div>
-                Checks if a value is within the range of two values
+              This converts a std object or string to array format by default.
+            </div>
+          </div>         
+
+          <!-- enplode -->
+          <div id="enplode" class="enplode"> 
+            <br>
+            <div class="lacier font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8">
+              <div class="flex-full">5. enplode</div>
+            </div> <br>
+            
+            <div>
+              This function uses the php implode() function. The main function is to wrap a string around 
+              an array that was imploded. 
             </div> <br>
 
             <!-- code line started -->
             <div class="pre-area shadow">
 
               <pre class="pre-code">
-  <span class="comment">// syntax: </span>
-  inRange($value, $min, $max)
+              
+  <span class="comment">1.</span> enplode( ["_", "#"], ['Hi', 'there'] ); <span class="comment">// returns: #Hi_there# </span>
+
+  <span class="comment">2.</span> enplode( ["_", "(", ")"], ['Hi', 'there'] ); <span class="comment">// returns: (Hi_there) </span>
+
+  <span class="comment">3.</span> enplode( ["_", "(", ")"], [] ); <span class="comment">// returns: null</span>
+
+  <span class="comment">4.</span> enplode( ["_", "(", ")"], [], true ); <span class="comment">// returns: ()</span>
+
+              </pre>
+
+              <div class="foot-note font-em-d9 pxs-14">
+                In the examples above, while the underscore is the string that is used to implode the second array argument,
+                <ul class="mvt-6">
+                  <li>
+                    In line 1 above, the hash will be wrapped around the implode string only if there is a string to be imploded. 
+                  </li>
+                  <li>
+                    In line 2 above, The first (opening) and second (closing) pathenthesis will be added to the start and end of the imploded string respectively.
+                  </li>
+                  <li>
+                    In line 3 above, both pathenthesis will not be added to the imploded array because the array is empty.
+                  </li>
+                  <li>
+                    Line 4 however, explains that when a third boolean argument of true is supplied, then the wrapper characters will always be added even if the array is empty.
+                  </li>
+                </ul>
+              </div>
+
+            </div>
+            <!-- code line ended -->
+          </div>         
+
+          <!-- tosingular -->
+          <div id="tosingular" class="tosingular"> 
+            <br>
+            <div class="lacier font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8">
+              <div class="flex-full">6. toSingular</div>
+            </div> <br>
+            
+            <div>
+              This function converts a string to singular by removing the last "s" or "S" character. The argument can also take a list of 
+              array strings. 
+            </div> <br>
+
+            <!-- code line started -->
+            <div class="pre-area shadow">
+
+              <pre class="pre-code">
+              
+  <span class="comment">1.</span> echo( toSingular( 'Boys' ) ); <span class="comment">// Boy </span>
+
+  <span class="comment">2.</span> print_r( toSingular( ['Boys', 'Book' "FUSS"] ) ); <span class="comment">// ['Boy', 'Book', "FUS"] </span>
+
+              </pre>
+
+              <div class="foot-note font-em-d9 pxs-14">
+                <span class="bi-circle-fill"></span> Notice that only the last "S" character is removed
+              </div> <br>
+
+            </div>
+            <!-- code line ended -->
+          </div>         
+
+          <!-- inflect -->
+          <div id="inflect" class="inflect"> 
+            <br>
+            <div class="lacier font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8">
+              <div class="flex-full">7. inflect</div>
+            </div> <br>
+            
+            <div>
+              Inflect is a more powerful function that either adds or removes the last "s" character of a string based on the count 
+              of value supplied to it. The format is shown below:
+            </div> <br>
+
+            <!-- code line started -->
+            <div class="pre-area shadow">
+                <div class="bc-silver pxv-10">
+                  Syntax
+                </div>
+              <pre class="pre-code">
+  inflect($text, $count, $strict) 
+              <span class="comment">
+    where :
+
+      $text   : string or array list of text strings
+      $count  : integer used to determine the qunatity of $text 
+      $strict : strict automation of addition or removal of last "s" character.
+              </span> 
+              </pre>
+
+              <div class="foot-note font-em-d9 pxs-14">
+                <span class="bi-circle-fill"></span> Let's take a look at few examples:
+              </div>
+
+              <pre class="pre-code">
+    inflect("Boy", 1); <span class="comment no-select"> <span class="co-6 c-sky-blue-d">.............</span> //Boy  (add "s" if count is greater than 1)</span>
+
+    inflect("Boy", 2); <span class="comment no-select"> <span class="co-6 c-sky-blue-d">.............</span> //Boys (add "s" if count is greater than 1)</span>
+
+    inflect("Boy", 2, true); <span class="comment no-select"> <span class="co-6 c-sky-blue-d">.......</span> //Boys (add "s" if count is greater than 1 and last character is not "s")</span>
+
+    inflect("Boys", 2, true); <span class="comment no-select"> <span class="co-6 c-sky-blue-d">......</span> //Boys (add "s" if count is greater than 1 and last character is not "s")</span>
+
+    inflect("Boys", 1, true); <span class="comment no-select"> <span class="co-6 c-sky-blue-d">......</span> //Boy  (remove "s" if count is less than 1 and last character is "s")</span>
+              </pre>
+
+              <div class="foot-note font-em-d9 pxs-14">
+                <span class="bi-circle-fill"></span> First argument can also be an array of strings. All strings values will be processed within the array. 
+              </div>
 
 
-  <span class="comment">// Example : returns true </span>
-  inRange(27, 20, 50)
+              <pre class="pre-code">
+    inflect(["Boy","Book"], 2); <span class="comment no-select"> <span class="co-6 c-sky-blue-d">.............</span> //[Boys, Books]  (add "s" if count is greater than 1)</span>
+              </pre>
+
+            </div>
+            <!-- code line ended -->
+          </div>         
+
+          <!-- to_lgts -->
+          <div id="to_lgts" class="to_lgts"> 
+            <br>
+            <div class="lacier font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8">
+              <div class="flex-full">8. to_lgts</div>
+            </div> <br>
+            
+            <div>
+                This function converts <code><?= ( htmlentities('&lt;') )?? "" ?></code> and <code><?= ( htmlentities('&gt;') )?? "" ?></code> to 
+                their respective equivalent angle brackets. 
+            </div> <br>
+
+            <!-- code line started -->
+            <div class="pre-area shadow">
+
+              <pre class="pre-code">
+              
+  to_lgts('< code >')<span class="comment">// returns: <?= ( htmlentities('&lt;') )?? "" ?> code <?= ( htmlentities('&gt;') )?? "" ?> </span>
+
               </pre>
 
             </div>
             <!-- code line ended -->
 
           </div>      
-          
-          <!-- randice -->
-          <div id="randice" class="randice"> 
+
+          <!-- href -->
+          <div id="href" class="href"> 
             <br>
-
-            <div class="font-menu lacier fb-6 bc-white-dd flex-full rad-4 pxv-8">
-              <div class="flex-full">5. randice</div>
-            </div> <br>
-              
-            <div>
-                Generates a list or random_bytes hash string from the supplied range of keys.
-            </div> <br>
-
-            <!-- code line started -->
-            <div class="pre-area shadow">
-
-              <pre class="pre-code">
-  <span class="comment">//returns random hashed string of 10 characters</span>
-  $hash = randice(10);
-
-  <span class="comment">//returns random hashed string of 5 characters from supplied string</span>
-  $hash = randice(10, 'abc123');   
-              </pre> 
-
-            </div>
-            <!-- code line ended -->
-
-          </div>                 
-          
-          <!-- is_empty -->
-          <div id="is_empty" class="is_empty"> 
-            <br>
-
-            <div class="font-menu lacier fb-6 bc-white-dd flex-full rad-4 pxv-8">
-              <div class="flex-full">6. is_empty</div>
-            </div> <br>
-              
-            <div>
-                This function tests if a value is empty. This can be an array or trimmed string. 
-                By trimming strings before testing, it acts as a proof against empty spaces. The function 
-                is also capable of regarding non-empty values as empty values. Examples are shown below:
-            </div> <br>
-
-            <!-- code line started -->
-            <div class="pre-area shadow">
-
-              <pre class="pre-code">
-  <span class="comment">//tests if value supplied is empty</span>
-  is_empty('a'); <span class="comment">//returns false</span>
-  is_empty(''); <span class="comment">//returns true</span>
-  is_empty('    '); <span class="comment">//returns true</span>
-  is_empty([]); <span class="comment">//returns true</span>
-
-  <span class="comment">//using defined and empty values</span>
-  is_empty('a', ['a','b','c']); <span class="comment">//returns true (because "a" exists in the list of assumed empty values)</span>  
-  is_empty('', ['a','b','c']); <span class="comment">//returns true (because test value is an empty value)</span>  
-              </pre> 
-
-            </div>
-            <!-- code line ended -->
-
-          </div>                 
-          
-          <!-- not_empty -->
-          <div id="not_empty" class="not_empty"> 
-            <br>
-            <div class="font-menu lacier fb-6 bc-white-dd flex-full rad-4 pxv-8">
-              <div class="flex-full">7. not_empty</div>
+            <div class="lacier font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8">
+              <div class="flex-full">9. href</div>
             </div> <br>
             
             <div>
-                This is the reverse of <a href="<?= DomUrl('docs/functions/modal#is_empty') ?>">is_empty</a> function
+                This function converts the urls in a text or string to clickable links using the url link itself.
+            </div> <br>
+
+            <!-- code line started -->
+            <div class="pre-area shadow">
+              <pre class="pre-code">
+  $text = href('url : http://www.site.com');
+  
+  var_dump($text);<span class="comment"> // url : &lt;a href="http://www.site.com"&gt http://www.site.com &lt;/a&gt;</span>
+              </pre>
+
+            </div>
+
+            <div class="mvs-10 font-em-d8">
+              A wrapper tag name can also be supplied for links
+            </div>
+
+            <div class="pre-area shadow">
+              <pre class="pre-code">
+  $text = href('url : http://www.site.com', 'span class="some_class"');
+  
+  var_dump($text);<span class="comment"> 
+  
+  <span class="c-teal no-select">// returns :</span>
+
+  &lt;span class="some_class"&gt; 
+    &lt;a href="http://www.site.com"&gt http://www.site.com &lt;/a&gt;
+  &lt;/span&gt; 
+                 </span>
+              </pre>
+
+            </div>
+            
+            <!-- code line ended -->
+          </div>        
+
+          <!-- scriptname -->
+          <div id="scriptname" class="scriptname"> 
+            <br>
+            <div class="lacier font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8">
+              <div class="flex-full">10. scriptName</div>
+            </div> <br>
+            
+            <div>
+                This function returns the current script name
+            </div>
+          </div>    
+
+          <!-- array_get -->
+          <div id="striplastslash" class="striplastSlash"> 
+            <br>
+            <div class="lacier font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8">
+              <div class="flex-full">11. striplastSlash</div>
+            </div> <br>
+            
+            <div>
+                This function removes the last slash from a url. It works for both forward slashes and backslashes
             </div> <br>
 
             <!-- code line started -->
             <div class="pre-area shadow">
 
               <pre class="pre-code">
-    <span class="comment">//tests if value supplied is empty</span>
-    not_empty('a'); <span class="comment">//returns true</span>
-    not_empty(''); <span class="comment">//returns false</span>
-    not_empty('    '); <span class="comment">//returns false</span>
-    not_empty([]); <span class="comment">//returns false</span>
-
-    <span class="comment">//using defined an empty values</span>
-    not_empty('a', ['a','b','c']); <span class="comment">//returns false (because "a" exists in the list of assumed empty values)</span>  
-    not_empty('', ['a','b','c']); <span class="comment">//returns false (because test value is an empty value)</span>  
-              </pre> 
+  $stripped = striplastSlash('site.com/user/profile/')
+      
+  var_dump($stripped); <span class="comment">//returns : site.com/user/profile</span>
+              </pre>
 
             </div>
             <!-- code line ended -->
+          </div>    
+
+          <!-- redirectto -->
+          <div id="redirectto" class="redirectto"> 
+            <br>
+            <div class="lacier font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8">
+              <div class="flex-full">12. redirectTo</div>
+            </div> <br>
+            
+            <div>
+                same as php <code>header("location:")</code>
+            </div>
+          </div>      
+
+          <!-- limittext -->
+          <div id="limittext" class="limittext"> 
+            <br>
+            <div class="lacier font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8">
+              <div class="flex-full">13. limitText</div>
+            </div> <br>
+            
+            <div>
+                This limits the number of texts acceptable in a text string and appends an ellipses 
+                to strings that have beyond the acceptable length of texts. It performs a simple 
+                smart calculation on strings that may require ellipses and resolves to either add or
+                ignore the ellipses.
+            </div> <br>
+
+            <!-- code line started -->
+            <div class="pre-area shadow">
+
+              <pre class="pre-code">
+  limitText('This is a string of not more than 10 texts', 7); 
+  
+  <span class="comment">//returns : This is a string of not more ...</span>
+              </pre>
+
+            </div>
+            <!-- code line ended -->
+          </div>      
+
+          <!-- limitchars -->
+          <div id="limitchars" class="limitchars"> 
+            <br>
+            <div class="lacier font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8">
+              <div class="flex-full">14. limitChars</div>
+            </div> <br>
+            
+            <div>
+                This limits the number of characters acceptable in a text string and appends an ellipses 
+                to strings that have beyond the acceptable length of texts
+            </div> <br>
+
+            <!-- code line started -->
+            <div class="pre-area shadow">
+
+              <pre class="pre-code">
+  limitText('This is a string of not more than 10 texts', 22);
+
+  <span class="comment">//returns : This is a string of not...</span> 
+              </pre>
+
+            </div>
+            <!-- code line ended -->
+
+            <div class="font-menu mvt-6">In the example above, by calculation, <code>limitText</code> automatically detects to add the letter <code>t</code> to the 
+            <code>no</code> to form <code>not</code>  before adding ellipses. At most times this behaviour is not predictable.</div>
 
           </div>  
 
-          <!-- combine -->
-          <div id="combine" class="combine"> 
+          <!-- limitword -->
+          <div id="limitword" class="limitword"> 
             <br>
-            <div class="font-menu lacier fb-6 bc-white-dd flex-full rad-4 pxv-8">
-              <div class="flex-full">8. combine</div>
+            <div class="lacier font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8">
+              <div class="flex-full">15. limitWord</div>
             </div> <br>
             
             <div>
-                This function combines two arrays or a string into an array. The first argument 
-                is not neccesarily an array but the second argument must be an array.
+                This works similarly to limitText function but it is applied on the total number 
+                of words required before an ellipses is added to a text.
             </div> <br>
 
             <!-- code line started -->
             <div class="pre-area shadow">
 
               <pre class="pre-code">
-              
-  $array = [1,2,3];
+  limitWord('This is a string of not more than 10 texts', 7);
 
-  combine(4, $array);
-  vdump($array); <span class="comment">//returns: [1,2,3,4]</span>  
-
-  <span class="comment">//using $array</span>
-  
-  combine([4, 5], $array);
-  vdump($array); <span class="comment">//returns: [1,2,3,4,5]</span>
+  <span class="comment">//returns : This is a string of not more ...</span> 
               </pre>
 
             </div>
             <!-- code line ended -->
 
-          </div>   
-          
-          <!-- compare -->
-          <div id="compare" class="compare"> 
-            <br>
-            <div class="font-menu lacier fb-6 bc-white-dd flex-full rad-4 pxv-8">
-              <div class="flex-full">9. compare</div>
-            </div> <br>
-            
-            <div>
-                Compare checks if all arguments supplied are of equal values.
-                It is case sensitive. These can be used to test any data type
-            </div> <br>
-
-            <!-- code line started -->
-            <div class="pre-area shadow">
-
-              <pre class="pre-code">
-  <span class="comment">//returns true</span>
-  vdump(compare('user', 'user', 'user')); 
-
-  <span class="comment">//returns false</span>
-  vdump(compare('user', 'user', 'me')); 
-              </pre>
-
-            </div>
-            <!-- code line ended -->
-
-          </div>   
-
-          <!-- arrinside -->
-          <div id="arrinside" class="arrinside"> 
-            <br>
-            <div class="font-menu lacier fb-6 bc-white-dd flex-full rad-4 pxv-8">
-              <div class="flex-full">10. arrInside</div>
-            </div> <br>
-            
-            <div>
-                This function checks if array contains another array.
-            </div> <br>
-
-            <!-- code line started -->
-            <div class="pre-area shadow">
-
-              <pre class="pre-code">
-  $value = ['user'=> ['name'=>'foo'] ];
-      
-  <span class="comment">//returns true</span>
-  var_dump(arrInside($value)); 
-              </pre>
-
-            </div>
-            <!-- code line ended -->
-
-          </div>        
-
-          <!-- arrvoid -->
-          <div id="arrvoid" class="arrvoid"> 
-            <br>
-            <div class="font-menu lacier fb-6 bc-white-dd flex-full rad-4 pxv-8">
-              <div class="flex-full">11. arrVoid</div>
-            </div> <br>
-            
-            <div>
-                This function checks if an array is empty. Contrary to empty function, all
-                array keys having empty values are removed before testing is done.
-            </div> <br>
-
-            <!-- code line started -->
-            <div class="pre-area shadow">
-
-              <pre class="pre-code">
-  $value = ['user'=>''];
-  $foo = ['user'=>'foo'];
-      
-  <span class="comment">//returns true</span>
-  var_dump(arrVoid($value));
-  
-  <span class="comment">//returns false</span>
-  var_dump(arrVoid($foo)); 
-              </pre>   
-              
-            </div>
-            <!-- code line ended -->
-
-          </div>        
-
-          <!-- arrgetsvoid -->
-          <div id="arrgetsvoid" class="arrgetsvoid"> 
-            <br>
-            <div class="font-menu lacier fb-6 bc-white-dd flex-full rad-4 pxv-8">
-              <div class="flex-full">12. arrGetsVoid</div>
-            </div> <br>
-            
-            <div>
-                This function checks if at least one empty value exists within an array.
-            </div> <br>
-
-            <!-- code line started -->
-            <div class="pre-area shadow">
-
-              <pre class="pre-code">
-    $value = ['user'=>'','gender'=>'male'];
-    $foo = ['user'=>'foo', 'gender'=> 'male'];
+          </div>               
         
-    <span class="comment">//returns true</span>
-    var_dump(arrGetsVoid($value));
-    
-    <span class="comment">//returns false</span>
-    var_dump(arrGetsVoid($foo));    
-              </pre>
+        </div> 
 
-            </div>
-            <!-- code line ended -->
-
-          </div> 
-
-          <!-- arrSort -->
-          <div id="arrsort" class="arrsort"> 
-            <br>
-            <div class="font-menu lacier fb-6 bc-white-dd flex-full rad-4 pxv-8">
-              <div class="flex-full">13. arrSort</div>
-            </div> <br>
-            
-            <div>
-                The function removes keys with empty values, then sorts an array
-            </div> <br>
-
-            <!-- code line started -->
-            <div class="pre-area shadow">
-
-              <pre class="pre-code">
-  vdump(arrsort([0 => 'foo', 1 => '', 2 => 'bar'])); <span class="comment">// [0 => 'foo', 2 => 'bar'] </span> 
-  
-
-  vdump(arrsort([0 => 'foo', 1 => '', 2 => 'bar'], true)); <span class="comment">// [0 => 'foo', 1 => 'bar'] </span> 
-              </pre>
-
-            </div>
-            <!-- code line ended -->
-
-          </div> 
-
-          <!-- array_trim -->
-          <div id="array_trim" class="array_trim"> 
-            <br>
-            <div class="font-menu lacier fb-6 bc-white-dd flex-full rad-4 pxv-8">
-              <div class="flex-full">14. array_trim</div>
-            </div> <br>
-            
-            <div>
-                This function removes keys having empty values from an array.
-            </div> <br>
-
-            <!-- code line started -->
-            <div class="pre-area shadow">
-
-              <pre class="pre-code">
-  $value = ['user'=>'','gender'=>'male'];
-      
-  <span class="comment">//returns ['gender'=>'male']</span>
-  var_dump(array_trim($value));
-              </pre>
-
-            </div>
-            <!-- code line ended -->
-          </div>        
-
-          <!-- array_get -->
-          <div id="array_get" class="array_get"> 
-            <br>
-            <div class="font-menu lacier fb-6 bc-white-dd flex-full rad-4 pxv-8">
-              <div class="flex-full">15. array_get</div>
-            </div> <br>
-            
-            <div>
-                This function returns a specified key in an array or null if such key does not exist.
-            </div> <br>
-
-            <!-- code line started -->
-            <div class="pre-area shadow">
-
-              <pre class="pre-code">
-  $value = ['user'=>'','gender'=>'male'];
-      
-  <span class="comment">//returns ['gender'=>'male']</span>
-  $user = array_get('user', $value);
-
-  var_dump($user);
-              </pre>
-
-            </div>
-            <!-- code line ended -->
-
-          </div>    
-
-          <!-- array_object -->
-          <div id="array_object" class="array_object"> 
-            <br>
-            <div class="font-menu lacier fb-6 bc-white-dd flex-full rad-4 pxv-8">
-              <div class="flex-full">16. array_object</div>
-            </div> <br>
-            
-            <div>
-                This function converts an array to an std object.
-            </div> <br>
-
-            <!-- code line started -->
-            <div class="pre-area shadow">
-
-              <pre class="pre-code">
-  $value = ['user'=> ['name'=>'foo'] ];
-      
-  $obj = array_object($value);
-
-  <span class="comment">//returns : foo</span>
-  vdump($obj->user['name'])
-              </pre>
-
-            </div>
-            <!-- code line ended -->
-
-          </div>                   
-
-          <!-- array_delete -->
-          <div id="array_delete" class="array_delete"> 
-            <br>
-            <div class="font-menu lacier fb-6 bc-white-dd flex-full rad-4 pxv-8">
-              <div class="flex-full">17. array_delete</div>
-            </div> <br>
-            
-            <div>
-                The function removes the first matched key of a corresponding supplied value 
-            </div> <br>
-
-            <!-- code line started -->
-            <div class="pre-area shadow">
-
-              <pre class="pre-code">
-  $array = ['name' => 'foo', 'size' => '3', 'num' => '3'];
-
-
-  vdump(array_delete('foo', $array)); <span class="comment">// ['size' => '3', 'num' => '3'] </span> 
-  
-
-  vdump(array_delete('3', $array); <span class="comment">// ['name' => 'foo', 'num' => '3'] </span> 
-              </pre>
-
-            </div>
-            <!-- code line ended -->
-
-          </div>     
-
-          <!-- array_unset -->
-          <div id="array_unset" class="array_unset"> 
-            <br>
-            <div class="font-menu lacier fb-6 bc-white-dd flex-full rad-4 pxv-8">
-              <div class="flex-full">18. array_unset</div>
-            </div> <br>
-            
-            <div>
-                The function removes all matched key of a corresponding supplied value 
-            </div> <br>
-
-            <!-- code line started -->
-            <div class="pre-area shadow">
-
-              <pre class="pre-code">
-  $array = ['name' => 'foo', 'size' => '3', 'num' => '3'];
-
-  vdump(array_unset('3', $array); <span class="comment">// ['name' => 'foo'] </span> 
-              </pre>
-
-            </div>
-            <!-- code line ended -->
-
-          </div>           
-                    
-          <!-- reItemize -->
-          <div id="reitemize" class="reitemize"> 
-            <br>
-            <div class="font-menu lacier fb-6 bc-white-dd flex-full rad-4 pxv-8">
-              <div class="flex-full">19. reItemize</div>
-            </div> <br>
-            
-            <div>
-              This function is used to regroup a two dimentional arrays of equal values.
-              It is mainly used to regroup file uploads. For example:
-            </div> <br>
-
-            <!-- code line started -->
-            <div class="pre-area shadow">
-
-              <pre class="pre-code">
-  <span class="comment">// An array: </span> 
-  $array['name'][0] = 'fileName1';
-  $array['age'][0]  = 20;  
-
-  $array['name'][1] = 'fileName2';
-  $array['age'][1] = 25;
-
-  $array = reItemize($array);
-
-  <span class="comment">// Becomes: </span> 
-  $array[0]['name'] = 'fileName1';
-  $array[0]['age'] = 20;
-
-  $array[1]['name'] = 'fileName2';
-  $array[1]['age'] = 25;
-              </pre>
-
-            </div>
-            <!-- code line ended -->
-
-          </div>            
-        
-        </div>  
-      
       </div>
+
     </section>
-    
   </div>
 
   

@@ -353,6 +353,7 @@ window.onload = function() {
                <li> <a href="<?= DomUrl('docs/forms') ?>" class="<?= inPath('active') ?>"><span class="ico ico-spin"></span>Handling Forms</a> </li>
                <li> <a href="<?= DomUrl('docs/useraccounts') ?>" class="<?= inPath('active') ?>"><span class="ico ico-spin"></span>Handling Users</a> </li>
                <li> <a href="<?= DomUrl('docs/database/data-model') ?>" class="<?= inPath('active') ?>"><span class="ico ico-spin"></span>Handling DBModels</a> </li>
+               <li> <a href="<?= DomUrl('docs/database/migrations') ?>" class="<?= inPath('active') ?>"><span class="ico ico-spin"></span>Handling Migrations</a> </li>
                <li> <a href="<?= DomUrl('docs/classes') ?>" class="<?= inPath('active') ?>"><span class="ico ico-spin"></span>Helper Classes</a> </li>
                <li> <a href="<?= DomUrl('docs/functions') ?>" class="<?= inPath('active') ?>"><span class="ico ico-spin"></span>Helper Functions</a> </li>
                <li> <a href="<?= DomUrl('docs/directives') ?>" class="<?= inPath('active') ?>"><span class="ico ico-spin"></span>Helper Directives</a> </li>
@@ -473,14 +474,20 @@ window.onload = function() {
                 can be in form of slashes or dots. When the path is not supplied, the file will be added directly into the window directory.
               </div>
               <div class="pre-area shadow">
-                <div class="pxv-6">Syntax</div>
+                <div class="pxv-6 bc-silver">Syntax</div>
                 <pre class="pre-code">
-  php mi add:window &lt;name&gt; &lt;path&gt;
+  php mi add:window &lt;dir?&gt;&lt;windowName&gt; &lt;extends?&gt; [-O?];
   <span class="comment">
     where: 
 
         name => name of controller file
         path => optional path to contoller file
+    
+        
+    Ex1: <span class="c-orange-dd">php mi add:window Info</span>   <span class="no-select">//add <span class="c-teal">windows/Info.php</span>. </span>
+    Ex2: <span class="c-orange-dd">php mi add:window Info.User</span> <span class="no-select">//add <span class="c-teal">windows/Info/User.php</span>. </span>
+    Ex3: <span class="c-orange-dd">php mi add:api Info.User UserFrame</span> <span class="no-select">//add <span class="c-teal">windows/Info/User.php <span class="comment">extend to <span class="c-dodger-blue">Frames/UserFrame</span>.</span> </span> </span>
+    Ex4: <span class="c-orange-dd">php mi add:api Info UserFrame -O</span> <span class="no-select">//add <span class="c-teal">windows/Info.php <span class="comment">extend to <span class="c-dodger-blue">Frames/UserFrame</span> overwrite any previous file.</span> </span> </span>
                 </span>
                 </pre>
 
@@ -498,19 +505,23 @@ window.onload = function() {
             <div>
 
               <div class="pvs-10">
-                This "frame" command is used to create a frame file into a "windows/frames" directory which is a subdirectory of a the window folder (directory).
+                This "frame" command is used to create a frame file into a "windows/frames" directory which is a subdirectory of the windows folder (directory).
               </div>
 
               <div class="pre-area shadow">
-                <div class="pxv-6">Syntax</div>
+                <div class="pxv-6 bc-silver">Syntax</div>
                 <pre class="pre-code">
-  php mi add:frame &lt;path&gt; [-0?]
+  php mi add:frame &lt;path&gt; [-O?]
   <span class="comment">
     where: 
 
-        name => name of model file
-        path => optional path to contoller file
+        path => path to frame file within Frames directory
         [-O] => overwrite old file (optional)
+        
+    Ex1: <span class="c-orange-dd">php mi add:frame Info</span>   <span class="no-select">//add <span class="c-teal">windows/Frames/Info.php</span>. </span>
+    Ex2: <span class="c-orange-dd">php mi add:frame Info.UserFrame</span> <span class="no-select">//add <span class="c-teal">windows/Frames/Info/UserFrame.php </span>. </span>
+    Ex3: <span class="c-orange-dd">php mi add:api Info.UserFrame -O</span> <span class="no-select">//add <span class="c-teal">windows/Info/UserFrame.php <span class="comment"> overwrite any previous file.</span> </span> </span>
+
   </span>
                 </pre>
               </div>
@@ -520,22 +531,29 @@ window.onload = function() {
           <div id="add-routes"> 
             <br>
             <div class="font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
-              <div class="flex-full midv"> <span class="bi-file-text mxr-8 c-lime-dd"></span> add:routes </div>
+              <div class="flex-full midv"> <span class="bi-file-text mxr-8 c-lime-dd"></span> add:route </div>
             </div>
             
             <div>
                 <div class="pvs-10">
-                  This "routes" command is used to create a route entry point file into a "windows/Routes" directory which is a subdirectory of a the window folder (directory).
+                  This "route" command is used to create a route entry point file into a "windows/Routes" directory which is a subdirectory of the windows folder (directory).
                 </div>
 
               <div class="pre-area shadow">
-                <div class="pxv-6">Syntax</div>
+                <div class="pxv-6 bc-silver">Syntax</div>
                 <pre class="pre-code">
-  php mi add:route &lt;name&gt; [-0?]
+  php mi add:route &lt;path&gt; &lt;extends?&gt; [-O?]
   <span class="comment">
     where: 
 
-        name => name  of route file
+        path => path of route file within window/Routes directory
+        extends => extend to frame file
+        -O => Overwrite any existing file.
+            
+    Ex1: <span class="c-orange-dd">php mi add:route MyRoute</span>   <span class="no-select">//add <span class="c-teal">windows/Routes/MyRoute.php</span>. </span>
+    Ex2: <span class="c-orange-dd">php mi add:route Loc.MyRoute</span> <span class="no-select">//add <span class="c-teal">windows/Routes/Loc/MyRoute.php. </span>
+    Ex3: <span class="c-orange-dd">php mi add:route Loc.MyRoute UserFrame</span> <span class="no-select">//add <span class="c-teal">windows/Routes/Loc/MyRoute.php <span class="comment">extend to <span class="c-dodger-blue">Frames/UserFrame</span>.</span> </span> </span>
+    Ex4: <span class="c-orange-dd">php mi add:route Loc.MyRoute UserFrame -O</span> <span class="no-select">//add <span class="c-teal">windows/Routes/Loc/MyRoute.php <span class="comment">extend to <span class="c-dodger-blue">Frames/UserFrame</span> overwrite any previous file.</span> </span> </span>
   </span>
                 </pre>
               </div>
@@ -551,18 +569,27 @@ window.onload = function() {
             
             <div>
               <div class="pvs-10">
-                This "api" command is used to create a routed api files into a "windows/API" directory which is a subdirectory of a the window folder (directory).
+                This "api" command is used to create a routed api files into a "windows/API" directory which is a subdirectory of the windows folder (directory).
               </div>
 
               <div class="pre-area shadow">
-                <div class="pxv-6">Syntax</div>
+                <div class="pxv-6 bc-silver">Syntax</div>
                 <pre class="pre-code">
-  php mi add:api [name] [\Dir?]
+  php mi add:api [name] [extends?] [\Dir?] [-O?]
   <span class="comment">
     where: 
 
-        name => name  of api route
-        \Dir => directory of api route
+        name => name of api route
+        extends? => extended frame class
+        \Dir => directory of api route 
+        -O   => overwrite any previous file   
+    
+    Ex1: <span class="c-orange-dd">php mi add:api Info</span>   <span class="no-select">//add <span class="c-teal">windows/Info.php</span>. </span>
+    Ex2: <span class="c-orange-dd">php mi add:api Info \Loc</span> <span class="no-select">//add <span class="c-teal">windows/Info.php, <span class="comment">add</span> windows/Loc/InfoAPI.php</span>. </span>
+    Ex3: <span class="c-orange-dd">php mi add:api Info UserFrame</span> <span class="no-select">//add <span class="c-teal">windows/Info.php <span class="comment">extend to <span class="c-dodger-blue">Frames/UserFrame</span>.</span> </span> </span>
+    Ex4: <span class="c-orange-dd">php mi add:api Info UserFrame -O</span> <span class="no-select">//add <span class="c-teal">windows/Info.php <span class="comment">extend to <span class="c-dodger-blue">Frames/UserFrame</span> overwrite any previous file.</span> </span> </span>
+    Ex5: <span class="c-orange-dd">php mi add:api Info UserFrame \Loc -O</span> <span class="no-select">//add <span class="c-teal">windows/Info.php <span class="comment">extend to <span class="c-dodger-blue">Frames/UserFrame</span>, add <span class="c-teal">windows/Loc/InfoAPI.php</span>, overwrite any previous file.</span> </span> </span>
+
   </span>
                 </pre>
               </div>
@@ -580,18 +607,23 @@ window.onload = function() {
             <div>
 
               <div class="pvs-10">
-                This model command is used to create a model file into a models directory which is a subdirectory of a the window folder (directory).
+                This model command is used to create a model file into a models directory which is a subdirectory of the windows folder (directory).
               </div>
 
               <div class="pre-area shadow">
-                <div class="pxv-6">Syntax</div>
+                <div class="pxv-6 bc-silver">Syntax</div>
                 <pre class="pre-code">
-  php mi add:model &lt;name&gt; &lt;path&gt;
+  php mi add:model &lt;path&gt; [-O?]
   <span class="comment">
     where: 
 
-        name => name of model file
-        path => optional path to contoller file
+      path => path to model file within the windows/Models directory.
+      -O => overwrite any previous file.
+
+    Ex1: <span class="c-orange-dd">php mi add:model UserModel</span>            <span class="no-select">//add <span class="c-teal">windows/Models/UserModel.php</span> </span>
+    Ex2: <span class="c-orange-dd">php mi add:model Access.UserModel</span>     <span class="no-select">//add <span class="c-teal">windows/Models/Access/UserModel.php</span> </span>
+    Ex3: <span class="c-orange-dd">php mi add:model Access.UserModel -O</span>  <span class="no-select">//add <span class="c-teal">windows/Models/Access/UserModel.php</span>, overwrite previous file </span>
+
   </span>
                 </pre>
               </div>
@@ -616,15 +648,15 @@ window.onload = function() {
               </div>
 
               <div class="pre-area shadow">
-                <div class="pxv-6">Syntax</div>
+                <div class="pxv-6 bc-silver">Syntax</div>
                 <pre class="pre-code">
   php mi add:rex  &lt;pathname&gt;.&lt;filename&gt;&lt;:ext?&gt;
   <span class="comment">
     where: 
 
-        filename => name of rex file
-        pathname => optional path to contoller file
-        :ext     => options [:css|:js|:php]
+      filename => name of rex file
+      pathname => optional path to contoller file
+      :ext     => options [:css|:js|:php]
 
 
     Ex1: <span class="c-orange-dd">php mi add:rex index</span>            <span class="no-select">//add <span class="c-teal">windows/Rex/index.rex.php</span> </span>
@@ -650,7 +682,7 @@ window.onload = function() {
               </div>
 
               <div class="pre-area shadow">
-                <div class="pxv-6">Syntax</div>
+                <div class="pxv-6 bc-silver">Syntax</div>
                 <pre class="pre-code">
   php mi clean storage
                 </pre>
@@ -673,20 +705,23 @@ window.onload = function() {
               </div>
 
               <div class="pre-area shadow">
-                <div class="pxv-6">Syntax</div>
+                <div class="pxv-6 bc-silver">Syntax</div>
                 <pre class="pre-code">
   php mi config:dbonline dbname dbuser dbpass dbserver dbport dbsocket
   <span class="comment">
     where: 
 
-        dbname => database name
-        dbuser => database username
-        dbpass => database password 
-        dbserver => database server
-        dbport => database port 
-        dbsocket => database socket
+        <span class="c-orange">dbname</span> => database name
+        <span class="c-orange">dbuser</span> => database username
+        <span class="c-orange">dbpass</span> => database password 
+        <span class="c-orange">dbserver</span> => database server
+        <span class="c-orange">dbport</span> => database port 
+        <span class="c-orange">dbsocket</span> => database socket
 
         NOTE: Empty values are replaced with dash (i.e -)
+
+        Ex: <span class="c-orange-dd">php mi config:dbonline tester root - localhost 3306 </span>  <span class="no-select">//set online database connection parameters </span>
+
   </span>
                 </pre>
 
@@ -710,18 +745,24 @@ window.onload = function() {
                 </div>
 
               <div class="pre-area shadow">
-                <div class="pxv-6">Syntax</div>
+                <div class="pxv-6 bc-silver">Syntax</div>
                 <pre class="pre-code">
   php mi config:dboffline dbname dbuser dbpass dbserver dbport dbsocket
   <span class="comment">
     where: 
 
-      dbname => database name
-      dbuser => database username
-      dbpass => database password 
-      dbserver => database server
-      dbport => database port 
-      dbsocket => database socket
+
+        <span class="c-orange">dbname</span> => database name
+        <span class="c-orange">dbuser</span> => database username
+        <span class="c-orange">dbpass</span> => database password 
+        <span class="c-orange">dbserver</span> => database server
+        <span class="c-orange">dbport</span> => database port 
+        <span class="c-orange">dbsocket</span> => database socket
+
+        NOTE: Empty values are replaced with dash (i.e -)
+
+        Ex: <span class="c-orange-dd">php mi config:dbonline tester root - localhost 3306 </span>  <span class="no-select">//set offline database connection parameters </span>
+
   </span>
                 </pre>
 
@@ -762,7 +803,7 @@ window.onload = function() {
               </div>
 
               <div class="pre-area shadow">
-                <div class="pxv-6">Syntax</div>
+                <div class="pxv-6 bc-silver">Syntax</div>
                 <pre class="pre-code">
   php mi config:usersTable tablename
   <span class="comment">
@@ -795,7 +836,7 @@ window.onload = function() {
               </div>
 
               <div class="pre-area shadow">
-                <div class="pxv-6">Syntax</div>
+                <div class="pxv-6 bc-silver">Syntax</div>
                 <pre class="pre-code">
   php mi config:usersTable tablename
   <span class="comment">
@@ -825,7 +866,7 @@ window.onload = function() {
                 </div>
 
               <div class="pre-area shadow">
-                <div class="pxv-6">Syntax</div>
+                <div class="pxv-6 bc-silver">Syntax</div>
                 <pre class="pre-code">
   php mi config:idField column
   <span class="comment">
@@ -854,7 +895,7 @@ window.onload = function() {
                 </div>
 
               <div class="pre-area shadow">
-                <div class="pxv-6">Syntax</div>
+                <div class="pxv-6 bc-silver">Syntax</div>
                 <pre class="pre-code">
   php mi config:meta [on|off]
   <span class="comment">
@@ -881,7 +922,7 @@ window.onload = function() {
                 directive is applied, more details of cli commands are displayed.
 
               <div class="pre-area shadow">
-                <div class="pxv-6">Syntax</div>
+                <div class="pxv-6 bc-silver">Syntax</div>
                 <pre class="pre-code">
   php mi cli [-lists]
   <span class="comment">
@@ -909,7 +950,7 @@ window.onload = function() {
                 </div>
 
               <div class="pre-area shadow">
-                <div class="pxv-6">Syntax</div>
+                <div class="pxv-6 bc-silver">Syntax</div>
                 <pre class="pre-code">
   php mi features
   <span class="comment">
@@ -936,7 +977,7 @@ window.onload = function() {
               </div>
 
               <div class="pre-area shadow">
-                <div class="pxv-6">Syntax</div>
+                <div class="pxv-6 bc-silver">Syntax</div>
                 <pre class="pre-code">
   php mi info &lt;command&gt;
   <span class="comment">
@@ -967,7 +1008,7 @@ window.onload = function() {
 
 
               <div class="pre-area shadow">
-                <div class="pxv-6">Syntax</div>
+                <div class="pxv-6 bc-silver">Syntax</div>
                 <pre class="pre-code">
   php mi install [app|db|dbname]
   <span class="comment">
@@ -1002,7 +1043,7 @@ window.onload = function() {
 
 
                 <div class="pre-area shadow">
-                  <div class="pxv-6">Syntax</div>
+                  <div class="pxv-6 bc-silver">Syntax</div>
                   <pre class="pre-code">
   php mi project &lt;project_name&gt;
   <span class="comment">
@@ -1031,7 +1072,7 @@ window.onload = function() {
 
 
               <div class="pre-area shadow">
-                <div class="pxv-6">Syntax</div>
+                <div class="pxv-6 bc-silver">Syntax</div>
                 <pre class="pre-code">
   php mi support
                 </pre>
@@ -1052,7 +1093,7 @@ window.onload = function() {
                 </div>
 
               <div class="pre-area shadow">
-                <div class="pxv-6">Syntax</div>
+                <div class="pxv-6 bc-silver">Syntax</div>
                 <pre class="pre-code">
   php mi version
                 </pre>
@@ -1075,7 +1116,7 @@ window.onload = function() {
             
 
               <div class="pre-area shadow">
-                <div class="pxv-6">Syntax</div>
+                <div class="pxv-6 bc-silver">Syntax</div>
                 <pre class="pre-code">
   php mi watch [online|offline|disabled]
   <span class="comment">

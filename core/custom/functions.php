@@ -196,10 +196,10 @@ if(!function_exists('toSingular')){
 
     if(is_array($name)){
       return array_map(function($value){
-        return ((substr($value, -1) === 's')? substr($value, 0, strlen($value) - 1) : $value);
+        return ((strtolower(substr($value, -1)) === 's')? substr($value, 0, strlen($value) - 1) : $value);
       }, $name);
     }
-    return ((substr($name, -1) === 's')? substr($name, 0, strlen($name) - 1) : $name);
+    return ((strtolower(substr($name, -1)) === 's')? substr($name, 0, strlen($name) - 1) : $name);
   }
 }
 
@@ -221,16 +221,17 @@ if(!function_exists('enplode')){
       
     $container = (array) $separator;
     $divider = (string) $container[0];
-    $wrapper = (string) $container[1]?? '';
+    $wrapper1 = (string) $container[1]?? '';
+    $wrapper2 = (string) $container[2]?? $wrapper1;
 
-    if(count($container) > 2){
-        trigger_error('maximum array count of 2 for argument(#1)  on enplode() exceeded!');
+    if(count($container) > 3){
+        trigger_error('maximum array count of 3 for argument(#1)  on enplode() exceeded!');
         return '';
     }
 
     $implode = implode($divider, $array);
 
-    return ($implode || $strict)? $wrapper.$implode.$wrapper : '';
+    return ($implode || $strict)? $wrapper1.$implode.$wrapper2 : '';
 
   }
 }
@@ -253,55 +254,59 @@ if(!function_exists('inflect')){
    */
   function inflect(array|string $text, int $count, bool $strict = false){
 
+    $arrText = (array) $text;
+   
     if($strict){
+      
+      if($count < 2){
 
-      if(is_array($text)){
-        
-        if($count < 2){
-          return array_map(function($value){
-           if(is_string($value)) return ((strtolower(substr($value, -1)) === 's')? substr($value, 0, strlen($value) - 1) : $value);
-          }, $text);
-        }else{
-          return array_map(function($value){
-           if(is_string($value)) return ((strtolower(substr($value, -1)) !== 's')? $value."s" : $value);
-          }, $text);        
-        }
+        $result = array_map(function($value){
+          if(is_string($value)) return ((strtolower(substr($value, -1)) === 's')? substr($value, 0, strlen($value) - 1) : $value);
+        }, $arrText);
 
-      } else {
+      }else{
 
-        if($count < 2){
-          return ((strtolower(substr($text, -1)) === 's')? substr($text, 0, strlen($text) - 1) : $text);
-        }else{
-          return ((strtolower(substr($text, -1)) !== 's')? $text."s" : $text);
-        }
-        
-      }
+        $result = array_map(function($value){
+
+          if( is_string($value) ) {
+
+            if((strtolower(substr($value, -1)) !== 's')){
+
+              if( $value === strtoupper($value) ) {
+                
+                return $value."S";
+
+              }else{
+                return $value."s";
+              }
+
+            } else{
+              return $value;
+            }
+
+          }
+
+        }, $arrText);        
+      } 
 
     }else{
-
-      if(is_array($text)){
-        
-        if($count < 2){
-          return $text;
-        }else{
-          return array_map(function($value){
-            return ((strtolower(substr($value, -1)) !== 's')? $value."s" : $value);
-          }, $text);        
-        }
-
-      } else {
-
-        if($count < 2){
-          return $text;
-        }else{
-          return ((strtolower(substr($text, -1)) !== 's')? $text."s" : $text);
-        }
-        
+      
+      if($count < 2){
+          $result = $arrText;
+      }else{
+        $result = array_map(function($value){
+          return ((strtolower(substr($value, -1)) !== 's')? $value."s" : $value);
+        }, $arrText);        
       }
 
     }
 
-    return ((substr($text, -1) === 's')? substr($text, 0, strlen($text) - 1) : $text);
+    if(is_string($text)||(is_array($text) && (count($text) < 2))){
+      return implode("", $result);
+    }else{
+      return $result;
+    }
+
   }
 }
 
