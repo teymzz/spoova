@@ -41,7 +41,7 @@
                             can emulate. For example, Frame files can be used to separate or divide sessions which are
                             only recognized in some particular windows files. Hence, all window files extending to such 
                             Frames will only derive their session values from their parent frame file. Windows files have a great 
-                            relationship with <code>Rex</code> class. This makes it easier to call methods like <code>Rex::load()</code> 
+                            relationship with <code>Res</code> class. This makes it easier to call methods like <code>Res::load()</code> 
                             using <code>self::load()</code> instead, which also searches for its template files from the rex folder.  Proceedures below 
                             helps to explain the steps or stages involved in setting up a windows file.
                             <br><br>
@@ -68,7 +68,7 @@
                     <pre class="pre-code">
   &lt;?php
 
-    namespace spoova\windows\Frame;
+    namespace spoova\windows\Frames;
     use Window;
 
     class Userframe extends Window{
@@ -91,7 +91,7 @@
                     <pre class="pre-code">
   &lt;?php
 
-    use spoova\windows\Frame\UserFrame;
+    use spoova\windows\Frames\UserFrame;
 
     class Home extend Userframe{
 
@@ -111,7 +111,7 @@
 
                         <div class="font-em-d87">
                             <div class="">Notice : In the above, we can discover that Frames are extensions of Windows.</div>          
-                            Since the <code>Res::load()</code> can be applied on windows files just like mvc, then we can say: <br>
+                            Since the <code>Res::load()</code> can be applied on windows files, then we can say: <br>
                         </div> <br> 
 
                         <div class="box-full font-menu  font-em-d85 bc-white-dd shadow flow-x"> 
@@ -120,7 +120,7 @@
 
     namespace spoova\windows;
 
-    use spoova\windows\Frame\UserFrame;
+    use spoova\windows\Frames\UserFrame;
 
 
     class Home extend Userframe{
@@ -183,7 +183,7 @@
   
     namespace spoova\windows;
 
-    use spoova\windows\Frame\UserFrame;
+    use spoova\windows\Frames\UserFrame;
 
 
     class Home extend Userframe{

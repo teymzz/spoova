@@ -86,8 +86,8 @@
               </div> <br>
               
               <div>
-                The modal custom helper functions that are helpful in the framework             
-                They help to handle some tedious tasks easily. They have no relationship with 
+                The modal custom helper functions are functions that help to handle some tedious 
+                tasks easily. They have no relationship with 
                 higher classes but are cogent in the build-up of spoova frame. The removal of 
                 some of these functions may lead to broken applications. Hence are best not 
                 removed. 
@@ -97,7 +97,6 @@
                   <div class="font-menu font-em-d9" style="color:rgb(12, 131, 131)">
                     <ul class="list-square">
                       <li> <a href="@DomUrl('docs/functions/modal#br')"> br </a> </li>
-                      <li> <a href="@DomUrl('docs/functions/modal#myisset')"> myIsset </a> </li>
                       <li> <a href="@DomUrl('docs/functions/modal#refil')"> refil </a> </li>
                       <li> <a href="@DomUrl('docs/functions/modal#encodeuricomponent')"> encodeURIComponent </a> </li>
                       <li> <a href="@DomUrl('docs/functions/modal#inrange')"> inRange </a> </li>
@@ -109,11 +108,10 @@
                       <li> <a href="@DomUrl('docs/functions/modal#arrinside')"> arrInside </a> </li>
                       <li> <a href="@DomUrl('docs/functions/modal#arrvoid')"> arrVoid </a> </li>
                       <li> <a href="@DomUrl('docs/functions/modal#arrgetsvoid')"> arrGetsVoid </a> </li>
-                      <li> <a href="@DomUrl('docs/functions/modal#resortarray')"> arrSort </a> </li>
+                      <li> <a href="@DomUrl('docs/functions/modal#arrsort')"> arrSort </a> </li>
                       <li> <a href="@DomUrl('docs/functions/modal#array_trim')"> array_trim </a> </li>
                       <li> <a href="@DomUrl('docs/functions/modal#array_get')"> array_get </a> </li>
                       <li> <a href="@DomUrl('docs/functions/modal#array_object')"> array_object </a> </li>
-                      <li> <a href="@DomUrl('docs/functions/modal#array_count')"> array_count </a> </li>
                       <li> <a href="@DomUrl('docs/functions/modal#array_delete')"> array_delete </a> </li>
                       <li> <a href="@DomUrl('docs/functions/modal#array_unset')"> array_unset </a> </li>
                       <li> <a href="@DomUrl('docs/functions/modal#reitemize')"> reItemize </a> </li>
@@ -141,6 +139,9 @@
                       <li> <a href="@DomUrl('docs/functions/lite#base_decode')"> base_decode </a> </li>
                       <li> <a href="@DomUrl('docs/functions/lite#tojson')"> toJson </a> </li>
                       <li> <a href="@DomUrl('docs/functions/lite#fromjson')"> fromJson </a> </li>
+                      <li> <a href="@DomUrl('docs/functions/lite#enplode')"> enplode </a> </li>
+                      <li> <a href="@DomUrl('docs/functions/lite#tosingular')"> toSingular </a> </li>
+                      <li> <a href="@DomUrl('docs/functions/lite#inflect')"> inflect </a> </li>
                       <li> <a href="@DomUrl('docs/functions/lite#to_lgts')"> to_lgts </a> </li>
                       <li> <a href="@DomUrl('docs/functions/lite#href')"> href </a> </li>
                       <li> <a href="@DomUrl('docs/functions/lite#scriptname')"> scriptName </a> </li>

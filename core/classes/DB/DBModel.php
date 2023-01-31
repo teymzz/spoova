@@ -45,12 +45,16 @@ class DBModel extends DBCollection {
      * One-One: matches the current model with another model using a third model 
      * 
      * @param string $superClass the parent class (or table)
-     * @param string $subClass the child class (or table) 
-     * @param array $superKeys foreign and/or local key  of the child class (or owned) model database table
-     *      - first and second array value must be the foreign key and local key of $parentClass (i.e parent table)
-     * @param string $subKeys foreign key of the parent class (or owned) model database table 
-     *      - first and second array value must be the foreign key and local key of $childClass (i.e child table)
-     *
+     * @param string $subClass the child class (or table) sdfsd sfsafa sadassdf sadas
+     * @param array $superKeys 
+     *      - The array format is [superClassForeignKey, superClassLocalKey] 
+     *      - The first and second array value must be the foreign key and local key of $superClass (i.e parent table)
+     *      - This foreign key is used by $subClass while its local key belongs to $superClass
+     * 
+     * @param string $subKeys 
+     *      - The array format is [subClassForeignKey, subClassLocalKey]
+     *      - The first and second array value must be the foreign key and local key of $subClass (i.e child table). 
+     *      - This foreign key is used by current model while its local key belongs to $subClass.
      * @return DBCollectibles 
      */
     final static protected function matchOneFor(string $superClass, string $subClass,  array $superKeys = [], array $subKeys = []): DBCollectibles{
@@ -80,18 +84,20 @@ class DBModel extends DBCollection {
         $JOIN  = " JOIN {$subTable} ON {$modelTable}.{$subForeignKey} = {$subTable}.{$subLocalKey} ";
         $JOIN .= " JOIN {$superTable} ON {$subTable}.{$superForeignKey} = {$superTable}.{$superLocalKey} ";
 
-        //Select the parent table (Model) first, where $className is child table
         $query = ["{$modelTable}", $JOIN];
 
         $collectibles = DBCollectibles::collect($model, $modelTable, ['ownsOne', $superTable] , $query, $subCustomKeys, $superCustomKeys);
 
         return $collectibles;
     }
-    
+
     /**
      * One-Many Database Relationship
-     * 
-     * @return DBCollectibles 
+     *
+     * @param string $className child class (or table) to be matched
+     * @param string $foreignKey foreign key name of current model on child's table
+     * @param string $localKey local key of the current model in the current model's (i.e parent) table
+     * @return DBCollectibles
      */
     final static protected function matchMany(string $className, string $foreignKey = '', string $localKey = ''): DBCollectibles {
 
@@ -119,11 +125,15 @@ class DBModel extends DBCollection {
      * 
      * @param string $superClass the parent class (or table)
      * @param string $subClass the child class (or table) 
-     * @param array $superKeys foreign and/or local key  of the child class (or owned) model database table
-     *      - first and second array value must be the foreign key and local key of $parentClass (i.e parent table)
-     * @param string $subKeys foreign key of the parent class (or owned) model database table 
-     *      - first and second array value must be the foreign key and local key of $childClass (i.e child table)
-     *
+     * @param array $superKeys 
+     *      - The array format is [superClassForeignKey, superClassLocalKey] 
+     *      - The first and second array value must be the foreign key and local key of $superClass (i.e parent table)
+     *      - This foreign key is used by $subClass while its local key belongs to $superClass
+     * 
+     * @param string $subKeys 
+     *      - The array format is [subClassForeignKey, subClassLocalKey]
+     *      - The first and second array value must be the foreign key and local key of $subClass (i.e child table). 
+     *      - This foreign key is used by current model while its local key belongs to $subClass.
      * @return DBCollectibles 
      */
     final static protected function matchManyFor(string $superClass, string $subClass,  array $superKeys = [], array $subKeys = []): DBCollectibles{
@@ -167,7 +177,7 @@ class DBModel extends DBCollection {
      * 
      * @param string $className parent model 
      * @param string $foreignKey Foreign key of $className on current model
-     * @param string $localkey Locak key of the $className (parent model)
+     * @param string $localkey Local key of the $className (parent model)
      *
      * @return DBCollectibles 
      */

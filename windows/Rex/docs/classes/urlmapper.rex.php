@@ -157,17 +157,18 @@
 
     var_dump($mapped);
     <span class="comment">
-        // The above returns:
-        &lt;a href="http://localhost/index"&gt;index&lt;/a&gt; 
+    <span class="c-teal no-select">// The above returns:</span>
 
-        &lt;span class="bi-chevron-right"&gt;&lt;/span&gt; 
+       &lt;a href="http://localhost/index"&gt;index&lt;/a&gt; 
 
-        &lt;a href="http://localhost/index"&gt;user&lt;/a&gt;
+       &lt;span class="bi-chevron-right"&gt;&lt;/span&gt; 
+
+       &lt;a href="http://localhost/index"&gt;user&lt;/a&gt;
 
 
-        //This above (using bootstrap icons) resolves as:
+    <span class="c-teal no-select">// The above (using bootstrap icons) resolves as:</span>
 
-        index <span class="bi-chevron-right"></span> user   
+       index <span class="bi-chevron-right"></span> user   
     </span>
                                     </pre>
                                 </div>
@@ -181,7 +182,7 @@
                         The window class has a build in static method <code>map</code> for mapping urls. The window class 
                         handles the <code>setbase</code> part of the <code>urlmapper</code> class. By just applying the 
                         directive <code>self::map()</code> urls can be easily mapped. This provides an easy navigation system.
-                        </div>
+                        </div> <br>
                         
                     @lay('build.co.links:tutor_pointer')
 

@@ -357,6 +357,7 @@ window.onload = function() {
                <li> <a href="<?= DomUrl('docs/forms') ?>" class="<?= inPath('active') ?>"><span class="ico ico-spin"></span>Handling Forms</a> </li>
                <li> <a href="<?= DomUrl('docs/useraccounts') ?>" class="<?= inPath('active') ?>"><span class="ico ico-spin"></span>Handling Users</a> </li>
                <li> <a href="<?= DomUrl('docs/database/data-model') ?>" class="<?= inPath('active') ?>"><span class="ico ico-spin"></span>Handling DBModels</a> </li>
+               <li> <a href="<?= DomUrl('docs/database/migrations') ?>" class="<?= inPath('active') ?>"><span class="ico ico-spin"></span>Handling Migrations</a> </li>
                <li> <a href="<?= DomUrl('docs/classes') ?>" class="<?= inPath('active') ?>"><span class="ico ico-spin"></span>Helper Classes</a> </li>
                <li> <a href="<?= DomUrl('docs/functions') ?>" class="<?= inPath('active') ?>"><span class="ico ico-spin"></span>Helper Functions</a> </li>
                <li> <a href="<?= DomUrl('docs/directives') ?>" class="<?= inPath('active') ?>"><span class="ico ico-spin"></span>Helper Directives</a> </li>
@@ -445,10 +446,10 @@ window.onload = function() {
   
       $db->query('select *name from users')->read();
   
-      <span class="comment">// outputs : select * from users</span>
+      
       if(DBStatus::err()) {
   
-          echo DBStatus::err();
+          echo DBStatus::err(); <span class="comment">// displays error</span>
   
       }
   
@@ -459,7 +460,7 @@ window.onload = function() {
                             <div class="font-em-d85">
                                 In the Example 2 above, we checked if an error exists in 
                                 storage and then displayed the error. Athough, this approach is discouraged,
-                                it might be useful when working in classes.
+                                it might be useful when working in window classes.
                             </div>
                             <br>
 

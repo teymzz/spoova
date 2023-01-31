@@ -26,6 +26,9 @@
           font-size: .85em;
           display: inline-block;
           width:100%;
+      }
+
+     .pre-area:not([class*="bc-"]){
           background-color : rgba(var(--white-dd));
       }
   
@@ -155,14 +158,14 @@
    --black-ll: 79, 79, 79;
 }
 
-.bc-white-d.--theme-esc{
+.--theme-dark .bc-white-d.--theme-esc{
     --white-d: 21, 24, 51;
     --white-dd: 23, 28, 56;
     --silver-d: var(--white-dd);
     color: rgb(203, 198, 198);
 }
 
-.bc-white-d.--theme-esc .flex-full > *{
+.--theme-dark .bc-white-d.--theme-esc .flex-full > *{
     --white: 255, 255, 255;
     --white-d: 250, 250, 250;
     --white-dd: 240, 240, 240;
@@ -350,6 +353,7 @@ window.onload = function() {
                <li> <a href="<?= DomUrl('docs/forms') ?>" class="<?= inPath('active') ?>"><span class="ico ico-spin"></span>Handling Forms</a> </li>
                <li> <a href="<?= DomUrl('docs/useraccounts') ?>" class="<?= inPath('active') ?>"><span class="ico ico-spin"></span>Handling Users</a> </li>
                <li> <a href="<?= DomUrl('docs/database/data-model') ?>" class="<?= inPath('active') ?>"><span class="ico ico-spin"></span>Handling DBModels</a> </li>
+               <li> <a href="<?= DomUrl('docs/database/migrations') ?>" class="<?= inPath('active') ?>"><span class="ico ico-spin"></span>Handling Migrations</a> </li>
                <li> <a href="<?= DomUrl('docs/classes') ?>" class="<?= inPath('active') ?>"><span class="ico ico-spin"></span>Helper Classes</a> </li>
                <li> <a href="<?= DomUrl('docs/functions') ?>" class="<?= inPath('active') ?>"><span class="ico ico-spin"></span>Helper Functions</a> </li>
                <li> <a href="<?= DomUrl('docs/directives') ?>" class="<?= inPath('active') ?>"><span class="ico ico-spin"></span>Helper Directives</a> </li>
@@ -372,7 +376,7 @@ window.onload = function() {
             <div class="font-em-1d2">
 
                 
- <div class="font-menu pvs-4"> <a href="http://localhost/spoova/tutorial">Tutorial</a> <span class="bi-chevron-right"></span> <a href="http://localhost/spoova/tutorial/wmv">Wmv</a> <span class="bi-chevron-right"></span> <a href="http://localhost/spoova/tutorial/wmv/frames">Frames</a>  </div>
+ <div class="font-menu pvs-4"> <a href="http://localhost/spoova/docs">Docs</a> <span class="bi-chevron-right"></span> <a href="http://localhost/spoova/docs/wmv">Wmv</a> <span class="bi-chevron-right"></span> <a href="http://localhost/spoova/docs/wmv/frames">Frames</a>  </div>
 
 
                 <div class="start font-em-d8">
@@ -466,7 +470,7 @@ window.onload = function() {
                 </div>
     
                 
- <div class="font-menu pvs-4"> <a href="http://localhost/spoova/tutorial">Tutorial</a> <span class="bi-chevron-right"></span> <a href="http://localhost/spoova/tutorial/wmv">Wmv</a> <span class="bi-chevron-right"></span> <a href="http://localhost/spoova/tutorial/wmv/frames">Frames</a>  </div>
+ <div class="font-menu pvs-4"> <a href="http://localhost/spoova/docs">Docs</a> <span class="bi-chevron-right"></span> <a href="http://localhost/spoova/docs/wmv">Wmv</a> <span class="bi-chevron-right"></span> <a href="http://localhost/spoova/docs/wmv/frames">Frames</a>  </div>
 
             </div>
         </section>

@@ -211,7 +211,7 @@
                                     <div class="box-full">
                                         <div class="pxv-6 bc-off-white"><code>Syntax: payload</code></div>
                                         <pre class="pre-code">
-    $jws->payload(payload); <span class="comment">// supplies data  to be hashed.</span>
+    $jws->payload($payload); <span class="comment">// supplies data  to be hashed.</span>
                                         </pre>
                                     </div>
                                 </div>
@@ -281,11 +281,11 @@
                                     <div class="box-full">
                                         <div class="pxv-6 bc-off-white"><code>Syntax: expires</code></div>
                                         <pre class="pre-code">
-  $jws->expires(time); 
+  $jws->expires($time); 
     <span class="comment">
       where:
         
-      time: expire time in seconds.
+       $time: expire time in seconds.
     </span>
                                         </pre>
                                     </div>
@@ -324,7 +324,7 @@
                                     <div class="box-full">
                                         <div class="pxv-6 bc-off-white"><code>Syntax: sign</code></div>
                                         <pre class="pre-code">
-                                        $jws->sign(secretkey, hash_algos); 
+    $jws->sign(secretkey, hash_algos); 
                                         </pre>
                                     </div>
                                 </div>
@@ -367,14 +367,8 @@
                                     <div class="box-full">
                                         <div class="pxv-6 bc-off-white"><code>Syntax: token</code></div>
                                         <pre class="pre-code">
-  $jws->token(); <span class="comment"> // return a generated token </span>
-  $jws->token(token); <span class="comment"> // set a token </span>
-
-        <span class="comment">
-            where: 
-
-            token : previously generated token
-        </span>
+    $jws->token(); <span class="comment"> // return a generated token </span>
+    $jws->token($token); <span class="comment"> // set a previously generated token </span>
                                         </pre>
                                     </div>
                                 </div>
@@ -383,7 +377,7 @@
                                     <div class="box-full">
                                         <div class="pxv-6 bc-off-white"><code>Example: Generating a token</code></div>
                                         <pre class="pre-code">
-  $jws->payload($payload); <span class="comment">// check <a href="#payload">payload</a> for $payload supplied</span>
+  $jws->payload($payload); <span class="comment">// check <a href="#payload">payload</a> for the $payload used here.</span>
     
   $jws->sign('secret_key'); <span class="comment"> // lock and sign payload with a secret key</span>
     
@@ -420,7 +414,7 @@
                                     <div class="box-full">
                                         <div class="pxv-6 bc-off-white"><code>Syntax: isValid</code></div>
                                         <pre class="pre-code">
-  $jws->isValid(secretkey, hash_algo); <span class="comment"> // returns bool of true if token is valid </span>
+  $jws->isValid($secretkey, $hash_algo); <span class="comment"> // returns bool of true if token is valid </span>
                                         </pre>
                                     </div>
                                 </div>
@@ -429,7 +423,7 @@
                                     <div class="box-full">
                                         <div class="pxv-6 bc-off-white"><code>Example 1: isValid</code></div>
                                         <pre class="pre-code">
-  $jws->payload($payload); <span class="comment">// check <a href="#payload">payload</a> for $payload supplied</span>
+  $jws->payload($payload); <span class="comment">// check <a href="#payload">payload</a> for the $payload used here</span>
     
   $jws->sign('secret', 'sha256');
 
@@ -470,12 +464,9 @@
                                     <div class="box-full">
                                         <div class="pxv-6 bc-off-white"><code>Syntax: decrypt</code></div>
                                         <pre class="pre-code">
-  $jws->decrypt(token, secretkey, hash_algo); 
+  $jws->decrypt($token, $secretkey, $hash_algo); 
 <span class="comment"> 
-    note: 
-    
-    if token is not a valid token or cannot be decrypted, the method returns an 
-    empty data.
+    Note: if $token is not a valid token or cannot be decrypted, the method returns an empty data.
 </span>
                                         </pre>
                                     </div>
@@ -487,7 +478,7 @@
                                         <pre class="pre-code">
   $jws = new JWSToken;
 
-  $jws->sign($payload, 'pass123', 'md5'); <span class="comment">// check <a href="#payload">payload</a> for $payload supplied</span>
+  $jws->sign($payload, 'pass123', 'md5'); <span class="comment">// check <a href="#payload">payload</a> for the $payload used here.</span>
     
   $token = $jws->token();
 
