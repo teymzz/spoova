@@ -99,13 +99,13 @@ trait TBGROUP {
                 "AUTO_INCREMENT","CHECK", "INDEX","CONSTRAINT", "COMMENT",
                 "FIRST", "AFTER",
 
-                //index directives
-                "DROP", "ADD",
-                
-                //table directives
-                "DROP_TABLE", "DROP_COLUMN",
-                "MODIFY", "CHANGE", "RENAME", "CONVERT",
+                //Drop directives
+                "DROP", "DROP_TABLE",
 
+                //Modifiers
+                "MODIFY", "CHANGE", "RENAME_TO", "CONVERT_TO",
+
+                //Partition
                 "PARTITION_BY","COLUMNS","PARTITION","VALUE",
             ]
         ];

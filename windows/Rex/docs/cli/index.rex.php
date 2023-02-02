@@ -349,7 +349,7 @@
         <span class="c-orange">dbport</span> => database port 
         <span class="c-orange">dbsocket</span> => database socket
 
-        NOTE: Empty values are replaced with dash (i.e -)
+        NOTE: Empty values are replaced with dash (i.e "-")
 
         Ex: <span class="c-orange-dd">php mi config:dbonline tester root - localhost 3306 </span>  <span class="no-select">//set online database connection parameters </span>
 
@@ -390,7 +390,7 @@
         <span class="c-orange">dbport</span> => database port 
         <span class="c-orange">dbsocket</span> => database socket
 
-        NOTE: Empty values are replaced with dash (i.e -)
+        NOTE: Empty values are replaced with dash (i.e "-")
 
         Ex: <span class="c-orange-dd">php mi config:dbonline tester root - localhost 3306 </span>  <span class="no-select">//set offline database connection parameters </span>
 

@@ -99,7 +99,7 @@
                    <code>lime</code> <code>lime-d</code> <code>lime-dd</code> <br>
                    <code>magenta</code> <code>magenta-d</code> <code>magenta-dd</code> <br>
                    <code>maroon</code> <code>maroon-d</code> <code>maroon-dd</code> <br>
-                   <code>crimson</code> <code>pink-d</code> <code>crimson-dd</code> <br>
+                   <code>crimson</code> <code>crimson-d</code> <code>crimson-dd</code> <br>
                    <code>tan</code> <code>tan-d</code> <code>tan-dd</code> <br>
                    <code>teal</code> <code>teal-d</code> <code>teal-dd</code> <br>
                    <code>sea-blue</code> <code>sea-blue-d</code> <code>sea-blue-dd</code> <br>

@@ -26,6 +26,9 @@
           font-size: .85em;
           display: inline-block;
           width:100%;
+      }
+
+     .pre-area:not([class*="bc-"]){
           background-color : rgba(var(--white-dd));
       }
   
@@ -191,6 +194,9 @@ body.--theme-dark{
           font-size: .85em;
           display: inline-block;
           width:100%;
+      }
+
+     .pre-area:not([class*="bc-"]){
           background-color : rgba(var(--white-dd));
       }
   
@@ -526,6 +532,7 @@ window.onload = function() {
                <li> <a href="<?= DomUrl('docs/forms') ?>" class="<?= inPath('active') ?>"><span class="ico ico-spin"></span>Handling Forms</a> </li>
                <li> <a href="<?= DomUrl('docs/useraccounts') ?>" class="<?= inPath('active') ?>"><span class="ico ico-spin"></span>Handling Users</a> </li>
                <li> <a href="<?= DomUrl('docs/database/data-model') ?>" class="<?= inPath('active') ?>"><span class="ico ico-spin"></span>Handling DBModels</a> </li>
+               <li> <a href="<?= DomUrl('docs/database/migrations') ?>" class="<?= inPath('active') ?>"><span class="ico ico-spin"></span>Handling Migrations</a> </li>
                <li> <a href="<?= DomUrl('docs/classes') ?>" class="<?= inPath('active') ?>"><span class="ico ico-spin"></span>Helper Classes</a> </li>
                <li> <a href="<?= DomUrl('docs/functions') ?>" class="<?= inPath('active') ?>"><span class="ico ico-spin"></span>Helper Functions</a> </li>
                <li> <a href="<?= DomUrl('docs/directives') ?>" class="<?= inPath('active') ?>"><span class="ico ico-spin"></span>Helper Directives</a> </li>
@@ -570,7 +577,6 @@ window.onload = function() {
                         <li><a href="<?= route('::text-alignments'); ?>">Text Alignments</a></li>
                         <li><a href="<?= route('::fonts'); ?>">Fonts and Font Sizes</a></li>
                         <li><a href="<?= route('::colors'); ?>">Setting element Colors</a></li>
-                        <li><a href="<?= route('::anchors'); ?>">Anchor Buttons</a></li>
                         <li><a href="<?= route('::property-inheritance'); ?>">Property Inheritance</a></li>
                         <li><a href="<?= route('::forms-and-alignment'); ?>">Forms and Form Alignment</a></li>
                         <li><a href="<?= route('::borders'); ?>">Borders and Border Radius</a></li>
