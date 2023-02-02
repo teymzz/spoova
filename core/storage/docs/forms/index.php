@@ -351,6 +351,7 @@ window.onload = function() {
                <li> <a href="<?= DomUrl('docs/forms') ?>" class="<?= inPath('active') ?>"><span class="ico ico-spin"></span>Handling Forms</a> </li>
                <li> <a href="<?= DomUrl('docs/useraccounts') ?>" class="<?= inPath('active') ?>"><span class="ico ico-spin"></span>Handling Users</a> </li>
                <li> <a href="<?= DomUrl('docs/database/data-model') ?>" class="<?= inPath('active') ?>"><span class="ico ico-spin"></span>Handling DBModels</a> </li>
+               <li> <a href="<?= DomUrl('docs/database/migrations') ?>" class="<?= inPath('active') ?>"><span class="ico ico-spin"></span>Handling Migrations</a> </li>
                <li> <a href="<?= DomUrl('docs/classes') ?>" class="<?= inPath('active') ?>"><span class="ico ico-spin"></span>Helper Classes</a> </li>
                <li> <a href="<?= DomUrl('docs/functions') ?>" class="<?= inPath('active') ?>"><span class="ico ico-spin"></span>Helper Functions</a> </li>
                <li> <a href="<?= DomUrl('docs/directives') ?>" class="<?= inPath('active') ?>"><span class="ico ico-spin"></span>Helper Directives</a> </li>
@@ -542,13 +543,13 @@ window.onload = function() {
       }
   
       <span class="comment">/**
-       * Determines if a form is authentication is completed 
+       * Determines if a form authentication is completed 
        *
        * @return bool
        */</span>
       public static function isAuthenticated(): bool {
   
-          return true;
+          return true; <span class="comment">//some validation test code is expected here.</span>
   
       }  
 
@@ -559,12 +560,12 @@ window.onload = function() {
        */</span>
       public static function tablename(): string {
   
-          //default table name
-          return 'users'
+          return 'users'; <span class="comment">//default table name</span>
+
       }
 
       <span class="comment">/**
-       * input fields with relative database column name key pairs 
+       * input field names mapped with relative database column name 
        *
        * @return string
        */</span>
@@ -719,8 +720,8 @@ window.onload = function() {
     <pre class="pre-code">
     &lt;?php
     
-    error(':csrf', 'title') <span class="comment">// return the csrf last error title</span> 
-    error(':csrf', 'info')  <span class="comment">// return the csrf last error info</span> 
+    error(':csrf', 'title'); <span class="comment">// return the csrf last error title</span> 
+    error(':csrf', 'info');  <span class="comment">// return the csrf last error info</span> 
     
     </pre>
                                 </div>
@@ -786,7 +787,7 @@ window.onload = function() {
     <pre class="pre-code">
     &lt;?php
     
-    error('username') <span class="comment">// return the csrf first error encountered for username</span> 
+    error('username'); <span class="comment">// return the csrf first error encountered for username</span> 
     
     </pre>
                                 </div>
@@ -809,9 +810,9 @@ window.onload = function() {
     <pre class="pre-code">
     &lt;?php
     
-    error(':dbm') <span class="comment">// something is wrong</span> 
-    error(':dbe') <span class="comment">// database error: something is wrong</span> 
-    error(':dbi') <span class="comment">// sql error (fully stated accoring to type of error)</span> 
+    error(':dbm'); <span class="comment">// something is wrong</span> 
+    error(':dbe'); <span class="comment">// database error: something is wrong</span> 
+    error(':dbi'); <span class="comment">// sql error (fully stated accoring to type of error)</span> 
     
     </pre>
                                 </div>

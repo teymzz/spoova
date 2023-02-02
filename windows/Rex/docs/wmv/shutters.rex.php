@@ -19,7 +19,7 @@
                     <div class="">
                         The shutter system was designed to close every window using the <code>Window::close()</code> method.
                         By default, when a window file does not exist and the corresponding url is called, the shutter automatically closes
-                        unless a logic is applied on the Index window file which tells the system that such url should be closed. 
+                        unless a logic is applied on the window entry point which tells the system that such url should be opened. 
                         This behaviour is one designed to prevent any access to a non-existing window 
                         in which the resulting effect will be a blank page. 
 

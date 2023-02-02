@@ -76,20 +76,13 @@ trait TBALTER {
 
     }
 
-    static function ADD() {
-        
-    }
-
-    static function ADD_FIELD() {
-        
-    }
-
-    static function ADD_UNIQUE() {
-
-    }
-
-    static function DROP_UNIQUE() {
-
+    /**
+     * Drop a database table
+     *
+     * @return void|false
+     */
+    static function DROP_TABLE(){
+        return self::DROP(true);
     }
 
     /**
@@ -98,9 +91,9 @@ trait TBALTER {
      * @param string $newName
      * @return void
      */
-    static function RENAME(string $newName){
+    static function RENAME_TO(string $newName){
         self::callables(__FUNCTION__);
-        self::$ALTER['RENAME'] = $newName;
+        self::$ALTER['RENAME_TO'] = $newName;
     }
 
     /**
@@ -115,7 +108,7 @@ trait TBALTER {
     }
 
     /**
-     * Rename a table
+     * Modify a table
      *
      * @param Closure $callback
      * @return DRAFT
@@ -138,30 +131,6 @@ trait TBALTER {
 
         }
 
-
-
-        /* 
-            $DRAFT::MODIFY(fn(DRAFT $DRAFT) => $DRAFT::INT('Blass')->NOT_NULL() )
-            $DRAFT::CHANGE(fn(DRAFT $DRAFT) => $DRAFT::INT(['blass' => 'blase'])->NOT_NULL() )
-            MODIFY Blass INT NOT NULL 
-
-            $DRAFT::CONVERT_TO('latin1')
-            CONVERT TO CHARACTER SET latin 1
-
-            DBSCHEMA::DROP_TABLE($this)
-
-            DBSCHEMA::DROP_COLUMN($this, columnName)
-
-            DBSCHEMA::DROP_INDEX($this, columnName)
-            DBSCHEMA::DROP_UNIQUE($this, columnName)
-            DBSCHEMA::DROP_PRIMARY($this, columnName)
-
-            DBSCHEMA::ALTER_TABLE('DROP INDEX')
-            DBSCHEMA::ALTER_DROP('columnName');
-            DBSCHEMA::ALTER_DROP_CONSTRAINT('indexName');
-
-            
-        */
         return self::$instance;
     }
     
@@ -289,7 +258,6 @@ trait TBALTER {
             }, $DROPS, array_keys($DROPS));
 
         }
-
         
 
         $PRIMARY_KEY = (array) ($Table['::PRIMARY_KEY'] ?? []);
@@ -297,57 +265,65 @@ trait TBALTER {
 
         $PRIMARY_KEY = implode(', ',$PRIMARY_KEY);
 
-        
+        $uniqueFields = self::$instance->uniqueFields;
 
-        // $uniqueFields = self::$instance->uniqueFields;
+        $constraints =  self::$instance->constraints;
 
-        // $constraints =  self::$instance->constraints;
-
-        // // //add unique fields 
-        // if($UNIQUES = ($constraints['UNIQUE']??'')){
-        //     foreach($UNIQUES as $UNIQUE => $UNIQUEVALUES){
-        //        $DRAFT .= ", CONSTRAINT {$UNIQUE} UNIQUE(".implode(', ', $UNIQUEVALUES).")";
-        //     }
-        // }
+        // //add unique fields 
+        if($UNIQUES = ($constraints['UNIQUE']??'')){
+            foreach($UNIQUES as $UNIQUE => $UNIQUEVALUES){
+               $DRAFT .= ", CONSTRAINT {$UNIQUE} UNIQUE(".implode(', ', $UNIQUEVALUES).")";
+            }
+        }
 
         // // //handle foreign keys
-        // foreach($FOREIGN_KEY as $foreignKey => $foreign) {
+        foreach($FOREIGN_KEY as $foreignKey => $foreign) {
 
-        //     $statement = '';
-        //     if(array_key_exists("::OPTIONS", $foreign)){
-        //         $OPTIONS = $foreign['::OPTIONS'];
-        //         $cascade = $OPTIONS[0]?? '';
-        //         $restrict = $OPTIONS[1]?? '';
-        //         $statement .= ($cascade)? " ON UPDATE CASCADE" : "";
-        //         $statement .= ($restrict)? " ON DELETE RESTRICT" : "";
+            $statement = '';
+            if(array_key_exists("::OPTIONS", $foreign)){
+                $OPTIONS = $foreign['::OPTIONS'];
+                $cascade = $OPTIONS[0]?? '';
+                $restrict = $OPTIONS[1]?? '';
+                $statement .= ($cascade)? " ON UPDATE CASCADE" : "";
+                $statement .= ($restrict)? " ON DELETE RESTRICT" : "";
 
-        //         unset($foreign['::OPTIONS']);
-        //     }
+                unset($foreign['::OPTIONS']);
+            }
 
-        //     $REFERENCES[] = array_map(function($value, $index) use(&$CASCADE, $statement) {
+            $REFERENCES[] = array_map(function($value, $index) use(&$CASCADE, $statement) {
 
-        //             $keys = array_keys($value); 
-        //             $values = array_values($value);
-        //             $foreigns = implode(',',$keys);
-        //             $locals = implode(',',$values);
-        //             return ", ADD FOREIGN KEY({$foreigns}) REFERENCES $index({$locals}){$statement}"; 
+                    $keys = array_keys($value); 
+                    $values = array_values($value);
+                    $foreigns = implode(',',$keys);
+                    $locals = implode(',',$values);
+                    return ", ADD FOREIGN KEY({$foreigns}) REFERENCES $index({$locals}){$statement}"; 
                 
-        //     }, $foreign, array_keys($foreign));
+            }, $foreign, array_keys($foreign));
 
-        // }
+        }
 
-        // $STATEMENT = '';
-        // foreach($REFERENCES as $REFERENCE){
+        $STATEMENT = '';
+        foreach($REFERENCES as $REFERENCE){
 
-        //     $STATEMENT .= ($REFERENCE)? ", ".implode(",", $REFERENCE) : '';
+            $STATEMENT .= ($REFERENCE)? ", ".implode(",", $REFERENCE) : '';
 
-        // }
+        }
 
-        // $REFERENCES = $STATEMENT;
+        $REFERENCES = $STATEMENT;
         
-        // $PRIMARY = ($PRIMARY_KEY)? ", PRIMARY KEY({$PRIMARY_KEY})" : "";
-        //     print $PRIMARY;
-        // // $DRAFT .= $PRIMARY;
+        $PRIMARY = ($PRIMARY_KEY)? ", PRIMARY KEY({$PRIMARY_KEY})" : "";
+
+        $DRAFT .= $PRIMARY;
+
+        if($rename = (self::$ALTER['RENAME_TO'] ?? '')){
+            $DRAFT .= ", RENAME TO ".$rename;
+        }
+
+        if($convert = (self::$ALTER['CONVERT_TO'] ?? '')){
+            $DRAFT .= ", CONVERT TO CHARACTER SET ".$rename;
+        }
+
+        $DRAFT = ltrim($DRAFT, ',');
 
         $DRAFT = trim("ALTER TABLE {$TABLE} {$DRAFT}");
         return $DRAFT;

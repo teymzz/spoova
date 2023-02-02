@@ -4,10 +4,12 @@
     <head>
         <meta name="viewport" content="width=device-width, initial-scale=.9, maximum-scale=1.0, user-scalable=1" />
 <meta name="description" content="website_description" />
-<link rel="icon" href="http://localhost/trial/res/main/images/icons/favicon.png" />
+<link rel="icon" href="http://localhost/spoova/res/main/images/icons/favicon.png" />
         <title>Css Integerations - Anchors</title>
-        <link  rel="stylesheet" type="text/css" href="http://localhost/trial/res/main/css/res.css" x-debug="res-css"><script src='http://localhost/trial/res/main/js/jquery-3.6.0.js'></script><script src='http://localhost/trial/res/main/css/bootstrap/js/bootstrap.min.js'></script><link  rel="stylesheet" type="text/css" href="http://localhost/trial/res/main/css/mdb5/css/mdb.min.css"><script src='http://localhost/trial/res/main/js/config.js'></script><script src='http://localhost/trial/res/main/js/core.js'></script><script src='http://localhost/trial/res/main/js/onLoaded.js'></script><script src='http://localhost/trial/res/main/js/custom.js'></script><script src='http://localhost/trial/res/main/js/device.js'></script><script src='http://localhost/trial/res/main/js/loadImages.js'></script><script src='http://localhost/trial/res/main/js/formValidator.js'></script><script src='http://localhost/trial/res/main/js/jquery.mousewheel.js'></script><script src='http://localhost/trial/res/main/js/anime.js'></script><script src='http://localhost/trial/res/main/js/init.js'></script>
-        <style rel="integerations.template.css.index"> 
+        <link  rel="stylesheet" type="text/css" href="http://localhost/spoova/res/main/css/res.css" x-debug="res-css"><script src='http://localhost/spoova/res/main/js/jquery-3.6.0.js'></script><script src='http://localhost/spoova/res/main/css/bootstrap/js/bootstrap.min.js'></script><link  rel="stylesheet" type="text/css" href="http://localhost/spoova/res/main/css/mdb5/css/mdb.min.css"><script src='http://localhost/spoova/res/main/js/config.js'></script><script src='http://localhost/spoova/res/main/js/core.js'></script><script src='http://localhost/spoova/res/main/js/onLoaded.js'></script><script src='http://localhost/spoova/res/main/js/custom.js'></script><script src='http://localhost/spoova/res/main/js/device.js'></script><script src='http://localhost/spoova/res/main/js/loadImages.js'></script><script src='http://localhost/spoova/res/main/js/formValidator.js'></script><script src='http://localhost/spoova/res/main/js/jquery.mousewheel.js'></script><script src='http://localhost/spoova/res/main/js/anime.js'></script><script src='http://localhost/spoova/res/main/js/init.js'></script>
+        
+        <script src='http://localhost/spoova/res/main/js/switcher.js'></script>
+        <style rel="docs.integerations.template.css.index"> 
 
 .content-field fieldset {
     margin-bottom: .5em;
@@ -45,22 +47,15 @@ code.main {
     }
 }
 
- </style>
-        
-    </head>
-
-    <body>
-
-        <div id="userscreen" data-height="full" data-form="validate" data-resp=".resp" class="grid-center bc-sky-blue-dd relative">
-            <div class="overlay">
-                <div class="padd-20 content-field xs-2s">
-                    
-
-    
-    <style rel="css.tutorial"> 
+ </style><style rel="build.css.tutorial"> 
 
      body{
           color: rgb(111, 110, 110);
+          background-color : rgba(var(--white-dd));
+     }
+
+     .tutorial{
+          min-height:100vh;
      }
 
      .pre-area{
@@ -68,20 +63,26 @@ code.main {
           font-size: .85em;
           display: inline-block;
           width:100%;
-          background-color : rgba(var(--silver));
+      }
+
+     .pre-area:not([class*="bc-"]){
+          background-color : rgba(var(--white-dd));
       }
   
      .pre-area.fix {
          font-size: 1em;
-     }
+    }
      
      pre.pre-code {
           overflow: auto hidden;
-          color: #4f58a0;
           font-size: .95em; 
           margin-bottom:0;
           padding-top:1em;
-     }
+     } 
+     
+     pre.pre-code:not([class*="c-"]) {
+          color: #4f58a0;
+     } 
      
      pre .comment {
           color: #909090;
@@ -90,7 +91,7 @@ code.main {
      .lacier.active {
           background-color: #3ecb32;
           color: white;
-          box-shadow: 0 0 2px 2px #3ecb32;
+          box-shadow: 0 0 2px 3px #32bc27 inset;
      }
   
      .lacier.active .c-lime-dd{
@@ -179,15 +180,63 @@ code.main {
 
  
 
-     body {
+     /* body {
           color: rgb(111, 110, 110);
           background-color: #f1f1f1;
-     }
+     } */
 
+ </style><style rel="build.css.headers"> 
+.--theme-dark > * {
+   --white-dd: 11, 10, 28;
+   --white:  21, 15, 39;
+   --off-white: 22, 23, 62;
+   --black-ll: 179, 179, 179; 
+   --silver: 23, 28, 56;       
+   --silver-d: 21, 25, 49;       
+   --silver-dd: 23, 28, 56;       
+}
+
+.--theme-dark .--theme-esc{
+   --white-dd: 240, 240, 240;
+   --white:  255, 255, 255;
+   --black-ll: 79, 79, 79;
+}
+
+.--theme-dark .bc-white-d.--theme-esc{
+    --white-d: 21, 24, 51;
+    --white-dd: 23, 28, 56;
+    --silver-d: var(--white-dd);
+    color: rgb(203, 198, 198);
+}
+
+.--theme-dark .bc-white-d.--theme-esc .flex-full > *{
+    --white: 255, 255, 255;
+    --white-d: 250, 250, 250;
+    --white-dd: 240, 240, 240;
+    --black-ll: 79, 79, 79;
+    --silver: 230, 230, 230;
+    --silver-d: 220, 220, 220;
+    --silver-dd: 200, 200, 200;
+}
+
+body.--theme-dark{
+    background-color : rgba(21, 15, 39);
+}
  </style>
+        
+    </head>
+
+
+    <body class="">
+
+        <div id="userscreen" data-height="full" data-form="validate" data-resp=".resp" class="grid-center bc-sky-blue-dd relative">
+            <div class="overlay">
+                <div class="box-full i-trans padd-20 content-field bc-white xs-2s">
+                    
+
     
-
-
+    
+    
 
     <div class="padd-x-4"> <br>
 
@@ -199,6 +248,8 @@ code.main {
 
         <div class="font-em-d85">
             <div class="wid-fit c-olive font-em-1d5">Anchors</div>
+
+            Anchor buttons are basically of two type
             <br>
             <ul class="mvt-10">
                 <li><code>b-center</code> -  sets the background image to "center top" position</li>
@@ -210,42 +261,42 @@ code.main {
         </div>
 
         <div class="box pxv-10 bc-silver font-em-d85">
-            <div class="px-200 bc-silver-d b-center" data-src="http://localhost/trial/res/assets/images/lach.jpg"></div>
+            <div class="px-200 bc-silver-d b-center" data-src="http://localhost/spoova/res/assets/images/bkg.jpg"></div>
             b-center
         </div>
 
         <div class="box pxv-10 bc-silver font-em-d85">
-            <div class="px-200 bc-silver-d b-cover" data-src="http://localhost/trial/res/assets/images/lach.jpg"></div>
+            <div class="px-200 bc-silver-d b-cover" data-src="http://localhost/spoova/res/assets/images/bkg.jpg"></div>
             b-cover
         </div>
 
         <div class="box pxv-10 bc-silver font-em-d85">
-            <div class="px-200 bc-silver-d b-cover" data-src="http://localhost/trial/res/assets/images/lach.jpg"></div>
+            <div class="px-200 bc-silver-d b-cover" data-src="http://localhost/spoova/res/assets/images/bkg.jpg"></div>
             b-cover
         </div><br><br>
 
         <div class="box pxv-10 bc-silver font-em-d85">
-            <div class="px-200 bc-silver-d b-contain" data-src="http://localhost/trial/res/assets/images/lach.jpg"></div>
+            <div class="px-200 bc-silver-d b-contain" data-src="http://localhost/spoova/res/assets/images/bkg.jpg"></div>
             b-contain
         </div>
 
         <div class="box pxv-10 bc-silver font-em-d85">
-            <div class="px-200 bc-silver-d b-parallax" data-src="http://localhost/trial/res/assets/images/lach.jpg"></div>
+            <div class="px-200 bc-silver-d b-parallax" data-src="http://localhost/spoova/res/assets/images/bkg.jpg"></div>
             b-parallax
         </div>
 
         <div class="box pxv-10 bc-silver font-em-d85">
-            <div class="px-200 bc-silver-d b-fluid" data-src="http://localhost/trial/res/assets/images/lach.jpg"></div>
+            <div class="px-200 bc-silver-d b-fluid" data-src="http://localhost/spoova/res/assets/images/bkg.jpg"></div>
             b-fluid
         </div><br><br>
 
         <div class="box pxv-10 bc-silver font-em-d85">
-            <div class="px-200 bc-silver-d b-cover b-clip" data-src="http://localhost/trial/res/assets/images/lach.jpg"></div>
+            <div class="px-200 bc-silver-d b-cover b-clip" data-src="http://localhost/spoova/res/assets/images/bkg.jpg"></div>
             b-cover b-clip
         </div>
 
         <div class="box pxv-10 bc-silver font-em-d85">
-            <div class="px-200 bc-silver-d im-fixed" data-src="http://localhost/trial/res/assets/images/lach.jpg"></div>
+            <div class="px-200 bc-silver-d im-fixed" data-src="http://localhost/spoova/res/assets/images/bkg.jpg"></div>
             im-fixed
         </div><br><br>
 
@@ -266,6 +317,33 @@ code.main {
             return String(str).replace(/&/g, '&amp;');
         }
     </script>
+
+    <script> 
+window.onload = function() {
+    
+
+    let switchBox = new Switcher;
+
+    $('.theme-btn').click(function() {
+
+        $('body').toggleClass('--theme-dark');
+
+        if($('body').hasClass('--theme-dark')){                
+            switchBox.set('spoovaTheme', '--theme-dark')
+        }else{
+            switchBox.set('spoovaTheme', '')    
+        }
+
+    })
+
+    switchBox.bind('spoovaTheme', function(value){
+        $('body').addClass(value)
+    })
+
+
+ 
+}
+</script>
 
 </html>
 

@@ -21,6 +21,7 @@ class Database extends Window {
             window('root:database.status')   => 'status',
             window('root:database.data-model')   => 'model',
             window('root:database.migrations')   => 'migrations',
+            window('root:database.migrations.samples')   => 'migration_samples',
         ];
 
         self::call($this, $acceptables);
@@ -139,6 +140,16 @@ class Database extends Window {
             'pointer' => $pointer
         ];
         self::load('docs.db.migrations', fn() => compile($vars));
+    } 
+
+    function migration_samples(){    
+        $pointer = self::mapurl('Tutorial/Database/Migrations/Samples', ' <span class="bi-chevron-right"></span> ');
+        
+        $vars = [
+            'title' => 'Tutorial - Database Data Model',
+            'pointer' => $pointer
+        ];
+        self::load('docs.db.migrations.samples', fn() => compile($vars));
     } 
     
 

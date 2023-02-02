@@ -24,11 +24,11 @@
 <div class="pre-area bc-white-dd mvt-6 shadow">
     <div class="pxv-10 bc-silver-d">Example: Fluid Box</div>
  <pre class="pre-code">
-  &lt;div 
-        class="fluid-box" 
-        src="@images('bkg.jpg')" 
-        style="--fluid-1:2; --fluid-2:2.5; --fluid-3:3.5;"&gt;
-  &lt;/div&gt;
+  &lt;img 
+    class="fluid-box" 
+    src="@images('bkg.jpg')" 
+    style="--fluid-1:2; --fluid-2:2.5; --fluid-3:3.5;"&
+  /&gt;
  </pre>
 </div>
                 <div class="fluid-box b-fluid bc-silver" data-src="@images('bkg.jpg')" style="--fluid-1:2; --fluid-2:2.5; --fluid-3:3.5;">

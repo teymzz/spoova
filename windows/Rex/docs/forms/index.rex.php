@@ -175,13 +175,13 @@
       }
   
       <span class="comment">/**
-       * Determines if a form is authentication is completed 
+       * Determines if a form authentication is completed 
        *
        * @return bool
        */</span>
       public static function isAuthenticated(): bool {
   
-          return true;
+          return true; <span class="comment">//some validation test code is expected here.</span>
   
       }  
 
@@ -192,12 +192,12 @@
        */</span>
       public static function tablename(): string {
   
-          //default table name
-          return 'users'
+          return 'users'; <span class="comment">//default table name</span>
+
       }
 
       <span class="comment">/**
-       * input fields with relative database column name key pairs 
+       * input field names mapped with relative database column name 
        *
        * @return string
        */</span>
@@ -352,8 +352,8 @@
     <pre class="pre-code">
     &lt;?php
     
-    error(':csrf', 'title') <span class="comment">// return the csrf last error title</span> 
-    error(':csrf', 'info')  <span class="comment">// return the csrf last error info</span> 
+    error(':csrf', 'title'); <span class="comment">// return the csrf last error title</span> 
+    error(':csrf', 'info');  <span class="comment">// return the csrf last error info</span> 
     
     </pre>
                                 </div>
@@ -419,7 +419,7 @@
     <pre class="pre-code">
     &lt;?php
     
-    error('username') <span class="comment">// return the csrf first error encountered for username</span> 
+    error('username'); <span class="comment">// return the csrf first error encountered for username</span> 
     
     </pre>
                                 </div>
@@ -442,9 +442,9 @@
     <pre class="pre-code">
     &lt;?php
     
-    error(':dbm') <span class="comment">// something is wrong</span> 
-    error(':dbe') <span class="comment">// database error: something is wrong</span> 
-    error(':dbi') <span class="comment">// sql error (fully stated accoring to type of error)</span> 
+    error(':dbm'); <span class="comment">// something is wrong</span> 
+    error(':dbe'); <span class="comment">// database error: something is wrong</span> 
+    error(':dbi'); <span class="comment">// sql error (fully stated accoring to type of error)</span> 
     
     </pre>
                                 </div>

@@ -21,15 +21,14 @@ trait TBCREATE {
      * @param string $name primary field name. Default is "id"
      * @return DRAFT
      */
-    public static function ID(int $size = 0, string $name = 'id') : DRAFT {
+    public static function ID(int $size = 2, string $name = 'id') : DRAFT {
         self::callables(__FUNCTION__);
         self::field($name, "int");
 
         self::$CREATE['TABLE']['FIELDS'][$name] = "INT".($size? "({$size})" : '')." NOT NULL AUTO_INCREMENT";
-        //self::$CREATE['TABLES'][$name] =  "INT".($size? "({$size})" : '')." NOT NULL AUTO_INCREMENT";
-        self::$CREATE['TABLE']['::PRIMARY_KEY'] = "{$name}";        
-        // self::$formats[$name] = "INT".($size? "({$size})" : '')." NOT NULL AUTO_INCREMENT";
-        // self::$formats['::PRIMARY_KEY'] = "{$name}";
+
+        self::$CREATE['TABLE']['::PRIMARY_KEY'] = "{$name}";   
+        
         return self::$instance;
     }
     
