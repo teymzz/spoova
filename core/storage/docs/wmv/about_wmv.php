@@ -347,6 +347,7 @@ window.onload = function() {
 
           <ul class="list-square">
                <li> <a href="<?= DomUrl('docs/installation') ?>" class="<?= inPath('active') ?>"><span class="ico ico-spin"></span>Installation</a> </li>
+               <li> <a href="<?= DomUrl('docs/wmv') ?>" class="<?= inPath('active') ?>" ><span class="ico ico-spin"></span><span class="fb-6 pointer" title="Windows Models View">WMV</span> PATTERN</a></li>
                <li> <a href="<?= DomUrl('docs/live-server') ?>" class="<?= inPath('active') ?>"><span class="ico ico-spin"></span>Live Server</a></li>
                <li> <a href="<?= DomUrl('docs/database') ?>" class="<?= inPath('active') ?>"><span class="ico ico-spin"></span>Database</a> </li>
                <li> <a href="<?= DomUrl('docs/resource') ?>" class="<?= inPath('active') ?>"><span class="ico ico-spin"></span>Resource class</a> </li>
@@ -355,6 +356,7 @@ window.onload = function() {
                <li> <a href="<?= DomUrl('docs/forms') ?>" class="<?= inPath('active') ?>"><span class="ico ico-spin"></span>Handling Forms</a> </li>
                <li> <a href="<?= DomUrl('docs/useraccounts') ?>" class="<?= inPath('active') ?>"><span class="ico ico-spin"></span>Handling Users</a> </li>
                <li> <a href="<?= DomUrl('docs/database/data-model') ?>" class="<?= inPath('active') ?>"><span class="ico ico-spin"></span>Handling DBModels</a> </li>
+               <li> <a href="<?= DomUrl('docs/database/migrations') ?>" class="<?= inPath('active') ?>"><span class="ico ico-spin"></span>Handling Migrations</a> </li>
                <li> <a href="<?= DomUrl('docs/classes') ?>" class="<?= inPath('active') ?>"><span class="ico ico-spin"></span>Helper Classes</a> </li>
                <li> <a href="<?= DomUrl('docs/functions') ?>" class="<?= inPath('active') ?>"><span class="ico ico-spin"></span>Helper Functions</a> </li>
                <li> <a href="<?= DomUrl('docs/directives') ?>" class="<?= inPath('active') ?>"><span class="ico ico-spin"></span>Helper Directives</a> </li>
@@ -362,7 +364,6 @@ window.onload = function() {
                <li> <a href="<?= DomUrl('docs/mails') ?>" class="<?= inPath('active') ?>"><span class="ico ico-spin"></span>Handling Mails</a> </li>
                <li> <a href="<?= DomUrl('docs/cli') ?>" class="<?= inPath('active') ?>"><span class="ico ico-spin"></span>Cli Commands</a> </li>         
                <li> <a href="<?= DomUrl('docs/plugins') ?>" class="<?= inPath('active') ?>"><span class="ico ico-spin"></span>Composer and Plugins</a></li>
-               <li> <a href="<?= DomUrl('docs/wmv') ?>" class="<?= inPath('active') ?>" ><span class="ico ico-spin"></span>The <span class="fb-6 pointer" title="Windows Models View">WMV</span> PATTERN</a></li>
                <li> <a href="<?= DomUrl('docs/libraries') ?>" class="<?= inPath('active') ?>"><span class="ico ico-spin"></span>Third-Party Libraries</a> </li>
                <li> <a href="<?= DomUrl('docs/other-features') ?>" class="<?= inPath('active') ?>"><span class="ico ico-spin"></span>Other Features</a> </li>
           </ul>
@@ -377,7 +378,7 @@ window.onload = function() {
       <div class="font-em-1d2">
 
         
- <div class="font-menu pvs-4"> <a href="http://localhost/spoova/tutorial">Tutorial</a> <span class="bi-chevron-right"></span> <a href="http://localhost/spoova/tutorial/wmv">Wmv</a> <span class="bi-chevron-right"></span> <a href="http://localhost/spoova/tutorial/wmv/about_wmv">About_wmv</a>  </div>
+ <div class="font-menu pvs-4"> <a href="http://localhost/spoova/docs">Docs</a> <span class="bi-chevron-right"></span> <a href="http://localhost/spoova/docs/wmv">Wmv</a> <span class="bi-chevron-right"></span> <a href="http://localhost/spoova/docs/wmv/about_wmv">About_wmv</a>  </div>
 
 
         <div class="start font-em-d8">
@@ -398,39 +399,39 @@ window.onload = function() {
                   <br><br>
 
                   <div class="pre-area shadow">
-                    <div class="pxv-10 bc-silver">Url Window</div>
+                    <div class="pxv-10 bc-silver">Window url entry point</div>
                     <pre class="pre-code pxs-6">
   <table style="min-width:40%; font-size: .9em;">
-    <tr><th class="pxv-4">window url</th> <th>window</th> </tr>
-    <tr><td><code>http://localhost/app/</code></td> <td><span class="comment no-select"> index </span></td></tr>
-    <tr><td><code>http://localhost/app/index</code></td> <td><span class="comment no-select"> index </span></td></tr>
-    <tr><td><code>http://localhost/app/users</code></td> <td><span class="comment no-select"> users </span></td></tr>
-    <tr><td><code>http://localhost/app/users/somepath</code></td> <td><span class="comment no-select"> users </span></td></tr>
-    <tr><td><code>http://www.site.com/</code></td> <td><span class="comment no-select"> index </span></td></tr>
-    <tr><td><code>http://www.site.com/index</code></td> <td><span class="comment no-select"> index </span></td></tr>
-    <tr><td><code>http://www.site.com/users/somepath</code></td> <td><span class="comment no-select"> users </span></td></tr>
+    <tr><th class="pxv-4 c-orange-dd">window url sample</th> <th class="c-orange-dd">entry point (or window)</th> </tr>
+    <tr><td><code class="bd-f">http://localhost/app/</code></td> <td><span class="comment no-select"> index </span></td></tr>
+    <tr><td><code class="bd-f">http://localhost/app/index</code></td> <td><span class="comment no-select"> index </span></td></tr>
+    <tr><td><code class="bd-f">http://localhost/app/users</code></td> <td><span class="comment no-select"> users </span></td></tr>
+    <tr><td><code class="bd-f">http://localhost/app/users/somepath</code></td> <td><span class="comment no-select"> users </span></td></tr>
+    <tr><td><code class="bd-f">http://www.site.com/</code></td> <td><span class="comment no-select"> index </span></td></tr>
+    <tr><td><code class="bd-f">http://www.site.com/index</code></td> <td><span class="comment no-select"> index </span></td></tr>
+    <tr><td><code class="bd-f">http://www.site.com/users/somepath</code></td> <td><span class="comment no-select"> users </span></td></tr>
   </table>
                     </pre>
-                  </div> <br><br>
+                  </div>
 
 
-                  <div class="pre-area">
+                  <div class="pre-area" hidden>
   <div class="pxv-10 bc-off-white">Window url sample</div>
     <pre class="pre-code pxs-6">
     <span class="comment no-select">
     The examples below best reveal the position 
     of the window entry point for local and online environments
     </span>
-    http://localhost/app/window/some/other/path
+    http://localhost/app/window/some/other/path <span class="comment">local environment</span>
 
     http://site.com/window/some/other/path
 
     </pre>
                   </div> <br>
 
-                  <p class="font-menu mvt-6">
-                    Learn more on the <code>wvm</code> structure from 
-                    <a href="<?= DomUrl('docs/routings/wmv') ?>"><span class="fb-6 hyperlink c-blue">wmv</span></a> 
+                  <p class="font-menu mvt-10">
+                    According to the url samples above, a url's entry point is usually the immediate path name that comes after a localhost url 
+                    or a remote (or online) url.
                   </p>
      
                 </div> 
@@ -487,7 +488,7 @@ window.onload = function() {
               </div>   
         
               
- <div class="font-menu pvs-4"> <a href="http://localhost/spoova/tutorial">Tutorial</a> <span class="bi-chevron-right"></span> <a href="http://localhost/spoova/tutorial/wmv">Wmv</a> <span class="bi-chevron-right"></span> <a href="http://localhost/spoova/tutorial/wmv/about_wmv">About_wmv</a>  </div>
+ <div class="font-menu pvs-4"> <a href="http://localhost/spoova/docs">Docs</a> <span class="bi-chevron-right"></span> <a href="http://localhost/spoova/docs/wmv">Wmv</a> <span class="bi-chevron-right"></span> <a href="http://localhost/spoova/docs/wmv/about_wmv">About_wmv</a>  </div>
 
           </div>
 
