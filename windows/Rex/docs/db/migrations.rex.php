@@ -34,7 +34,7 @@
 
                         <div class="pre-area mvs-20">
  <pre class="pre-code">
-  php mi add:migration file_name 
+  php mi add:migrator file_name 
  </pre>
                         </div> <br>
 
@@ -117,18 +117,92 @@
                             <p class="">
                                 The <code>DRAFT</code> class defines the structure and format of a table. It contains database designs and modification 
                                 plans. This class uses methods to pivot how a table should be modififed or created. These methods are used to either define 
-                                a table's data type or foreign constraints or used to alter a tables structure. There are lists of methods which can be applied 
+                                a table's data type or foreign constraints or used to alter a tables structure. The <code>DRAFT</code> class is usually applied 
+                                within the <code>DBSCHEMA::CREATE()</code> or <code>DBSCHEMA::ALTER()</code> environment in a migration file using the format below:
+                                    
+                                There are lists of methods which can be applied 
                                 and we shall be taking a closer look to some of these methods:
                             </p>
+                            <div class="font-em-1d1">
+                                <div class="pre-area">
+        <pre class="pre-code">
+  &lt;?php 
+
+    class M1673742992_file_name {
+
+
+        function up() {
+
+            DBSCHEMA::CREATE('tablename', function(DRAFT $DRAFT){
+
+            });
+
+        } 
+
+        function down() {
+
+            DBSCHEMA::ALTER('tablename', function(DRAFT $DRAFT){
+
+            });
+
+        }
+
+    }  
+     
+        </pre>
+                                </div> 
+
+                                <div class="pvs-10 font-em-d9">
+                                    We can also supply an object as the first argument of <code>CREATE</code> or <code>ALTER</code> method 
+                                    provided that the object implements a method "tablename()" which returns a database table name. Hence, the format 
+                                    below is also valid.
+                                </div>   
+                                
+                            <div class="font-em-1d1">
+                                <div class="pre-area">
+        <pre class="pre-code">
+  &lt;?php 
+
+    class M1673742992_file_name {
+
+
+        function up() {
+
+            DBSCHEMA::CREATE($this, function(DRAFT $DRAFT){
+
+            });
+
+        } 
+
+        function down() {
+
+            DBSCHEMA::ALTER($this, function(DRAFT $DRAFT){
+
+            });
+
+        }
+
+        function tablename(){
+
+            return 'table_name';
+
+        }
+
+    }  
+     
+        </pre>
+                                </div>                                
+                            </div>
+
                             <div class="mvt-10">
 
                                 <div class="data-type-methods">
                                     <div class="c-sea-blue">Data type methods</div>
                                     <div class="">
                                         These methods helps to define the type of a field. The can be applied either within the <code>DBSCHEMA::CREATE()</code> 
-                                        or <code>DBSCHEMA::ALTER()</code> environment. This is because they can be used when generating or modifying a table's 
-                                        column.
-                                    </div>
+                                        or <code>DBSCHEMA::ALTER()</code> environment through the use of <code>DRAFT</code> class. This is because they can be used when generating or modifying a table's 
+                                        column. The following are static methods used for defining a table's data type:
+                                    </div> <br>
                                     <code>VARCHAR()</code>,
                                     <code>CHAR()</code>,
                                     <code>ENUM()</code>,
@@ -149,13 +223,15 @@
                                     <code>REAL()</code>,
                                     <code>DECIMAL()</code>,
                                     <code>DOUBLE()</code>,
-                                    <code>FLOAT()</code>,
-                                    <code>SET()</code>
-                                    <code>COMMENT()</code>
+                                    <code>FLOAT()</code>
                                 </div> <br>
 
                                 <div class="constraint-methods">
                                     <div class="c-sea-blue">Constraint related methods</div>
+                                    <div class="">
+                                        These methods are mostly used to set constraints on tables. They are non-static methods 
+                                        that can be chained on data type method using valid chain structures. These methods include:
+                                    </div> <br>
                                     <code>DEFAULT()</code>,
                                     <code>NULL()</code>,
                                     <code>NOT_NULL()</code>,
@@ -175,10 +251,82 @@
                                 <div class="modifier-methods">
                                     <div class="c-sea-blue">Modifier methods</div>
                                     <div class="">
-                                        These methods are only defined within the <code>DBSCHEMA::ALTER()</code> environment. 
-                                        This is because their main function is to modify an already existing table. There are only three 
-                                        type of these method which are <code>MODIFY()</code>, <code>CHANGE()</code> and <code>DROP()</code>
+                                        Similarly to data type methods, the modifier methods are static methods that are only defined within the <code>DBSCHEMA::ALTER()</code> scope. 
+                                        They take only one argument which is a callback closure argument that must return a <code>DRAFT</code> object. Since their main function is to modify an already existing table, 
+                                        tables <code>DRAFT</code> object modified or altered are be defined and returned by callback function. There are only three 
+                                        type of these method which are <code>MODIFY()</code>, <code>CHANGE()</code> and <code>DROP()</code>. It is however to note that unlike  the 
+                                        <code>MODIFY</code> and <code>CHANGE</code> methods, the <code>DROP</code> method does not implement a callback function. Assuming we have a <code>DRAFT</code> object <code>"$DRAFT"</code>, 
+                                        the <code>MODIFY</code> or <code>CHANGE</code> methods can be applied in the following format:
+                                    </div> <br>
+
+                                    <div class="pre-area">
+    <pre class="pre-code">
+
+    DBSCHEMA::ALTER($this, function(DRAFT $DRAFT){
+
+        $DRAFT::MODIFY( function(DRAFT $DRAFT) { 
+            
+            $DRAFT::DATA_TYPE(); <span class="comment">// use any of the data type method here.</span>
+
+            return $DRAFT;
+        
+        } );
+
+    });
+
+    </pre>
+                                        <div class="c-grey pxs-20 font-em-d9">    
+                                            The structure above defines the format which is used to modify a column's data type only. 
+                                            Since it modifies only one column, we can reformat our code as below:
+                                        </div>
+
+    <pre class="pre-code">
+
+    DBSCHEMA::ALTER($this, function(DRAFT $DRAFT){
+
+        <span class="c-sky-blue-dd">$DRAFT::MODIFY( fn(DRAFT $DRAFT) => $DRAFT::DATA_TYPE() );</span>
+
+    });
+
+    </pre>
+
+                                    </div> <br><br>
+
+                                    <div class="pre-area">
+    <pre class="pre-code">
+
+    DBSCHEMA::ALTER($this, function(DRAFT $DRAFT){
+
+        <span class="c-sky-blue-dd">$DRAFT::CHANGE( fn(DRAFT $DRAFT) => $DRAFT::DATA_TYPE() );</span>
+
+    });
+
+    </pre>
+                                    </div> <br><br>
+
+                                    <div class="foot-note">
+                                        <p class="">
+                                            The <code>DROP()</code> method drops a database table, databse table column or database table's index. 
+                                            It takes one or two arguments depending on what is expected to be dropped. If the first argument is set as true, 
+                                            then the current database table will be dropped. However, if the first argument is string, it is assumed that the migration table's 
+                                            field is expected to be dropped unless a second argument is provided in which case, the first agument is assumed to be an index type 
+                                            (e.g UNIQUE) while second argument will be the index name that is expected to be dropped. An example is shown below:
+                                        </p>
                                     </div>
+
+                                    <div class="pre-area">
+    <pre class="pre-code">
+
+    DBSCHEMA::ALTER($this, function(DRAFT $DRAFT){
+
+        <span class="c-sky-blue-dd">$DRAFT::DROP( true );</span> <span class="comment">// drop current database table</span>
+
+    });
+
+    </pre>
+                                    </div> <br><br>
+
+
                                 </div>
                             </div>
                         </div>                    
@@ -188,10 +336,11 @@
                               <div class="c-olive">Setting column data type</div>
                         <div class="d87">
                             <div class="mvs-10">
-                                The data type methods above sets the data type of field. All methods are first supplied with the 
-                                column name after which other properties are defined based on size or precision depending on the 
-                                type of method called. The methods are therefore, grouped into different categories based on the 
-                                argument they require. The groups are defined below:
+                                The data type methods above sets the data type of field. The first argument in most cases is the name of the field 
+                                to be altered or created. However the <code>INTFIELD()</code>, <code>TEXTFIELD()</code> and <code>BLOBFIELD()</code> takes the  
+                                type of field first before the second argument which is the name of the column to be altered or modified. After 
+                                defining the column name, then other properties are defined based on size, precision 
+                                or options depending on the type of method called. The data type methods are listed below:
                             </div>
 
                             <div class="groups">
@@ -214,10 +363,16 @@
                                     <code>INT(<span class="c-grey">$name, $size, $default</span>)</code>
                                 </div>
                                 <div class="">
+                                    <code>BLOB(<span class="c-grey">$name, $default</span>)</code>
+                                </div>
+                                <div class="">
                                     <code>TEXTFIELD(<span class="c-grey">$type, $name, $size, $default</span>)</code>
                                 </div>
                                 <div class="">
                                     <code>INTFIELD(<span class="c-grey">$type, $name, $size, $default</span>)</code>
+                                </div>
+                                <div class="">
+                                    <code>BLOBFIELD(<span class="c-grey">$type, $name, $default</span>)</code>
                                 </div>
                                 <div class="">
                                     <code>BIT(<span class="c-grey">$name</span>)</code>
@@ -259,12 +414,6 @@
                                     <code>YEAR(<span class="c-grey">$name, $precision, $default</span>)</code>
                                 </div>
                                 <div class="">
-                                    <code>BLOB(<span class="c-grey">$name, $default</span>)</code>
-                                </div>
-                                <div class="">
-                                    <code>BLOBFIELD(<span class="c-grey">$type, $name, $default</span>)</code>
-                                </div>
-                                <div class="">
                                     <code>COMMENT(<span class="c-grey">$string</span>)</code>
                                 </div>
 
@@ -277,7 +426,7 @@
                                     <code>$name</code> 
                                     <span>
                                         This is usually the first argument of any of the data type methods except in <code>INTFIELD()</code> 
-                                        <code>BLOBFIELD</code> and <code>TEXTFIELD</code> method where it comes as the second argument. 
+                                        <code>BLOBFIELD()</code> and <code>TEXTFIELD()</code> method where it comes as the second argument. 
                                         It defines the name of a table's column when used within 
                                         the <code>DBSCHEMA::CREATE()</code> scope. However, within the <code>DBSCHEMA::ALTER</code> 
                                         it supports an array of old column name to new table name, where the index of the array is the 
@@ -374,12 +523,34 @@
                     </div> <br>
 
                     <div class="">
+                        <div class="c-olive"> The ID() Data Type Method </div>
+                        <div class="">
+                            
+                            The <code>ID()</code> method is used to generate an auto-incremental primary key field. By default, the column 
+                            name is set as "id" but that can be modified by supplying a custom name as the second argument. The first argument takes 
+                            the length of field from a minimum of 1 to a maximum of 255. The syntax is shown below: <br>
+                            <br>
+
+                            <div class="bc-white-dd pxv-4">
+                                <code class="bd-f">DRAFT::ID(<span class="c-grey">$size, $custom_name</span>);</code> <br>
+                                
+                                <div class="c-grey pxv-10 font-em-d85">
+                                    <code>$size</code> as length of field <br>
+                                    <code>$custom_name</code> as custom column name. Default is "id"
+                                </div>
+                            </div>
+
+                        </div>
+                    </div> <br>
+
+                    <div class="">
                         <div class="c-olive-dd">Setting database column constraints</div>
                         <div class="d87">
                             <div class="">
                                 Constraint methods are used to apply contraints on table columns. These constraint can be applied during table 
-                                creation or modification on tables or generated table columns. These methods include <code>DEFAULT()</code>, 
-                                <code>NULL</code>, <code>NOT_NULL()</code>, <code>PRIMARY_KEY()</code>, <code>FOREIGN_KEY()</code> are listed and explained below:
+                                creation or modification on tables or generated table columns. These methods <code>DEFAULT()</code>, 
+                                <code>NULL</code>, <code>NOT_NULL()</code>, <code>PRIMARY_KEY()</code>, <code>FOREIGN_KEY()</code>, <code>SIGNED()</code>, 
+                                <code>UNSIGNED()</code>, <code>CONSTRAINT()</code>, <code>AUTO_INCREMENT()</code> are listed and explained below:
                             </div>
                             <br>
                             <div class="">
@@ -465,112 +636,449 @@
                             </div>
                         </div>
 
-                    </div>
+                    </div> <br>
 
                     <div class="">
-                        <div class="modifiers">Modifying Fields</div>
-                        <p class="">
-                            The <code>DROP()</code> method drops a database table, databse table column or database table's index. 
-                            It takes one or two arguments depending on what is expected to be dropped. If the first argument is set as true, 
-                            then the current database table will be dropped. However, if the first argument is string, it is assumed that the migration table's 
-                            field is expected to be dropped unless a second argument is provided in which case, the first agument is assumed to be an index type 
-                            (e.g UNIQUE) while second argument will be the index name that is expected to be dropped.
-                        </p>
-                        <p class="">
-                            The <code>MODIFY()</code> and <code>CHANGE()</code> methods are both used to modify a field. The only argument they require is a closure 
-                            which must return a <code>DRAFT</code> object. All modifer methods are restricted to the <code>DBSCHEMA::ALTER()</code> environment since it is the 
-                            only environment that supports table modification.
-                        </p>
-                    </div>
-
-                    <div class="">
-                        <div class="sample-structures">
-                            Sample structures
+                        <div class="adding-fields font-em-1d5 c-orange-dd">
+                            Creating new table Format
                         </div>
-                        The following examples below are structures which defines the format in which a migration table can be created or dropped using the <code>DBSCHEMA</code> class. 
-
+                        <div class="">
+                            The creation of new tables are handled by the <code>DBSCHEMA::CREATE()</code> scope using the <code>DRAFT</code> data type 
+                            chaining structures.
+                        </div> <br>
                         <div class="pre-area">
- <pre class="pre-code">
-  &lt;?php 
+    <pre class="pre-code">
+    DBSCHEMA::CREATE('tablename', function(DRAFT $DRAFT){
 
-  class M1673742992_file_name {
+        $DRAFT::ID();
 
-    function up() {
+        $DRAFT::VARCHAR('firstname', 100)->NOT_NULL();
 
-        DBSCHEMA::CREATE('user_table' function(DRAFT $DRAFT) {
+        $DRAFT::VARCHAR('lastname', 100)->NOT_NULL();
 
-            $DRAFT::VARCHAR('firstname', 50, 'Felix')->NOT_NULL();
-            $DRAFT::VARCHAR('lastname', 50)->DEFAULT('Brussels')->NOT_NULL();
-            $DRAFT::VARCHAR('username', 50)->UNIQUE()->NOT_NULL();
-            $DRAFT::INT('number', 30)->NOT_NULL();
-            $DRAFT::DECIMAL('mark', [10, 5]);
-            $DRAFT::DATETIME('added_on')->DEFAULT('(CURRENT_TIMESTAMP)');
-
-            return $DRAFT;
-
-        });
-
-    }
-
-    function down() {
-
-        DBSCHEMA::ALTER('user_table', function(DRAFT $DRAFT) {
-
-            $DRAFT::DROP(true); <span class="comment no-select">//drop current table</span>
+        $DRAFT::VARCHAR('username', 255)->NOT_NULL(); 
         
+        $DRAFT::VARCHAR('password', 255)->NOT_NULL(); 
+        
+        $DRAFT::VARCHAR('email', 255)->NOT_NULL(); 
+        
+        $DRAFT::VARCHAR('address', 1000);
+        
+        $DRAFT::VARCHAR('phone', 20);
+        
+        $DRAFT::DATETIME('added_on', "(CURRENT_TIMESTAMP)");
+        
+        $DRAFT::DATETIME('updated_on')->DEFAULT("(CURRENT_TIMESTAMP)");
+        
+        $DRAFT::UNIQUE(['username', 'password'])
+
+    })        
+    </pre>
+                        </div>
+                    </div>
+
+                    <div class="foot-note mvs-10 bc-silver pxv-10">
+                        The format above is a sample of table columns definition format.
+                    </div><br>
+
+                    <div class="">
+                        <div class="adding-fields font-em-1d5 c-orange-dd">
+                            Adding Fields To Existing Table
+                        </div>
+                        <div class="">
+                            Most of the data type method can be applied to add more fields to a table or to add indexes to table. Since the 
+                            <code> DBSCHEMA::ALTER()</code> is used to modify tables, by declaring a data type method within this method, the  
+                            migrator engine assumes that a new field is intended to be created. The methods like <code>AFTER()</code> and <code>BEFORE()</code> 
+                            can be applied to specify the position where the new column is expected to be added. An example is shown below: <br>
+                        </div> <br>
+                        <div class="pre-area">
+    <pre class="pre-code">
+    DBSCHEMA::ALTER('tablename', function(DRAFT $DRAFT){
+
+        $DRAFT::VARCHAR('fullname')->AFTER('username'); <span class="comment no-select">// add fullname field after username column</span>
+        $DRAFT::VARCHAR('address')->AFTER('firstname'); <span class="comment no-select">// add firstname field to the beginning of the table</span>
+
+    })        
+    </pre>
+                        </div>
+                    </div> <br>
+
+                    <div class="">
+                        <div class="dropping-fields font-em-1d5 c-orange-dd">
+                            Dropping Fields or Indexes From Existing Table
+                        </div>
+                        <div class="">
+                            The <code>DBSCHEMA::ALTER()</code> environment can also be used to drop a database table or table indexes just as shown below.
+                        </div> <br>
+                        <div class="pre-area">
+    <pre class="pre-code">
+    DBSCHEMA::ALTER('users', function(DRAFT $DRAFT){
+
+        $DRAFT::DROP('fullname'); <span class="comment no-select">// drop fullname column in users table</span>
+        
+        $DRAFT::DROP('PRIMARY KEY'); <span class="comment no-select">// drop the primary key from the table</span>
+        
+        $DRAFT::DROP('INDEX', 'unique1'); <span class="comment no-select">// drop the index name "unique1" from the table.</span>
+        
+        $DRAFT::DROP('UNIQUE', 'unique2'); <span class="comment no-select">// drop the unique name "unique2" from the table.</span>
+        
+        $DRAFT::DROP('FOREIGN KEY', 'unique3'); <span class="comment no-select">// drop the FOREIGN KEY name "unique3" from the table.</span>
+
+    })        
+    </pre>
+                        </div>
+                    </div> <br>
+
+                    <div class="">
+                        <div class="dropping-fields font-em-1d5 c-orange-dd">
+                            Dropping an Existing Table
+                        </div>
+                        <div class="">
+                            From the <code>DRAFT</code> class the <code>DROP(true)</code> or <code>DROP_TABLE()</code> can be used to drop the current table.
+                        </div> <br>
+                        <div class="pre-area">
+                            <div class="bc-silver pxv-10">
+                                Drop current table users
+                            </div>
+    <pre class="pre-code">
+    DBSCHEMA::ALTER('users', function(DRAFT $DRAFT){
+
+        $DRAFT::DROP_TABLE(); <span class="comment no-select">// $DRAFT::DROP(true);</span>
+
+    })        
+    </pre>
+                        </div>
+                    </div> <br>
+
+                    <div class="">
+                        <div class="renaming-fields font-em-1d5 c-orange-dd">
+                            Renaming an Existing Table
+                        </div>
+                        <div class="">
+                            The migration engine can also be used to rename a table through the <code>DRAFT::RENAME()</code> method.
+                        </div> <br>
+                        <div class="pre-area">
+    <pre class="pre-code">
+    DBSCHEMA::ALTER('users', function(DRAFT $DRAFT){
+
+        $DRAFT::RENAME_TO('user_table'); <span class="comment no-select">// rename current table "users" to "user_table"</span>
+        
+    })        
+    </pre>
+                        </div>
+                    </div> <br>
+
+                    <div class="">
+                        <div class="renaming-fields font-em-1d5 c-orange-dd">
+                            Renaming an Existing Table's Field
+                        </div>
+                        <div class="">
+                            The <code>CHANGE()</code> method can be used to change the field name as shown below .
+                        </div> <br>
+                        <div class="pre-area">
+    <pre class="pre-code">
+    DBSCHEMA::ALTER('users', function(DRAFT $DRAFT){
+
+        $DRAFT::CHANGE(function (DRAFT $DRAFT) {
+
+            $DRAFT::VARCHAR(['firstname' => 'fname']); <span class="comment no-select">// change firstname to fname of VARCHAR type</span>
+            
+            $DRAFT::VARCHAR(['lastname' => 'lname']);  <span class="comment no-select">// change lastname to lname of VARCHAR type</span>
+            
+            $DRAFT::INT(['serial_no' => 'serial']); <span class="comment no-select">// change serial_no to serial field of INT type</span>
+        }); 
+        
+    })        
+    </pre>
+                        </div>
+                        <div class="foot-note mvs-10">
+                            In the code above we are able to change the fields names and data types through the <code>CHANGE()</code> modifier method 
+                            within the <code>DBSCHEMA::ALTER()</code> scope. It is worthy to note that only the <code>CHANGE()</code> method accepts array 
+                            arguments for data type methods, which makes it easier to change fields names.
+                        </div>
+                    </div> <br>
+
+
+
+                    <div class="">
+                        <div class="renaming-fields font-em-1d5 c-orange-dd">
+                            Converting Table Character Type
+                        </div>
+                        <div class="">
+                           A table's character type can be converted to another character type by the use of the <code>DRAFT::CONVERT_TO()</code> 
+                           method.
+                        </div> <br>
+                        <div class="pre-area">
+    <pre class="pre-code">
+    DBSCHEMA::ALTER('users', function(DRAFT $DRAFT){
+
+        $DRAFT::CONVERT_TO('latin 1'); <span class="comment no-select">//set current table character type to latin</span>
+        
+    })        
+    </pre>
+                        </div>
+                    </div> <br>
+
+
+
+                    <div class="">
+                        <div class="sample-structures font-em-1d5 c-orange-dd">
+                            Table Partitioning
+                        </div>
+                        The migration files can also be used to set up table partitions. Partitioning is mostly done by through the use of 
+                        partitioning methods which are: 
+                        
+                        <code>PARTITION_BY</code>, <code>COLUMNS</code>, <code>PARTITION</code> and <code>VALUE</code>
+
+                        Usually, these methods are called in the order in which they are listed.
+                        <br><br>
+
+                        <div class="">
+                            <div class="">
+                                <div class="partition_by c-teal flex midv">
+                                  <span class="bi-circle-fill font-em-d8 mxr-6"></span>  PARTITION_BY
+                                </div>
+                                This method set the type of partition that is expected to be used to partition the tables. Valid options are 
+                                <code>RANGE</code> and <code>LIST</code>. The second argument takes a callback function.
+                            </div> <br>
+
+                            <div class="pre-area">
+                                <div class="pxv-10 bc-silver">
+                                    Example of usage
+                                </div>
+ <pre class="pre-code">
+    DBSCHEMA::CREATE('tablename', function(DRAFT $DRAFT){
+
+        $DRAFT::PARTITION_BY('RANGE', function(DRAFT $DRAFT){
+
+            <span class="comment">//some code here</span>
+
         });
 
-    }
-
-  }
+    })
  </pre>
-                        </div>
+                            </div>
 
-                        <div class="foot-note mvs-10">
-                            In order to apply the migration file above, from the cli we have to run the migration code 
-                        </div>
-                        <div class="pre-area">
- <pre class="pre-code">
-  php mi migrate up
- </pre>
-                        </div>
-
-                        <div class="foot-note">
-                            Once this code is executed, all migration files within the <code>core/migrations</code> directory 
-                            will implement their <code>up()</code> method. Asssuming our code structure is like above, then 
-                            from the code format, a table will be generated in the currently selected database. The connection used 
-                            will depend on user default connection which must have been set in the <code>icore/dbconfig.php</code> 
-                            file. Both the firstname and lastname will implement a default value of "Felix" and "Brussels" respectively 
-                            with the default maximum length set at <span class="c-teal">50</span> while the "username" field will be a unique field. The "number" column will be an integer 
-                            column while a decimal column "mark" will have a precision of "10, 5". The "DATETIME" method will however create 
-                            an "added_on" field with a default value of <code>CURRENT_TIMESTAMP</code>
                         </div> <br>
 
-                        <div class="foot-note">
-                            In order to migrate down, from the cli, we can simple run the command: 
+                        <div class="">
+                            <div class="">
+                                <div class="columns c-teal flex midv">
+                                   <span class="bi-circle-fill font-em-d8 mxr-6"></span> COLUMNS
+                                </div>
+                                This specifies allows the definition of partition types as columns. For example, through this method we can have a type of 
+                                "RANGE COLUMN" and "LISTS COLUMN". This method also uses specific structures to determine if a partition is "RANGE" or "RANGE COLUMN". 
+                                The first argument which is expected to be an array will either set a partition type as the type defined through the 
+                                <code>PARTITION_BY</code> (i.e RANGE or LIST) or it will automatically append a the <code>"COLUMN"</code> string to the partition set if it detects 
+                                an array within a supplied array argument. For example:
+                            </div> <br>
+
+                            <div class="pre-area">
+                                <div class="pxv-10 bc-silver">
+                                    Example 1a: Type of RANGE
+                                </div>
+ <pre class="pre-code">
+    DBSCHEMA::CREATE('tablename', function(DRAFT $DRAFT){
+
+        $DRAFT::PARTITION_BY('RANGE', function(DRAFT $DRAFT){
+
+            $DRAFT::COLUMN('col1');
+
+        });
+
+    })
+ </pre>
+                            </div>
+
+                            <div class="pre-area">
+                                <div class="pxv-10 bc-silver">
+                                    Example 1b: Type of RANGE
+                                </div>
+ <pre class="pre-code">
+    DBSCHEMA::CREATE('tablename', function(DRAFT $DRAFT){
+
+        $DRAFT::PARTITION_BY('RANGE', function(DRAFT $DRAFT){
+
+            $DRAFT::COLUMN(['col1', 'col']);
+
+        });
+
+    })
+ </pre>
+                            </div>
+
+                            <div class="pre-area">
+                                <div class="pxv-10 bc-silver">
+                                    Example 2: Type of RANGE COLUMN
+                                </div>
+ <pre class="pre-code">
+    DBSCHEMA::CREATE('tablename', function(DRAFT $DRAFT){
+
+        $DRAFT::PARTITION_BY('RANGE', function(DRAFT $DRAFT){
+
+            $DRAFT::COLUMN([['col1','col2'], ['col3','col4']]);
+
+        });
+
+    })
+ </pre>
+                            </div>
+
+                            <div class="foot-note mvs-10">
+                               The only difference between the <code>RANGE</code> and <code>RANGE COLUMN</code> above is that 
+                               in <code>RANGE COLUMN</code>, the array argument supplied to <code>COLUMN()</code> method also contains 
+                               array values.
+                            </div>
                         </div>
 
-                        <div class="pre-area mvt-10">
+                        <div class="">
+                            <div class="">
+                                <div class="partition c-teal flex midv">
+                                  <span class="bi-circle-fill font-em-d8 mxr-6"></span>  PARTITION
+                                </div>
+                                This method is used to set the identifier names of each partition specified. By setting the partitioning names, 
+                                the database table can easily be queried using the specified partitions. The <code>PARTITION</code> method takes 
+                                two arguments. The first argument is the partition identifier name, while the second argument defines the logic used 
+                                for partitioning. This logic can be "LESS THAN" (or "VALUE LESS THAN") and "IN" (or "VALUES IN").
+                            </div> <br>
+
+                            <div class="pre-area">
+                                <div class="pxv-10 bc-silver">
+                                    Example of usage
+                                </div>
  <pre class="pre-code">
-  php mi migrate down
+    DBSCHEMA::CREATE('tablename', function(DRAFT $DRAFT){
+
+        $DRAFT::PARTITION_BY('RANGE', function(DRAFT $DRAFT){
+
+            $DRAFT::COLUMNS('col1')
+
+                ->PARTITION('p0','VALUES LESS THAN');
+
+        });
+
+    })
+ </pre>
+                            </div>
+
+                        </div> <br>
+
+                        <div class="">
+                            <div class="">
+                                <div class="partition_by c-teal flex midv">
+                                  <span class="bi-circle-fill font-em-d8 mxr-6"></span>  VALUE
+                                </div>
+                                This method the value or list of values that is used to separate a table. The values defined within this method 
+                                are the values by which the table will be partitioned.
+                            </div> <br>
+
+                            <div class="pre-area">
+                                <div class="pxv-10 bc-silver">
+                                    Example of usage
+                                </div>
+ <pre class="pre-code">
+    DBSCHEMA::CREATE('tablename', function(DRAFT $DRAFT){
+
+        $DRAFT::INT('number', '2')->NOT_NULL();
+
+        $DRAFT::PARTITION_BY('RANGE', function(DRAFT $DRAFT){
+
+            $DRAFT::COLUMNS('number')
+
+                ->PARTITION('p0','VALUES LESS THAN')->VALUE(500)
+                ->PARTITION('p1','VALUES LESS THAN')->VALUE(300)
+                ->PARTITION('p2','VALUES LESS THAN')->VALUE(200)
+
+
+        });
+
+    })
+ </pre>
+                            </div>
+
+                            <div class="foot-note mvs-10"> 
+                                Note that the <code>VALUE</code> method can also take string as its parameter. An example is shown below:
+                            </div>
+
+                            <div class="pre-area">
+    <pre class="pre-code">
+    DBSCHEMA::CREATE('tablename', function(DRAFT $DRAFT){
+        
+        $DRAFT::INT('number', '2')->NOT_NULL();
+
+        $DRAFT::DATETIME('date')->DEFAULT('(CURRENT_TIMESTAMP)');
+
+
+        $DRAFT::PARTITION_BY('RANGE', function(DRAFT $DRAFT){
+
+            $DRAFT::COLUMNS('date')
+
+                ->PARTITION('p0','VALUES LESS THAN')->VALUE(500)
+                ->PARTITION('p1','VALUES LESS THAN')->VALUE(300)
+                ->PARTITION('p2','VALUES LESS THAN')->VALUE(200)
+
+
+        });
+
+    })        
+    </pre>
+                            </div>
+
+                        </div>
+
+                    </div> <br>
+
+                    <div class="">
+                        <div class="sample-structures font-em-1d5 c-orange-dd">
+                            Executing migration files
+                        </div>
+                        The migration files <code>up()</code> and <code>down()</code> methods are responsible for executing migrations 
+                        when we run certain commands from the command line. 
+
+                        <br><br>
+
+                        <div class="pre-area">
+                            <div class="pxv-10 bc-silver">
+                                Running migrations up
+                            </div>
+ <pre class="pre-code">
+  >> <span class="c-orange-dd">php</span> mi migration up
  </pre>
                         </div>
 
                         <div class="foot-note mvs-10">
-                            The command above will step down migration files starting from the last excuted migration file and ending in the first migration file by calling the <code>down()</code> 
-                            method of each migration file. Whenever we have multiple files, we can also step down our migration files in a number of times, for example 4 times. In order to do this 
-                            we simply add the number of times we want to step down our migration file to the step down migration code above. This means that a code like: 
+                            The command above will execute all migration files by calling the <code>up()</code> method of each files in an ascending order. 
+                            We can also execute the <code>down()</code> method by running the command below:
                         </div>
 
-                        <div class="pre-area mvt-10">
+                        <div class="pre-area">
+                            <div class="pxv-10 bc-silver">
+                                Running migrations down
+                            </div>
  <pre class="pre-code">
-  php mi migrate down 4
+  >> <span class="c-orange-dd">php</span> mi migrate down
  </pre>
                         </div>
 
                         <div class="foot-note mvs-10">
-                            The code above will only step down 4 recently applied migration files. This stepping down system is only applied for a down migration. 
-                            Other examples that explains more on table creation and modification can be accessed from here.
+                            In the cases where we want to run the migration files down in a specific number of times, we can also specify the number of times we 
+                            want to run down (or reverse) the migration files just as shown below:
+                        </div>
+
+                        <div class="pre-area">
+                            <div class="pxv-10 bc-silver">
+                                Running migrations down 4 times
+                            </div>
+ <pre class="pre-code">
+  >> <span class="c-orange-dd">php</span> mi migrate down 4
+ </pre>
+                        </div>
+
+                        <div class="foot-note mvs-10">
+                            The command above will step down migration files starting from the last executed migration file and ending in the 
+                            file that occupies the number of times specified. This stepping down system is only applied for a down migration. 
+                            Also, note that the connection used depends on the configuration file settings defined in 
+                            the <code>icore/dbconfig.php</code> file. 
                         </div>
 
                     </div>

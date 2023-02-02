@@ -50,7 +50,7 @@
             
   acceptableUrls  <span class="comment">an array with the list of accepted valid urls and method or class called</span>
   
-  close           <span class="comment">prevent a shutter from closing when current page url does not exist in accepted urls</span>
+  close           <span class="comment">a boolean of false prevents a shutter from closing when current page url does not exist in accepted urls</span>
   
   argument        <span class="comment">an array of varibles passed as argument to method or class called when a url is resolved</span>
  </pre>

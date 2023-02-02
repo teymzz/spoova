@@ -63,6 +63,9 @@ code.main {
           font-size: .85em;
           display: inline-block;
           width:100%;
+      }
+
+     .pre-area:not([class*="bc-"]){
           background-color : rgba(var(--white-dd));
       }
   
@@ -260,7 +263,7 @@ body.--theme-dark{
                     An example of image thumbnail 
                 </div>
                 <div class="image-thumb bd-1 bd bd-red pxv-10 mvt-10">
-                    <div class="image b-cover px-180" data-src="http://localhost/spoova/res/assets/images/lach.jpg">
+                    <div class="image b-cover px-180" data-src="http://localhost/spoova/res/assets/images/bkg.jpg">
                         <div class="image-label on-hover ov-d5 c-white c-silver calibri">Study</div>
                     </div>
                 </div>
@@ -271,7 +274,7 @@ body.--theme-dark{
     <pre class="pre-code">
   &lt;div class="image-thumb bd-1 bd bd-red pxv-10 mvt-10"&gt;
 
-    &lt;div class="image b-cover px-180" data-src="http://localhost/spoova/res/assets/images/lach.jpg"&gt;
+    &lt;div class="image b-cover px-180" data-src="http://localhost/spoova/res/assets/images/bkg.jpg"&gt;
 
         &lt;div class="image-label ov-d5 c-white c-silver calibri" data-anime="slide-up">Study&lt;/div&gt;
     
@@ -321,7 +324,7 @@ body.--theme-dark{
     <pre class="pre-code">
   &lt;div class="image-thumb bd-1 bd bd-red pxv-10 mvt-10"&gt;
 
-    &lt;div class="image b-cover px-180" data-src="http://localhost/spoova/res/assets/images/lach.jpg"&gt;
+    &lt;div class="image b-cover px-180" data-src="http://localhost/spoova/res/assets/images/bkg.jpg"&gt;
 
         &lt;div class="image-label on-hover ov-d5 c-white c-silver calibri" data-anime="slide-up">Study&lt;/div&gt;
     
@@ -336,7 +339,7 @@ body.--theme-dark{
                     Hover on image to display label
                 </div>
                 <div class="image-thumb bd-1 bd bd-red pxv-10 mvt-10">
-                    <div class="image b-cover px-180" data-src="http://localhost/spoova/res/assets/images/lach.jpg">
+                    <div class="image b-cover px-180" data-src="http://localhost/spoova/res/assets/images/bkg.jpg">
                         <div class="image-label on-hover ov-d5 c-white c-silver calibri" data-anime="slide-up">
                             Study
                         </div>
@@ -351,7 +354,7 @@ body.--theme-dark{
     <pre class="pre-code">
   &lt;div class="image-thumb bd-1 bd bd-red pxv-10 mvt-10"&gt;
 
-    &lt;div class="image b-cover px-180" data-src="http://localhost/spoova/res/assets/images/lach.jpg"&gt;
+    &lt;div class="image b-cover px-180" data-src="http://localhost/spoova/res/assets/images/bkg.jpg"&gt;
 
         &lt;div class="image-label on-hover ov-d5 c-white c-silver calibri" data-anime="slide-up-scroll">
 
@@ -373,7 +376,7 @@ body.--theme-dark{
                     Effect of "slide-up-scroll"
                 </div>
                 <div class="image-thumb bd-1 bd bd-red pxv-10 mvt-10">
-                    <div class="image b-cover px-180" data-src="http://localhost/spoova/res/assets/images/lach.jpg">
+                    <div class="image b-cover px-180" data-src="http://localhost/spoova/res/assets/images/bkg.jpg">
                         <div class="image-label on-hover ov-d5 c-white c-silver calibri" data-anime="slide-up-scroll">
                             Lorem ipsum dolor sit amet consectetur adipisicing elit. 
                         </div>
@@ -381,7 +384,7 @@ body.--theme-dark{
                     Non-Overflowing Text
                 </div>
                 <div class="image-thumb bd-1 bd bd-red pxv-10 mvt-10">
-                    <div class="image b-cover px-180" data-src="http://localhost/spoova/res/assets/images/lach.jpg">
+                    <div class="image b-cover px-180" data-src="http://localhost/spoova/res/assets/images/bkg.jpg">
                         <div class="image-label on-hover ov-d5 c-white c-silver calibri" data-anime="slide-up-scroll">
                             Lorem ipsum dolor sit amet consectetur adipisicing elit. 
                             Vitae molestias voluptates nam necessitatibus obcaecati, 
@@ -417,42 +420,42 @@ body.--theme-dark{
             </ul>
             
             <div class="box pxv-10 bc-silver mxv-6">
-                <div class="px-200 bc-silver-d b-center" data-src="http://localhost/spoova/res/assets/images/lach.jpg"></div>
+                <div class="px-200 bc-silver-d b-center" data-src="http://localhost/spoova/res/assets/images/bkg.jpg"></div>
                 b-center
             </div>
 
             <div class="box pxv-10 bc-silver mxv-6">
-                <div class="px-200 bc-silver-d b-cover" data-src="http://localhost/spoova/res/assets/images/lach.jpg"></div>
+                <div class="px-200 bc-silver-d b-cover" data-src="http://localhost/spoova/res/assets/images/bkg.jpg"></div>
                 b-cover
             </div>
 
             <div class="box pxv-10 bc-silver mxv-6">
-                <div class="px-200 bc-silver-d b-cover" data-src="http://localhost/spoova/res/assets/images/lach.jpg"></div>
+                <div class="px-200 bc-silver-d b-cover" data-src="http://localhost/spoova/res/assets/images/bkg.jpg"></div>
                 b-cover
             </div>
 
             <div class="box pxv-10 bc-silver mxv-6">
-                <div class="px-200 bc-silver-d b-contain" data-src="http://localhost/spoova/res/assets/images/lach.jpg"></div>
+                <div class="px-200 bc-silver-d b-contain" data-src="http://localhost/spoova/res/assets/images/bkg.jpg"></div>
                 b-contain
             </div>
 
             <div class="box pxv-10 bc-silver mxv-6">
-                <div class="px-200 bc-silver-d b-parallax" data-src="http://localhost/spoova/res/assets/images/lach.jpg"></div>
+                <div class="px-200 bc-silver-d b-parallax" data-src="http://localhost/spoova/res/assets/images/bkg.jpg"></div>
                 b-parallax
             </div>
 
             <div class="box pxv-10 bc-silver mxv-6">
-                <div class="px-200 bc-silver-d b-fluid" data-src="http://localhost/spoova/res/assets/images/lach.jpg"></div>
+                <div class="px-200 bc-silver-d b-fluid" data-src="http://localhost/spoova/res/assets/images/bkg.jpg"></div>
                 b-fluid
             </div>
 
             <div class="box pxv-10 bc-silver mxv-6">
-                <div class="px-200 bc-silver-d b-cover b-clip" data-src="http://localhost/spoova/res/assets/images/lach.jpg"></div>
+                <div class="px-200 bc-silver-d b-cover b-clip" data-src="http://localhost/spoova/res/assets/images/bkg.jpg"></div>
                 b-cover b-clip
             </div>
 
             <div class="box pxv-10 bc-silver mxv-6">
-                <div class="px-200 bc-silver-d im-fixed" data-src="http://localhost/spoova/res/assets/images/lach.jpg"></div>
+                <div class="px-200 bc-silver-d im-fixed" data-src="http://localhost/spoova/res/assets/images/bkg.jpg"></div>
                 im-fixed
             </div>
 

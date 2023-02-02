@@ -24,7 +24,7 @@ class MkMigrator extends MkBase{
         $class = to_frontslash($class, true);
         $classDir  = dirname($class);
         $classDir  = ($classDir == '.')? '' : $classDir;
-        $className = ucfirst(basename($class));
+        $className = basename($class);
 
         Cli::textView(Cli::danger(Cli::emo('point-list').' add:migrator ').Cli::warn($filename));
         Cli::break(2);
@@ -73,6 +73,18 @@ class MkMigrator extends MkBase{
        
         if($Filemanager->openFile(true, $filepath)) {
 
+            $tableName = 'table_name';
+
+            if(strtolower(substr($className, 0, 7)) === 'create_'){
+
+                $tableName = substr($className, 7, strlen($className));
+                
+            }elseif(strtolower(substr($className, 0, 6)) === 'alter_'){
+
+                $tableName = substr($className, 6, strlen($className));
+                
+            }
+
 
 
             $content = <<<SCRIPT
@@ -81,7 +93,7 @@ class MkMigrator extends MkBase{
 
                 DBSCHEMA::CREATE(\$this, function(DRAFT \$DRAFT){
 
-                    //\$DRAFT::Method();
+                    //\$DRAFT::VARCHAR();
 
                 });
 
@@ -89,25 +101,66 @@ class MkMigrator extends MkBase{
 
               public function down() {
 
-                
+                 DBSCHEMA::ALTER(\$this, function(DRAFT \$DRAFT){
+
+                    \$DRAFT::DROP(true);
+
+                 });
 
               }  
 
               public function table() : string {
 
-                return 'tablename';
+                return '$tableName';
 
               }
 
             SCRIPT; 
+
+            $content2 = <<<SCRIPT
+
+            
+              public function up() {
+
+                DBSCHEMA::ALTER(\$this, function(DRAFT \$DRAFT){
+
+                    //code here...
+
+                });
+
+              }
+
+              public function down() {
+
+
+                DBSCHEMA::ALTER(\$this, function(DRAFT \$DRAFT){
+
+                    //code here...
+
+                });
+            
+
+              }  
+
+              public function table() : string {
+
+                return '$tableName';
+
+              }
+
+            SCRIPT;
+
+            if(strpos(strtolower($className), 'alter') !== false){
+                $content = $content2;
+            }
             
             $format = self::classFormat([
                 'namespace' => $nameSpace, 
                 'class'     => $prefix.$className, 
                 'methods'   => $content,
                 'use'       => [
-                    'spoova\core\classes\DBSchema\DBSCHEMA',
-                    'spoova\core\classes\DBSchema\DRAFT'
+                    'spoova\core\classes\DB\DBSchema\DBSCHEMA',
+                    'spoova\core\classes\DB\DBSchema\DRAFT'
                 ]
             ]);
             file_put_contents($filepath, $format);

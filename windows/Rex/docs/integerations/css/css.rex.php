@@ -36,7 +36,6 @@
                         <li><a href="@route('::text-alignments')">Text Alignments</a></li>
                         <li><a href="@route('::fonts')">Fonts and Font Sizes</a></li>
                         <li><a href="@route('::colors')">Setting element Colors</a></li>
-                        <li><a href="@route('::anchors')">Anchor Buttons</a></li>
                         <li><a href="@route('::property-inheritance')">Property Inheritance</a></li>
                         <li><a href="@route('::forms-and-alignment')">Forms and Form Alignment</a></li>
                         <li><a href="@route('::borders')">Borders and Border Radius</a></li>
