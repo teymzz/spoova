@@ -227,7 +227,7 @@
                             </div> <br>
 
                             <div class="font-em-d87">
-                                <div class="c-orange font-em-1d1 bc-white-dd pxv-10">SELF::ONCALL</div> <br> 
+                                <div class="c-orange font-em-1d1 bc-white-dd pxv-10">SELF::ONCALL - RECOMMENDED</div> <br> 
                                 <div class="">
                                     This <code>SELF::ONCALL</code> key is a preload method can be applied within any list of urls for any of the four shutter methods. We don't have to apply any option since we are within the shutter itself.<br><br>
                                     <div class="pre-area shadow">
