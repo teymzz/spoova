@@ -30,39 +30,39 @@
                   <br><br>
 
                   <div class="pre-area shadow">
-                    <div class="pxv-10 bc-silver">Url Window</div>
+                    <div class="pxv-10 bc-silver">Window url entry point</div>
                     <pre class="pre-code pxs-6">
   <table style="min-width:40%; font-size: .9em;">
-    <tr><th class="pxv-4">window url</th> <th>window</th> </tr>
-    <tr><td><code>http://localhost/app/</code></td> <td><span class="comment no-select"> index </span></td></tr>
-    <tr><td><code>http://localhost/app/index</code></td> <td><span class="comment no-select"> index </span></td></tr>
-    <tr><td><code>http://localhost/app/users</code></td> <td><span class="comment no-select"> users </span></td></tr>
-    <tr><td><code>http://localhost/app/users/somepath</code></td> <td><span class="comment no-select"> users </span></td></tr>
-    <tr><td><code>http://www.site.com/</code></td> <td><span class="comment no-select"> index </span></td></tr>
-    <tr><td><code>http://www.site.com/index</code></td> <td><span class="comment no-select"> index </span></td></tr>
-    <tr><td><code>http://www.site.com/users/somepath</code></td> <td><span class="comment no-select"> users </span></td></tr>
+    <tr><th class="pxv-4 c-orange-dd">window url sample</th> <th class="c-orange-dd">entry point (or window)</th> </tr>
+    <tr><td><code class="bd-f">http://localhost/app/</code></td> <td><span class="comment no-select"> index </span></td></tr>
+    <tr><td><code class="bd-f">http://localhost/app/index</code></td> <td><span class="comment no-select"> index </span></td></tr>
+    <tr><td><code class="bd-f">http://localhost/app/users</code></td> <td><span class="comment no-select"> users </span></td></tr>
+    <tr><td><code class="bd-f">http://localhost/app/users/somepath</code></td> <td><span class="comment no-select"> users </span></td></tr>
+    <tr><td><code class="bd-f">http://www.site.com/</code></td> <td><span class="comment no-select"> index </span></td></tr>
+    <tr><td><code class="bd-f">http://www.site.com/index</code></td> <td><span class="comment no-select"> index </span></td></tr>
+    <tr><td><code class="bd-f">http://www.site.com/users/somepath</code></td> <td><span class="comment no-select"> users </span></td></tr>
   </table>
                     </pre>
-                  </div> <br><br>
+                  </div>
 
 
-                  <div class="pre-area">
+                  <div class="pre-area" hidden>
   <div class="pxv-10 bc-off-white">Window url sample</div>
     <pre class="pre-code pxs-6">
     <span class="comment no-select">
     The examples below best reveal the position 
     of the window entry point for local and online environments
     </span>
-    http://localhost/app/window/some/other/path
+    http://localhost/app/window/some/other/path <span class="comment">local environment</span>
 
     http://site.com/window/some/other/path
 
     </pre>
                   </div> <br>
 
-                  <p class="font-menu mvt-6">
-                    Learn more on the <code>wvm</code> structure from 
-                    <a href="@domUrl('docs/routings/wmv')"><span class="fb-6 hyperlink c-blue">wmv</span></a> 
+                  <p class="font-menu mvt-10">
+                    According to the url samples above, a url's entry point is usually the immediate path name that comes after a localhost url 
+                    or a remote (or online) url.
                   </p>
      
                 </div> 

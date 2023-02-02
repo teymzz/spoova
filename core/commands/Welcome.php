@@ -105,8 +105,9 @@ class Welcome {
                                     </div>
                                 </div>
                         </div>
-                        <div href="@Domurl()" class="in-flex">
+                        <div href="@Domurl()" class="in-flex f-col">
                             <div class="flex midv fb-9 font-menu font-em-1d2 {{ spoovaLoaded('c-sea-blue','c-blue') }}">POOVA</div>
+                            <div class="font-em-d2 absolute pxs-6 c-sky-blue" @onShow('spoovaLoaded', 'true')>app connected <span class="bi bi-check"></span></div>
                         </div>
                     </div>
                 </div>
