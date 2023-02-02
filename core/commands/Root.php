@@ -188,7 +188,7 @@ class Root extends Entry{
             yield 5; //stage 5
             
             $Filemanager->setUrl(docroot);
-            $Filemanager->zipUrl(_core.'custom/spoove');      
+            $Filemanager->zipUrl(_core.'custom/spoove', ['.git']);      
               
             yield 6; //stage 6
 
