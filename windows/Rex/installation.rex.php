@@ -48,6 +48,51 @@
                    
                </div>
 
+               <div class="install-page calibri bc-white-dd">
+                   <div class="c-olive pxv-10 bc-silver">Install Page Code</div>
+                   <div class="font-em-d8 pxv-10 no-select">
+                   
+                        If the installation route page (e.g http://localhost/app/install) is missing, 
+                        you can access the installation page by creating a new route into the <code>windows/Routes</code> 
+                        directory and adding the following code: 
+
+                   </div>
+
+                   <div class="font-em-d8">
+
+                        <div class="pre-area">
+            
+            <pre class="pre-code">
+    &lt?php
+
+    namespace spoova\windows\Routes;
+
+    use Installer;
+    use Window;
+
+    class Install extends Window{
+
+
+        function __construct()
+        {
+            include_once(_core.'installer.php');
+
+            $Install = new Installer;
+            $Install->install();
+            print $Install->content();
+        }
+
+
+    }
+            </pre>            
+                        
+                        </div>
+
+                   </div>
+
+
+               </div> <br>
+
                <div class="setup calibri bc-white-dd">
                    <div class="c-olive pxv-10 bc-silver">Setup config</div>
                    <div class="font-em-d85 pxv-10">

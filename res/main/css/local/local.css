@@ -183,7 +183,6 @@ a.inherit:hover {
 :where([class*="flex"].flex) {
     display: flex;
     word-break: keep-all;
-    white-space: nowrap;
     word-wrap: none;
 }
 

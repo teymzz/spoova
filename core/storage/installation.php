@@ -349,6 +349,7 @@ window.onload = function() {
 
           <ul class="list-square">
                <li> <a href="<?= DomUrl('docs/installation') ?>" class="<?= inPath('active') ?>"><span class="ico ico-spin"></span>Installation</a> </li>
+               <li> <a href="<?= DomUrl('docs/wmv') ?>" class="<?= inPath('active') ?>" ><span class="ico ico-spin"></span><span class="fb-6 pointer" title="Windows Models View">WMV</span> PATTERN</a></li>
                <li> <a href="<?= DomUrl('docs/live-server') ?>" class="<?= inPath('active') ?>"><span class="ico ico-spin"></span>Live Server</a></li>
                <li> <a href="<?= DomUrl('docs/database') ?>" class="<?= inPath('active') ?>"><span class="ico ico-spin"></span>Database</a> </li>
                <li> <a href="<?= DomUrl('docs/resource') ?>" class="<?= inPath('active') ?>"><span class="ico ico-spin"></span>Resource class</a> </li>
@@ -365,7 +366,6 @@ window.onload = function() {
                <li> <a href="<?= DomUrl('docs/mails') ?>" class="<?= inPath('active') ?>"><span class="ico ico-spin"></span>Handling Mails</a> </li>
                <li> <a href="<?= DomUrl('docs/cli') ?>" class="<?= inPath('active') ?>"><span class="ico ico-spin"></span>Cli Commands</a> </li>         
                <li> <a href="<?= DomUrl('docs/plugins') ?>" class="<?= inPath('active') ?>"><span class="ico ico-spin"></span>Composer and Plugins</a></li>
-               <li> <a href="<?= DomUrl('docs/wmv') ?>" class="<?= inPath('active') ?>" ><span class="ico ico-spin"></span>The <span class="fb-6 pointer" title="Windows Models View">WMV</span> PATTERN</a></li>
                <li> <a href="<?= DomUrl('docs/libraries') ?>" class="<?= inPath('active') ?>"><span class="ico ico-spin"></span>Third-Party Libraries</a> </li>
                <li> <a href="<?= DomUrl('docs/other-features') ?>" class="<?= inPath('active') ?>"><span class="ico ico-spin"></span>Other Features</a> </li>
           </ul>
@@ -417,6 +417,51 @@ window.onload = function() {
                    </div> <br>
                    
                </div>
+
+               <div class="install-page calibri bc-white-dd">
+                   <div class="c-olive pxv-10 bc-silver">Install Page Code</div>
+                   <div class="font-em-d8 pxv-10 no-select">
+                   
+                        If the installation route page (e.g http://localhost/app/install) is missing, 
+                        you can access the installation page by creating a new route into the <code>windows/Routes</code> 
+                        directory and adding the following code: 
+
+                   </div>
+
+                   <div class="font-em-d8">
+
+                        <div class="pre-area">
+            
+            <pre class="pre-code">
+    &lt?php
+
+    namespace spoova\windows\Routes;
+
+    use Installer;
+    use Window;
+
+    class Install extends Window{
+
+
+        function __construct()
+        {
+            include_once(_core.'installer.php');
+
+            $Install = new Installer;
+            $Install->install();
+            print $Install->content();
+        }
+
+
+    }
+            </pre>            
+                        
+                        </div>
+
+                   </div>
+
+
+               </div> <br>
 
                <div class="setup calibri bc-white-dd">
                    <div class="c-olive pxv-10 bc-silver">Setup config</div>
