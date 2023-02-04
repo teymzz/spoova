@@ -118,7 +118,7 @@
 
       if(self::isIndex($this)){
       
-         self::pathcall($this, [
+         self::call($this, [
     
             window('root') => 'root',
             
@@ -156,7 +156,10 @@
 
                                             <p>
                                                 In any given url, an entry name returned by <code>window('root')</code> or <code>window(':')</code> 
-                                                is always the name that comes after the domain url. In localhost, it is the name that comes after the project folder name.
+                                                is always the name that comes after the domain url. In localhost, it is the name that comes after the project folder name. In the code 
+                                                above, assuming the folder name is <code>app</code>, then a url "http://localhost/app/" and "http://localhost/app/index" will run successfully because the 
+                                                <code>call()</code> method was used and both urls still refer to the index page. In situations where we need to handle more paths on the index page, for example 
+                                                "http://localhost/app/localhost/more_path" then <code>self::basecall()</code> may be preferred instead while noting that unwanted urls must be filtered out through some validation logic.
                                             </p>
                                          
                                         </div>
