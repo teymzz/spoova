@@ -58,13 +58,13 @@ class Serve {
      */
     static function indexlogic() {
 
-        Server::callRoute('index');
+        Server::callRoute('Index');
         
         /*  //initialize the index page
             if(server::isIndex($this)){
             
                 //load index page
-                server::pathcall($this, [
+                server::call($this, [
             
                     window('root') => 'root',
                     
