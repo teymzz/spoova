@@ -109,7 +109,7 @@ function appExists($class) : bool{
    
 
     //Get the class real name
-    $className = basename($classDir);
+    $className = ucfirst(basename($classDir));
 
     //class path
     $classPath = $classSpace.'/'.$className;
