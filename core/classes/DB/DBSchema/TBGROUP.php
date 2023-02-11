@@ -147,7 +147,7 @@ trait TBGROUP {
      * @param string $error
      * @return false
      */
-    protected static function callError(string $error) : bool{
+    public static function callError(string $error) : bool{
         self::$error = $error;
         return false;
     }

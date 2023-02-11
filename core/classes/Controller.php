@@ -13,6 +13,7 @@ use Session;
 class Controller{
 
   public $layout = '';
+  public bool $usingLayout;
 
   protected static array $routes = [
 

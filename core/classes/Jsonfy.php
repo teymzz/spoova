@@ -13,6 +13,8 @@ namespace spoova\core\classes;
  */
 class Jsonfy{
 
+	public $sourceData;
+
 	/**
 	 * array of data supplied or generated from json string
 	 *

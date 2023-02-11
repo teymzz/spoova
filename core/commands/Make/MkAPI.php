@@ -12,36 +12,6 @@ use spoova\core\commands\Cli;
 class MkAPI extends MkBase{
 
     public function build() : bool{
-
-        /* Syntax: add:api <name> [\subdir] [-O]*/
-        /* Syntax: add:api <name> [\subdir?] [extends:s?] [-O]*/
-        
-        /* Syntax: add:api <name> | Add api */
-        /* Syntax: add:api <name> [-O] | Add api overwrite */
-
-        /* Syntax: add:api <name> [extends] | Add api extends frame  */
-        /* Syntax: add:api <name> [extends:s] | Add api extends frame (session format)*/
-        
-        /* Syntax: add:api <name> [\subdir] | Add api use subdirectory */
-        
-        /* Syntax: add:api <name> [extends] [-O] | Add api extends frame overwrite  */
-        /* Syntax: add:api <name> [extends:s] [-O] | Add api extends frame (session format) overwrite*/
-        /* Syntax: add:api <name> [\subdir] [-O] | Add api use subdirectory overwrite all*/
-        /* Syntax: add:api <name> [extends] [\subdir] | Add api extends frame, use subdirectory*/
-        /* Syntax: add:api <name> [extends] [\subdir] | Add api extends frame, use subdirectory*/
-        /* Syntax: add:api <name> [extends:s] [\subdir] | Add api extends frame (session format), use subdirectory*/
-        /* Syntax: add:api <name> [extends:s] [\subdir] | Add api extends frame (session format), use subdirectory*/
-        
-        /* Syntax: add:api <name> [extends:s] [\subdir] [-O] | Add api extends frame, use subdirectory overwrite all*/
-        /* Syntax: add:api <name> [extends:s] [\subdir] [-O] | Add api extends frame, use subdirectory overwrite all*/
-        /* Syntax: add:api <name> [extends:s] [\subdir] [-O] | Add api extends frame (session format), use subdirectory overwrite all*/
-        /* Syntax: add:api <name> [extends:s] [\subdir] [-O] | Add api extends frame (session format), use subdirectory overwrite all*/
-        
-        /* Note: Subdirectory is preceeded by a slash or dot while extends is not.*/
-
-        /* FootNote1: only when extends has slash before, it is regarded as subdir*/
-        /* FootNote1: only when extends has :s, it uses session extension*/
-        /* FootNote1: only when -O is supplied, overwrite comes to effect. */
         
         $args = static::$args;
 
@@ -60,10 +30,9 @@ class MkAPI extends MkBase{
         if(!$class) {
 
             self::addTitle('add:api');
-            Cli::textView(Cli::color('File Error:', 'red').' no api class name supplied!', 2);
-            Cli::break();
-            $this->display('Syntax: '.Cli::btn('mi').' '.Cli::alert('add:api').Cli::warn('<apiName>'.Cli::color('<extends?>', 'purple', 1).Cli::color('<subdir?>', 'green', 1).Cli::danger('[-O?]', 1), 1), 2);                                                         
-            $this->display(Cli::emos('ribbon-arrow', 1).Cli::warn('<apiName>').' | name of API class to be created.', 3);
+            
+            Cli::textView('Syntax: '.Cli::btn('mi').' '.Cli::alert('add:api').Cli::warn('<apiName>'.Cli::color('<extends?>', 'purple', 1).Cli::color('<subdir?>', 'green', 1).Cli::danger('[-O?]', 1), 1), 2, "|1");                                                         
+            $this->display(Cli::emos('ribbon-arrow', 1).Cli::warn('<apiName>').'  | name of API class to be created.', 3);
             $this->display(Cli::emos('ribbon-arrow', 1).Cli::color('<extends?>', 'purple').' | optional: extended Frame class path in "'.WIN_FRAMES.'" directory.', 3);
             $this->display(Cli::emos('ribbon-arrow', 1).Cli::color('<\subdir?>', 'green').' | optional: "'.WIN.'" subdirectory.', 3);
             $this->display(Cli::emos('ribbon-arrow', 1).Cli::danger('[-O]').' | optional: overwrite existing file', 3);
@@ -79,8 +48,10 @@ class MkAPI extends MkBase{
             return false;
 
         }
-
-
+        
+        $fv = $args;
+        unset($fv[count($fv)-1]);
+        $syntax = implode(" ",$fv);
         $extends = '';
         $subdir = '';
         $overwrite = '';
@@ -180,9 +151,21 @@ class MkAPI extends MkBase{
         if($overwrite && ($overwrite != '-O')){
 
             self::addTitle('add:api');
-            Cli::textView(Cli::error('Unknown directive "'.Cli::warn($overwrite).'" supplied'), 1);
-            Cli::break(2);
-            return false;       
+            Cli::textView(Cli::error('Unknown directive "'.Cli::warn($overwrite).'" supplied'), 0, "|2");
+            Cli::textView('Do you mean "'.Cli::warn("add:api $syntax -O").'"? [Y/N] ', 2);
+
+            $response = Cli::prompt(['Y','N','y','n'], function($input, $options) use($syntax){
+
+                if(!in_array($input, $options)) {
+                    Cli::textView('Do you mean "'.Cli::warn("add:api $syntax -O").'"? [Y/N] ', 2);
+                }
+
+            });
+
+            if(strtolower($response) !== 'y') {
+                Cli::textView(br().Cli::alert('Notice:').' file generation aborted!', 0, '|2');
+                return false;
+            }
 
         }
 
@@ -297,7 +280,7 @@ class MkAPI extends MkBase{
         CONTENT2;
 
         /* set content based on arguments */
-        self::addTitle('add:api');
+        //self::addTitle('add:api');
 
         if($subdir) {
 
@@ -335,8 +318,23 @@ class MkAPI extends MkBase{
 
 
             if(is_file($filePath) && !$overwrite){
-               $this->display(Cli::color("NOTICE:", 'red').' Route file "'.$class.'" already exists!');
-               return false;
+
+                Cli::textView("API File ".Cli::warn("\"$className\"")." already exists! ", 0, '|2');
+
+                Cli::textView('Overwite existing file? [Y, N] ');
+                
+                $response = Cli::prompt(['Y','N','y','n'], function($input, $options){
+
+                    if(!in_array($input, $options)) {
+                        Cli::textView('Overwite existing file? [Y, N] ');
+                    }
+
+                });
+
+                if(strtolower($response) !== 'y') {
+                    Cli::textView(br().Cli::alert('Notice:').' File overwrite aborted!', 0, '|2');
+                    return false;
+                }
             }
 
             if($Filemanager->openFile(true, $filePath)) {

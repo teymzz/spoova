@@ -16,6 +16,11 @@ use PHPMailer\PHPMailer\PHPMailer;
  */
 class Mailer extends PHPMailer{
     
+    public $property;
+    public $type;
+    public $content;
+    public $file;
+    public $files;
     /**
      * Contains all declared headers and setup
      *

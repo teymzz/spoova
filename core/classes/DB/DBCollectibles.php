@@ -17,6 +17,8 @@ class DBCollectibles implements DBOperators {
      */
     public static ? DBCollectibles $tthis = null;
 
+    public $DBError;
+
     /**
      * Database Handler
      *

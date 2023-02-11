@@ -22,6 +22,7 @@ class Collection implements Iterator{
     private $iterator = 0;
     private $callables = [];
     private static $protected = [];
+    public $error;
 
     private static Collection $container;
 

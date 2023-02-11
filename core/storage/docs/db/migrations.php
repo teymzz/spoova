@@ -349,6 +349,7 @@ window.onload = function() {
 
           <ul class="list-square">
                <li> <a href="<?= DomUrl('docs/installation') ?>" class="<?= inPath('active') ?>"><span class="ico ico-spin"></span>Installation</a> </li>
+               <li> <a href="<?= DomUrl('docs/wmv') ?>" class="<?= inPath('active') ?>" ><span class="ico ico-spin"></span><span class="fb-6 pointer" title="Windows Models View">WMV</span> PATTERN</a></li>
                <li> <a href="<?= DomUrl('docs/live-server') ?>" class="<?= inPath('active') ?>"><span class="ico ico-spin"></span>Live Server</a></li>
                <li> <a href="<?= DomUrl('docs/database') ?>" class="<?= inPath('active') ?>"><span class="ico ico-spin"></span>Database</a> </li>
                <li> <a href="<?= DomUrl('docs/resource') ?>" class="<?= inPath('active') ?>"><span class="ico ico-spin"></span>Resource class</a> </li>
@@ -365,7 +366,6 @@ window.onload = function() {
                <li> <a href="<?= DomUrl('docs/mails') ?>" class="<?= inPath('active') ?>"><span class="ico ico-spin"></span>Handling Mails</a> </li>
                <li> <a href="<?= DomUrl('docs/cli') ?>" class="<?= inPath('active') ?>"><span class="ico ico-spin"></span>Cli Commands</a> </li>         
                <li> <a href="<?= DomUrl('docs/plugins') ?>" class="<?= inPath('active') ?>"><span class="ico ico-spin"></span>Composer and Plugins</a></li>
-               <li> <a href="<?= DomUrl('docs/wmv') ?>" class="<?= inPath('active') ?>" ><span class="ico ico-spin"></span>The <span class="fb-6 pointer" title="Windows Models View">WMV</span> PATTERN</a></li>
                <li> <a href="<?= DomUrl('docs/libraries') ?>" class="<?= inPath('active') ?>"><span class="ico ico-spin"></span>Third-Party Libraries</a> </li>
                <li> <a href="<?= DomUrl('docs/other-features') ?>" class="<?= inPath('active') ?>"><span class="ico ico-spin"></span>Other Features</a> </li>
           </ul>
@@ -470,8 +470,7 @@ window.onload = function() {
                                     The <code>DBSCHEMA::ALTER()</code> method is used to alter or modify existing database tables
                                 </div> <br>
                                 <div class="">
-                                    The <code>DBSCHEMA::DROP_TABLE()</code> method is the easiest way to drop a table outside the 
-                                    <code>DB::ALTER()</code> scope
+                                    The <code>DBSCHEMA::DROP_TABLE()</code> method is the only way to drop a table.
                                 </div> <br>
                                 <div class="">
                                     The <code>DBSCHEMA::DROP_FIELD()</code> method is the easiest way to drop a table's column outside the 
@@ -523,7 +522,8 @@ window.onload = function() {
                                 </div> 
 
                                 <div class="pvs-10 font-em-d9">
-                                    We can also supply an object as the first argument of <code>CREATE</code> or <code>ALTER</code> method 
+                                    We can also supply an object as the first argument of <code>CREATE</code>, <code>ALTER</code>, <code>DROP_TABLE</code> 
+                                    or <code>DROP_FIELD</code> methods 
                                     provided that the object implements a method "tablename()" which returns a database table name. Hence, the format 
                                     below is also valid.
                                 </div>   
@@ -676,11 +676,11 @@ window.onload = function() {
 
                                     <div class="foot-note">
                                         <p class="">
-                                            The <code>DROP()</code> method drops a database table, databse table column or database table's index. 
-                                            It takes one or two arguments depending on what is expected to be dropped. If the first argument is set as true, 
-                                            then the current database table will be dropped. However, if the first argument is string, it is assumed that the migration table's 
-                                            field is expected to be dropped unless a second argument is provided in which case, the first agument is assumed to be an index type 
-                                            (e.g UNIQUE) while second argument will be the index name that is expected to be dropped. An example is shown below:
+                                            The <code>DROP()</code> method drops a database table column or database table's index. 
+                                            It takes one or two arguments depending on what is expected to be dropped. If the one argument is supplied, 
+                                            it is assumed that the migration table's field is expected to be dropped unless it is set as "PRIMARY KEY" which 
+                                            will drop the current table's primary key. However, if two arguments are supplied, then the first is assumed to be 
+                                            an index type (e.g UNIQUE) while second argument will be the index name that is expected to be dropped. An example is shown below:
                                         </p>
                                     </div>
 
@@ -689,7 +689,19 @@ window.onload = function() {
 
     DBSCHEMA::ALTER($this, function(DRAFT $DRAFT){
 
-        <span class="c-sky-blue-dd">$DRAFT::DROP( true );</span> <span class="comment">// drop current database table</span>
+        <span class="c-sky-blue-dd">$DRAFT::DROP( 'address' );</span> <span class="comment">// drop current database table's field</span>
+
+    });
+
+    </pre>
+                                    </div> <br><br>
+
+                                    <div class="pre-area">
+    <pre class="pre-code">
+
+    DBSCHEMA::ALTER($this, function(DRAFT $DRAFT){
+
+        <span class="c-sky-blue-dd">$DRAFT::DROP( 'UNIQUE', 'initials' );</span> <span class="comment">// drop unique index "initials" from current table</span>
 
     });
 
@@ -1111,11 +1123,7 @@ window.onload = function() {
                                 Drop current table users
                             </div>
     <pre class="pre-code">
-    DBSCHEMA::ALTER('users', function(DRAFT $DRAFT){
-
-        $DRAFT::DROP_TABLE(); <span class="comment no-select">// $DRAFT::DROP(true);</span>
-
-    })        
+    DBSCHEMA::DROP_TABLE('users'); <span class="comment">// drop current table "users".</span>        
     </pre>
                         </div>
                     </div> <br>
@@ -1222,6 +1230,7 @@ window.onload = function() {
         $DRAFT::PARTITION_BY('RANGE', function(DRAFT $DRAFT){
 
             <span class="comment">//some code here</span>
+            return $DRAFT;
 
         });
 
@@ -1250,11 +1259,11 @@ window.onload = function() {
  <pre class="pre-code">
     DBSCHEMA::CREATE('tablename', function(DRAFT $DRAFT){
 
-        $DRAFT::PARTITION_BY('RANGE', function(DRAFT $DRAFT){
+        $DRAFT::PARTITION_BY('RANGE', fn(DRAFT $DRAFT) =>
 
-            $DRAFT::COLUMN('col1');
+            $DRAFT::COLUMN('col1')
 
-        });
+        );
 
     })
  </pre>
@@ -1267,11 +1276,11 @@ window.onload = function() {
  <pre class="pre-code">
     DBSCHEMA::CREATE('tablename', function(DRAFT $DRAFT){
 
-        $DRAFT::PARTITION_BY('RANGE', function(DRAFT $DRAFT){
+        $DRAFT::PARTITION_BY('RANGE', fn(DRAFT $DRAFT) =>
 
-            $DRAFT::COLUMN(['col1', 'col']);
+            $DRAFT::COLUMN(['col1', 'col'])
 
-        });
+        );
 
     })
  </pre>
@@ -1287,6 +1296,8 @@ window.onload = function() {
         $DRAFT::PARTITION_BY('RANGE', function(DRAFT $DRAFT){
 
             $DRAFT::COLUMN([['col1','col2'], ['col3','col4']]);
+
+            return $DRAFT;
 
         });
 
@@ -1319,13 +1330,13 @@ window.onload = function() {
  <pre class="pre-code">
     DBSCHEMA::CREATE('tablename', function(DRAFT $DRAFT){
 
-        $DRAFT::PARTITION_BY('RANGE', function(DRAFT $DRAFT){
+        $DRAFT::PARTITION_BY('RANGE', fn(DRAFT $DRAFT) =>
 
             $DRAFT::COLUMNS('col1')
 
                 ->PARTITION('p0','VALUES LESS THAN');
 
-        });
+        );
 
     })
  </pre>
@@ -1351,7 +1362,7 @@ window.onload = function() {
 
         $DRAFT::INT('number', '2')->NOT_NULL();
 
-        $DRAFT::PARTITION_BY('RANGE', function(DRAFT $DRAFT){
+        $DRAFT::PARTITION_BY('RANGE', fn(DRAFT $DRAFT) =>
 
             $DRAFT::COLUMNS('number')
 
@@ -1359,8 +1370,7 @@ window.onload = function() {
                 ->PARTITION('p1','VALUES LESS THAN')->VALUE(300)
                 ->PARTITION('p2','VALUES LESS THAN')->VALUE(200)
 
-
-        });
+        );
 
     })
  </pre>
@@ -1379,7 +1389,7 @@ window.onload = function() {
         $DRAFT::DATETIME('date')->DEFAULT('(CURRENT_TIMESTAMP)');
 
 
-        $DRAFT::PARTITION_BY('RANGE', function(DRAFT $DRAFT){
+        $DRAFT::PARTITION_BY('RANGE', fn(DRAFT $DRAFT) =>
 
             $DRAFT::COLUMNS('date')
 
@@ -1387,8 +1397,7 @@ window.onload = function() {
                 ->PARTITION('p1','VALUES LESS THAN')->VALUE(300)
                 ->PARTITION('p2','VALUES LESS THAN')->VALUE(200)
 
-
-        });
+        );
 
     })        
     </pre>

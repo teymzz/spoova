@@ -11,6 +11,7 @@ use spoova\core\commands\Cli;
 class DBSCHEMA {
 
     private static $DRAFT_SQL = '';
+    private static $DRAFT_TABLE = '';
 
     /**
      * Create a new database table
@@ -21,10 +22,11 @@ class DBSCHEMA {
      */
     static function CREATE(string|object $TABLE, Closure $FORMAT) : bool{
 
+        self::SET_TABLE($TABLE);
         $DRAFT = new DRAFT('CREATE');
         $STRUCTURE = $FORMAT($DRAFT);
         
-        if(self::GET_DRAFT($TABLE, $NAME, $STRUCTURE)){
+        if(self::GET_DRAFT($NAME, $STRUCTURE)){
             self::DBCONNECT($dbc, $db);
 
             $DRAFT = $STRUCTURE::BUILD($NAME);
@@ -46,9 +48,17 @@ class DBSCHEMA {
 
     }
 
-    static function DROP_TABLE(string|object $TABLE) : bool{
 
-        if(self::GET_DRAFT($TABLE, $NAME)){ 
+
+    /**
+     * Drop a database table
+     *
+     * @param string|object $TABLE
+     * @return boolean
+     */
+    static function DROP_TABLE(string|object $TABLE) : bool{
+        self::SET_TABLE($TABLE);
+        if(self::GET_DRAFT($NAME)){ 
             if(!DRAFT::hasError()){
                 self::DBCONNECT($dbc, $db);
                 return $db->drop($NAME, true);
@@ -58,47 +68,16 @@ class DBSCHEMA {
 
     }
 
-    // static function ADD_FIELD(string|object $TABLE, Closure $FORMAT) : bool{
-
-    //     $DRAFT = new DRAFT('ALTER');
-
-    //     $STRUCTURE = $FORMAT($DRAFT);
-
-    //     if(self::GET_DRAFT($TABLE, $NAME, $STRUCTURE)){
-    //         if(!DRAFT::hasError()){
-    //             self::DBCONNECT($dbc, $db);
-    //             if($STRUCTURE instanceof DRAFT){
-                    
-    //                 self::DBCONNECT($dbc, $db);
-
-    //                 $DRAFT = $STRUCTURE::BUILD($NAME);
-
-    //                 $db->query($DRAFT);
-
-    //                 if(!$db->process()){ 
-    //                     Cli::textView(Cli::error($db->error()), 0, '|2');
-    //                     Cli::textView(Cli::warn('DRAFT:', '|1').$DRAFT, 0, '|2');
-    //                     return false;
-    //                 }else{
-    //                     return true;
-    //                 }
-
-    //             }else{
-    //                 Cli::textView(Cli::error('Schema must a draft object'), 0, '|2');
-    //                 return false;
-    //             }
-
-    //             return $db->drop($NAME, true);    
-    //         }        
-    //     }
-
-    //     return false;
-
-    // }
-
+    /**
+     * Drop a database field
+     *
+     * @param string|object $TABLE
+     * @param string $FIELD
+     * @return void
+     */
     static function DROP_FIELD(string|object $TABLE, string $FIELD){
-
-        if(self::GET_DRAFT($TABLE, $NAME)){
+        self::SET_TABLE($TABLE);
+        if(self::GET_DRAFT($NAME)){
             if(!DRAFT::hasError()){
                 self::DBCONNECT($dbc, $db);
         
@@ -109,20 +88,17 @@ class DBSCHEMA {
     }
 
     static function ALTER(string|object $TABLE, Closure $FORMAT) : bool {
-
+        self::SET_TABLE($TABLE);
         $DRAFT = new DRAFT('ALTER');
         $STRUCTURE = $FORMAT($DRAFT);
-
-        if(self::GET_DRAFT($TABLE, $NAME, $STRUCTURE)){
+        if(self::GET_DRAFT($NAME, $STRUCTURE)){
             if(!DRAFT::hasError()){
                 self::DBCONNECT($dbc, $db);
                 $DRAFT = $STRUCTURE::BUILD($NAME);
-        
+
                 $db->query($DRAFT);
         
                 if(!$db->process()){ 
-                    //Cli::textView(Cli::error($db->error()), 0, '|2');
-                    //Cli::textView(Cli::warn('DRAFT:', '|1').$DRAFT, 0, '|2');
                     self::$DRAFT_SQL = (Cli::warn('DRAFT:', '|1').$DRAFT);
                     return false;
                 }else{
@@ -161,38 +137,45 @@ class DBSCHEMA {
     /**
      * Get the current name from value supplied
      *
-     * @param string|object $TABLE
      * @param string|null $NAME references the name of the table
      * @param DRAFT|NULL $STRUCTURE
      * @return bool
      */
-    private static function GET_DRAFT(string|object $TABLE,  string|null &$NAME, DRAFT|NULL &$STRUCTURE = NULL) : bool {
+    private static function GET_DRAFT(string|null &$NAME, DRAFT|NULL &$STRUCTURE = NULL) : bool {
+
+
+        //proceed to get the draft structure
+        if(func_num_args() > 1){
+            if(!($STRUCTURE instanceof DRAFT)){
+                return DRAFT::callError(Cli::error(('Schema function must return be a draft object'), 0, '|2'));
+            }
+        }
+
+        $NAME = SELF::$DRAFT_TABLE;
+        if($NAME) return true;
+        return DRAFT::callError(Cli::error(('invalid database table supplied for schema'), 0, '|2'));
+
+    }
+
+    /**
+     * Validate table
+     *
+     * @param string|object $TABLE
+     * @return void
+     */
+    private static function SET_TABLE(string|object $TABLE){
 
         if(is_object($TABLE)){
             if(method_exists($TABLE, 'table')){
                 $TABLE = $TABLE->table();
                 if(!is_string($TABLE)){
-                    Cli::textView(Cli::error('Schema "table" must be a string'), 0, '|2');         
-                   return false;
+                    DRAFT::callError(Cli::error('Schema "table" must be a string'), 0, '|2');         
                 }
             }else{
-              
-                Cli::textView(Cli::error('Schema object does not contain a "table" method!'), 0, '|2');
-                return false;
+                return DRAFT::callError(Cli::error('Schema object does not contain a "table" method!'), 0, '|2');
             }
         }
-
-        //proceed to get the draft structure
-        if(func_num_args() > 2){
-            if(!($STRUCTURE instanceof DRAFT)){
-                Cli::textView(Cli::error('Schema must be a draft object'), 0, '|2');
-                return false;
-            }
-        }
-
-        $NAME = strtolower($TABLE);
-        return true;
-
+        SELF::$DRAFT_TABLE = strtolower($TABLE);
     }
 
     /**
@@ -204,6 +187,15 @@ class DBSCHEMA {
 
         return self::$DRAFT_SQL;
 
+    }
+
+    /**
+     * Returns the dbschema table name
+     *
+     * @return string
+     */
+    public static function DRAFT_TABLE() : string{
+        return self::$DRAFT_TABLE;
     }
 
 }

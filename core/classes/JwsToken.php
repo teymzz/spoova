@@ -27,6 +27,9 @@ class JwsToken{
     private $token;
     private $itoken;
     private $error;
+    public $basehead;
+    public $baseload;
+    public $decrypt;
 
     public function set($type = 'JWS', $algo = 'HS256'){
 

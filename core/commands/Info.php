@@ -34,12 +34,12 @@ class Info extends Entry{
 
             'add'            => 'Creates a new file
             
- Syntax :'.self::mi('add:{options}','','','').Cli::warn('<dir?>[name] [extends?] [subdir?] [-O?]', 1).Cli::color('[-O]','red', 1).Cli::break(1, false).'
- '.Cli::emo('ribbon-arrow').' Where: '.cli::alert('{options}').' ~ '.Cli::alert('[controller|window|model|winmodel|rex]')
+ Syntax :'.self::mi('add:{options}','','','').Cli::warn('<dir?>[name] [extends?] [subdir?]', 1).Cli::color('[-O]','red', 1).Cli::break(1, false).'
+ '.Cli::emo('ribbon-arrow').' Where: '.cli::alert('{options}').' ~ '.Cli::alert('[window|frame|route|api|model|rex|migrator]')
   .Cli::br(2)
-  .Cli::notice(' Struture above may not be true for all options.', 1)
+  .Cli::notice(' Syntax above may not be true for all options.', 1)
   .Cli::br(2)
-  .Cli::textIndent('Type'.self::mi('add:{option}', '','', '').' To see specific descriptions.', 1)
+  .Cli::textIndent('Type'.self::mi('add:{option}', '','', '').' to see specified option\'s descriptions.', 1)
  ,
 
             
@@ -63,6 +63,15 @@ class Info extends Entry{
  .Cli::textIndent(Cli::warn('-O'). ' ....... optional: overwrite existing file', 1),
             
 
+            #---------------------            
+            'add:migrator'   => 'Adds a migration file (class) into \'core/migrations\' directory.
+
+ Syntax :'.self::mi('add:migrator','','','').Cli::warn('<name>', 1).Cli::br(2)
+ .Cli::textIndent(Cli::warn('name').' ..... name of migration file to be added in \'core/migrations\' directory ', 1).Cli::br(2)
+ .Cli::textIndent(Cli::alert('Notice: ').'a name with prefix "'.Cli::warn('create_').'" will try to use a creation code syntax', 1).Cli::br(2)
+ .Cli::textIndent(Cli::alert('Notice: ').'a name with prefix "'.Cli::warn('alter_').'" will try to use an alter code syntax', 1).Cli::br(2)
+ .Cli::textIndent(Cli::alert('Notice: ').'supplied name will have an auto generated prefix', 1)
+ ,
             #---------------------            
             'add:model'   => 'Adds a model file (class) into \'windows/models\' directory or subdirectory.
 
@@ -138,20 +147,20 @@ class Info extends Entry{
 
  Syntax :'.self::mi('config:dbonline', '','','').Cli::warn('dbname dbuser dbpass dbserver [dbsocket?]', 1).'
 
- '.self::mi('config:dbonline', '','').Cli::warn('dbname dbuser dbpass dbserver','yellow').'
+ '.self::mi('config:dbonline', '','').Cli::warn('"dbname dbuser dbpass dbserver"', 1).' 
 
- '.self::mi('config:dbonline', '','').Cli::warn('dbname - dbpass - -', 1).Cli::emo('point-list', 1).' where dbuser, dbserver, dbsocket are not defined
+ '.self::mi('config:dbonline', '','').Cli::warn('"dbname - dbpass - -"', 1).' [where dbuser, dbserver, dbsocket are not defined]
 
  Note: Replace empty value with dash.',
 
             #---------------------
             'config:dboffline'   => 'Sets offline database default connection parameters. 
 
- Syntax :'.self::mi('config:dboffline', '','','').Cli::warn('dbname dbuser dbpass dbserver [dbsocket?]', 1).'
+ Syntax :'.self::mi('config:dboffline', '','','').Cli::warn('"dbname dbuser dbpass dbserver [dbsocket?]"', 1).'
  
- '.self::mi('config:dboffline', '','').Cli::warn('dbname dbuser dbpass dbserver', 1).'
+ '.self::mi('config:dboffline', '','').Cli::warn('"dbname dbuser dbpass dbserver"', 1).'
 
- '.self::mi('config:dboffline', '','').Cli::warn('dbname - dbpass - -', 1).Cli::emo('point-list', 1).' where dbuser, dbserver, dbsocket are not defined
+ '.self::mi('config:dboffline', '','').Cli::warn('"dbname - dbpass - -"', 1).Cli::emo('point-list', 1).' where dbuser, dbserver, dbsocket are not defined
 
  '.Cli::color('Note:','blue').' Replace empty value(s) with dash.',
  
@@ -178,11 +187,6 @@ class Info extends Entry{
  '.Cli::notice('').Cli::warn('status').' returns the current watch settings',
             
             #---------------------            
-            'config:watcher'     => 'Returns the status of liveserver
-            
- Syntax :'.self::mi('config:watcher','','','').'',
-            
-            #---------------------            
             'config:meta'        => 'Allows or disallow the autoloading of environment meta tags by the resource class when importing static urls
     
  Syntax :'.self::mi('config:meta[on|off]','','','').'',
@@ -197,48 +201,75 @@ class Info extends Entry{
             #---------------------
             'features'           => 'Displays a list of spoova features
             
- Syntax :'.self::mi('features','','','').'',
-            
-            #---------------------
-            'functions'          => 'Displays some spoova function
-
- Syntax :'.self::mi('functions','','','').'',      
+ Syntax :'.self::mi('features','','','').'',   
 
             #---------------------
             'info'           => 'Provides information or description about acceptable cli syntaxes or commands
 
- Syntax :'.self::mi('info','','','').'',   
+ Syntax :'.self::mi('info','','','').' <command>',   
  
             #--------------------- 
-            'install'        => 'Installs project app or database parameters supplied
+            'install'        => 'test database connection parameters or create the default database name using config parameters.
 
- Syntax :'.self::mi('install','','','').Cli::danger('or', 1).Cli::alert('install:[app|db|dbname]', 1).' 
+ Syntax :'.Cli::alert('install', 1).Cli::warn('[db|dbname]', 1).' 
  
- '.Cli::alert('Note:').' when no option is supplied, it runs test to detect if current project has been fully configured',   
-            
-            #---------------------  
-            'install:app'    => 'Installs project pack
+ '.Cli::alert('install').Cli::warn('db', 1).Cli::emo('infinite-arrow', '1|1').'runs test to detect if current project "icore/dbconfig.php" connection parameters are valid '.'
 
- '.Cli::emo('ribbon-arrow', '|1').'Syntax :'.self::mi('install:app','','','').'',       
-      
-            #---------------------  
-            'install:db'     => 'Finalizes database parameters installation if all parameters have been set.
+ '.Cli::alert('install').Cli::warn('dbname', 1).Cli::emo('infinite-arrow', '1|1').'uses "icore/dbconfig.php" connection parameters to generate default database name if it does not exist. '.'
 
- Syntax :'.self::mi('install:db','','','').Cli::warn('[path?]', 1).'
+ '.Cli::alert('install').Cli::warn('[db|dbname]', 1).Cli::danger('folder', 1).Cli::emo('infinite-arrow', '1|1').'uses custom folder name that must contain "icore/dbconfig.php" configuration parameters'
+ ,   
+
+            #---------------------  
+            'install db'     => 'Runs test to detect if current project "icore/dbconfig.php" connection parameters are valid.
+
+ Syntax :'.self::mi('install','','','').Cli::warn('db', 1).Cli::danger('[folder?]', 1).'
  
-  Where '.Cli::warn('[path?]').' - optional dbconfig.php file directory from project folder
+  Where '.Cli::danger('[folder?]').' - optional custom folder name that must contain "icore/dbconfig.php" configuration parameters',
+ 
+            #---------------------  
+            'install dbname' => 'Uses "icore/dbconfig.php" connection parameters to create its default database name if it does not exist.
 
+ Syntax :'.self::mi('install','','','').Cli::warn('dbname', 1).Cli::danger('[folder?]', 1).'
+ 
+  Where '.Cli::danger('[folder?]').' - optional custom folder name that must contain "icore/dbconfig.php" configuration parameters'
+ ,
+ 
+            #---------------------
+            'migrate'   => 'Run migration files
+
+ Syntax :'.self::mi('migrate', '','','').Cli::warn('[up|down|status]', 1).Cli::color('[times?]', 'red', 1).'
+ 
+ '.self::mi('migrate up', '','').'
+
+ '.self::mi('migrate down', '','').Cli::warn('[times?]', 1).Cli::emo('infinite-arrow', 1).' where times is number of down migrations
+
+ '.self::mi('migrate status', '','').'',
+ 
+            #---------------------
+            'migrate down'   => 'Run migration files down
+
+ Syntax :'.self::mi('migrate', '','','').Cli::warn('down', 1).Cli::color('[times?]', 'red', 1).'
+
+ '.self::mi('migrate', '','').Cli::warn('down', 1).Cli::emo('infinite-arrow', 1).' run all migration files down
+
+ '.self::mi('migrate', '','').Cli::warn('down', 1).Cli::color('4', 'red', 1).Cli::emo('infinite-arrow', 1).' run 4 recent migration files down
  ',
  
-            #---------------------  
-            'install:dbname' => 'Creates a new non-existing database using default configuration parameters
-            
- Syntax :'.self::mi('install:dbname','','','').'',
+            #---------------------
+            'migrate up'   => 'Run migration files up
+
+ Syntax :'.self::mi('migrate', '','','').Cli::warn('up', 1).'',
+ 
+            #---------------------
+            'migrate status'   => 'Displays migration file status
+
+ Syntax :'.self::mi('migrate', '','','').Cli::warn('status', 1).'',
  
             #---------------------
             'project'        => 'Creates a new project application
             
- Syntax :'.self::mi('project','','','').Cli::warn('<project name>'),
+ Syntax :'.self::mi('project','','','').Cli::warn('<project name>', 1),
 
             #---------------------
             'version'        => 'displays the current spoova version
@@ -270,8 +301,13 @@ class Info extends Entry{
 
  '.self::mi('watch','','').Cli::danger('disable', 1).' .... Disables watch entirely
 
- Type :'.self::mi('info', '','','').Cli::warn('config:watch', 1).' - to see description  
+ Type :'.self::mi('info', '','','').Cli::warn('config:watch', 1).' to see description  
  ',
+            #---------------------
+            'watch disable'       => 'Disables the live watch',
+            'watch offline'       => 'Sets the watch to offline mode',
+            'watch online'        => 'Sets the watch to online mode',
+
             #---------------------
             'watch status'        => 'Returns the current watch (liveserver) configuration
             
@@ -279,7 +315,7 @@ class Info extends Entry{
  
   To set watch status '.Cli::emo('ribbon-arrow').' Type :'.self::mi('config:watch', '','','').Cli::warn('[option]', 1).'  
   
-   '.Cli::emo('ribbon-arrow').' Type :'.self::mi('info', '','','').Cli::warn('watch', 1).' - to learn more  
+   '.Cli::emo('ribbon-arrow').' Type :'.self::mi('info', '','','').Cli::warn('watch', 1).' to learn more  
  ',
 
 

@@ -1771,7 +1771,7 @@ trait DBError{
    *   - Setting $type as true will not affect error state
    * @return bool
    */
-  public function error_exists(bool|string $type = null) : bool{
+  public function error_exists(bool|string $type = '') : bool{
 
     if(strtolower($type) === "state"){
 

@@ -50,49 +50,53 @@ class Syntax extends Entry{
 
         return [
 
-            'add'            => 'add:[controller|window|model|winmodel|rex] [path] [extends?] [-O?]',
-            'add:api'        => 'add:api <name> [extends?] [\subdir]',
-            'add:frame'      => 'add:frame <name> [-S?] [-O?]',
-            'add:model'      => 'add:model [path] [-O]',
+            'add'            => 'add:[window|route|model|api|frame|rex] [path] [extends?] [-O?]',
+            'add:api'        => 'add:api <path> [extends?] [\subdir] [-O?]',
+            'add:frame'      => 'add:frame <path> [extends?] [-O?]',
+            'add:model'      => 'add:model <path> [-O]',
+            'add:api'        => 'add:route <path> [extends?] [\subdir] [-O?]',
             'add:rex'        => 'add:rex [path.?]<filename>',
             'add:window'     => 'add:window <path> [extends?] [-O?]',
             'add:route'      => 'add:route <path> [extends?] [-O?]',
+            'add:migator'    => 'add:migrator <name>',
             
             'backup'             => 'backup [project|:clear]',
 
             'config'             => 'config:<options> <args>',
-            'config:dbonline'    => 'config:dbonline dbuser dbpass dbserver dbport dbsocket',
-            'config:dboffline'   => 'config:dboffline dbuser dbpass dbserver dbport dbsocket',
+            'config:dbonline'    => 'config:dbonline "dbuser dbpass dbserver dbport dbsocket"',
+            'config:dboffline'   => 'config:dboffline "dbuser dbpass dbserver dbport dbsocket"',
             'config:usersTable'  => 'config:usersTable <name>',
             'config:cookieField' => 'config:cookieField <name>',
             'config:idField'     => 'config:idField <name>',
             'config:watch'       => 'config:watch [online|offline|both|disabled]',
-            'config:watcher'     => 'config:watcher',
             'config:meta'        => 'config:meta',
             'clean'              => 'clean storage',
 
             'cli'                => 'cli',
 
-            'classes'            => 'classes',
-
             'features'           => 'features',
 
-            'functions'          => 'functions',
+            'info'               => 'info <command>',
 
-            'info'               => 'info <[version|features|support|cli|functions]|:command>',
+            'migrate'          => 'migrate [up|down|status]',
             
             'install'        => 'install|install:[app|db|dbname]',
-            'install:app'    => 'install:app',
-            'install:db'     => 'install:db',
-            'install:dbname' => 'install:dbname',
+            'install db'     => 'install db [folder?]',
+            'install dbname' => 'install dbname [folder?]',
 
             'project'        => 'project <project_name>',
+            
+            'start'          => 'start',
+            'support'        => 'support',
 
-            'support'        => 'Display current spoova supports',
+            'version'        => 'version',
 
-            'version'        => 'Displays spoova current version',
+            'watch'          => 'watch [online|offline|both|disabled]',
 
-            'watch status'   => 'Returns the watch current settings',
+            'watch disable'  => 'watch disable',
+            'watch offline'  => 'watch offline',
+            'watch online'   => 'watch online',
+            'watch status'   => 'watch status',
 
         ];
 

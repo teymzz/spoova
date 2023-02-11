@@ -13,6 +13,7 @@ class Collectibles {
     public static $staticError;
     public static $collectionItems = false;
     public static $privatize = false;
+    public $error;
 
     /**
      *

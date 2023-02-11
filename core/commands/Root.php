@@ -2,6 +2,7 @@
 
 namespace spoova\core\commands;
 
+use spoova\core\commands\InteractiveConsole;
 use spoova\core\commands\Cli;
 use spoova\core\classes\FileManager;
 
@@ -11,10 +12,17 @@ use spoova\core\classes\FileManager;
 class Root extends Entry{
 
 
-    function __construct($arg)
+    function __construct(string $arg)
     {
-        if(is_iterable($this->$arg())){
-            Cli::runAnime([$this, $arg]);
+        
+        if($arg === ':interactive'){
+
+            new InteractiveConsole;
+
+        } else {
+            if(is_iterable($this->$arg())){
+                Cli::runAnime([$this, $arg]);
+            }
         }
     }
 
@@ -57,36 +65,18 @@ class Root extends Entry{
       $clis =  [     
         Cli::emos('point-list', 1).'cli (commands) :' => '',
             
-            '> add' => '',
-                                              
-            '> backup [project|:clear]'   => '',
-            
-            '> classes'   => '',
-            '> class_methods <namespace>' => '',
-            '> clean storage' => '',
-            '> cli'       => '', 
-               
+            '> add' => '',                                 
+            '> backup'   => '',
+            '> clean' => '',
+            '> cli'   => '', 
             '> config' => '',
-            '> config meta [on|off]' => '',
-            '> config [dbonline|dboffline] [dbname dbuser dbpass dbserver dbport dbsocket]' => '',
-            '> config dbusers_table <tablename>'  => '',
-            '> config dbcookie_field <fieldname>' => '',
-            '> config dbpass_field <fieldname>'   => '',
-
-            '> features'  => '',
-            '> functions' => '',
-                                        
+            '> features'  => '',                        
             '> install'     => '',
-            '> install app' => '',
-            '> install db'  => '',
-            '> install dbname <name>' => '',
-
-            '> project <project_name>' => '',
-
+            '> migrate'     => '',
+            '> project' => '',
             '> support'   => '',  
-            
             '> version'   => '',
-            '> watch status'   => '',
+            '> watch'     => '',
             
         ];
 
@@ -117,20 +107,24 @@ class Root extends Entry{
 
         $features = [
             'RESOURCE CONTROL'    => 'Importing and grouping of static resources',
-            'LIVE SERVER CONTROL' => 'Inbuilt live server system integrated with code debugging',
+            'LIVE SERVER CONTROL' => 'Inbuilt live server file integrated with code debugging (beta)',
             'TEMPLATE RENDERING'  => 'Renders template engine',
             'DATA VALIDATION'     => 'Inbuilt input validation',
-            'DATA UPLOAD'         => 'Inbuilt file uploader tool',
-            'SESSION CONTROL'     => 'Built in structure for handling session',
-            'META TAGS CONTROL'   => 'Inbuilt tool for controlling meta tags.',
+            'FILE UPLOADER'       => 'Inbuilt file uploader class',
+            'FILE MANAGER'        => 'Inbuilt file manager class',
+            'SESSION CONTROL'     => 'Built in structure for handling sessions',
+            'META TAGS CONTROL'   => 'Designed structure for managing meta tags setup and importation.',
             'DATABASE CONTROL'    => 'Simple Handlers for running mysql queries on mysql database',
+            'DATABASE MIGRATION'  => 'Cli commands for generating and running migration files (beta)',
+            'INTERACTIVE CLI'     => 'An interactive console assistant',
             'WVM(WMV) PATTERN'    => 'A development structure built on MVC pattern',
         ];
         
-        Cli::textView(Cli::color(Cli::emos('diamond', 1).'FEATURES','yellow'), 0, 2);
+        Cli::textView(Cli::color(Cli::emos('diamond', 1).'FEATURES','yellow'), 0, "1|1");
 
         foreach($features as $feature => $desc) {
-            $this->display( Cli::emo('ribbon-arrow',1, 0).Cli::color($feature, 'yellow') .' >>> '.$desc);
+
+            $this->display( Cli::emo('ribbon-arrow',1, 0).Cli::warn($feature, 1) ." ".Cli::dots(25, $feature)." ".$desc);
         }        
         
     }

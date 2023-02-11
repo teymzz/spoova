@@ -88,6 +88,9 @@ class MkRoute extends MkBase{
         $Filemanager = new FileManager;
 
         /* create class directory & class file */
+
+        
+
         if(!is_file($filePath) || ($lastArg == '-O')){
             
             if($Filemanager->openFile(true, $filePath)) {

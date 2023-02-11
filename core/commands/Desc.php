@@ -41,7 +41,6 @@ class Desc extends Entry{
             'config:cookieField' => 'Sets database column in usersTable to be used for storing cookie',
             'config:idField'     => 'Sets database column in usersTable for storing a unique user id (e.g email, id, ...)',
             'config:watch'       => 'Configures live server for offline or online development, This can also be disabled',
-            'config:watcher'     => 'Returns the status of liveserver',
             'config:meta'        => 'Allows or disallow the autoloading of environment meta tags by the resource class when importing static urls',
 
             'cli'                => 'Displays a list of spoova cli commands',

@@ -35,7 +35,7 @@ class DBMigrator
             return;
         }
 
-        Cli::textView(Cli::error('database connection failed!'));
+        Cli::textView(Cli::error('database connection failed!'), 0, "|2");
         exit();
 
     }
@@ -47,11 +47,10 @@ class DBMigrator
 
             $migrationsFolder = docroot.'/core/migrations';
             $migrationSpace   = "spoova\core\migrations\\";
+
             $Filemanager = new FileManager;
             $Filemanager->setUrl($migrationsFolder);
             $files = $Filemanager->getFiles(false, false);
-
-            // $files = scandir($migrationsFolder);
             
             $newMigrations = array_diff($files, $appliedMigrations);
 
@@ -129,6 +128,7 @@ class DBMigrator
         } else {
 
             Cli::textView(Cli::error("migration table does not exist in database ".Cli::warn(User::config('DBNAME')).""), 2, '|2');
+            Cli::textView(Cli::error(DBStatus::err()), 2, '|2');
 
         }
        
@@ -191,6 +191,11 @@ class DBMigrator
                             $aborted = true;
                             Cli::textView(Cli::error("migration was aborted because error was found in \"".Cli::warn("{$migrationClass}")."\""), 0, '|2');
                             if(DBStatus::err()) Cli::textView(Cli::danger("Sql error:",'|1').DBStatus::err(), 2, '|2');
+                            
+                            if(DRAFT::hasError()){
+                                Cli::textView(DRAFT::err(), 0, '|2');
+                            }
+                            if(DBSCHEMA::DRAFT_SQL()) Cli::textView(DBSCHEMA::DRAFT_SQL(), 2, '|2');
                             break;
                         }else{
                             //remove migration from database
@@ -205,9 +210,6 @@ class DBMigrator
 
                             $totalApplied++;
                             
-                            // else{
-                            //     Cli::textView(Cli::success("all migrations reversed successfully"), 2, '|2');
-                            // }
                         }
 
                     }else {
@@ -230,7 +232,7 @@ class DBMigrator
 
 
             }else{
-                Cli::textView(Cli::color("migrations:",'green', '|1')."no new migrations found", 2, '|2');
+                Cli::textView(Cli::color("migrations:",'green', '|1')."no reversible migrations found", 2, '|2');
             }
 
         } else {
@@ -246,129 +248,14 @@ class DBMigrator
 
         $dbh = $this->dbh;
 
-        /* 
-           
-            DBSCHEMA::CREATE('migrations', function(DRAFT $DRAFT){
-
-                $DRAFT::ID();
-                $DRAFT::VARCHAR('migration', 255)->UNIQUE()->NULL('hey');
-                $DRAFT::VARCHAR('removed', 255);
-                $DRAFT::TIMESTAMP('created_at')->CURRENT_TIME();
-                $DRAFT::TIMESTAMP('removed_at')->CURRENT_TIME();
-
-                return $DRAFT;
-
-            })
-
-        */
-
         return $dbh->query("CREATE TABLE IF NOT EXISTS migrations(
             id INT AUTO_INCREMENT PRIMARY KEY,
-            migration VARCHAR(255),
+            migration VARCHAR(191),
             removed VARCHAR(255),
             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
             removed_at TIMESTAMP,
             UNIQUE(migration)
-        ) ENGINE=INNODB;")->process();
-
-
-        // DBSCHEMA::TABLE(
-        //     'migrations', 
-        //     function(){
-
-        //         // $this->ID('size', 'custom_name').
-                
-        //         // $this->JSON('name', 'size', 'default').
-
-        //         // $this->VARCHAR('name', 'size', 'default').
-                
-        //         // $this->CHAR('name', 'size', 'default').
-        //         // $this->TEXT('name', 'size', 'default').
-        //         // $this->TINYTEXT('name', 'size', 'default').
-        //         // $this->MEDIUMTEXT('name', 'size', 'default').
-        //         // $this->LONGTEXT('name', 'size', 'default').
-                
-        //         // $this->ENUM('name', 'size', 'default').
-        //         // $this->SET('name', 'size', 'default').
-
-        //         // //bool fields
-        //         // $this->BOOL('name', 'size', 'default').
-        //         // $this->BIT('name', 'size', 'default').
-                
-        //         // $this->BINARY('name', 'size', 'default').
-
-        //         // //integers
-        //         // $this->INT('name', 'size', 'default'). //signed or unsigned
-        //         // $this->BIGINT('name', 'size', 'default').
-        //         // $this->SMALLINT('name', 'size', 'default').
-        //         // $this->TINYINT('name', 'size', 'default').
-
-        //         // //integer serial
-        //         // $this->SERIAL('name', 'size', 'default'). //BIGINT UNSIGNED NOT NULL AUTO_INCREMENT UNIQUE
-                
-
-        //         // // decimal
-        //         // $this->FLOAT('name', ['size', 'd'], 'default').
-        //         // $this->DOUBLE('name', ['size', 'd'], 'default').
-        //         // $this->DECIMAL('name', ['size', 'd'], 'default').
-        //         // $this->REAL('name', ['size', 'd'], 'default').
-
-        //         // //date fields
-        //         // $this->DATE('name', 'size', 'default').
-        //         // $this->DATETIME('name', 'size', 'default').
-        //         // $this->TIMESTAMP('name', 'size', 'default').
-        //         // $this->TIME('name', 'size', 'default').
-        //         // $this->YEAR('name', 'size', 'default').
-
-        //         // //text fields
-
-        //         // $this->BLOB('name', 'size', 'default').
-        //         // $this->TINYBLOB('name', 'size', 'default').
-        //         // $this->MEDIUMBLOB('name', 'size', 'default').
-        //         // $this->LONGBLOB('name', 'size', 'default')
-
-        //         //FORMAT .........................................
-        //         $this->ID('size', 'custom_name').  //id int auto_increment not null [signed|unsigned]              
-
-        //         $this->JSON('name', 'size', 'DEFAULT|NULL|NOT NULL').
-
-        //         $this->VARCHAR('name', 'size', 'DEFAULT|NULL|NOT NULL').
-        //         $this->CHAR('name', 'size', 'DEFAULT|NULL|NOT NULL').
-        //         $this->TEXT('name', 'size', 'DEFAULT|NULL|NOT NULL').
-        //         $this->TEXTFIELD('TEXT|TINY|MEDIUM|LONG', 'name', 'size', 'DEFAULT|NULL|NOT NULL').
-                
-        //         $this->ENUM('name', ['OPTIONS'], 'DEFAULT|NULL|NOT NULL').
-        //         $this->SET('name', ['OPTIONS'], 'DEFAULT|NULL|NOT NULL').
-                
-        //         $this->BOOL('name', 'DEFAULT|NULL|NOT NULL').                
-        //         $this->BIT('name', 'DEFAULT|NULL|NOT NULL').
-        //         $this->BINARY('name', 'DEFAULT|NULL|NOT NULL').
-                
-        //         $this->INT('name', 'size', 'DEFAULT|NULL|NOT NULL').
-        //         $this->INTFIELD('INT|TINY|SMALL|BIG', 'name', 'size', 'DEFAULT|NULL|NOT NULL').
-                
-        //         $this->SERIAL('name', 'size').
-                
-        //         $this->FLOAT('name', ['size', 'd'], 'default').
-        //         $this->DOUBLE('name', ['size', 'd'], 'default').
-        //         $this->DECIMAL('name', ['size', 'd'], 'default').
-        //         $this->REAL('name', ['size', 'd'], 'default').
-                
-        //         $this->DATE('name', 'size', 'default').
-        //         $this->DATETIME('name', 'size', 'default').
-        //         $this->TIMESTAMP('name', 'size', 'default').
-        //         $this->TIME('name', 'size', 'default').
-        //         $this->YEAR('name', 'size', 'default').
-
-        //         $this->BLOB('name', 'size', 'default').
-        //         $this->FIELD('BLOB|TINY|MEDIUM|LONG','name', 'size', 'default').
-
-        //         ->DEFAULT();
-        //         ->SIGNED();
-        //         ->UNSIGNED();
-                
-        //     }
-        // );
+        ) ENGINE=INNODB")->process();
 
     }
 
@@ -388,6 +275,138 @@ class DBMigrator
         
         return $dbh->insert();
         
+    }
+
+    public function migrate_status($args){
+        if($args){
+            Cli::textView(Cli::error("no arguments expected on syntax"), 0, "|2");
+            return false;
+        }
+
+        $dbh = $this->dbh;
+
+        $appliedMigrations = $this->getAppliedMigrations();
+
+
+        if(!$dbh->table_exists('migrations')){
+            Cli::textView(Cli::error('migration table does not exist'), 0, "|2");
+            Cli::textView('Trying to generate one', 0, "|2");
+            Cli::wait(1);
+
+            $this->createMigrationsTable();
+
+            Cli::wait(1);
+
+            if(!$dbh->table_exists('migrations')){
+                
+                Cli::textView(Cli::error('migration table failed to create!'), 0, "|2");
+
+                return false;
+            } else{
+                Cli::textView(Cli::success('migration table added successfully', 1), 0, "|2");
+            }
+
+            //yield from Cli::play(10, 0, 'Checking migration status', 1);
+        }
+
+        $migrationsFolder = docroot.'/core/migrations';
+        $migrationSpace   = "spoova\core\migrations\\";
+
+        $Filemanager = new FileManager;
+        $Filemanager->setUrl($migrationsFolder);
+        $files = $Filemanager->getFiles(false, false);
+        
+        $newMigrations = array_diff($files, $appliedMigrations);
+
+        $default = ['LAST MIGRATED FILE' => '', 'APPLIED ON' => ''];
+
+        $dbh->query("select migration as 'LAST MIGRATED FILE', created_at as 'APPLIED ON' from migrations order by created_at desc")->read();
+        $allmigrations = count($dbh->results());
+        $rows = array_unset($dbh->results($allmigrations - 1), '');
+        $fields = $dbh->tables(User::config('DBNAME'),'migrations');
+        // $fields = array_unset($fields, 'removed');
+        // $fields = array_unset($fields, 'removed_at');
+        // $fields = array_unset($fields, 'id');
+        $rows = array_replace($default, $rows);
+
+        //$resultCount = count($result)?: 1; - 15
+        $lines = (count($fields) * (10)) + 14; 
+        $table = "";
+
+        $lim1 = 25;
+        $lim2 = 34;
+        $lim3 = $lim2 - 3;
+
+
+
+        $table .= "".str_repeat("-", $lines)."".br();
+
+        foreach($rows as $row => $value){
+            $table .= "| ".strtoupper(limitChars($row, $lim1)).Cli::dots($lim1, $row, " ");
+            
+            if(!$value){
+                $value = Cli::emo('crossmark', '|1').'Not available ';
+                $table .= "| ".limitChars($value, $lim2).Cli::dots($lim2 + 2, $value, " ")."|".br(); 
+            }else{
+                
+                $table .= "| ".limitChars($value, $lim2).Cli::dots($lim2, $value, " ")."|".br(); 
+            }
+
+            $table .= "".str_repeat("-", $lines)."".br();
+
+        }
+
+        //print $table;
+
+        $mod = ['migration'=> 'last migrated file', 'created_at'=> 'applied on'];
+        
+        // $count = 0;
+        // foreach($fields as $field => $value){
+        //     $value = $mod[$value] ?? $value;
+        //     $table .= "| ".strtoupper(limitChars($value, $lim)).Cli::dots($num, limitChars($value, $lim2), " ");
+        //     $count++;
+        // }
+        
+        // if($rows){
+        //     $table .= "|".Cli::br();
+        //     $table .= "".str_repeat("-", $lines)."".br();
+    
+        //     $count = 0;
+        //     foreach($rows as $row => $value){
+        //         $table .= "| ".limitChars($value, $lim).Cli::dots($num, limitChars($value, $lim2), " ");
+        //         $count++;
+        //     }
+        // }else{
+
+        //     $table .= "|".Cli::br();
+        //     $table .= "".str_repeat("-", $lines)."".br();
+        //     $count = 0;
+        //     foreach($fields as $field => $value){
+        //         $table .= "| ".limitChars(Cli::emo('crossmark', '|1').'Not available', $lim).Cli::dots($num + 2, limitChars(Cli::emo('crossmark', '|1').'Not available', $lim2), " ");
+        //         //$table .= "| ".limitChars($value, $lim).Cli::dots($num, limitChars($value, $lim2), " ");
+        //         $count++;
+        //     }
+        //     // $table .= "|".Cli::br();
+        //     // $table .= "".str_repeat("-", $lines)."".br();
+            
+        // }
+
+        // $table .= "|".Cli::br();
+        //        $table .= "".str_repeat("-", $lines)."".Cli::br();
+        $totalNew = count($newMigrations);
+        $text = strtoupper("pending migrations");
+        $table .= "| ".limitChars($text, $lim1).Cli::dots($lim1, $text, " ");
+        
+        $table .= "|"." $totalNew".Cli::dots($lim2, $totalNew, " ")."|".br()."".str_repeat("-", $lines)."".Cli::br();
+        
+        $totalNew = count($newMigrations);
+        $text = strtoupper("applied migrations");
+        $table .= "| ".limitChars($text, $lim1).Cli::dots($lim1, $text, " ");
+        
+        $table .= "|"." $allmigrations".Cli::dots($lim2, $allmigrations, " ")."|".br()."".str_repeat("-", $lines)."".Cli::br();
+
+        Cli::textView(Cli::alert($table), '', '|1');
+
     }
 
     protected function log(string $message){

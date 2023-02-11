@@ -20,7 +20,7 @@ class Entry extends Console{
     protected const spack = 'spack_';
     protected const crest = self::spack.SP_VERSION;
 
-    protected const root = [ 'version', 'support', 'features', 'cli', 'functions', 'classes', 'repack' ];
+    protected const root = [ 'version', 'support', 'features', 'cli', 'functions', 'classes', 'repack', ':interactive' ];
 
     /**
      * commands for configurations
@@ -92,19 +92,6 @@ class Entry extends Console{
         '   <name>'      => 'Create a new project file',                                    
         '   backup_file <filepath>'   => 'backup update project installer file path :dev',                                    
         '   backup_folder <filepath>' => 'backup update project installer folder :dev',                                    
-
-        // 'OTHERS >' => '',            
-        // '   create' => 'creates a file',
-        // '   create class <classpath>' => 'creates a class with a supplied class path',
-        // '   create migration <classpath>' => 'creates a class with a supplied class path',
-        // '   dbcreate' => 'used only after successful database connection to create a new database',
-        // '   users_table' => 'configure default user fieldname in database (important)',
-        // '   functions' => 'return list of functions',            
-        // '   make::migration' => 'make migrations',
-        // '   migrate' => 'run migrations',
-        // '   meta' => 'enables Spoova to automatically load meta tags to the project file',
-        // '   watch' => 'set the watchdog ++ ',
-        // '   More Info' => ' To get more information about configurations use : >> info <name> ++    For example: "spoova info config" returns the information about config. '
     ];
     
     //list of usable methods in directives;
