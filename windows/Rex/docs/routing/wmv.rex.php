@@ -18,8 +18,8 @@
                     <div class="db-connection">
                         <div class="fb-6 c-olive">Introduction</div>
                         <div class="">
-                            The wmv is a term used for loading of web pages using web servers without starting the server manually through ports. 
-                            . Windows files are all loaded from the windows folder through the use of a standard logic. By default, when a url does not exist,
+                            The wmv is a term used for loading of web pages using web servers without starting the server manually from ports using php inbuilt server. 
+                            This may require local servers such as xampp or wamp or remote servers. Windows files are all loaded from the windows folder through the use of a standard logic. By default, when a url does not exist,
                             spoova tries run its windows files from the windows (routes) folder. If the path does not exist spoova will return a 
                             404 error response page depending on whether it is an api window or not. This is done by
                             processing the <code>Index</code> class within the windows folder. The Index is then used to handle 
@@ -47,12 +47,13 @@
                             <br><br>
 
                             <div class="fb-6 mvb-10">Setup steps</div>
-                            <ol>
-                                <li>Create a separate frame folder within the windows folder</li>
+                            <ol class="calibri">
+                                <li>Create a separate frame folder within the windows folder.</li>
                                 <li>In the frame folder, add a base group class frame file for the windows files that will share the same data.</li>
-                                <li>Create a windows' page by using the page's entry point name as a class in the Windows File.</li>
+                                <li>Create a windows' page by using the page's entry point name as a class in the <code>windows\Routes</code> namespace.</li>
                                 <li>Extend your windows file to your frame file</li>
                                 <li>Add a construct method within the windows file created in one above</li>
+                                <li>These processes can be shortened by working with available cli commands designed for generating files.</li>
                                 <li>
                                     Once this is done, when a user tries to access a page with the name of your windows file,
                                     the windows file will be automatically loaded up from the windows folder. If the non-existing url is not handled
@@ -62,7 +63,7 @@
                             
                         </div>
 
-                        <div class="font-em-d8">Step 1 & 2 above : This frame file should be added inside the Frame folder directory within the windows folder.</div> <br>     
+                        <div class="font-em-d8">Step 1 & 2 above : This frame file should be added inside the Frames directory within the windows folder.</div> <br>     
                         <div class="box-full font-menu  font-em-d85 bc-white-dd shadow flow-x">
 <div class="pxv-10 bc-silver">File 1 - Frame file sample (UserFrame.php)</div>        
                     <pre class="pre-code">

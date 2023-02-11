@@ -347,6 +347,7 @@ window.onload = function() {
 
           <ul class="list-square">
                <li> <a href="<?= DomUrl('docs/installation') ?>" class="<?= inPath('active') ?>"><span class="ico ico-spin"></span>Installation</a> </li>
+               <li> <a href="<?= DomUrl('docs/wmv') ?>" class="<?= inPath('active') ?>" ><span class="ico ico-spin"></span><span class="fb-6 pointer" title="Windows Models View">WMV</span> PATTERN</a></li>
                <li> <a href="<?= DomUrl('docs/live-server') ?>" class="<?= inPath('active') ?>"><span class="ico ico-spin"></span>Live Server</a></li>
                <li> <a href="<?= DomUrl('docs/database') ?>" class="<?= inPath('active') ?>"><span class="ico ico-spin"></span>Database</a> </li>
                <li> <a href="<?= DomUrl('docs/resource') ?>" class="<?= inPath('active') ?>"><span class="ico ico-spin"></span>Resource class</a> </li>
@@ -363,7 +364,6 @@ window.onload = function() {
                <li> <a href="<?= DomUrl('docs/mails') ?>" class="<?= inPath('active') ?>"><span class="ico ico-spin"></span>Handling Mails</a> </li>
                <li> <a href="<?= DomUrl('docs/cli') ?>" class="<?= inPath('active') ?>"><span class="ico ico-spin"></span>Cli Commands</a> </li>         
                <li> <a href="<?= DomUrl('docs/plugins') ?>" class="<?= inPath('active') ?>"><span class="ico ico-spin"></span>Composer and Plugins</a></li>
-               <li> <a href="<?= DomUrl('docs/wmv') ?>" class="<?= inPath('active') ?>" ><span class="ico ico-spin"></span>The <span class="fb-6 pointer" title="Windows Models View">WMV</span> PATTERN</a></li>
                <li> <a href="<?= DomUrl('docs/libraries') ?>" class="<?= inPath('active') ?>"><span class="ico ico-spin"></span>Third-Party Libraries</a> </li>
                <li> <a href="<?= DomUrl('docs/other-features') ?>" class="<?= inPath('active') ?>"><span class="ico ico-spin"></span>Other Features</a> </li>
           </ul>
@@ -455,14 +455,21 @@ window.onload = function() {
                         <div class="font-em-d87">
                         The example above reveals that urls are loaded through the server file <code>index.php</code>. In this way, all php urls and files are protected 
                         unless allowed. Since this method is favored, developer can either start a server on port <code>8080</code> by calling the command
-                        <code>php spoova start</code> which starts the server using cli or developers can use their preferred web server. Spoova has been configured to 
+                        <code>php mi start</code> which starts the server using cli or developers can use their preferred web server. Spoova has been configured to 
                         respond in a similar way.
                         </div> <br>  
 
                         <div class="font-em-d87">
-                        Once the server is started, spoova begins to search for its route files within the <code>Window</code> and <code>Window/Routes</code> folder. It is 
-                        important to keep the <code>windows/Index.php</code> file available in order to successfully load web pages. When file are loaded using the php server, 
-                        external css libraries icons may be affected. This may be resolved by loading the icons directly using the cdn link of such libraries. 
+                            <p>
+                                Once the server is started, spoova begins to search for its route files within the <code>Window</code> and <code>Window/Routes</code> folder. It is 
+                                important to keep the <code>windows/Index.php</code> file available in order to successfully load web pages if a basic logic which supports customized 
+                                Window entry file (or class) name is not used. <br> 
+                            </p>
+                        
+                            <p class="c-orange-d">
+                                Note that when file are loaded using the php inbuilt server ports, external css library icons may be affected. This may be resolved by 
+                                loading the icons directly using the cdn link of such libraries. 
+                            </p>
                         </div>
 
                     </div> <br>

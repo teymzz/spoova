@@ -86,14 +86,21 @@
                         <div class="font-em-d87">
                         The example above reveals that urls are loaded through the server file <code>index.php</code>. In this way, all php urls and files are protected 
                         unless allowed. Since this method is favored, developer can either start a server on port <code>8080</code> by calling the command
-                        <code>php spoova start</code> which starts the server using cli or developers can use their preferred web server. Spoova has been configured to 
+                        <code>php mi start</code> which starts the server using cli or developers can use their preferred web server. Spoova has been configured to 
                         respond in a similar way.
                         </div> <br>  
 
                         <div class="font-em-d87">
-                        Once the server is started, spoova begins to search for its route files within the <code>Window</code> and <code>Window/Routes</code> folder. It is 
-                        important to keep the <code>windows/Index.php</code> file available in order to successfully load web pages. When file are loaded using the php server, 
-                        external css libraries icons may be affected. This may be resolved by loading the icons directly using the cdn link of such libraries. 
+                            <p>
+                                Once the server is started, spoova begins to search for its route files within the <code>Window</code> and <code>Window/Routes</code> folder. It is 
+                                important to keep the <code>windows/Index.php</code> file available in order to successfully load web pages if a basic logic which supports customized 
+                                Window entry file (or class) name is not used. <br> 
+                            </p>
+                        
+                            <p class="c-orange-d">
+                                Note that when file are loaded using the php inbuilt server ports, external css library icons may be affected. This may be resolved by 
+                                loading the icons directly using the cdn link of such libraries. 
+                            </p>
                         </div>
 
                     </div> <br>

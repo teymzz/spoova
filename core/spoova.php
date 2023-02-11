@@ -58,8 +58,6 @@ class spoova extends Entry{
     private function start(){
 
         $document_root = dirname(__DIR__);
-        $pwd = $_SERVER['PWD'];
-        $root = dirname($pwd);
         
         self::log('..spoova started successfully');
         
