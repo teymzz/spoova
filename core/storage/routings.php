@@ -347,6 +347,7 @@ window.onload = function() {
 
           <ul class="list-square">
                <li> <a href="<?= DomUrl('docs/installation') ?>" class="<?= inPath('active') ?>"><span class="ico ico-spin"></span>Installation</a> </li>
+               <li> <a href="<?= DomUrl('docs/wmv') ?>" class="<?= inPath('active') ?>" ><span class="ico ico-spin"></span><span class="fb-6 pointer" title="Windows Models View">WMV</span> PATTERN</a></li>
                <li> <a href="<?= DomUrl('docs/live-server') ?>" class="<?= inPath('active') ?>"><span class="ico ico-spin"></span>Live Server</a></li>
                <li> <a href="<?= DomUrl('docs/database') ?>" class="<?= inPath('active') ?>"><span class="ico ico-spin"></span>Database</a> </li>
                <li> <a href="<?= DomUrl('docs/resource') ?>" class="<?= inPath('active') ?>"><span class="ico ico-spin"></span>Resource class</a> </li>
@@ -363,7 +364,6 @@ window.onload = function() {
                <li> <a href="<?= DomUrl('docs/mails') ?>" class="<?= inPath('active') ?>"><span class="ico ico-spin"></span>Handling Mails</a> </li>
                <li> <a href="<?= DomUrl('docs/cli') ?>" class="<?= inPath('active') ?>"><span class="ico ico-spin"></span>Cli Commands</a> </li>         
                <li> <a href="<?= DomUrl('docs/plugins') ?>" class="<?= inPath('active') ?>"><span class="ico ico-spin"></span>Composer and Plugins</a></li>
-               <li> <a href="<?= DomUrl('docs/wmv') ?>" class="<?= inPath('active') ?>" ><span class="ico ico-spin"></span>The <span class="fb-6 pointer" title="Windows Models View">WMV</span> PATTERN</a></li>
                <li> <a href="<?= DomUrl('docs/libraries') ?>" class="<?= inPath('active') ?>"><span class="ico ico-spin"></span>Third-Party Libraries</a> </li>
                <li> <a href="<?= DomUrl('docs/other-features') ?>" class="<?= inPath('active') ?>"><span class="ico ico-spin"></span>Other Features</a> </li>
           </ul>
@@ -494,9 +494,9 @@ window.onload = function() {
                         <div class="font-menu font-em-d85">
                             In example 2 above : 
 
-                            <br><br> We supplied a class using an array. The <code>App</code> class will be loaded from the <code>spoova\windows</code>
+                            <br><br> We supplied a class using an array. As an example, the <code>App</code> class will be loaded from the <code>spoova\windows</code>
                             directory and the <code>index</code> method will be called from that <code>App</code> class. However, since spoova uses standard 
-                            logic, web pages are only loaded classes using window files.
+                            logic, web pages are only loaded classes using window route files, that is, window files within <code>window\Routes</code> directory or app namespace.
                             
                             
                         </div> <br> 
@@ -513,7 +513,7 @@ window.onload = function() {
                                 <br><br>
 
                                 <div class="box-full font-menu font-em-d85 bc-white-dd shadow flow-x">
-                                <div class="pxv-10 bc-silver">Example 3 : Markup </div>        
+                                    <div class="pxv-10 bc-silver">Example 3 : Markup </div>        
                         <pre class="pre-code">
   &lt;?php
     
@@ -525,7 +525,7 @@ window.onload = function() {
 
   ?&gt;
                         </pre>
-                            </div> <br><br> 
+                                </div> <br><br> 
                             <div class="font-menu font-em-d85">
                                 The <code>markup</code> method above will return the compiled data. 
                             </div>
@@ -540,6 +540,37 @@ window.onload = function() {
                             Assuming that we are within a window file (or class), then the <code>Res::</code> class can be replaced with 
                             <code>self::</code>
                         </div> <br>
+
+                        <div class="box-full font-menu font-em-d85 bc-white-dd shadow flow-x">
+                                    <div class="pxv-10 bc-silver">Example 4 : Using window file </div>        
+                        <pre class="pre-code">
+  &lt;?php
+    
+    namespace spoova\window\Routes;
+
+    use Window;
+
+    class Home extends Window {
+
+        function __construct() {
+
+            $arguments = ['title' => 'This is Homepage'];
+
+            self::load('home', fn() => compile($arguments) );
+
+        }
+
+    }
+
+  ?&gt;
+                        </pre>
+                        </div> <br><br>
+
+                        <div class="foot-note">
+                            <span class="head">Footnote:</span> In the example above, not only were we able to use the <code>self::load()</code> 
+                            inherited method but we also passed an argument to the <code>home.rex.php</code> file using the compiler function which will 
+                            also compile or render the rex file. The above is also an example of loading rex templates files.
+                        </div> <br> 
 
                         <div class="learn-more">
                             <div class="fb-6">More on MVC and WMV</div>
