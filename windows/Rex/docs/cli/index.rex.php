@@ -292,7 +292,8 @@
 
     Ex1: <span class="c-orange-dd">php mi add:rex index</span>            <span class="no-select">//add <span class="c-teal">windows/Rex/index.rex.php</span> </span>
     Ex2: <span class="c-orange-dd">php mi add:rex index:css</span>        <span class="no-select">//add <span class="c-teal">windows/Rex/index.rex.css</span> </span>
-    Ex3: <span class="c-orange-dd">php mi add:rex build.index:css</span>  <span class="no-select">//add <span class="c-teal">windows/Rex/build/index.rex.css</span> </span>
+    Ex3: <span class="c-orange-dd">php mi add:rex index:js</span>         <span class="no-select">//add <span class="c-teal">windows/Rex/index.rex.js</span> </span>
+    Ex4: <span class="c-orange-dd">php mi add:rex build.index:css</span>  <span class="no-select">//add <span class="c-teal">windows/Rex/build/index.rex.css</span> </span>
   </span>
                 </pre>
               </div>
@@ -338,7 +339,7 @@
               <div class="pre-area shadow">
                 <div class="pxv-6 bc-silver">Syntax</div>
                 <pre class="pre-code">
-  php mi config:dbonline dbname dbuser dbpass dbserver dbport dbsocket
+  php mi config:dbonline "dbname dbuser dbpass dbserver dbport dbsocket"
   <span class="comment">
     where: 
 
@@ -351,7 +352,7 @@
 
         NOTE: Empty values are replaced with dash (i.e "-")
 
-        Ex: <span class="c-orange-dd">php mi config:dbonline tester root - localhost 3306 </span>  <span class="no-select">//set online database connection parameters </span>
+        Ex: <span class="c-orange-dd">php mi config:dbonline "tester root - localhost 3306" </span>  <span class="no-select">//set online database connection parameters </span>
 
   </span>
                 </pre>
@@ -378,7 +379,7 @@
               <div class="pre-area shadow">
                 <div class="pxv-6 bc-silver">Syntax</div>
                 <pre class="pre-code">
-  php mi config:dboffline dbname dbuser dbpass dbserver dbport dbsocket
+  php mi config:dboffline "dbname dbuser dbpass dbserver dbport dbsocket"
   <span class="comment">
     where: 
 
@@ -392,7 +393,7 @@
 
         NOTE: Empty values are replaced with dash (i.e "-")
 
-        Ex: <span class="c-orange-dd">php mi config:dbonline tester root - localhost 3306 </span>  <span class="no-select">//set offline database connection parameters </span>
+        Ex: <span class="c-orange-dd">php mi config:dbonline "tester root - localhost 3306" </span>  <span class="no-select">//set offline database connection parameters </span>
 
   </span>
                 </pre>
@@ -400,9 +401,9 @@
               </div>
 
               <div class="pre-area shadow">
-                <div class="bc-silver c-silver-dd pxv-6">Example</div>
+                <div class="bc-silver pxv-6">Example</div>
                 <pre class="pre-code">
-  <span class="c-lime-dd">php mi</span> <span class="c-orange-dd">config:dboffline</span><span class="c-violet-dd"> <abbr title="">mydatabase</abbr> <abbr title="">root</abbr> <abbr title="">-</abbr> <abbr title="">localhost</abbr> <abbr title="">3307</abbr> <abbr title="">-</abbr></span>
+  <span class="c-lime-dd">php mi</span> <span class="c-orange-dd">config:dboffline</span><span class="c-violet-dd"> <abbr title="">"mydatabase</abbr> <abbr title="">root</abbr> <abbr title="">-</abbr> <abbr title="">localhost</abbr> <abbr title="">3307</abbr> <abbr title="">-</abbr>"</span>
   <span class="comment">
     where: 
 
@@ -442,7 +443,7 @@
 
       tablename => name of database table
 
-      Ex: <span class="c-orange-dd">php mi config:userTable users</span>  <span class="no-select">// set database user info table</span>
+      Ex: <span class="c-orange-dd">php mi config:userTable users</span>  <span class="no-select">//set database user info table</span>
   </span>
 
                 </pre>
@@ -650,7 +651,7 @@
             <div>
 
                 <div class="pvs-10">
-                  This command installs the entire spoova application by testing all configuration parameters supplied for database,
+                  This command installs the entire spoova application by testing all configuration parameters supplied for database
                   and the entire application. It also creates neccessary database if the selected database name does not exist 
                   as long as the database connection parameters have been properly set. When no option is supplied, then the entire 
                   application is installed. Specific options performs their relative functions as shown below.
@@ -660,13 +661,13 @@
               <div class="pre-area shadow">
                 <div class="pxv-6 bc-silver">Syntax</div>
                 <pre class="pre-code">
-  php mi install [app|db|dbname]
+  php mi install [db|dbname] [folder?]
   <span class="comment">
     where: 
 
-      app    => installs entire spoova application 
-      db     => installs all database parameters 
-      dbname => creates init-configured database table name if it does not already exist in database
+      db     => test the database connection parameters defined in "icore/dbconfig.php" file 
+      dbname => creates default database name supplied in "icore/dbconfig.php" file using the defined connection parameters
+      folder => refers to an optional custom folder name in project root that contains an "icore/dbconfig.php" file with connection parameters.
   </span>
                 </pre>
 
@@ -685,8 +686,8 @@
               <div>
 
                   <div class="pvs-10">
-                    This command is used to create a new project application. This can only be done from the 
-                    spoova pack directory. When a new project file is created using the cli, all essential mapping 
+                    This command is used to create a new separate project application. This should be done from the 
+                    spoova project pack directory. When a new project file is created using the cli, all essential mapping 
                     of file to the current enviroment is done. It is highly suggested to create a new project app 
                     using the cli which ensures that the new project app is essentially ready for configuration.
                   </div>
@@ -701,7 +702,7 @@
 
       project_name => name of new project application
 
-      Ex: <span class="c-orange-dd">php mi project lumen</span>  <span class="no-select">// create separate project name "lumen"</span>
+      Ex: <span class="c-orange-dd">php mi project lumen</span>  <span class="no-select">//create separate project name "lumen"</span>
   </span>
                   </pre>
 
@@ -782,7 +783,7 @@
       Ex1: <span class="c-orange-dd">php mi watch online  </span>  <span class="no-select">//set watch to online and offline environments </span>
       Ex2: <span class="c-orange-dd">php mi watch offline </span>  <span class="no-select">//set watch to offline environment </span>
       Ex3: <span class="c-orange-dd">php mi watch disabled</span>  <span class="no-select">//set watch to disabled mode </span>
-      Ex3: <span class="c-orange-dd">php mi watch status</span>    <span class="no-select">//get current watch status.</span>
+      Ex4: <span class="c-orange-dd">php mi watch status</span>    <span class="no-select">//get current watch status.</span>
 
   </span>
                 </pre>

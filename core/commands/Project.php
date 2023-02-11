@@ -37,6 +37,181 @@ class Project extends Entry{
             return false;
         }
 
+        //default options
+        $entryFile = "Index";
+        $settings['projectLogic'] = 'standard';
+        $settings['webInstaller'] = true;
+
+        //Project Logic
+        Cli::textView(Cli::alert("What project logic do you prefer to use?"), 0, '|2');
+        $logics = ['basic', 'index', 'standard'];
+        Cli::list($logics, 0, '|1');
+        Cli::textView(br().Cli::warn('Logic: '), 2);
+
+        $response1 = Cli::prompt(['1','2','3', 'basic', 'index', 'standard'], function($input, $options){
+
+            if(Cli::promptInvalid($input, $options)) {
+                Cli::clearLine();
+                Cli::textView(Cli::error("Please choose a valid logic in [1, 2, 3]"), 0, "|1");
+                Cli::textView(br().Cli::warn('Logic: '), 2);
+            }
+
+        });
+
+        if(is_numeric($response1)) $response1 -= 1;
+        
+        $logic = $logics[$response1]?? $response1; //get logic name
+
+        if($logic === 'basic'){
+
+            Cli::break();
+
+            $input = Cli::q([], function(){
+
+                return [
+
+                    'init' => function(){
+                        Cli::textView(Cli::alert('Please input a base window file name: '));
+                    },
+
+                    'test' => function($input) {
+                       return preg_match("~^[a-zA-Z][a-zA-Z_0-9]+$~", $input, $matches)? true : false;
+                    },
+
+                    'failed' => function($input, $options, $counter){
+                        Cli::clearUp().Cli::clearLine();
+                        Cli::textView(Cli::error("invalid file name supplied!"), 0, "|2");
+                        return true;
+                    },
+
+                    'maximum' => fn() =>  Cli::textView(Cli::error("maximum number of trials reached"))
+
+                ];
+
+            }, 4);
+
+            if(Cli::qFailed()){
+                return false;
+            }
+
+            $choice = Cli::q('', function() use($input) {
+
+                return [
+
+                    'init' => function() use($input) {
+                        Cli::textView(Cli::alert('Window basic file name is "'.Cli::warn(ucfirst($input)).'" [Y/N] '), 0, "1");
+                    },
+
+                    'test' => function($input){
+                        $input =  strtolower($input);
+                        $valids = ['y', 'n'];
+                        return in_array($input, $valids);
+                    },
+
+                    'failed' => function($input, $options, $counter) {
+
+                        Cli::textView(Cli::error("invalid option supplied!"), 0, "|1");
+                        return true;
+
+                    },
+
+                    'maximum' => fn() => Cli::textView(Cli::error("maximum number of trials reached"))
+
+                ];
+
+            }, 4);
+
+            if(Cli::qFailed() || (strtolower($choice) === 'n')){
+                                
+                Cli::textView(br().Cli::alert("Use basic file name as \"".Cli::warn('Basic')."\"?"));
+
+                $response5 = Cli::q(['y'], fn() => 
+
+                    [
+                        'init' => fn() => Cli::textView("Press ".Cli::warn("\"Y\"")." to continue or any key to abort: ", 0, 1),
+                        'test' => function($input, $options){
+                            return in_array(strtolower($input), $options);
+                        },
+
+                        'maximum' => fn() => Cli::textView(Cli::error("maximum number of trials reached"), 0, "|1"),
+
+                        'failed' => function() {
+                            Cli::textView(Cli::error("process terminated"), 0, "1|2");
+                            exit;
+                        }
+
+                    ]
+            
+                );
+
+                $entryFile = "Basic";
+
+            }else{
+                $entryFile = $input;
+            }
+        }elseif( ($logic === 'index') || ($logic === 'standard') ) {
+            $entryFile = "Index";
+        }
+
+        $baseLogic = $logic;
+
+        if($logic === 'standard') {
+            $logic = '';
+        }else{
+            $logic = "'$entryFile'";
+        }
+
+        //Add web installer
+        $response2 = Cli::q(['y','n'], fn() => 
+
+            [
+                'init' => fn() => Cli::textView(Cli::alert("Add a web installer page? [Y/N] "), 0, 1),
+                'test' => function($input, $options){
+                    return in_array(strtolower($input), $options);
+                },
+
+                'maximum' => fn() => Cli::textView(Cli::error("maximum number of trials reached"), 0, "|1"),
+
+                'failed' => function() {
+                    Cli::textView(Cli::error("invalid option supplied!"), 0, "|1");
+                    return true;
+                }
+
+            ], 4
+    
+        );
+
+        if(Cli::qFailed()){
+            if(Cli::qmax()){
+                
+                Cli::textView(br().Cli::alert("No web installer page will be added"));
+
+                $response5 = Cli::q('y', fn() => 
+
+                    [
+                        'init' => fn() => Cli::textView("Press ".Cli::warn("\"Y\"")." to continue or any key to abort: ", 0, 1),
+                        'test' => function($input, $options){
+                            return strtolower($input) === $options;
+                        },
+
+                        'maximum' => fn() => Cli::textView(Cli::error("maximum number of trials reached"), 0, "|1"),
+
+                        'failed' => function() {
+                            Cli::textView(Cli::error("process terminated"), 0, "1|2");
+                            exit;
+                        }
+
+                    ]
+            
+                );
+
+                $addInstaller = false;
+
+            }
+        }else{
+            $addInstaller = (strtolower($response2) === 'y');
+        }
+
         // Handle environmental directive
         if(!is_file(_core.'custom/app')){        
             //write text, delay 2 seconds, break 2 lines
@@ -80,12 +255,13 @@ class Project extends Entry{
             if (!(new Install('app'))) {
                 return false;
             }
-            Cli::break(2);
+            Cli::break();
         } else {
             Cli::break(2);
         }
 
         # Load configurations ---------------------------------
+        
         Cli::textView('loading configurations', 4);
         
         yield from Cli::play(6); //run animation 6 times  
@@ -126,8 +302,10 @@ class Project extends Entry{
         //yield from Cli::animate(4, 2);
         
         //Remove unecessary files from new folder
-        $project_path = dirname(docroot).$project_name;
-        $this->flushapp($project_path, ['core/custom/app','core/custom/'.$app_name]);
+        $project_path = dirname(docroot).DS.$project_name;
+        $removables = ['core/custom/app','core/custom/'.$app_name];
+
+        $this->flushapp($project_path, $removables);
         
         Cli::textView(Cli::emos('checkmark'), 1, [0, 2]);
         Cli::pause(1);           
@@ -149,9 +327,24 @@ class Project extends Entry{
 
         $map = new Map([$project_name], false);
 
+        //use predefined logic 
+        $LOGIC = <<<LOGIC
+        <?php
+
+        include 'icore/filebase.php';
+
+        Server::run($logic);
+        LOGIC;
+
+        $LOGIC_FILE = $project_path.DS.'index.php';
+
+        file_put_contents($LOGIC_FILE, $LOGIC);
+
+
         //finalize 
         $final = new Welcome(dirname(docroot).DS.$project_name);
-        $final->build();
+
+        $final->build(['installer' => $addInstaller, 'entry_file' => $entryFile, 'logic' => $baseLogic ]);
 
         // Cli::textView(br(), 1);
         Cli::textView(Cli::warn(Cli::emo('diamond', '|1').$project_name).Cli::emo('bullet-arrow', [1, 1]).'http://localhost/'.$project_name, 4, [1, 1], [2, 1]);
@@ -191,7 +384,8 @@ class Project extends Entry{
         }
 
         if(is_dir((dirname(docroot).DS.$app_name))) {
-            $this->display('project "'.$app_name.'" already exists!');
+            Cli::textView(Cli::danger(Cli::emo('point-list', '|1').'mi project'), 0, "|2");
+            Cli::textView(Cli::error('project "'.Cli::warn($app_name).'" already exists!'), 0, '|2');
             return false;
         }
 
@@ -209,8 +403,9 @@ class Project extends Entry{
 
     private function flushapp($project_path, array $files){
         foreach($files as $file) {
-            if(is_file($project_path.'/'.$file)){
-                unlink($project_path.'/'.$file);
+            $fpath = to_backslash($project_path.'/'.$file);
+            if(is_file($fpath)){
+                unlink($fpath);
             }
         }
     }

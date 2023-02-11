@@ -178,7 +178,7 @@ class MkModel extends MkBase{
             Cli::textView(Cli::error('namespace', 1).Cli::warn($nameSpace.'\\'.$className, 1).' | file already exists');
             Cli::break(2);  
             
-            Cli::textView('Try using: '.Cli::btn('mi').Cli::warn('add:route '.$arg1.' -O', 1).' | to overwrite file', 1);
+            Cli::textView('Try using: '.Cli::btn('mi').Cli::warn('add:model '.$arg1.' -O', 1).' | to overwrite file', 1);
             
             Cli::break(2);  
 

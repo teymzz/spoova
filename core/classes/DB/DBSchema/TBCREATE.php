@@ -1576,8 +1576,6 @@ trait TBCREATE {
 
         $PRIMARY_KEY = (array) ($Table['::PRIMARY_KEY'] ?? []);
         $PRIMARY_KEY = implode(', ',$PRIMARY_KEY);
-
-        print_r($Table);
         
         $FOREIGN_KEY = $Table['::FOREIGN_KEY'] ?? [];
         $REFERENCES  = [];

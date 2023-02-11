@@ -47,6 +47,8 @@ use spoova\core\commands\Cli;
    */
   protected string $commandName = '';
 
+  protected array $commands;
+
   /**
    * description of command supplied
    *
@@ -378,6 +380,33 @@ use spoova\core\commands\Cli;
    */
   final public function addLog($message){
     self::$console_messages['log'][] = $message; 
+  }
+
+  /**
+   * Cli prompt
+   *
+   * @param array $options
+   * @param \Closure $callback
+   * @return void
+   */
+  final public function prompt(array $options = [], \Closure $callback = null): string {
+
+    $input = trim(fgets(STDIN, 1024));
+
+    if(func_num_args() > 0){
+
+      $callback($input);
+
+      if(!in_array($input, $options)){
+
+        $this->prompt(...func_get_args());
+
+      }
+      
+    }
+
+    return $input;
+
   }
 
   /**

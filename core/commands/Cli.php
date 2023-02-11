@@ -2,6 +2,8 @@
 
 namespace spoova\core\commands;
 
+use Closure;
+
 /**
  * Animation class for cli
  */
@@ -135,6 +137,11 @@ class Cli
     private static $loadTime = 60000;
 
     private static $textView = '';
+
+    private static $prompt = [];
+    private static $q = [];
+
+    private static $storage = [];
 
     /**
      * Animation loader type
@@ -553,6 +560,315 @@ class Cli
     }
 
     /**
+     * Returns a string of dots based on required number of strings to be generated
+     *
+     * @param integer $total total number of characters to be generated
+     * @param string $text string character provided
+     *  - Note that the total number of characters to be generated (i.e arg(#1)) must be 
+     *    greater than the number of characters in the text provided (i.e arg(#2))
+     * @return string 
+     */
+    public static function dots(int $total, string $text = '', $char = ".") : string{
+        
+        $textNum = strlen($text);
+
+        if($total > $textNum){
+            $dotsNum = $total - $textNum;
+        }else{
+            //$text = limitChars($text, $total);
+            $dotsNum = 0;
+        }
+
+        //print br($text.": ".$dotsNum);
+
+        return str_repeat($char, $dotsNum);
+
+    }
+
+    /**
+     * Store any data type for use later
+     *  - This may overwrite existing data
+     * @param integer $index
+     * @param mixed $value
+     * @param boolean $exec determines if a closure value should be executed once.
+     * @return mixed 
+     *   Returns exact value supplied or value returned by a closure if closure was supplied 
+     */
+    public static function save(int $index, $value, bool $exec = false){
+        
+        self::$storage[$index] = $value;
+        
+        if($exec && ($value instanceof closure)){
+            return $value();
+        }
+
+        return $value;
+
+    }
+
+    /**
+     * Call any closure function using index name if it exists in storage
+     *
+     * @param integer $index
+     * @param mixed $value
+     * @return mixed dependent on what function returns (or void)
+     */
+    public static function fn(int $index){
+
+        if(isset(self::$storage[$index]) && (self::$storage[$index] instanceof Closure)){
+           return self::$storage[$index]();
+        }
+
+    } 
+
+    
+  /**
+   * Cli prompt
+   *
+   * @param array $options Valid options to be tested
+   * @param \Closure $callback callback function to be applied on option
+   * @param $terminate terminate prompt (in number of times) if option is not valid
+   * @param $new determines if a new prompt is called.. Default value should not be modified
+   *    - True terminates once
+   *    - Integers determines the number of acceptable error times 
+   * @return string
+   */
+   public static function prompt(array $options = [], \Closure $callback = null, bool|int $terminate = false, bool $new = true): string {
+
+        static $counter = 0;
+
+        if($new){
+            $counter = 0;
+            self::$prompt = [];
+            self::$prompt['maximum_accepted'] = $terminate;
+            unset(self::$prompt['invalid']);
+        }
+
+
+        //return if number of times exceeded
+        if(is_int($terminate) && ($terminate == $counter) && ($counter !== 0)){
+            $trials = $counter;
+            $counter = 0;
+            self::$prompt['maximum'] = true;
+            self::$prompt['invalid'] = true;
+            self::$prompt['trials'] = $trials;
+            self::$prompt['terminate'] = $terminate;
+            $callback(self::$prompt['val'] ?? '', $options, self::$prompt);
+            return self::$prompt['val'] ?? '';
+        }
+
+        $input = '';
+        $input = trim(fgets(STDIN, 1024));
+        $counter++;
+    
+        self::$prompt['val'] = $input;
+
+        if(func_num_args() > 0){
+
+            if($options && !in_array($input, $options)){
+                
+                self::$prompt['trials'] = $counter;
+                self::$prompt['terminate'] = $terminate;
+                self::$prompt['invalid'] = true;
+                $callback($input, $options, self::$prompt);
+
+                if( ($terminate === false || is_int($terminate)) ){
+                    self::prompt($options, $callback, $terminate, false);
+                }else{
+                    Cli::break(2);
+                }
+
+            }elseif(!$options){                
+                
+                if( ($terminate === false || is_int($terminate)) && empty($input) ){
+                    print " ";
+                    self::$prompt['trials'] = $counter;
+                    self::$prompt['terminate'] = $terminate;
+                    self::$prompt['invalid'] = true;
+                    $callback($input, $options, self::$prompt);  
+                    self::prompt($options, $callback, $terminate, false);
+                }else{
+                    Cli::break(2);
+                }
+                
+            }
+        
+        }
+
+        $counter = 0;
+        if($options && !in_array($input, $options)) self::$prompt['invalid'] = true;
+        return self::$prompt['val'] ?? '';
+
+    }
+
+    /**
+     * Open a new stdin prompt channel
+     *
+     * @param mixed $option optional option to be tested
+     * @param Closure $callback must return an array using specific key indexes: init, test, success, failed, maximum each having a closure value. 
+     *  - init callback function will run every time the prompt is recalled
+     *  - test callback will contain the test logic which must return a bool value of true or false 
+     *  - success callback will be called if the test returns a true value 
+     *  - failed callback will be called if the test fails. If the callback returns a true value, Cli::q() will be recalled, else it will be terminated 
+     *  - maximum callback will be executed if the maximum number of trials defined by $trials is reached
+     * @param integer|null $trials
+     * @return boolean|string
+     */
+    public static function q(mixed $option, Closure $callback, int $trials = null)  : bool|string {
+        static $counter = 0;
+
+        $callbacks = $callback($option);
+
+        if(!isset(self::$q['val']) || ($counter === 0) ) {
+            self::$q['val'] = '';
+            if($counter === 0) {
+                self::$q['max'] = false;
+                self::$q['failed'] = false;
+            }
+        }
+        
+        if(is_array($callbacks)){
+
+            //initialize callback argument variables
+            $success = '';
+            $failed  = '';
+            $test    = '';
+            $init    = '';
+            $maximum = '';
+
+            //test all arguments -----------------------------------------------------------------
+            if($counter === 0){
+                if(isset($callbacks['init']) && !(($init = $callbacks['init']) instanceof Closure)) {
+                    Cli::textView(Cli::error('q(#2) "init" must be a closure'), 0,  "|1");
+                    return false;
+                }
+    
+    
+                if(isset($callbacks['test']) && !(($test = $callbacks['test']) instanceof Closure)) {
+                    Cli::textView(Cli::error('q(#2) "test" must be a closure'), 0,  "|1");
+                    return false;
+                }elseif(!isset($callbacks['test'])) {
+                    Cli::textView(Cli::error('q(#2) "test" must be defined'), 0,  "|1");
+                    return false;                
+                }
+    
+                if(isset($callbacks['success']) && !(($success = $callbacks['success']) instanceof Closure)) {
+                    Cli::textView(Cli::error('q(#2) "success" must be a closure'), 0,  "|1");
+                    return false;
+                }
+    
+                if(isset($callbacks['failed']) && !(($failed = $callbacks['failed']) instanceof Closure)) {
+                    Cli::textView(Cli::error('q(#2) "failed" must be a closure'), 0,  "|1");
+                    return false;
+                }
+    
+                if(isset($callbacks['maximum']) && !(($maximum = $callbacks['maximum']) instanceof Closure)) {
+                    Cli::textView(Cli::error('q(#2) "maximum" must be a closure'), 0,  "|1");
+                    return false;
+                }
+            }else{
+                $success = $callbacks['success'] ?? '';
+                $failed  = $callbacks['failed']  ?? '';
+                $test    = $callbacks['test']    ?? '';
+                $init    = $callbacks['init']    ?? '';
+                $maximum = $callbacks['maximum'] ?? '';
+            }
+            
+            //Check for maximum trials --------------------------------------------------------------------
+            if(is_int($trials) && ($counter == $trials)){
+                
+                if($maximum) {
+
+                    $counter = 0; 
+                    self::$q['max'] = true;
+                    $callbacks['maximum'](self::$q['val'], $option, $counter);
+                    return self::$q['val'];
+
+                }
+
+            }
+
+            //Run inital command --------------------------------------------------------------------------
+            if($init) $init($option, $counter);
+    
+            //Get input supplied --------------------------------------------------------------------------
+            
+            self::$q['val'] = trim(fgets(STDIN, 1024));
+
+            $counter++;
+
+            $response = $test(self::$q['val'], $option, $counter); //run the test...
+
+            if(!is_bool($response)){
+                Cli::textView(Cli::error('q(#2) "test" must return a bool'), 0, "|1");
+                $counter = 0;
+                return false;                
+            }
+
+            if($response === true){
+                self::$q['failed'] = false;
+                $count = $counter;
+                $counter = 0;
+                if($success)  $success(self::$q['val'], $option, $count);                
+                
+            }else{
+                //Re-prompt only if failed closure returns a true
+                self::$q['failed'] = true;
+                if($failed && $failed(self::$q['val'], $option, $counter)) self::q($option, $callback, $trials, false);     
+            }
+
+        }else{
+             Cli::textView(Cli::error('Cli::q(#2) closure argument must return an array'), 0, '|1');
+            return false;
+        }
+        $counter = 0;
+        return self::$q['val'];
+    }
+
+    public static function  qFailed() : bool{
+        return self::$q['failed']?? false;
+    }
+
+    public static function  qValid() : bool{
+        return !self::qFailed();
+    }
+    public static function  qmax() : bool{
+        return self::$q['max']?? false;
+    }
+
+    public static function promptInvalid($input = '', array $options = []) : bool {
+
+        if(func_num_args() === 0) return self::$prompt['invalid'] ?? false;
+
+        $maximum_accepted = self::$prompt['maximum_accepted'] ?? false;
+
+        $prompt = self::$prompt;
+
+        if(is_int($maximum_accepted)){
+
+            if((($prompt['trials'] < $maximum_accepted) || ($prompt['terminate'] === false)) && !in_array($input, $options)) {
+                self::$prompt['invalid'] = true;
+                return true;
+            }
+
+        }else{            
+            
+            if(($prompt['terminate'] === false) && !in_array($input, $options)) {
+                self::$prompt['invalid'] = true;
+                return true;
+            }
+            
+        }
+        self::$prompt['invalid'] = false;
+        return false;
+    }
+
+    public static function promptIsMax() : bool {
+        return self::$prompt['maximum'] ?? false;
+    }
+
+
+    /**
      * Clears cursor back in the number of times defined
      *
      * @return string chr(8)
@@ -588,6 +904,29 @@ class Cli
      */
     public static function clearUp(int $linesCount = 1){
         echo "\033[2K\r"."\033[{$linesCount}A";
+    }
+
+    /**
+     * Add a list of items
+     *
+     * @param array $array array of keys and string value
+     * @param string $spaces 
+     * @param string $spaces
+     * @return void
+     */
+    public static function List(array $array, $spacing = "0|0", $break = "0|0", $interval = "0|0"){
+
+        array_map(function($value, $key) use($spacing, $break, $interval){
+            
+            if(is_numeric($key)){
+                $key += 1;
+            }
+
+            //display list
+            Cli::textView("$key. $value", $spacing, $break, $interval);
+
+        }, $array, array_keys($array));
+
     }
 
 

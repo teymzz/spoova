@@ -15,11 +15,11 @@ if(!defined('basefolder') || empty($_SERVER['DOCUMENT_ROOT'])){
       $ds = DIRECTORY_SEPARATOR;
       $broot = str_replace(["/","\\"], $ds, realpath(broot).'/');
       $bfol = str_replace("\\",$ds, str_replace("/",$ds,bfol));
-      //$bfol = str_replace("//",$ds, $bfol);
+
       if(empty($_SERVER['DOCUMENT_ROOT'])){
        
         return dirname(__DIR__).'/'.$path;
-        // return str_replace("//","/",broot.$xbfol);
+        
       }
       $broot = (!in_array($_SERVER['REMOTE_ADDR'],['127.0.0.1','::1','']))? dirname($broot) : $broot;
       $surl = ($broot != $ds)? str_replace($broot,'',$bfol) : $bfol;

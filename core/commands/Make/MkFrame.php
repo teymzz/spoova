@@ -40,8 +40,8 @@ class MkFrame extends MkBase{
 
 
         if(!$classArg) {
-            $this->display(Cli::color('Error:', 'red').' no class name supplied!');
-            $this->display('Syntax:'.Cli::btn('mi','add:frame', '','', '').Cli::color('<className>', 'yellow', 0), 2);
+            Cli::textView('Syntax: '.Cli::btn('mi','|1').Cli::color('add:frame', 'red', "|1").Cli::warn('<args>'), 0, "|2");
+            Cli::textView('Type: '.Cli::emo('ribbon-arrow', '|1').Cli::btn('mi','|1').Cli::color('info', 'blue', "|1").Cli::warn('add:frame')." to see full syntax.", 0, "|2");
             return false;
         }
         
@@ -64,8 +64,26 @@ class MkFrame extends MkBase{
             if(is_file($classPath.'.php') && ($arg2 !== '-O')){
 
                  Cli::textView("Frame ".Cli::warn("\"$className\"")." already exists! ", 0, '|2');
-                 Cli::textView(Cli::alert("Notice:")." use directive \"-O\" to overwrite ", 0, '|2');
-                return false;
+
+                 Cli::textView('Overwite existing file? [Y, N] ');
+
+                 $response = Cli::prompt(['Y','N','y','n'], function($input, $options){
+
+                    if(!in_array($input, $options)) {
+                         Cli::textView('Overwite existing file? [Y, N] ');
+                    }
+
+                 });
+
+                 if(strtolower($response) !== 'y') {
+                    Cli::textView(br().Cli::alert('Notice:').' File creation aborted!', 0, '|2');
+                    return false;
+                 }else{
+                    Cli::break();
+                 }
+
+                //  Cli::textView(Cli::alert("Notice:")." use directive \"-O\" to overwrite ", 0, '|2');
+                //  return false;
 
             }
 

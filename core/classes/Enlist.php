@@ -19,6 +19,7 @@ class Enlist{
 	private $counter = 1;
 	private $espace;
 	private $reNumber;
+	public $smartUrl;
 
 	private function processUrl($url){
        

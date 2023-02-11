@@ -8,11 +8,18 @@ namespace core\classes;
  */
 class IPHandler
 {
+     public string $userIP;
 
      public function localIP(){
           return $this->get_local_ip();
      }
 
+     /**
+      * Get client ip
+      *
+      * @param string $type
+      * @return void
+      */
      public function clientIP($type=null){
           //$type: will be added later
           $this->userIP = $this->get_client_ip();
@@ -30,24 +37,24 @@ class IPHandler
           }
      }
 
-     /**
-      * Returns the information of an ip using geoplugin.net
-      *
-      * @param string $customIP
-      * @return mixed
-      */
-     public function geoInfo($customIP = null){
+     // /**
+     //  * Returns the information of an ip using geoplugin.net
+     //  *
+     //  * @param string $customIP
+     //  * @return mixed
+     //  */
+     // public function geoInfo($customIP = null){
           
-          $user_ip = !is_empty($customIP)? $customIP : $this->clientIP();
-          if(!filter_var($user_ip,FILTER_VALIDATE_IP)){ return false; }
+     //      $user_ip = !is_empty($customIP)? $customIP : $this->clientIP();
+     //      if(!filter_var($user_ip,FILTER_VALIDATE_IP)){ return false; }
           
-          try{
-               $geo = unserialize(@file_get_contents("http://www.geoplugin.net/php.gp?ip=$user_ip"));
-               return $geo;
-          }catch(\Exception $e){
-               return false;
-          }
-     }
+     //      try{
+     //           $geo = unserialize(@file_get_contents("http://www.geoplugin.net/php.gp?ip=$user_ip"));
+     //           return $geo;
+     //      }catch(\Exception $e){
+     //           return false;
+     //      }
+     // }
 
      private function get_client_ip()
      {
@@ -86,14 +93,3 @@ class IPHandler
      }
 
 }
-
-// $IPHandler = new IPHandler;
-
-// if($ipAddress = $IPHandler->clientIP()){
-//   //$User->update('ipAddress',$ipAddress); //sample only
-//   //$User->delete('$user'); //sample only
-//   //$User->add('$user',$data);   //sample only
-// }else{
-//   $IPHandler->redirect('suspicious')
-//   //IPADDRESS IS SUSPICIOUS	
-// }

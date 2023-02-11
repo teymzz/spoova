@@ -15,6 +15,13 @@ class MiPDO extends DBBridge{
   \PDO::MYSQL_ATTR_FOUND_ROWS   => true
     ]; 
 
+  /**
+   * Determines when a connection is successful
+   *
+   * @var boolean
+   */
+  public bool $dbConnection;
+
   
   /**
    * modifies the settings of pdo connection

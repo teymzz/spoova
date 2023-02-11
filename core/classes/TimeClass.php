@@ -19,6 +19,7 @@ class TimeClass{
   private $min;
   private $sec;
   private $all;
+  private $type;
 
   /**
    * set time to be converted

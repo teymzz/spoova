@@ -12,10 +12,9 @@ trait TBALTER {
     public static array $ALTER = [];
 
     /**
-     * Drops a table, column, indexes or primary key 
+     * Drops a column, indexes or primary key 
      *
      * @param string $name 
-     *  - if $name is bool(true), the current table will be dropped
      *  - if $name is string, the current table's column $name will be dropped
      *  - if $name is "PRIMARY KEY", the current table's primary key index will be dropped
      * @param string $identifier
@@ -23,7 +22,7 @@ trait TBALTER {
      *  - if $identifier is supplied, then first argument option ranges are: ["INDEX"|"UNIQUE"|"FORIEGN KEY"|"PRIMARY KEY"]
      * @return void|false
      */
-    static function DROP(string|bool $name, string $identifier = ''){
+    static function DROP(string $name, string $identifier = ''){
 
         self::callables(__FUNCTION__);
 
@@ -34,24 +33,18 @@ trait TBALTER {
                 return self::callError(Cli::error('invalid number of arguments count on "'.Cli::warn('DRAFT::DROP()').'" method'));                
         }
 
-        if(strtoupper($name) === 'PRIMARY KEY'){
+        if(is_string($name) && (strtoupper($name) === 'PRIMARY KEY')){
             $argsCount = 2;
         }
 
 
         if($argsCount < 2){
 
-            if($name === true){
-                self::$ALTER['DROP']['TABLE'][] = $name;
-            }elseif(is_string($name)){
-
-                if(trim($name)){
-                    self::$ALTER['DROP']['COLUMN'][] = $name;
-                }else{
-                    Cli::textView(Cli::error('argument(#1) of "'.Cli::warn('DROP()').'" cannot be an empty value"'));
-                    return self::callError(Cli::error('argument(#1) of "'.Cli::warn('DROP()').'" cannot be an empty value"'));
-                }
-
+            if(trim($name)){
+                self::$ALTER['DROP']['COLUMN'][] = $name;
+            }else{
+                Cli::textView(Cli::error('argument(#1) of "'.Cli::warn('DROP()').'" cannot be an empty value"'));
+                return self::callError(Cli::error('argument(#1) of "'.Cli::warn('DROP()').'" cannot be an empty value"'));
             }
 
         }else{
@@ -200,7 +193,6 @@ trait TBALTER {
         $CHANGES = $Table['CHANGE'] ?? []; //TABLE SCOPE
 
         if($ADD){
-            //$DRAFT .= "ALTER TABLE {$TABLE}"; //Base Query
 
             $FIELDS = array_map(function($value, $key){
 
@@ -242,13 +234,14 @@ trait TBALTER {
                             $rel = array_values($val)[0]?? '';
                             $value = $key." ".$rel;
                         }else{
-                            if($key === 'COLUMN'){
-                                $value = "COLUMN {$val}";
+                            if(($key === 'COLUMN') || ($key === 'TABLE')){
+                                $value = "$key `{$val}`";
                             }else{
 
                                 $value = $val;
                             }
                         }
+
                         return "DROP $value";
 
                 }, $value, array_keys($value)); 
@@ -264,6 +257,7 @@ trait TBALTER {
         $FOREIGN_KEY = $Table['::FOREIGN_KEY'] ?? [];
 
         $PRIMARY_KEY = implode(', ',$PRIMARY_KEY);
+        $REFERENCES = [];
 
         $uniqueFields = self::$instance->uniqueFields;
 
@@ -320,12 +314,13 @@ trait TBALTER {
         }
 
         if($convert = (self::$ALTER['CONVERT_TO'] ?? '')){
-            $DRAFT .= ", CONVERT TO CHARACTER SET ".$rename;
+            $DRAFT .= ", CONVERT TO CHARACTER SET ".$convert;
         }
 
         $DRAFT = ltrim($DRAFT, ',');
 
         $DRAFT = trim("ALTER TABLE {$TABLE} {$DRAFT}");
+
         return $DRAFT;
 
     }

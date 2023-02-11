@@ -7,10 +7,11 @@ use Window;
 class Router extends Slicer{
 
     public $request;
+    protected $method;
     public $response;
     protected $routes = [];
     protected $data = '';
-    protected $methodset = false;
+    protected bool $methodset = false;
     private $route = []; //details of the current route
     private $errorFile = '';
     
