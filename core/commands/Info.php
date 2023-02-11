@@ -189,7 +189,7 @@ class Info extends Entry{
             #---------------------            
             'config:meta'        => 'Allows or disallow the autoloading of environment meta tags by the resource class when importing static urls
     
- Syntax :'.self::mi('config:meta[on|off]','','','').'',
+ Syntax :'.self::mi('config:meta ','','','').Cli::warn('[on|off]'),
             
             #---------------------
             'cli'                => 'Displays a list of spoova cli commands

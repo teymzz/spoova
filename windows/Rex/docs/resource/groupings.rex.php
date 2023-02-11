@@ -543,10 +543,7 @@
                                             Using cli commands: <br>
                                             <ul>
                                                 <li>
-                                                    Navigate to the core folder of your project file. For example: <code>c:\www\project_folder\core >> </code> 
-                                                </li>
-                                                <li>
-                                                    Run the command <code>php spoova watch <span class="c-green-l">online|offline|disable</span></code> to turn on, off or disable the default live server
+                                                    Run the command <code>php mi watch <span class="c-green-l">online|offline|disable</span></code> to turn on, off or disable the default live server
                                                 </li>
                                                 <li>
                                                     Online : means to run live server in both online and offline environments
@@ -569,10 +566,7 @@
                                             Using cli commands: <br>
                                             <ul>
                                                 <li>
-                                                    Navigate to the core folder of your project file. For example: <code>c:\www\project_folder\core >> </code> 
-                                                </li>
-                                                <li>
-                                                    Run the command <code>php spoova meta <span class="c-green-l">on|off</span></code> to turn on or off the meta tags importation.
+                                                    Run the command <code>php mi config:meta <span class="c-green-l">on|off</span></code> to turn on or off the meta tags importation.
                                                 </li>
                                             </ul>
 
