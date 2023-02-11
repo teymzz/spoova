@@ -22,6 +22,7 @@ abstract class SharedInfo{
   protected static $init = [];
   protected static $init_base;
   protected $fileManager;
+  public $dbtable;
   
   /**
    * Supplying arguments into assumes a new connection

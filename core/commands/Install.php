@@ -4,6 +4,7 @@ namespace spoova\core\commands;
 use spoova\core\classes\DB;
 use spoova\core\classes\DB\DBConfig;
 use spoova\core\classes\FileManager;
+use User;
 
 /**
  * @package core/commands
@@ -18,38 +19,44 @@ class Install extends Entry{
 
 
         $method = trim( ($args[0]?? ' ') );
-        $dbname = trim( ($args[1]?? ' ') );
-        $dburl  = trim( ($args[2]?? ' ') );
+        $folname = trim( ($args[1]?? ' ') );
+        //$dburl  = trim( ($args[2]?? ' ') );
 
-        if(!$method){
+        if(count($args) > 2){
             $this->display(Cli::danger(Cli::emo('point-list', '|1'). 'install'));
+            Cli::textView(Cli::error("invalid number of arguments count supplied."), 0, "|2");
+        }
+
+        if(!$method || ($max = (count($args) > 2))){
+            if(empty($max)) $this->display(Cli::danger(Cli::emo('point-list', '|1'). 'install'));
             $this->display('Syntax :'.self::mi('install', '','','').Cli::warn('<args>', 1), 1);
-            $this->display(Cli::emo('ribbon-arrow', '2|1').self::mi('install:', '','','').Cli::warn('[app|db|dbname]', 0));
-            $this->display(Cli::notice('NOTE:').Cli::warn('install app', 0).' is the same as '.Cli::warn('install:app', 0), 1);
+            $this->display(Cli::emo('ribbon-arrow', '2|1').self::mi('install ', '','','').Cli::warn('[db|dbname]', 0).Cli::danger(" [folder?]"));
+            $this->display(Cli::emo('ribbon-arrow', '2|1').self::mi('install ', '','','').Cli::warn('db', 0).Cli::emo("infinite-arrow","1|1").'tests default database connection parameters');
+            $this->display(Cli::emo('ribbon-arrow', '2|1').self::mi('install ', '','','').Cli::warn('dbname', 0).Cli::emo("infinite-arrow","1|1").'adds default configured database name to database if not exist');
+            $this->display(Cli::emo('ribbon-arrow', '2|1').self::mi('install ', '','','').Cli::warn('[db|dbname]', 0).Cli::danger('folder', 1).Cli::emo("infinite-arrow","1|1").'uses custom folder "icore/dbconfig.php" parameters');
             return false;
         }
 
-        if($method === 'app' || $args === 'app') {
 
+        if($method === 'app' || $args === 'app') {
             Cli::loadTime(50000);
             Cli::runAnime([[$this, 'app'], '']);
-            //$this->app();
             return;            
         }         
 
         if($method === 'db') {
-            $this->install_db($dbname);
+            //test default or custom folder dbconfig connection
+            $this->install_db($folname);
             return;
         }
 
         if($method === 'dbname') {
-            $newargs = [$dbname];
-            if($dburl) array_push($newargs, $dburl);
-            $this->install_dbname(...$newargs);
+            //$newargs = [$dbname];
+            //if($dburl) array_push($newargs, $dburl);
+            //create a database name for default or custom folder dbconfig connection
+            $this->install_dbname($folname);
             return;            
         }
-
-
 
         if(method_exists($this, $method)  && $method != 'complete_setup') {
             array_shift($args);
@@ -58,24 +65,25 @@ class Install extends Entry{
             return;
         }
 
-        $this->addError('command "'.implode(' ',$args).'" not recognized');
+        Cli::textView(Cli::error('command "'.implode(' ',$args).'" not recognized'), 0, "|2");
         return;
 
     }
 
     /**
      * Install spoova app
+     *  - Generate an unexisting spack file and update custom app file 
      *
      * @return void
      */
     public function app()
     {   
-        Cli::animeType('roller');
-        $this->display(Cli::color(Cli::emo('point-list','|1'). "Install App", 'green'));
+        //Cli::animeType('roller');
+        //$this->display(Cli::color(Cli::emo('point-list','|1'). "Install App", 'green'));
         
         // Text 1: start test animation
         yield from Cli::play(5, 2, 'Installing application');
-        //Cli::animeType('roller');
+        Cli::animeType('roller');
         yield from Cli::play(5);
         Cli::pause(3);
         yield from Cli::play(5);
@@ -84,7 +92,7 @@ class Install extends Entry{
 
         // Handle environmental directive
         if(!is_file(_core.'custom/app')){
-            yield Cli::endAnime(0, 1, Cli::error('invalid command "app"'));
+            yield Cli::endAnime(0, 1, Cli::error('the command "app" is not enabled for this environment.'));
         }
 
         // Import FileManager
@@ -100,11 +108,10 @@ class Install extends Entry{
         $sys_cresp  = sys.'/'.self::crest;
         $sys_cresf  = sys.'/'.self::crest;
 
-        //NOTE: Root installation was suspended
-
         // Generate a spack file 
         if(!is_file($crest_file)) {
 
+            // zip project file into core/custom/spv directory
             $Filemanager->setUrl(docroot);
             $Filemanager->zipUrl(_core.'custom/spv');
             
@@ -116,11 +123,12 @@ class Install extends Entry{
             if($Filemanager->zipped()){
 
                 //unlink previous spack file...
-                if(is_file($crest_spac)) unlink($crest_spac);
+                $Filemanager->removeFile($crest_spac);
 
                 // Text 1: continue loading ...               
                 yield from Cli::play(20); 
 
+                //continue with zipped file and move zip to defined deirectory with defined name
                 $Filemanager->moveTo(_core.'custom/', self::crest);
             }
 
@@ -219,15 +227,39 @@ class Install extends Entry{
     }
 
     /**
-     * Try to install the database using default parameters
+     * Tries to connect to the database using default parameters defined
      *
-     * @param string $url : optional url
+     * @param string $folder : optional folder name
      * @return void
      */
-    private function install_db($url = ''){
+    private function install_db($folder = ''){
+
+        Cli::textView(Cli::danger(Cli::emos('point-list', 1).'install db '.$folder), 0, '0|1');
+
+        $configUrl = ltrim($folder."/icore", " /");
+
+        if((strpos($folder, "/") !== false) || (strpos($folder, "\\") !== false)){
+            Cli::textView(Cli::error('subdirectory folder name must only be a name with no paths.'), 0, "1|2");
+            return false;
+        }elseif(!is_dir($configUrl)){
+            Cli::textView(Cli::error('directory "'.Cli::warn($configUrl).'" does not exist'), 0, "1|2");
+            return false;
+        }elseif(!is_file($configUrl.'/dbconfig.php')){
+
+            Cli::textView(Cli::error('Directory "'.Cli::warn($configUrl).'" does not contain a "dbconfig.php" file.'), 0, "1|2");
+
+            return false;
+
+        }else{
+            $folder = $folder."/icore/dbconfig.php";
+            $folder = ltrim($folder, "/");
+        }
 
         //*  Load offline connection parameters /
-        if( !$offlineConfig = $this->loadDB( (func_num_args() > 1? $url : false)) ) return;
+        if( !$offlineConfig = $this->loadDB($folder)) {
+            Cli::textView(Cli::error('invalid configuration parameters defined for "'.Cli::warn($folder).'"'));
+            return;
+        }
         
         $offline = $offlineConfig ; //offline configurations
 
@@ -235,27 +267,34 @@ class Install extends Entry{
 
         $isNamed = $offline['NAME']?? false;
 
-        
+        if(strtolower($folder) !== 'icore/dbconfig.php') {
+            $for = 'for "'.Cli::warn($folder).'" ' ;
+        }else{
+            $for = '';
+        }
+
         if($isNamed) {
 
             if($dbcon->openDB($offline)){
                 if($dbcon->active()){
-                    $this->addLog('Database "'.$isNamed.'" connected successfully ');
+                    Cli::textView(Cli::success('Database "'.$isNamed.'" connected successfully '.$for), 0, '1|2');
                     return;
                 }
             } else {
                 //Try to connect without database name
                 if($dbcon->openTool($offline)){
-                    $this->addError('Database connected but "'.$isNamed.'" failed to connect');
+                    Cli::textView(Cli::notice('Database connected but "'.$isNamed.'" failed to connect '.$for), 0, "1|2");
+                }else{
+                    Cli::textView(Cli::error('Database connection failed '.$for), 0, "1|2");
                 }
             }
 
         } else {
 
             if($dbcon->openTool($offline)) {
-                $this->addLog('Database connected. (No database name selected)');
+                Cli::textView('Database connected '.$for.'(No database name selected)');
             } else {
-                $this->addError('Database connection failed.');
+                Cli::textView('Database connection failed '.$for);
             }
             
         }
@@ -265,61 +304,115 @@ class Install extends Entry{
     /**
      * Try to create a new database name using default parameters
      *
-     * @param string $dname new database name
-     * @param string $dbconfig_url : optional dbconfig file directory
+     * @param string $folder : optional icore/dbconfig.php folder name
      * @return void
      */
-    private function install_dbname($dbname, $dbconfig_url = '') {
+    private function install_dbname($folder = '') {
  
-        if($dbname == '') {
-            $this->addLog(">> install dbname <database_name> <optional_dbconfig_directory>");
-            $this->addLog(str_repeat(" ", 14)."Note: optional directory as relative or absolute should not be started with a slash");
-            return;
+        Cli::textView(Cli::danger(Cli::emos('point-list', 1).'install dbname '.$folder), 0, '0|2');
+
+        if(trim($folder) == '') {
+
+
+            Cli::textView('What will you like to do with this command', 0 , "|2");
+            Cli::List(['Run command', 'View syntax', 'View syntax and description'], 0, "|1");;
+            
+            Cli::save(1, fn() => Cli::textView(Cli::emo('ribbon-arrow', "4|1"), 0, 1), true);
+
+            $response = Cli::q([1, 2, 3], fn() => 
+                [
+                    'init' => fn() => '',
+                    'test' => fn($input, $options) => in_array(strtolower($input), $options),
+                    'maximum' => function() {
+                         Cli::textView(Cli::error('maximum number of trials reached'), 0, '|2');
+                         exit;
+                    },
+                    'failed' => function() {
+                        Cli::clearUp();
+                        Cli::fn(1);
+                        return true;
+                    }
+                ], 4
+            );
+
+            if(CLi::qFailed()) {
+                 echo Cli::textView(Cli::error('process terminated'), 0, "1|2");
+                 return;
+            }
+
+            if(($response == 2) || ($response == 3)){
+                Cli::textView("Syntax: ".self::mi('install ').Cli::warn('dbname ').Cli::danger("[folder?]"), 4, "1|2");
+                if($response == '3') {
+                    Cli::textView('Creates configured database name from the dbconfig file if it does not exist', 4, "0|2");
+                    Cli::textView(Cli::warn('dbname').': creates default database name if not exist using default "icore/dbconfig.php" parameters.', 4, "|2");
+                    Cli::textView(Cli::danger('folder').' (optional): custom sub-folder name which contains "icore/dbconfig.php" file.', 4, "|2");
+                } 
+                return;
+            }
+
+            if($response == 1){
+                $dbname = User::config('DBNAME');
+
+                if(!$dbname) {
+                    Cli::textView(Cli::error('no default database name set in "icore.dbconfig.php" file'), 0, "|2");
+                    return;
+                }
+            }
+            
         }
 
-        if(!$dbconfig_url) $dbconfig_url = domroot();
+        if(!$folder) $folder = domroot();
 
-        $configPath =  rtrim($dbconfig_url, '/ ')."/dbconfig.php";
+        $configPath =  rtrim($folder, '/ ')."/icore/dbconfig.php";
 
-        if( func_num_args() > 1 and !is_file($configPath) ){
+        if( func_num_args() > 0 and !is_file($configPath) ){
 
-            Cli::error('cannot find "'.$configPath.'"'); 
+            Cli::error('cannot find "'.Cli::warn($configPath).'"', 0, "|2"); 
             return;
 
         } else {
 
-            $this->loadDB($configPath);
-            return;
+            $folder = $configPath;
 
         }
 
         //*  Load offline connection parameters /        
-        $url = (func_num_args() > 1)? [$dbconfig_url] : [];
+        // $url = (func_num_args() > 1)? [$folder] : [];
 
-        if(!$offlineConfig = $this->loadDB(...$url)) return ;
+        if(!$offlineConfig = $this->loadDB($folder)) {
+            Cli::error('invalid configuration format detected in "'.Cli::warn($configPath).'"', 0, "|2");
+            return ;
+        }
+
+        $dbname = ($offlineConfig['NAME']??'');
 
         if($db = ($dbcon = new DB)->openDB($offlineConfig)) {
-      
+    
             if($db->db_exists($dbname)) {
-                $this->addLog('  Spoova says -> database "'.$dbname.'" already exists');
-            } else {
+                Cli::textView(Cli::notice('database "'.Cli::warn($dbname).'" already exists'), 2, "1|2");
+                return;
+            } else {  
+
                 if($db->createDB($dbname)) {
-                    $this->addLog('  Spoova says -> database "'.$dbname.'" created successfully  ');
+                    Cli::textView(Cli::success('database "'.Cli::warn($dbname).'" added successfully'), 0, "|2");
                     return;
                 }
                 
-                if($db->error()) { 
-                    $this->addError('database "'.$dbname.'" failed to create');
-                    $this->addLog('  Spoova says -> '.$db->error() );
-                    return ;
+                if($db->error(true)) {
+
+                    Cli::textView(Cli::error('database "'.Cli::warn($dbname).'" failed to create'), 0, '|2');
+                    Cli::textView(Cli::error($db->error(true)), 0, "|2");
+                    return;
                 } 
             }        
             
         } else  {
 
             if($dbcon->error()) {
-                $this->addError('database "'.$dbname.'" failed to create');
-                $this->addError('Spoova says -> "'.$dbname.'" '.$dbcon->error());
+                //Cli::textView(Cli::error('database "'.$dbname.'" failed to create'), 0, "|2");
+                Cli::textView(Cli::error('Database connection parameters failed for "'.Cli::warn($configPath).'"'), 0, "|2");
+            }else{
+                Cli::textView(Cli::error('something is wrong'));
             }
 
         }

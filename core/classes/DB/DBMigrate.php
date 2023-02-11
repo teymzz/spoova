@@ -30,5 +30,13 @@ class DBMigrate {
 
     }
 
+    public function status($args) {
+
+        $DBMigrator = new DBMigrator;
+
+        $DBMigrator->migrate_status(...func_get_args());
+
+    }
+
 
 }

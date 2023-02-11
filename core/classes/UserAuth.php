@@ -14,13 +14,15 @@ use \User;
  */
 class UserAuth extends SharedInfo{
 
-  private $dbtable;
+  public $dbtable;
   private $info = false;
   private $message;
   private $error; 
   private $passField = 'password';
   private $password  = false;
   private string $fields  = '';
+  private string $values  = '';
+  private bool $primary;
 
   /**
    * Connect to database using a new custom connection

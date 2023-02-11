@@ -6,14 +6,42 @@ use spoova\core\classes\FileManager;
 
 class Welcome {
 
+    protected $ProjectPath;
+
     function __construct($ProjectPath)
     {
-
         $this->ProjectPath = $ProjectPath;
 
     }
 
-    function window() : string {
+    function window($fileName, $logic) : string {
+
+
+        $Logic1 = <<<LOGIC
+        self::call(\$this,
+            [
+                window('root') => 'root'
+            ]
+        ); 
+        LOGIC;
+
+        $Logic2 = <<<LOGIC
+        if(self::isIndex(\$this)){
+      
+            self::call(\$this, [
+       
+               window('root') => 'root',
+               
+            ]);
+   
+        } else {
+
+            if(!self::callRoute(window('root'))) self::close();
+
+        } 
+        LOGIC;
+
+        $Logic =  ($logic === 'standard')? $Logic1 : $Logic2;
 
         $content = <<<CONTENT
         <?php
@@ -22,15 +50,11 @@ class Welcome {
         
         use Window;
         
-        class Index extends Window {
+        class $fileName extends Window {
             
             public function __construct(){
         
-                self::call(\$this,
-                    [
-                        window('root') => 'root'
-                    ]
-                );
+                $Logic
         
             }
         
@@ -152,16 +176,18 @@ class Welcome {
 
     }
 
-    function build() {
+    function build(array $options = []) {
 
         $ProjectPath = $this->ProjectPath;
+
+        $entryFile  = ucfirst($options['entry_file']);
+        $baseLogic  = $options['logic'];
         
-        $indexContent = $this->window();
+        $indexContent = $this->window($entryFile, $baseLogic);
 
         $tempContent = $this->template();
-
-        $installer   = $this->installer();
-
+        $installer = $options['installer'];
+        $installer   = $installer ? $this->installer() : '';
 
         if(is_dir($ProjectPath)) {
 
@@ -179,14 +205,17 @@ class Welcome {
             }
 
             //Create a new File
-            $indexPath = $ProjectPath.'/windows/Routes/'.'Index.php';
+            $indexPath = $ProjectPath.'/windows/Routes/'."$entryFile.php";
             $installPath = $ProjectPath.'/windows/Routes/'.'Install.php';
             $tempPath = $ProjectPath.'/windows/Rex/'.'index.rex.php';
 
-            if($Filemanager->openFiles($indexPath, $installPath, $tempPath)) {
+            $openFiles = [$indexPath, $tempPath];
+            if($installer) $openFiles[] = $installPath; //add installer file
+
+            if($Filemanager->openFiles($openFiles)) {
 
                 file_put_contents($indexPath, $indexContent);   
-                file_put_contents($installPath, $installer);
+                if($installer) file_put_contents($installPath, $installer);
                 
                 //create a new index rex template file
                 file_put_contents($tempPath, $tempContent);

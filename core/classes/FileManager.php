@@ -1053,7 +1053,7 @@ class FileManager extends Enlist{
     }
 
     /**
-     * Deletes a supplied file or folder dorectory
+     * Deletes a supplied file or folder directory
      *
      * @param string $dir
      * @return boolean
@@ -1083,6 +1083,21 @@ class FileManager extends Enlist{
         return false;
       }
 
+    }
+
+    /**
+     * removes a file from a directory only if it exists
+     *   - Note: no response message is set
+     * @param string $path  path of file 
+     * @param boolean $check 
+     *    - if $check is set as true, method will return true if file does not exist
+     *    - if $check is set as false, method will return true only if an existing file was unlinked
+     * @return boolean
+     */
+    public function removeFile(string $path, bool $check = false) : bool {
+      if(!is_file($path) && $check) return true;
+      if(is_file($path)) return unlink($path);
+      return false;
     }
 
     /**

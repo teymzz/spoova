@@ -3,6 +3,8 @@
 
 namespace spoova\core\commands\Make;
 
+use spoova\core\classes\DB\DBSchema\DBSCHEMA;
+use spoova\core\classes\DB\DBSchema\DRAFT;
 use spoova\core\classes\FileManager;
 use spoova\core\commands\Cli;
 use spoova\core\commands\Make\MkBase;
@@ -101,11 +103,7 @@ class MkMigrator extends MkBase{
 
               public function down() {
 
-                 DBSCHEMA::ALTER(\$this, function(DRAFT \$DRAFT){
-
-                    \$DRAFT::DROP(true);
-
-                 });
+                 DBSCHEMA::DROP(\$this);
 
               }  
 
@@ -158,10 +156,7 @@ class MkMigrator extends MkBase{
                 'namespace' => $nameSpace, 
                 'class'     => $prefix.$className, 
                 'methods'   => $content,
-                'use'       => [
-                    'spoova\core\classes\DB\DBSchema\DBSCHEMA',
-                    'spoova\core\classes\DB\DBSchema\DRAFT'
-                ]
+                'use'       => [DBSCHEMA::class, DRAFT::class]
             ]);
             file_put_contents($filepath, $format);
             

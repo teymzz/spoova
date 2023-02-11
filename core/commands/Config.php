@@ -6,11 +6,11 @@ use spoova\core\classes\DB\DBConfig;
 class Config extends Entry{
 
     /* Database constants */
-    private const DBCONSTANTS = [ 'USER', 'PASS', 'NAME', 'SERVER', 'PORT', 'SOCKET' ];
+    private const DBCONSTANTS = [ 'NAME', 'USER', 'PASS', 'SERVER', 'PORT', 'SOCKET' ];
 
     /* methods that are allowed to be called directly on config */
     private $direct = [
-        'meta', 'watch', 'init', 'install', 'users_table', 'cookie_fieldname'
+        'meta', 'watch', 'init', 'install', 'usersTable', 'cookieField', 'idField'
     ];   
 
     private static array $offline = []; 
@@ -29,19 +29,10 @@ class Config extends Entry{
 
             Cli::textView(Cli::danger(Cli::emo('point-list', '|1').'mi config'));
             Cli::textView(Cli::emos('hot', 1).'sets configuration', 0, '2|1');
-            Cli::textView(Cli::emo('ribbon-arrow','|1').'Syntax:'.self::mi('config','','','').Cli::warn('<options>', 1), 0, '1|2');
+            Cli::textView(Cli::emo('ribbon-arrow','|1').'Syntax:'.self::mi('config:','','','').Cli::warn('[option] <args>'), 0, '1|2');
 
-            foreach (self::directives as $directive => $value) {
-                if(strstr($directive, 'config') and (trim($directive) !== 'config') ){
-                    $config[$directive] = $value;
-                }
-            }
-
-            if(empty($config)){
-                $this->addLog('No options found!');
-            } else {
-                $this->addLog($config);
-            }
+            Cli::textView(Cli::warn('[option] => '). "[dbonline|dboffline|meta|usersTable|cookieField|idField]", 3, "|2");
+            Cli::textView('Type '.self::mi('info').Cli::danger('config:', 1).Cli::warn('[option]').' to see specified option syntax', 3, "|2");
             
             return;   
         }  
@@ -54,7 +45,10 @@ class Config extends Entry{
             return;
         }
 
-        $this->addError('command "'.$arg.'" not recognized');
+
+        self::commandTitle('config:'.$arg.Cli::br());
+
+        Cli::textview(Cli::error('"'.$arg.'" not recognized'), 0, "|2");
 
     }
 
@@ -66,6 +60,8 @@ class Config extends Entry{
      */
     public function dbonline(){
 
+        self::commandTitle('config:dbonline'.Cli::br());
+
         $args = func_get_args();
 
         $url = $args[1]?? "/icore";
@@ -78,12 +74,34 @@ class Config extends Entry{
             $url .= '/dbconfig.php';
         }
         
-        if(!$arg = $this->testdb_var($args)) return false;
+        if(!$arg = $this->testdb_var($args, __FUNCTION__)) return false;
 
         if(!($dbvalues = $this->render_arguments($arg)) ) return false;
 
         //make installation
         $this->setup_db('online',$dbvalues, $url);
+
+        Cli::textView("Will you like to use the same configuration for offline environment? [Y, N] ");
+
+        $response = Cli::prompt(['Y','N', 'y', 'n'], function($input, $options, $times){
+
+            if(!in_array($input, $options)){
+                Cli::textView("Oops! Invalid option supplied", 0, "|2");
+            }
+
+            if($times > 3){
+                Cli::textView("trials exceeded, aborting command...", 0 , "|2");
+            }
+
+        }, 3);
+
+        if(strtolower($response) === 'y'){
+            Cli::break();
+            $this->setup_db('offline',$dbvalues, $url);
+        } else {
+            Cli::textView(Cli::alert("Notice: ").'Default offline connection unchanged', 0, '1|1');
+            Cli::break();
+        }
 
     }
 
@@ -95,6 +113,8 @@ class Config extends Entry{
      */
     public function dboffline(){
 
+        self::commandTitle('config:dboffline'.Cli::br());
+
         $args = func_get_args();
 
         $url = $args[1]?? "/icore";
@@ -107,12 +127,37 @@ class Config extends Entry{
             $url .= '/dbconfig.php';
         }
 
-        if(!$arg = $this->testdb_var($args)) return false;
+        if(!$arg = $this->testdb_var($args, __FUNCTION__)) return false;
 
         if(!($dbvalues = $this->render_arguments($arg)) ) return false;
 
         //make installation
         $this->setup_db('offline',$dbvalues, $url);
+
+        Cli::textView("Use the same configuration for online environment? [Y, N] ");
+
+        $response = Cli::prompt(['Y','N', 'y', 'n'], function($input, $options, $times){
+
+            if(!in_array($input, $options)){
+                if($times == 3){
+                    Cli::break();
+                    Cli::textView(Cli::error("maximum trials exceeded, aborting command..."));
+                }else{
+                    Cli::textView(Cli::warn("oops: ")."invalid option supplied", 0, "|2");
+                    Cli::textView("Use the same configuration for online environment? [Y, N] ");
+                }
+            }
+
+
+        }, 3);
+        
+        if(strtolower($response) === 'y'){
+            Cli::break(1);
+            $this->setup_db('online',$dbvalues, $url);
+        } else {
+            Cli::textView(Cli::alert('Notice: ').'Default online connection unchanged', 0, '1|1');
+            Cli::break();
+        }
 
     }    
 
@@ -122,13 +167,16 @@ class Config extends Entry{
      * @param array $arg
      * @return string
      */
-    private function testdb_var(array $arg): string{
+    private function testdb_var(array $arg, $option = ''): string{
         
         $arg = $arg[0]?? '';
         $arg = trim($arg , "'");
         
         if(empty($arg)){
-            Console::error('invalid syntax. Type "spoova config" to see a list of valid options', "(args)" ); 
+            
+            Cli::textView(Cli::danger(Cli::emo('point-list', '|1').'mi config:'.$option));
+            Cli::textView('sets database '.ltrim($option, 'db').' configuration', 0, '2|1');
+            Cli::textView(Cli::emo('ribbon-arrow','|1').'Syntax:'.self::mi('config:'.$option,'','','').Cli::warn('"dbname dbuser dbpass dbserver dbport dbsocket"', 1), 0, '1|2');
             return '';
         }
         
@@ -148,7 +196,7 @@ class Config extends Entry{
         $match = preg_match('~[A-Za-z-\s]+~', $arg);
 
         if(!$match){
-             $this->addError("invalid syntax");
+             Cli::textView(Cli::error("invalid syntax"));
              return false;
         }
 
@@ -160,12 +208,16 @@ class Config extends Entry{
         
         //prevent lesser parameters
         $counts = count($dbvalues);
-        if($counts !== 6){
-            $this->addError("invalid count(".$counts.") of parameters supplied. ");
+
+        if($counts < 5){
+            Cli::textView(Cli::error("invalid count(".$counts.") of parameters supplied. "));
             return false;
         }
 
+        if(count($dbvalues) < 6) $dbvalues[] = '';
+
         $dbvalues = array_combine(self::DBCONSTANTS, $dbvalues); 
+
         return $dbvalues;
 
     }
@@ -182,16 +234,15 @@ class Config extends Entry{
     private function setup_db(string $environment, array $dbvalues, string $url) {
 
         //check the environment
-        if($environment !== "online" and $environment !== "offline"){
+        $environments = ['online','offline'];
+
+        if(!in_array($environment, $environments)){
             Console::error('environment not set');
             return false;
         }
 
-        //$dbconfig as loaded init file configurations
-       DBConfig::load($url, $dbconfig);
-        
-        //database keys
-        $dbkeys = self::DBCONSTANTS;
+        //$dbconfig will contain loaded init file configurations
+        DBConfig::load($url, $dbconfig);
         
         $allconfig = $dbconfig;
 
@@ -205,10 +256,10 @@ class Config extends Entry{
             
             //modify the online information if neccessary 
             if(count($online) < 6 and count($online) > 1){
-                Console::error("dbconfig file format is not accepted");
+                Cli::textView(Cli::error("dbconfig file format is not accepted"), 0, '|2');
                 return false;
             }elseif(empty($online)){
-                $online =  array_flip(self::DBCONSTANTS);
+                $online =  array_flip(self::DBCONSTANTS); //database keys
                 $online = array_fill_keys(array_keys($online), '');
             }
             
@@ -221,7 +272,7 @@ class Config extends Entry{
 
             //modify the offline information if neccessary 
             if(count($offline) < 6 and count($offline) > 1){
-                Console::error("dbconfig file format is not accepted");
+                Cli::textView(Cli::error("dbconfig file format is not accepted"), 0, '|2');
                 return false;
             }elseif(empty($offline)){
                $offline =  array_flip(self::DBCONSTANTS);
@@ -256,7 +307,7 @@ class Config extends Entry{
         fwrite($fp2, preg_replace('/[[:blank:]]+/',' ',$newconfig));
         fclose($fp2);  
 
-        Console::say($environment." setup configuration successful");
+        Cli::textView(Cli::success($environment." setup configuration successful"), 0, '|2');
     }
 
     private function meta(){
@@ -265,9 +316,7 @@ class Config extends Entry{
         self::commandTitle('config:meta');
 
         if((count($args) < 1) || (count($args) > 1)){
-            //$syntax = self::$syntaxes['config']['meta']?? '';
-            //print $syntax;
-            //$this->log_syntax($syntax);
+
             Cli::break(1);
             
             Cli::textView(Cli::error('Expecting exactly one(1) argument'), 1);
@@ -311,17 +360,19 @@ class Config extends Entry{
 
     }
 
-    private function dbusers_table() {
+    private function usersTable() {
         $args = func_get_args();
 
+        self::commandTitle('config:usersTable');
+
         if(count($args) < 1){
-            $syntax = self::$syntaxes['config']['users_table'];
-            $this->log_syntax($syntax);
+            //$syntax = self::$syntaxes['config']['users_table'];
+            Cli::textView(Cli::emo('ribbon-arrow','|1').'Syntax:'.self::mi('config:','','','').Cli::warn('userTable <tablename>'), 0, '1|2');
             return;
         }
 
         if(count($args) > 1){
-            Console::error("install user_table expects exactly one parameter");  
+            Cli::textView(br().Cli::error("usersTable expects exactly one parameter").br('',2));  
             return;
         }
         
@@ -332,26 +383,27 @@ class Config extends Entry{
             $FileManager->textUpdate(['USER_TABLE' => $table_name]);
             
             if($FileManager->readFile('USER_TABLE')){
-                Console::log('user table configured successfully');    
+                Cli::textView(br().Cli::success('user table configured successfully').br('', 2));    
                 $this->complete_setup();         
             } else {
-                Console::log('user table configuration failed');                
+                Cli::textView(br().Cli::error('user table configuration failed').br('', 2));                
             }
         }
 
     }
 
-    private function dbusers_id_fieldname() {
+    private function idField() {
         $args = func_get_args();
 
+        self::commandTitle('config:idField');
+
         if(count($args) < 1){
-            $syntax = self::$syntaxes['config']['dbusers_id_fieldname'];
-            $this->log_syntax($syntax);
+            Cli::textView(Cli::emo('ribbon-arrow','|1').'Syntax:'.self::mi('config:','','','').Cli::warn('idField <columnName>'), 0, '1|2');
             return;
         }
 
         if(count($args) > 1){
-            Console::error("install user_table expects exactly one parameter");  
+            Cli::textView(br().Cli::error("idField expects exactly one parameter").br('', 2));  
             return;
         }
         
@@ -362,24 +414,32 @@ class Config extends Entry{
             $FileManager->textUpdate(['USER_ID_FIELDNAME' => $field_name]);
             
             if($FileManager->readFile('USER_ID_FIELDNAME')){
-                Console::log('user id field configured successfully');    
+                Cli::textView(br().Cli::success('user id field configured successfully').br('', 2));    
                 $this->complete_setup();         
             } else {
-                Console::log('user id field configuration failed');                
+                Cli::textView(br().Cli::error('user id field configuration failed').br('', 2));             
             }
         }
 
     }
 
-    private function dbcookie_fieldname() {
+    private function cookieField() {
+
+        self::commandTitle('config:idField');
+
         $args = func_get_args();
-        if(count($args) < 1){
-          Console::log(">> config cookie_fieldname [ user_database_cookie_field_name ]");  
-          return;
+        
+        if(count($args) < 1){ 
+
+            Cli::textView(Cli::emo('ribbon-arrow','|1').'Syntax:'.self::mi('config:','','','').Cli::warn('cookieField <columnName>'), 0, '1|2');
+
+            return;
         }    
 
         if(count($args) > 1){
-            Console::error("install cookie_fieldname expects exactly one parameter");  
+
+            Cli::textView(br().Cli::error("cookieField expects exactly one parameter").br('', 2));  
+
             return;
         }
         
@@ -389,70 +449,34 @@ class Config extends Entry{
         if($FileManager = $this->get_init()){
             $FileManager->textUpdate(['COOKIE_FIELDNAME' => $cookie_fieldname]);
             
-            if($FileManager->readFile('RESOURCE_META')){
-                Console::log('cookie field configured successfully');   
-                //try to complete setup
+            if($FileManager->readFile('COOKIE_FIELDNAME')){
+                Cli::textView(br().Cli::success('cookie field configured successfully').br('', 2)); 
+
                 $this->complete_setup();         
             } else {
-                Console::log('cookie field configuration failed');                
+                Cli::textView(br().Cli::error('cookie field configuration failed').br('', 2));            
             }
         }
 
     }   
     
-    private function init(){
-        $args = func_get_args();
-
-        if(empty($args)){
-            $syntax = self::$syntaxes['config']['init'];
-            $this->log_syntax($syntax);
-            return;
-        }
-
-        var_dump($args);
-
-        // $arg = array_shift($args)[0]; 
-        // $args = array_values($args);
-        // $this->$arg(...$args);
-        // return;
-    }
-
     /**
      * Transfer all installations to the Installation  Handler Class
      *
      * @params $params : list of arguments supplied
      * @return void
      */
-    private function install($params = '') {
+    // private function install($params = '') {
 
-        self::error(" config install is not recognized... ");
-        self::log(' use instead :: >> init install ');
+    //     self::error(" config install is not recognized... ");
+    //     self::log(' use instead :: >> init install ');
         
-    }
+    // }
 
 
     //complete the setup installation file
     private function complete_setup(){
         //run this after all configuration has been made
-    }
-
-    /**
-     * Separates a syntax from a string of text where syntaxes are identified by double forward arrows (>>)
-     *
-     * @param string $syntax
-     * @return void
-     */
-    private function log_syntax($syntax){
-
-        $expSyntax = explode(">>", $syntax, 2)[1]?? '';
-            
-        if($expSyntax){
-            Console::log(">> ".$expSyntax);
-            return;
-        }
-
-        Console::log("no syntaxes found for this command");
-
     }
 
     private function watch($arg = ''){
@@ -461,17 +485,6 @@ class Config extends Entry{
         $this->display(Cli::notice('Please Type:'.self::mi('watch', '','', '').' instead'), 2);
 
     }
-
-
-
-    
-//  USER_TABLE: users;
-//  COOKIE_FIELDNAME: cookie;
-//  USER_ID_FIELDNAME: email;
-//  TABLE_CONFIGURATION: 3;
-//  RESOURCE_WATCH: 1
-//  RESOURCE_META: on
-//  SETUP_COMPLETE: 1
     
 
 }

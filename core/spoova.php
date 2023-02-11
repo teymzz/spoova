@@ -29,7 +29,7 @@ class spoova extends Entry{
 
         if(!isCli()) redirect('/');
         
-        parent::__construct($appName);
+        parent::__construct($appName); //sets the app name
 
         if(!$this->commands){ 
             if($commands = self::commands()){
@@ -106,7 +106,7 @@ class spoova extends Entry{
         $command = ($commands)? $commands[0] : '';
         $tolower = strtolower((string)$command);
 
-        /* Handle Root calls */
+        /* Handle Root Commands */
         if(in_array($tolower, self::root)){
 
             if($command == 'cli' && count($commands) == 2){
@@ -187,7 +187,6 @@ class spoova extends Entry{
      * @return void
      */
     public function run(){
-
         /* start development server */
         if(self::commands(0) == 'start'){
             self::start(); 

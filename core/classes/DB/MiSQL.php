@@ -7,6 +7,15 @@ use mysqli_sql_exception;
 class MiSQL extends DBBridge{
 
   /**
+   * Determines when a connection is successful
+   *
+   * @var boolean
+   */
+  public bool $dbConnection;
+
+  public $connection;
+
+  /**
    * Open a new MySQLi connection
    *
    * @return boolean
