@@ -242,7 +242,7 @@ body.--theme-dark{
     <script src='http://localhost/spoova/res/main/js/switcher.js'></script>
     
 </head>
-<body>
+<body class="--theme-dark">
 
     <script>
         $(document).ready(function(){
@@ -672,7 +672,7 @@ window.onload = function() {
 
         keys : array of keys to be read in given local file
         separator  : An optional character separator used to separate keys and values. 
-                    By default, this is set as column <code>:</code>. When set as true, 
+                    By default, this is set as colon <code>:</code>. When set as true, 
                     the readFile checks if the key supplied exists within the file and returns
                     a bool of true or false                                     
     </span>
@@ -867,7 +867,7 @@ window.onload = function() {
         key : target key
         value: target key's new value.
         separator  : An optional character separator used to separate keys and values. 
-                    By default, this is set as column <code>:</code>. When set as true, 
+                    By default, this is set as colon <code>:</code>. When set as true, 
                     the readFile checks if the key supplied exists within the file and returns
                     a bool of true or false        
                                             </span>
@@ -912,7 +912,7 @@ window.onload = function() {
         key : target key
         updates: a referenced variable that contains all successful updates 
         separator  : An optional character separator used to separate keys and values. 
-                    By default, this is set as column <code>:</code>. When set as true, 
+                    By default, this is set as colon <code>:</code>. When set as true, 
                     the readFile checks if the key supplied exists within the file and returns
                     a bool of true or false        
                                             </span>
@@ -960,7 +960,7 @@ window.onload = function() {
     key : target key
     updates: a referenced variable that contains all successful deletes 
     separator  : An optional character separator used to separate keys and values. 
-                By default, this is set as column <code>:</code>. When set as true, 
+                By default, this is set as colon <code>:</code>. When set as true, 
                 the readFile checks if the key supplied exists within the file and returns
                 a bool of true or false        
     </span>
@@ -1006,7 +1006,7 @@ window.onload = function() {
 
         path : path of file
         separator  : An optional character separator used to separate keys and values. 
-                    By default, this is set as column <code>:</code>. When set as true, 
+                    By default, this is set as colon <code>:</code>. When set as true, 
                     the readFile checks if the key supplied exists within the file and returns
                     a bool of true or false
     </span>
@@ -1053,7 +1053,7 @@ window.onload = function() {
 
         path : path of file
         separator  : An optional character separator used to separate keys and values. 
-                    By default, this is set as column <code>:</code>. When set as true, 
+                    By default, this is set as colon <code>:</code>. When set as true, 
                     the readFile checks if the key supplied exists within the file and returns
                     a bool of true or false
     </span>

@@ -14,7 +14,7 @@
     @res('res/main/js/switcher.js')
     @live
 </head>
-<body>
+<body class="--theme-dark">
 
     <script>
         $(document).ready(function(){
