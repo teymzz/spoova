@@ -49,6 +49,7 @@
               <li><a href="#add-api">add:api</a></li>
               <li><a href="#add-rex">add:rex</a></li> 
               <li><a href="#clean-storage">clean storage</a></li> 
+              <li><a href="#config-all">config:all</a></li>
               <li><a href="#config-dbonline">config:dbonline</a></li>
               <li><a href="#config-dbonline">config:dboffline</a></li>
               <li><a href="#config-usersTable">config:usersTable</a></li>
@@ -319,6 +320,32 @@
   php mi clean storage
                 </pre>
               </div>
+            </div> 
+          </div> 
+          
+          <div id="config-all"> 
+            <br>
+            <div class="font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
+              <div class="flex-full midv"> <span class="bi-gear mxr-8 c-lime-dd"></span> config:all </div>
+
+            </div>
+            
+            <div>
+
+              <div class="pvs-10">
+                This is an interactive console guide to set up all required essential configuration parameters.
+              </div>
+
+              <div class="pre-area shadow">
+                <div class="pxv-6 bc-silver">Syntax</div>
+                <pre class="pre-code">
+  php mi config:all
+  <span class="comment">
+    Note: database connection parameters must always be wrapped within quotes.
+  </span>
+                </pre>
+
+</div>
             </div> 
           </div> 
           

@@ -1,6 +1,9 @@
 <?php
 
 namespace spoova\core\commands;
+
+use PDO;
+use spoova\core\classes\DB;
 use spoova\core\classes\DB\DBConfig;
 
 class Config extends Entry{
@@ -10,11 +13,13 @@ class Config extends Entry{
 
     /* methods that are allowed to be called directly on config */
     private $direct = [
-        'meta', 'watch', 'init', 'install', 'usersTable', 'cookieField', 'idField'
+        'meta', 'watch', 'init', 'install', 'usersTable', 'cookieField', 'idField',
+        'all'
     ];   
 
     private static array $offline = []; 
     private static array $online = [];
+    private static $all = false;
 
     /**
      * @param array func_get_args() : installer arguments
@@ -52,6 +57,183 @@ class Config extends Entry{
 
     }
 
+    public function all(){
+
+        self::$all = true;
+
+        self::commandTitle('config:all'.Cli::br());
+
+        Cli::textView(Cli::alert("Please setup the following configuration parameters"), "0|0", "|2");
+
+        Cli::textView(Cli::warn("Database parameters (offline): "), 0, "");
+        $response = Cli::prompt([], null, true);
+
+        if(trim($response)) {
+            $response = ltrim(rtrim($response,'"'), '"');
+            $this->dboffline($response);
+        }else{
+            Cli::clearUp(2);
+            Cli::clearLine();
+            Cli::textView(Cli::warn('skipping offline database parameters...'), 0, "|2");
+        }
+
+        Cli::textView(Cli::warn("Database parameters (online) : "), "0|0");
+        $response = Cli::prompt([], null, true);    
+
+        if(trim($response)) {
+            $this->dbonline($response);
+        }else{
+            Cli::clearUp(2);
+            Cli::clearLine();
+            Cli::textView(Cli::warn('skipping online database parameters...'), 0, "|2");
+        } 
+
+        if(!online){
+
+            Cli::textView(Cli::alert("Proceed to test offline connection? [Y/N] "));
+            $response = strtolower(Cli::prompt([], null, true)); 
+
+            if($response === 'y') {
+
+                //get connection parameters;
+                $config = docroot."/icore/dbconfig.php";
+                DBConfig::load($config, $configs);
+                $oconfigs = $configs['offline']??[];
+                array_trim($oconfigs);
+                $dbname = ($oconfigs['NAME'] ?? '');
+
+                unset($oconfigs['NAME']);
+                $configs = array_keys($oconfigs);
+
+                $dbc= new DB();
+
+                if($db = $dbc->openTool()){
+                    
+                    if($dbname) {
+
+                        $configs[0] = $dbname;
+
+                        $oconfigs['NAME'] = $dbname;
+
+                        if($dbc->openDB($oconfigs)){
+                            Cli::clearUp();
+                            Cli::textView(Cli::success("connection successfull!"), 0, '|2');
+
+                        }else{
+
+                            Cli::clearUp();
+                            Cli::textView(Cli::warn('Notice: ').("database name \"".Cli::warn($dbname)."\" does not exist."), 0, "|2");
+                            Cli::textView("Will you like to create one? [Y/N] ");
+
+                            $response = strtolower(Cli::prompt());
+
+                            if(strtolower($response) === 'y'){
+                                if($db->createDB($dbname)){
+                                    Cli::textView(Cli::success('database name created successfully'), 0, "|2");                                    
+                                }else{
+                                    Cli::textView(Cli::error('database name creation failed'), 0, "|2");  
+                                    Cli::textView(Cli::error($db->error(true)));  
+                                }
+                            }else{
+                                // Cli::break();
+                                Cli::textView(Cli::error("process aborted because selected database name does not exist!"), 0, '|2');
+                                exit;                            
+                            }
+
+                        }
+
+                    }else{
+ 
+                        Cli::clearUp(2);
+                        Cli::textView(Cli::warn('Notice: ').("no database name added yet."), 0, "|1");
+                        Cli::textView(Cli::alert("Proceed to add database name? [Y/N] "), 0, 1);
+
+                        $response = strtolower(Cli::prompt());
+
+                        if(strtolower($response) === 'y'){
+
+                            Cli::textView(Cli::alert("Please enter your database name: ", 0 , 1));
+                            $dbname = strtolower(Cli::prompt());
+
+                            if(!trim($dbname)){
+
+                                Cli::textView(Cli::error("process aborted because no name was supplied"), 0, '|2');
+                                exit;                                     
+                            }
+                            
+                            if($db->createDB($dbname)){
+                                Cli::textView(Cli::success('database name created successfully'), 0, "|2");                                    
+                            }else{
+                                Cli::textView(Cli::error("some error occured!"), 0, '|2');
+                                Cli::textView(Cli::error($db->error(true)), 0, '|2');
+                                Cli::textView(Cli::error("process aborted!"), 0, '|2');
+                                exit;                            
+                            }
+
+                        }else{
+                            Cli::textView(Cli::warn("skipping database name configuration..."), 0, '|2');
+                            Cli::break(1);
+                        }
+
+                    }
+
+                } else {
+
+                    Cli::textView(Cli::error("connection failed!"), 0, '|2');
+                    Cli::textView(Cli::error("process aborted!"), 0, '|2');
+                    exit;
+                    
+                }
+
+            } else{
+
+                Cli::clearUp();
+                Cli::textView(Cli::warn('Notice: ').('process aborted because connection must be tested.'), 0, "|2");
+
+                exit;
+
+            }
+
+        }else{
+            Cli::break(1);
+        }
+
+        Cli::textView(Cli::alert("set users data table name (USERS_TABLE) : "));       
+        $useridTable = Cli::prompt([], null, true); 
+        
+        Cli::clearUp();        
+        Cli::textView(Cli::alert("set userid column name (USER_ID_FIELDNAME) : "));         
+        $useridField = Cli::prompt([], null, true);        
+        
+        Cli::clearUp();         
+        Cli::textView(Cli::alert("set cookie column name (USER_COOKIE_FIELDNAME) : "));        
+        $cookie = Cli::prompt([], null, true);     
+        Cli::clearUp(2);
+        
+        $this->usersTable($useridTable);
+        Cli::clearUp(1);
+        $this->idField($useridField);
+        Cli::clearUp(1);
+        $this->cookieField($cookie); 
+
+        //meta option     
+        Cli::textView(Cli::alert("Allow resource class to build meta tags from setup file? [Y/N] "));        
+        $response = Cli::prompt([], null, true);           
+        $option = (strtolower($response) === 'y')?  'on' : "off";
+        Cli::clearUp(2);
+        $meta = $this->meta($option);
+
+        if($useridField && $useridTable && $cookie){
+            //do a text update
+            $FileManager = $this->get_init();
+            $FileManager->textUpdate(['SETUP_COMPLETE' => 1 ]);
+        }
+        
+        Cli::textView("All configurations added successfully");
+        Cli::break(2);
+
+    }
+
     /**
      * Configure the online parameters for database
      * 
@@ -60,9 +242,9 @@ class Config extends Entry{
      */
     public function dbonline(){
 
-        self::commandTitle('config:dbonline'.Cli::br());
-
         $args = func_get_args();
+        
+        if(!self::$all) self::commandTitle('config:dbonline'.Cli::br());
 
         $url = $args[1]?? "/icore";
         if(strpos(getDefined('docroot'), $url) === false){
@@ -81,26 +263,28 @@ class Config extends Entry{
         //make installation
         $this->setup_db('online',$dbvalues, $url);
 
-        Cli::textView("Will you like to use the same configuration for offline environment? [Y, N] ");
-
-        $response = Cli::prompt(['Y','N', 'y', 'n'], function($input, $options, $times){
-
-            if(!in_array($input, $options)){
-                Cli::textView("Oops! Invalid option supplied", 0, "|2");
+        if(!self::$all){
+            Cli::textView("Will you like to use the same configuration for offline environment? [Y, N] ");
+    
+            $response = Cli::prompt(['Y','N', 'y', 'n'], function($input, $options, $times){
+    
+                if(!in_array($input, $options)){
+                    Cli::textView("Oops! Invalid option supplied", 0, "|2");
+                }
+    
+                if($times > 3){
+                    Cli::textView("trials exceeded, aborting command...", 0 , "|2");
+                }
+    
+            }, 3);
+    
+            if(strtolower($response) === 'y'){
+                Cli::break();
+                $this->setup_db('offline',$dbvalues, $url);
+            } else {
+                Cli::textView(Cli::alert("Notice: ").'Default offline connection unchanged', 0, '1|1');
+                Cli::break();
             }
-
-            if($times > 3){
-                Cli::textView("trials exceeded, aborting command...", 0 , "|2");
-            }
-
-        }, 3);
-
-        if(strtolower($response) === 'y'){
-            Cli::break();
-            $this->setup_db('offline',$dbvalues, $url);
-        } else {
-            Cli::textView(Cli::alert("Notice: ").'Default offline connection unchanged', 0, '1|1');
-            Cli::break();
         }
 
     }
@@ -113,9 +297,9 @@ class Config extends Entry{
      */
     public function dboffline(){
 
-        self::commandTitle('config:dboffline'.Cli::br());
-
         $args = func_get_args();
+
+        if(!self::$all) self::commandTitle('config:dboffline'.Cli::br());
 
         $url = $args[1]?? "/icore";
         if(strpos(getDefined('docroot'), $url) === false){
@@ -134,29 +318,33 @@ class Config extends Entry{
         //make installation
         $this->setup_db('offline',$dbvalues, $url);
 
-        Cli::textView("Use the same configuration for online environment? [Y, N] ");
-
-        $response = Cli::prompt(['Y','N', 'y', 'n'], function($input, $options, $times){
-
-            if(!in_array($input, $options)){
-                if($times == 3){
-                    Cli::break();
-                    Cli::textView(Cli::error("maximum trials exceeded, aborting command..."));
-                }else{
-                    Cli::textView(Cli::warn("oops: ")."invalid option supplied", 0, "|2");
-                    Cli::textView("Use the same configuration for online environment? [Y, N] ");
+        if(!self::$all){
+            
+            Cli::textView("Use the same configuration for online environment? [Y, N] ");
+    
+            $response = Cli::prompt(['Y','N', 'y', 'n'], function($input, $options, $times){
+    
+                if(!in_array($input, $options)){
+                    if($times == 3){
+                        Cli::break();
+                        Cli::textView(Cli::error("maximum trials exceeded, aborting command..."));
+                    }else{
+                        Cli::textView(Cli::warn("oops: ")."invalid option supplied", 0, "|2");
+                        Cli::textView("Use the same configuration for online environment? [Y, N] ");
+                    }
                 }
+    
+    
+            }, 3);
+            
+            if(strtolower($response) === 'y'){
+                Cli::break(1);
+                $this->setup_db('online',$dbvalues, $url);
+            } else {
+                Cli::textView(Cli::alert('Notice: ').'Default online connection unchanged', 0, '1|1');
+                Cli::break();
             }
 
-
-        }, 3);
-        
-        if(strtolower($response) === 'y'){
-            Cli::break(1);
-            $this->setup_db('online',$dbvalues, $url);
-        } else {
-            Cli::textView(Cli::alert('Notice: ').'Default online connection unchanged', 0, '1|1');
-            Cli::break();
         }
 
     }    
@@ -306,14 +494,15 @@ class Config extends Entry{
         $fp2 = fopen($url, 'w');
         fwrite($fp2, preg_replace('/[[:blank:]]+/',' ',$newconfig));
         fclose($fp2);  
-
+        if(self::$all) Cli::clearUp(1); 
         Cli::textView(Cli::success($environment." setup configuration successful"), 0, '|2');
     }
 
     private function meta(){
+        
         $args = func_get_args();
 
-        self::commandTitle('config:meta');
+        if(!self::$all) self::commandTitle('config:meta');
 
         if((count($args) < 1) || (count($args) > 1)){
 
@@ -361,12 +550,12 @@ class Config extends Entry{
     }
 
     private function usersTable() {
+        
         $args = func_get_args();
 
-        self::commandTitle('config:usersTable');
+        if(!self::$all) self::commandTitle('config:usersTable');
 
         if(count($args) < 1){
-            //$syntax = self::$syntaxes['config']['users_table'];
             Cli::textView(Cli::emo('ribbon-arrow','|1').'Syntax:'.self::mi('config:','','','').Cli::warn('userTable <tablename>'), 0, '1|2');
             return;
         }
@@ -386,16 +575,21 @@ class Config extends Entry{
                 Cli::textView(br().Cli::success('user table configured successfully').br('', 2));    
                 $this->complete_setup();         
             } else {
-                Cli::textView(br().Cli::error('user table configuration failed').br('', 2));                
+                if(!$table_name){
+                    Cli::textView(br().Cli::warn('Notice: ').('user data table name not defined').br('', 2));                
+                }else{
+                    Cli::textView(br().Cli::error('user table configuration failed').br('', 2));                
+                }
             }
         }
 
     }
 
     private function idField() {
-        $args = func_get_args();
+        
+        $args = func_get_args(); 
 
-        self::commandTitle('config:idField');
+        if(!self::$all) self::commandTitle('config:idField');
 
         if(count($args) < 1){
             Cli::textView(Cli::emo('ribbon-arrow','|1').'Syntax:'.self::mi('config:','','','').Cli::warn('idField <columnName>'), 0, '1|2');
@@ -417,7 +611,11 @@ class Config extends Entry{
                 Cli::textView(br().Cli::success('user id field configured successfully').br('', 2));    
                 $this->complete_setup();         
             } else {
-                Cli::textView(br().Cli::error('user id field configuration failed').br('', 2));             
+                if(!$field_name){
+                    Cli::textView(br().Cli::warn('Notice: ').('user id field name not defined').br('', 2));             
+                }else{
+                    Cli::textView(br().Cli::error('user id field configuration failed').br('', 2));             
+                }
             }
         }
 
@@ -425,10 +623,10 @@ class Config extends Entry{
 
     private function cookieField() {
 
-        self::commandTitle('config:idField');
-
         $args = func_get_args();
-        
+
+        if(!self::$all) self::commandTitle('config:cookieField');     
+
         if(count($args) < 1){ 
 
             Cli::textView(Cli::emo('ribbon-arrow','|1').'Syntax:'.self::mi('config:','','','').Cli::warn('cookieField <columnName>'), 0, '1|2');
@@ -454,24 +652,18 @@ class Config extends Entry{
 
                 $this->complete_setup();         
             } else {
-                Cli::textView(br().Cli::error('cookie field configuration failed').br('', 2));            
+
+                if(!$cookie_fieldname){
+
+                    Cli::textView(br().Cli::warn('Notice: ').('cookie field name not defined').br('', 2));            
+                }else{
+                    Cli::textView(br().Cli::error('cookie field configuration failed').br('', 2));            
+
+                }
             }
         }
 
     }   
-    
-    /**
-     * Transfer all installations to the Installation  Handler Class
-     *
-     * @params $params : list of arguments supplied
-     * @return void
-     */
-    // private function install($params = '') {
-
-    //     self::error(" config install is not recognized... ");
-    //     self::log(' use instead :: >> init install ');
-        
-    // }
 
 
     //complete the setup installation file

@@ -409,7 +409,7 @@ window.onload = function() {
                                 by setting "RESOURCE_WATCH" to a default value of "1" or "2" which stands for 
                                 offline and online respectively. These tell the resource file handler class to automatically include the live server when
                                 importing or downloading resource urls in the desired environment. Setting as online(2) enables it for both offline and online 
-                                environments while a defualt of zero(0) disables the live server. This configuration can be set in the <code>icore\init</code> file. <br><br>
+                                environments while a default of zero(0) disables the live server. This configuration can be set in the <code>icore\init</code> file. <br><br>
                             </div>
     
                             <span class="c-olive fb-6">2.</span> By including the directive <code class="font-em-d8">&lt;?= Res::import("::watch") ?&gt;</code>

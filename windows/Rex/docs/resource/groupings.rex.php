@@ -343,7 +343,7 @@
                                         is supplied as its argument. Using the <code>close()</code> outside of a storage space will 
                                         reset all previously stored urls. This is why <code>open</code> or <code>urlOpen</code> is much
                                         preferred as it also provides a safe mean of exiting into unamed space. The "open" methods will 
-                                        never reset the storage space unless an bool argument of true is suuplied.
+                                        never reset the storage space unless an bool argument of true is supplied.
                                     </div> <br>         
                                 </div>
                             </div>

@@ -137,10 +137,15 @@ class Info extends Entry{
 
  Syntax :'.self::mi('config:', '','','').Cli::color('[option]','cyan').Cli::warn('<args>', 1).'            
 
-  '.Cli::color('[option]','cyan').' : [dbonline|dboffline|usersTable|cookieField|idField|watch|watcher|meta]
+  '.Cli::color('[option]','cyan').' : [all|dbonline|dboffline|usersTable|cookieField|idField|watch|watcher|meta]
 
   '.Cli::emo('ribbon-arrow').' Type'.self::mi('config:', '', '', '').Cli::color('[option]', 'cyan').' to see the supplied option descriptions
 ',
+
+            #---------------------
+            'config:all'         => 'An interactive console guide line for setting up all essential configurations at once
+
+ Syntax :'.self::mi('config:', '','','').Cli::color('all','cyan').'',
             
             #---------------------
             'config:dbonline'    => 'Sets online database default connection parameters. 
