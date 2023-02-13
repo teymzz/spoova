@@ -26,7 +26,7 @@ class DBConfig{
      * Load the entire contents of the init file
      *
      * @param string $url init file url
-     * @param void $data referenced variable to contain
+     * @param array $data referenced variable to contain
      * @return bool
      */
     static function load(string $url, &$data) : bool{

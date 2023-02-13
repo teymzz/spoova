@@ -377,7 +377,6 @@ class Install extends Entry{
         }
 
         //*  Load offline connection parameters /        
-        // $url = (func_num_args() > 1)? [$folder] : [];
 
         if(!$offlineConfig = $this->loadDB($folder)) {
             Cli::error('invalid configuration format detected in "'.Cli::warn($configPath).'"', 0, "|2");

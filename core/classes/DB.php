@@ -13,6 +13,12 @@ class DB implements DBHelpers{
   private $conName;
   private $currentDB;
   private $isConnected = false;
+
+  protected $newState;
+  protected $error;
+  protected $dbcon;
+  protected $conResponse;
+  protected $conType;
   
   /**
    * creates an instance of a new DB 
@@ -243,7 +249,7 @@ class DB implements DBHelpers{
        }
 
      }
-   
+    
      $conn = new $conClass(...$params);  
 
      return $this->dbh = $this->selfUpdate($conn);
@@ -271,7 +277,7 @@ class DB implements DBHelpers{
    * @param string $dbserver  Required
    * @param string $dbport    Required (if using port)
    * @param string $dbsocket  Optional
-   * @return void|@core/classes/DBHandler
+   * @return void|DBHandler
    */
   public function openTool($dbuser = '', $dbpass = '', $dbserver = '', $dbport = '', $dbsocket = ''){
 
@@ -281,7 +287,7 @@ class DB implements DBHelpers{
       $conName = DBCON; 
     }
 
-    $conName = $this->reloadName();
+    $conName = $this->reloadName($conName);
 
     if(is_array($dbuser)){
       if(func_num_args() > 1) {
@@ -377,104 +383,3 @@ class DB implements DBHelpers{
   }
   
 }
-
-
-/**
-
-  #documentations:
-
-  @database handler => MYSQL (or API or MYAPI), PDO. default is PDO
-
-     -parameters for PDO connection: PDO 
-     -parameters for MySQL connection: MySQLi 
-
-
-     #NOTE 1: anywhere "API" is used as parameter, it means either parameters for PDO or MySQL connection can be used.
-     ----------------------------------------------------------------------------------------------------------------------------------------------
-     #NOTE 2: @params "PDO" => "PDO" or "MyPDO" can be interswitched as the parameter for pdo connection
-     #NOTE 3: @params "API" => "API" or "MyAPI" or "MYSQL" can be interswitched as the parameter for mysqli connection
-
-  @connection parameters => $dbname,$dbuser,$dbpass,$dbserver,$dbport,$dbsocket 
-
-  #Syntax:
-
-  //initialize class
-  1) $dbcon = new DB([API,MYSQL,MYAPI] | [PDO,MYPDO] | NULL); //initialize DB with defined db handler parameters or default db handler parameter
-
-  //opening connection
-  $db = $dbcon->open(); //open connection with default db handler parameters
-  $db = $dbcon->open([API,MYSQL,MYAPI] | [PDO,MYPDO]); //open connection with defined default db handler parameter, OR
-
-  $db = $dbcon->openDB(); //open connection with defined db connection parameters or default db connection parameter  
-  $db = $dbcon->openDB(DBNAME, DBUSER, DBPASS, DBSERVER, DBPORT, DBSOCKET | NULL); //open connection with defined db connection parameters or default db connection parameters (FULL) (recommended)
-  $db = $dbcon->openDB(DBNAME, DBUSER, DBPASS, DBSERVER, DBPORT); //same as above for four paramters (PORT) (recommended)
-  $db = $dbcon->openDB(DBNAME, DBUSER, DBPASS, DBSERVER, DBSOCKET); //same as above four four paramters (SOCKET) (may need to supply full parameters if it doesn't work)
-
-  //database operations will be discussed under #Methods
-
-  //close connection
-  $db->close();
-
-
-  #Methods:
-
-  $db->mypdo() // switch to PDO connection
-  $db->myapi() // switch to MYSQL connection
-
-  $db->switchDB(DBNAME, DBUSER, DBPASS, DBSERVER, ) // switch connection to a new database to a new database
-  $db->switchDB("D") // switch connection back to default database connection
-  $db->newDB(dbname,$handler); // creates an handler for a new database using the same connection 
-
-  $db->conResponse() //returns connection response for $db->switchDB();
-
-  $db->conType() // returns either PDO or MYSQLI
-
-  $db->currentDB() // returns the current database being connected to. If none is found, it returns default database name set in core\dbconfig.php
-
-  $db->query($sql, $bindedparamters | null) // run queries
-
-  $db->process() // execute queries other than CRUD operations
-
-  $db->setData([]) // sets an array of data.  
-
-
-  //CRUD methods
-
-  $db->insert_into($sql), $db->columns([$columns]), $db->values([$values]), $db->insert() // perform insert
-
-  $db->select($sql), $db->read() // perform fetch  
-
-  $db->do_update($sql), $db->update() // perform fetch  
-
-  $db->do_delete($sql), $db->delete() // perform delete    
-
-  //CRUD operators
-  They are responsible for performing specific operations and cannot be replaced. These are listed below
-
-  $db->insert() // for inserting data into database
-  $db->read()   // for reading from database
-  $db->update() // for updating table rows
-  $db->delete() // for deleting from table
-
-  //Execute operator
-  Performs mainly non-crud operation.
-  $db->process();
-
-  NOTE: All crud operators  can all be used along with $db->query() to peform crud operations depending on type of operation to be performed. If used with $db->query(), crud operators must come immediately after $db->query().
-
-
-  For example:
-
-  $db->query($sql); //set query
-  $db->read(); // execute query
-
-  
-  ..creating a connection (example)
-  
-  $dbcon = new \core\classes\DB();
-  $toolmess = ($dbcon->openDB(dbuser, dbpass, dbserver, dbsocket, dbport))? ("tool connected") : ('tool connection failed'); //db tool : tool allows unspecified DB operations
-  $opendb = ($dbcon->tool(dbuser, dbpass, dbserver, dbsocket, dbport))? ("tool connected") : ('tool connection failed'); //db tool : tool allows unspecified DB operations
-  $connmess = ($dbcon->active())? ("connected") : ('connection failed'); //db active : active allowed specified DB operations
-  print_r(json_encode(['tool'=>$toolmess,'conn'=>$connmess]));
-
-*/

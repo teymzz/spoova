@@ -218,7 +218,7 @@
             Get request values are accessed with the get keyword i.e @({{get:key}})@ <br><br> where 
             <code>key</code> is the get key <br><br>
 
-            The get or post request values can be obtained generally as @({{key}})@. By defualt, this 
+            The get or post request values can be obtained generally as @({{key}})@. By default, this 
             variable i.e <code>key</code> will be obtained depending on the current request. However, the get 
             request has the higest power here. This means that if a key exists in post and equally get, then the 
             get request key will be picked.

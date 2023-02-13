@@ -82,7 +82,7 @@ abstract class DBBridge implements DBInterface, DBHelpers{
    *
    * @var array
    */
-  protected $data;
+  protected array $data;
 
   /**
    * Sql query
@@ -104,6 +104,7 @@ abstract class DBBridge implements DBInterface, DBHelpers{
   protected $DBUSER   = DBUSER;
   protected $DBPASS   = DBPASS;
   protected $DBNAME   = DBNAME;
+  protected bool $dbConnection;
 
   /**
    * Initializes with database connection
