@@ -1165,7 +1165,7 @@ assume that the database table name is <code>post</code>  rather than <code>post
 
                                 <div class="foot-note mvs-10">
                                     In the relationship above, the user class will connect to the <code>roles</code> table by using the relationship it has with the <code>user_role</code> 
-                                    table. If the linking table is not <code>user_role</code> which is the defualt, then we can supply the custom table name as the second argument. 
+                                    table. If the linking table is not <code>user_role</code> which is the default, then we can supply the custom table name as the second argument. 
                                     Also, in this relationship, the parent tables <code>users</code> and <code>roles</code> must have an "id" primary key. However, the foreign keys can be 
                                     modified. The supplied model's custom foreignkey and the current model's foreign key on the linking table can be supplied as the third and fourth argument 
                                     respectively. Hence we can have a format as below:

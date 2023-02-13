@@ -63,6 +63,7 @@ class Syntax extends Entry{
             'backup'             => 'backup [project|:clear]',
 
             'config'             => 'config:<options> <args>',
+            'config:all'         => 'config:all',
             'config:dbonline'    => 'config:dbonline "dbuser dbpass dbserver dbport dbsocket"',
             'config:dboffline'   => 'config:dboffline "dbuser dbpass dbserver dbport dbsocket"',
             'config:usersTable'  => 'config:usersTable <name>',
@@ -80,7 +81,7 @@ class Syntax extends Entry{
 
             'migrate'          => 'migrate [up|down|status]',
             
-            'install'        => 'install|install:[app|db|dbname]',
+            'install'        => 'install:[db|dbname]',
             'install db'     => 'install db [folder?]',
             'install dbname' => 'install dbname [folder?]',
 

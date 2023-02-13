@@ -26,7 +26,7 @@ class MiSQL extends DBBridge{
     $this->conType = "MYSQLI";
 
     try{
-      $this->isFailed    = false;
+      $this->isFailed = false;
 
       mysqli_report(MYSQLI_REPORT_STRICT);
       $db = @(new mysqli($this->DBSERVER, $this->DBUSER, $this->DBPASS, $this->DBNAME, intval($this->DBPORT), $this->DBSOCKET));

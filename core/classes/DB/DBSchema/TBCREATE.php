@@ -12,7 +12,7 @@ trait TBCREATE {
 
     
     /**
-     * This creates an auto increment primary key field. The defualt field name is 
+     * This creates an auto increment primary key field. The default field name is 
      * "id" if not supplied.
      *
      * @param int $size 

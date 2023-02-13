@@ -349,7 +349,7 @@ trait DBQuery{
    * @param boolean $usedata true disables the use of binded parameters for raw sql queries
    * @return DBHandler
    */
-  public function query($query, $data = null, $usedata = false){
+  public function query($query, array $data = [], $usedata = false){
     $this->freeVars();
     $this->sqlquery = $query;
     $this->data     = $data;
@@ -372,11 +372,7 @@ trait DBQuery{
   public function process(){
     if($this->sqlquery == null){ return $this->call_error("Error: no query not Supplied"); return false; }
 
-    if(is_array($this->data)){
-      if(count($this->data) > 0){
-       $this->conn->buildBind($this->data, $this->sqlquery);
-      }
-    }
+    $this->conn->buildBind($this->data, $this->sqlquery);
 
     $process = $this->conn->process_query($this->sqlquery);
     
@@ -417,7 +413,7 @@ trait DBSelect {
 
       $this->limit = $this->buildLimit(false);
       $this->sqlquery  = null;
-      $this->data = null;
+      $this->data = [];
       $this->where = null;
 
       //$this->expose_vars();
@@ -826,7 +822,7 @@ trait DBUpdate{
   public function set(string $values){
 
     if($this->sqlquery == null){return $this->call_error("no query found earlier");}
-    $this->data = null;
+    $this->data = [];
     $this->set = $values;
     $this->sqlquery .= " set ".$values;
     return $this;
@@ -891,7 +887,7 @@ trait DBDelete{
 
      $this->limit = $this->buildLimit(false);
      $this->sqlquery  = null;
-     $this->data = null;
+     $this->data = [];
      $this->where = null;
 
      $this->delete    = " delete ".$tbname;
@@ -1085,14 +1081,14 @@ trait OSql{
 //--------------------------- DATA TRAITS ------------------------------------------------ 
 trait DBDATA{
   
-  private $data;
+  private array $data = [];
 
   public function setData($arr = array()){
     if($this->sqlquery == null){return $this->call_error("No Sql query found yet");}
     $this->data = $this->trimAll($arr);
   }
     
-	private function trimAll($data){
+	private function trimAll($data) : array {
     
 		if($data == null){ return array(); }
 
@@ -1477,6 +1473,7 @@ trait DBState{
    */
   public function queryState($query, array $data = null, string $statename = null){
     self::$statequery = $query;
+    if($data === null) $data = [];
     self::$statedata  = $data;
 
     if($statename != null) $this->saveState($statename);

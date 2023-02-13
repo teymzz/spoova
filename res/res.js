@@ -12,7 +12,7 @@ if(typeof Res == 'undefined'){
         constructor(url, responseField, settings = {}){
 
             //default variables anchor
-            let defaults = {}, loc, uri, xdefualts;
+            let defaults = {}, loc, uri, xdefaults;
 
             //url default extension (should be updated)
             this.defaults = defaults;
