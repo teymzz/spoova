@@ -39,7 +39,7 @@ php mi project <project_name>
 7. Run all composer commands from the "core/" directory because the vendor folder is placed within it.
 8. Avoid placing classes directly in the the root of "core/" directory. A special subdirectory may be designated for classes.
 9. To use the live server, ensure to read the offline documentation provided on how to implement the feature.
-10.All spoova directories are protected except the "res/" and "src/" directory which are specially reserved directories for keeping static resources.
+10. All spoova directories are protected except the "res/" and "src/" directory which are specially reserved directories for keeping static resources.
 
 ##### NOTICE
 
