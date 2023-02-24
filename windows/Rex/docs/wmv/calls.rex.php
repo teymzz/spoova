@@ -18,7 +18,7 @@
                     <div class="shutters-intro">
                         
                         <div class="font-em-d87">
-                            The call methods are methods designed to managed window urls. Every url path called on a 
+                            The call methods are methods designed to manage window urls. Every url path called on a 
                             window can be handled using specially designed method which are listed below 
                             
                             <br><br>
@@ -80,7 +80,7 @@
                                         <li>
                                             <div class="bc-silver rad-4 pxv-4">
                                                 <code>acceptableUrls</code> These are arrays of key and value pairs where the "key" is a url that is expected to be compared with the  
-                                                current page url based on the type of shutter method applied on them. Once a url successfully matches the "value" (i.e resolved), the "value" which is either a 
+                                                current page url based on the type of shutter method applied on them. Once a url successfully matches the currently visited url (i.e resolved), the "value" which is either a 
                                                 direct method of that current class or a new window class will be called.
                                             </div>
                                         </li> <br>
@@ -112,7 +112,7 @@
                             which tells the shutter method to prevent automatic closing of the windows. This option may be employed when handling complex applications or urls. 
                             This can be done by setting a third or fourth argument as a boolean value of <code>false</code>.
                             Whenever any of the shutters are pended, developer must be careful to properly close invalid urls, most especially for <code>basecall()</code> because 
-                            failure to close may result in faulty or black pages, if not properly handled.
+                            failure to close may result in faulty or black pages if not properly handled.
                         
                             <p>
                                 <div class="c-orange font-em-1">The Window Function</div>
@@ -280,7 +280,7 @@
 
     function __construct(){
 
-        self::rootcall($this, [window(':')  => 'index']);
+        self::rootcall($this, [window(':')  => 'root']);
 
     }
 
@@ -309,6 +309,7 @@
   
   <span class="comment no-select"><span class="c-green-l">valid url:</span> http://domain/home </span>
   <span class="comment no-select"><span class="c-green-l">valid url:</span> http://domain/home/user </span>
+  <span class="comment no-select"><span class="c-green-l">called method:</span> index </span>
 
   <span class="comment no-select"><span class="c-red-dd">invalid url:</span> http://domain/some </span>
   <span class="comment no-select"><span class="c-red-dd">invalid url:</span> http://domain/some/home </span>
@@ -321,7 +322,7 @@
                                     will become a valid url. It is important to remember that domain for localhost is usally the <code>localhost/project_folder_name</code>
                                     
                                     As an example, if a basic logic is employed, this means that all urls will be handled by a base window server class. This class 
-                                    is expected to be directly within the <code>windows</code> directory. Assuming the server class name is Index, then
+                                    is expected to be directly within the <code>windows/Routes</code> directory. Assuming the server class name is Index, then
                                     the Index class may be configured to use the <code>rootcall()</code> method to initialize other classes based on the url's 
                                     window name, since it is the class that manages every other url. In this way, rather than use methods, we can 
                                     directly call classes using the format below:
@@ -480,7 +481,7 @@
             ];
 
             <span class="comment">//set accepted paths for Home window</span>
-            self::pathcall($this, $accepted_paths);
+            self::call($this, $accepted_paths);
 
         }
 
@@ -528,7 +529,7 @@
         ];
 
     <span class="comment">//set accepted paths for Home window</span>
-    self::pathcall($this, $accepted_paths);
+    self::call($this, $accepted_paths);
 
   }
 
@@ -550,7 +551,7 @@
         ];
 
     <span class="comment">//set accepted paths for Home window</span>
-    self::pathcall($this, $accepted_paths);
+    self::call($this, $accepted_paths);
 
   }
 
@@ -575,16 +576,58 @@
                                     <div class="flex-full midv"> <span class="bi-circle mxr-8 c-orange-dd"></span> Base Path </div>
                                 </div> <br>
                                 <div class="explanation">
-                                    The <code>basecall</code> method works similarly as the <code>call</code> method on the direct path 
+                                    The <code>basecall()</code> method works similarly as the <code>call()</code> method on the direct path 
                                     supplied. However, the difference is that a basecall method is applied on urls that must have a specific 
-                                    parent path. For example, a url of <code>home/users</code> and <code>home/users/profile</code> both have the 
+                                    parent path structure. For example, a url of <code>home/users</code> and <code>home/users/profile</code> both have the 
                                     same parent path of <code>home/users</code>. Hence, the <code>basecall</code> will be triggered for both urls
                                     mentioned earlier if the url supplied was <code>home/users</code>. The dangers of this method is that it can leave 
                                     unwanted urls opened. When working with urls, it is important to be precise. This makes the handling of urls to be less 
                                     ambiguous. This method could however prove useful in certain cases when we are trying to call a different class or trying to 
                                     accept any path on a specific window url. When it is used anyway, developers must make sure that 
                                     all non-essential urls are properly closed or handled properly.
+                                </div> <br>
+
+                                
+                                <div class="pre-area">
+                                    <div class="pxv-10 bc-orange c-white">Example - Using basecall</div>
+<pre class="pre-code">
+
+  &lt;?php 
+
+  use Window;
+
+  class Home {
+
+      function __construct(){
+    
+        $accepted_paths = [
+    
+            window(':user') => 'index',
+    
+            ];
+    
+        <span class="comment">//set accepted parent paths from Home window</span>
+        self::call($this, $accepted_paths);
+    
+      }
+
+      function index() {
+
+        <span class="comment">//called by all "home/user" parent urls</span>
+
+      }
+
+  }
+
+
+</pre>
                                 </div>
+
+                                <div class="foot-note mvs-6">
+                                    In the code above, all urls that have a parent structure of <code>home/user</code> (e.g home/user/settings) will call or trigger the  
+                                    <code>index()</code> method.
+                                </div>
+
                             </div> <br>
 
 
@@ -620,7 +663,7 @@
                                     In the code above, the <code>call()</code> was pended to allow the <code>basecall()</code> to also run. 
                                     If a url is resolved by <code>call()</code>, then <code>basecall()</code> will trip off. However,
                                     if a url is not resolved by the <code>call()</code> method, then the <code>basecall</code> will try to resolve its own 
-                                    list of urls. If <code>basecall()</code> cannot resolve its urls, then, a 404 error is return. 
+                                    list of urls. If <code>basecall()</code> cannot resolve its urls, then, a 404 error page is displayed and a false value is returned. 
                                     Also, if the <code>call()</code> was able to resolve its url, we can force <code>basecall()</code> to work by declaring the previous <code>call()</code> 
                                     as unresolved. This can be done by adding the <code>$this->resolved(false)</code> immediately below the <code>call()</code> 
                                     method. Another method to force our <code>basecall()</code> to work is to call it within the <code>self::clearResolved()</code> method which takes a closure as callback argument.
@@ -679,8 +722,8 @@
                                 <div class="font-menu mvt-6">
                                     The code structure above is a good example of how to check if a url is resolved. If the <code>call()</code> cannot resolve its urls, 
                                     then since it was pended,  this will allow <code>basecall</code> to try to resolve its own urls. If basecall happens to resolve it urls, 
-                                    since it is a soft shutter, it will leave the resolved url opened to allow multiple paths unless it is handled properly. Naturally we, don't 
-                                    want to close a url when it is resolved because that will send a 404 response to server. However, the <code>self::close()</code> method above 
+                                    since it is a soft shutter, it will leave the resolved url opened to allow multiple paths unless it is handled properly. Naturally, we don't 
+                                    want to close a url with <code>self::close()</code> when it is resolved because that will send a 404 response to server. However, the <code>self::close()</code> method above 
                                     is just a way to show that a url can be closed using 
                                     the <code>self::close()</code> method.
                                 </div>
@@ -869,7 +912,7 @@
 
   <span class="comment no-select">...</span>
 
-  namespace spoova\windows\Route;
+  namespace spoova\windows\Routes;
 
   class Home {
 
@@ -907,7 +950,7 @@
 
   <span class="comment no-select">...</span>
 
-  namespace spoova\windows\Route;
+  namespace spoova\windows\Routes\Home;
 
   class User {
 
@@ -936,7 +979,7 @@
                                     <code>root()</code>  method when <code>home</code> is visited. However, when <code>home/user</code> is visited, 
                                     the <code>User</code> class is called. The <code>lastCall()</code> function tracks this movement and makes it easier 
                                     to harvest the last resolved url. Rather than use <code>window(':user')</code>, we can use the <code>lastCall()</code> 
-                                    function which will naturally return the last resolved call. If any argument is supplied on it (e.g <code>lastCall('/path')</code>
+                                    function which will naturally return the last resolved call. If any argument is supplied on it (e.g <code>lastCall('/path')</code>)
                                     then <code>home/user/path</code> will be returned. 
                                 </div>
                             </div>

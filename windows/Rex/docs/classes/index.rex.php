@@ -1,8 +1,6 @@
 
 @template('template.t-tut')
 
-  <!-- @lay('build.co.coords:header') -->
-
   @lay('build.co.navbars:left-nav')
 
   <div class="box-full pxl-2 bc-white-dd pull-right">
@@ -43,6 +41,8 @@
                   <li> <a href="@route('::forms')"> Form </a> </li>
                   <li> <a href="@route('::url')"> Url </a> </li>
                   <li> <a href="@route('::urlmapper')"> UrlMapper </a> </li>
+                  <li> <a href="@route('::cli')"> Cli </a> </li>
+                  <li> <a href="@route('::benchmark')"> Benchmark </a> </li>
                 </ul>
                 
             </div> 

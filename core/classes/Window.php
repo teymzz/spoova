@@ -1147,6 +1147,16 @@ use spoova\windows\Routes\Docs\Wmv;
     }
 
     /**
+     * This method enforces window to add a non-existing rex file when the "load" method is used.
+     *
+     * @param string $template_path
+     * @return void
+     */
+    final protected static function addRex(string $template_path = ''){
+      Res::addRex(...func_get_args());
+    }
+
+    /**
      * Renders and Outputs the rex template files
      * 
      * @param string $url rex template url

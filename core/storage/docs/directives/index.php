@@ -359,7 +359,8 @@ window.onload = function() {
                <li> <a href="<?= DomUrl('docs/database/migrations') ?>" class="<?= inPath('active') ?>"><span class="ico ico-spin"></span>Handling Migrations</a> </li>
                <li> <a href="<?= DomUrl('docs/classes') ?>" class="<?= inPath('active') ?>"><span class="ico ico-spin"></span>Helper Classes</a> </li>
                <li> <a href="<?= DomUrl('docs/functions') ?>" class="<?= inPath('active') ?>"><span class="ico ico-spin"></span>Helper Functions</a> </li>
-               <li> <a href="<?= DomUrl('docs/directives') ?>" class="<?= inPath('active') ?>"><span class="ico ico-spin"></span>Helper Directives</a> </li>
+               <li> <a href="<?= DomUrl('docs/template') ?>" class="<?= inPath('active') ?>"><span class="ico ico-spin"></span>Rex Template Engine</a> </li>
+               <li> <a href="<?= DomUrl('docs/directives') ?>" class="<?= inPath('active') ?>"><span class="ico ico-spin"></span>Template Directives</a> </li>
                <li> <a href="<?= DomUrl('docs/setters') ?>" class="<?= inPath('active') ?>"><span class="ico ico-spin"></span>Global Setters</a> </li>
                <li> <a href="<?= DomUrl('docs/mails') ?>" class="<?= inPath('active') ?>"><span class="ico ico-spin"></span>Handling Mails</a> </li>
                <li> <a href="<?= DomUrl('docs/cli') ?>" class="<?= inPath('active') ?>"><span class="ico ico-spin"></span>Cli Commands</a> </li>         
@@ -396,9 +397,13 @@ window.onload = function() {
           <div class="directives-intro">
               <div class="fb-6">Introduction</div>
               <div class="">
-                  Helper directives are predefined template directives that are used within 
-                  rex template files. These directives are preceeded by an <code>@</code> symbol. 
-                  They are listed below:
+                  Template directives are predefined helper directives that are used within 
+                  rex template files. These directives are processed by the REX template engine which 
+                  in turn resolves them to their respective functions. Rex template engine is used 
+                  to load rex and compile template files by combining the effect of the <code>Res::load()</code> 
+                  and either the <code>compile()</code> or <code>view()</code> functions. 
+                  Rex template directives are usually 
+                  preceeded by an <code>@</code> symbol and there are a couple of them which are listed below:
                   <br><br>
 
                   <ul class="font-em-d9 list-free pxl-1 c-sea-blue directives">

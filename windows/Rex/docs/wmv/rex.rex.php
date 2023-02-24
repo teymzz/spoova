@@ -9,6 +9,8 @@
 
                 @lay('build.co.links:tutor_pointer')
 
+                @layout:rex 
+
                 <div class="start font-em-d8">
 
                     <div class="font-em-1d5 c-orange">Window Rex</div> <br>  
@@ -233,6 +235,8 @@
                     @lay('build.co.links:tutor_pointer')
 
                 </div>
+
+                @layout;
             </div>
         </section>
     </div>

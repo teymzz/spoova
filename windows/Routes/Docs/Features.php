@@ -21,7 +21,7 @@ class Features extends Window {
                 // window(':other-features.javascript.switcher').'.js' => 'switcherJs',
             ], false
         );
-        /* window(':other-features'.url(window('base'))->pathFrom(lastCall())) */
+
         self::basecall($this, [
             lastCall('/css') => 'win:Routes\Docs\Features\Css',
             window(':other-features.javascript') => 'win:Routes\Docs\Features\Javascript',

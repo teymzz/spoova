@@ -12,6 +12,7 @@ class DBSCHEMA {
 
     private static $DRAFT_SQL = '';
     private static $DRAFT_TABLE = '';
+    private static DRAFT $DRAFT;
 
     /**
      * Create a new database table
@@ -23,7 +24,7 @@ class DBSCHEMA {
     static function CREATE(string|object $TABLE, Closure $FORMAT) : bool{
 
         self::SET_TABLE($TABLE);
-        $DRAFT = new DRAFT('CREATE');
+        $DRAFT = self::$DRAFT = new DRAFT('CREATE');
         $STRUCTURE = $FORMAT($DRAFT);
         
         if(self::GET_DRAFT($NAME, $STRUCTURE)){
@@ -89,7 +90,7 @@ class DBSCHEMA {
 
     static function ALTER(string|object $TABLE, Closure $FORMAT) : bool {
         self::SET_TABLE($TABLE);
-        $DRAFT = new DRAFT('ALTER');
+        $DRAFT = self::$DRAFT = new DRAFT('ALTER');
         $STRUCTURE = $FORMAT($DRAFT);
         if(self::GET_DRAFT($NAME, $STRUCTURE)){
             if(!DRAFT::hasError()){
@@ -176,6 +177,17 @@ class DBSCHEMA {
             }
         }
         SELF::$DRAFT_TABLE = strtolower($TABLE);
+    }
+
+    /**
+     * Return the draft object
+     *
+     * @return DRAFT
+     */
+    public static function DRAFT(): DRAFT {
+
+        return self::$DRAFT;
+
     }
 
     /**

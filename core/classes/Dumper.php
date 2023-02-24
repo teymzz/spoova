@@ -8,6 +8,7 @@ use ReflectionMethod;
 class Dumper{
 
     private $init = false;
+    private const dumpFile = _core.'custom/views/dump.php';
 
     /**
      * Dump Variables
@@ -36,6 +37,11 @@ class Dumper{
 
     public static function vdump($var){
 
+        if(isCli()){
+            var_dump(...func_get_args());
+            return new self;
+        }
+
         $args = func_get_args();
 
         foreach($args as $arg){
@@ -48,16 +54,20 @@ class Dumper{
 
             CONTENTS;
 
-            $file = _core.'custom/views/dump.php';
-            
-            file_put_contents($file, $contents);
+            $Filemanager = new FileManager;
 
-            ob_start();
-            include($file);
-            $template = ob_get_clean(); //new replacement
-            $vfile = str_replace(['\\','/'], '\\\\', __FILE__).':[\d]+:';
-            $template = preg_replace("~(<small>)?$vfile(</small>)?\n?~", '', $template);
-            echo $template;            
+            if($Filemanager->openFile(true, self::dumpFile)){
+                
+                file_put_contents(self::dumpFile, $contents);
+    
+                ob_start();
+                include($file);
+                $template = ob_get_clean(); //new replacement
+                $vfile = str_replace(['\\','/'], '\\\\', __FILE__).':[\d]+:';
+                $template = preg_replace("~(<small>)?$vfile(</small>)?\n?~", '', $template);
+                echo $template;            
+                
+            }
         }
 
         return new self;
@@ -65,6 +75,7 @@ class Dumper{
     }
 
     public function exit() {
+        if(is_file(self::dumpFile)) unlink(self::dumpFile);
         exit();
     }
 

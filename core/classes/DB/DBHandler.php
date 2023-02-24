@@ -74,9 +74,9 @@ class DBHandler Implements DBHelpers{
   /**
    * swicth to a new database
    */
-  public function switchDB($dbname,$dbuser=null,$dbpass=null,$dbserver=null){
+  public function switchDB($dbname,$dbuser = null,$dbpass = null, $dbserver = null){
     if($this->conn != null){
-      if($this->conn->switchDB($dbname,$dbuser,$dbpass,$dbserver=null)){
+      if($this->conn->switchDB($dbname,$dbuser,$dbpass, $dbserver)){
         return true;
       }
     }
@@ -88,7 +88,7 @@ class DBHandler Implements DBHelpers{
   /**
    * return base connection
    *
-   * @return void
+   * @return DBBridge|null
    */
   public function dbcon(){
     return $this->conn != null ? $this->conn->dbcon() : null;
@@ -206,13 +206,10 @@ class DBHandler Implements DBHelpers{
     }
   }
 
-
-   
-#--------------------------------FOR DEBUGGING---------------------Expose!!!!!!------------------------
   /**
-   * returns the last sql query
+   * Returns the last sql query. Used for debugging
    *
-   * @return string|null
+   * @return string
    */
   public function expose_sql(){
     echo "<br>".$this->sqlquery; 
@@ -221,7 +218,7 @@ class DBHandler Implements DBHelpers{
   /**
    * prints out the sql parameters
    *
-   * @return string|null
+   * @return void
    */
   public function expose_vars(){
     return false;
@@ -256,12 +253,24 @@ class DBHandler Implements DBHelpers{
     foreach ($classvars as $key => $value) {
         if(!in_array($key,$strictvars) && !array_key_exists($key, $statics)){
           
-          if(isset($this->$key)) $this->$key = null;
+          if(isset($this->$key)) {
+            if(is_array($this->$key)){
+              $this->$key = [];
+            }else{
+              $this->$key = null;
+            }
+          }
         
         }  else if(array_key_exists($key, $statics)){
 
             if($key === 'queryState' || $key === 'statedata') continue;
-            if(isset(self::$$key)) self::$$key = null;
+            if(isset(self::$$key)) {
+              if(is_array(self::$$key)){
+                self::$$key = [];
+              }else{
+                self::$$key = null;
+              }
+            }
 
         }
     }
@@ -272,32 +281,38 @@ class DBHandler Implements DBHelpers{
       return true;
   }
 
-  #--------------------------------Close Connection--------------------------------------
-    public function close(){
+  public function close(){
 
-    	if($this->checkdb($this->conn)){
-        $this->conn->close_connection();
-        $this->conn = null;  	
-      }
+    if($this->checkdb($this->conn)){
+      $this->conn->close_connection();
+      $this->conn = null;  	
+    }
 
-      $this->conn = null;
-      $classvars  = get_class_vars(__CLASS__);
-      $class      = new ReflectionClass(__CLASS__);
-      $statics    = $class->getStaticProperties();
+    $this->conn = null;
+    $classvars  = get_class_vars(__CLASS__);
+    $class      = new ReflectionClass(__CLASS__);
+    $statics    = $class->getStaticProperties();
 
-      foreach ($classvars as $key => $value) {
-        
-        if(in_array($key, $statics)) {
+    foreach ($classvars as $key => $value) {
+      
+      if(in_array($key, $statics)) {
+        if(is_array(self::$$key)){
+          self::$$key = [];
+        }else{
           self::$$key = null;
+        }
+      }else{
+        if(is_array($this->$key)){
+          $this->$key = [];
         }else{
           $this->$key = null;
         }
       }
-
-      $this->errlog = array();
-      return true;
-
     }
+
+    $this->errlog = array();
+
+  }
 
 }
 

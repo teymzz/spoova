@@ -52,9 +52,7 @@ if( !defined('server') ) {
 	 * @param boolean $modified when set as false, $path will not be saved
 	 * @return string
 	 */
-	function  DomUrl($path='', bool $modified = true){
-					
-		//if(!SETTER::EXISTS('::DOMURL::')) SET('::DOMURL::', GET(DomUrl::Name(), DomUrl::Hash()), true);
+	function  domUrl($path='', bool $modified = true){
 
 		$path = ltrim($path?:'', '/ ');
 		$http = isSecure()? 'https://' : 'http://';
@@ -69,8 +67,6 @@ if( !defined('server') ) {
 			(!isset($_SERVER['SERVER_ADMIN']))
 		)? $server : $host; 
 		$basedom = '';
-		
-		//alert($host);
 
 		if(func_num_args() === 2 && online){
 			
@@ -111,7 +107,7 @@ if( !defined('server') ) {
 
 		if(isset($urlhash[1])) $url .= '#'.$urlhash[1];
 		if(isset($urlquery[1])) $url .= '?'.$urlquery[1];
-
+        $url = str_replace(['http:///', 'https:///'], ['http://', 'https://'], $url); 
 		return $url;
 	}
 	

@@ -1,11 +1,11 @@
 <?php
 
 namespace spoova\core\widget;
+
 /**
  * @abstract NavBuild
  * This class compiles the @package NavHandle and @package NavEngine
  */
-
 abstract class NavBuild{
 
     /**
@@ -14,6 +14,8 @@ abstract class NavBuild{
      * @var NavBuild
      */
     private $NavBar;
+
+    public $build;
 
     protected $navsetts = [
         'options_view' => true,

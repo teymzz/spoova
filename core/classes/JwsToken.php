@@ -20,8 +20,8 @@ class JwsToken{
     private $payload;
     private $expire = 3600;
     private $allowDecrypt;
-    private $expired;
-    private $pending;
+    private $expired = false;
+    private $pending = false;
     private $signature;
     private $activate;
     private $token;
@@ -31,6 +31,13 @@ class JwsToken{
     public $baseload;
     public $decrypt;
 
+    /**
+     * Set the type and algorithm to be used for jwstoken 
+     *
+     * @param string $type
+     * @param string $algo
+     * @return JWSToken
+     */
     public function set($type = 'JWS', $algo = 'HS256'){
 
         if($this->error != '') return $this;
@@ -49,6 +56,12 @@ class JwsToken{
 
     } 
 
+    /**
+     * Sets or modifies the algorithm to be used for token generation or decrypting
+     *
+     * @param string $algo
+     * @return JWSToken
+     */
     public function algo($algo = 'HS256'){
 
         if($this->error != '') return $this;
@@ -67,6 +80,12 @@ class JwsToken{
 
     }  
 
+    /**
+     * Sets the payload to be tokenfied
+     *
+     * @param array $payload
+     * @return JWSToken
+     */
     public function payload($payload = []){
 
         if(is_string($payload)){
@@ -83,7 +102,14 @@ class JwsToken{
         
     }
 
-    public function sign($secretkey,$hash = 'sha256'){
+    /**
+     * Signs a payload with a secret key and hashing algorithm type
+     *
+     * @param mixed $secretkey to be used to sign the payload
+     * @param string $hash hashing modifier algorithm to be used. Overides the JWSToken->algo() method
+     * @return void
+     */
+    public function sign($secretkey, $hash = 'sha256'){
         
         $type = $this->type;
         $algo = $this->algo;
@@ -111,6 +137,12 @@ class JwsToken{
         $this->token = $jwt;
     }
 
+    /**
+     * Declares when a token should expire
+     *
+     * @param integer|string $secs An integer or numeric string measured in seconds. 
+     * @return JWSToken
+     */
     public function expires($secs = 3600){
 
         if($this->payload == ''){
@@ -126,17 +158,36 @@ class JwsToken{
 
     }
 
+    /**
+     * Sets a token or returns a generated token string
+     *
+     * @param string $token 
+     *  - when $token is defined, it sets the token string
+     *  - when no argument is supplied, it returns a generated token string
+     * 
+     * @return JWSToken|string
+     */
     public function token($token = ''){
       if(func_num_args() > 0){
           $this->itoken = $token;
-          $this->pending = '';
-          $this->expired = '';
+          $this->pending = false;
+          $this->expired = false;
           return $this; 
       }
       return $this->token;
     }
 
-    public function decrypt($token = '', $secretkey = '', $hash = 'sha256'){
+    /**
+     * Decrypts a token
+     *  - When binded with isValid() method and no arguments supplied, it returns the last 
+     *    decrypted token. 
+     *
+     * @param string $token 
+     * @param string $secretkey secret key used when signing token
+     * @param string $hash hashing algorithm used to hash token
+     * @return mixed
+     */
+    public function decrypt(string $token = '', $secretkey = '', $hash = 'sha256'){
 
         if(func_num_args() < 1){
             return $this->decrypt;
@@ -172,16 +223,32 @@ class JwsToken{
 
     }
 
-    public function isValid($secretkey, $hash='sha256'){
+    /**
+     * Used to validate and decy
+     *
+     * @param mixed $secretkey
+     * @param string $hash
+     * @return boolean
+     */
+    public function isValid($secretkey, $hash = 'sha256') : bool {
         
-        return $this->isValidToken($secretkey ,$hash, true);
+        return $this->isValidToken($secretkey, $hash, true);
                 
     }
 
+    /**
+     * Checks if a token is valid or decrypts a token
+     *
+     * @param mixed $secretkey
+     * @param string $hash hashing algorithm
+     * @param boolean $process determines if a defined token should be decrypted
+     * @param string $test determines if a token is being tested (e.g for exp, nbf) 
+     * @return boolean
+     */
     private function isValidToken($secretkey, $hash, $process = false, $test = ''){
 
         $token = $this->itoken;
-        $explode = explode('.',$token);
+        $explode = explode('.', $token);
 
         if(count($explode) < 3){ 
             return $this->error('invalid token format detected');
@@ -224,7 +291,7 @@ class JwsToken{
 
     }
 
-    private function validate(array $payload, $test = ''){
+    private function validate(array $payload, $test = '') : bool{
         
         $rels = ['nbf'=>'pending', 'exp' => 'expired'];
         
@@ -272,15 +339,31 @@ class JwsToken{
             }            
         }
         return true;
+
     }
 
-    public function expired($secret = '', $hash='sha256'){
+    /**
+     * Checks if a token has expired
+     *
+     * @param string $secret
+     * @param string $hash
+     * @return bool
+     */
+    public function expired($secret = '', $hash='sha256') : bool {
         if(func_num_args() > 0){
-          $this->isValidToken($secret ,$hash, true, 'exp');
+          $this->isValidToken($secret, $hash, true, 'exp');
         }
         return $this->expired;
     }
 
+    /**
+     * Detects if a token is not yet active
+     *
+     * @param string $secret
+     * @param string $hash
+     * @return bool
+     *  - Returns true only if a token is pending. Bad and active tokens will return false.
+     */
     public function pending($secret = '', $hash='sha256'){
         if(func_num_args() > 0){
           $this->isValidToken($secret ,$hash, 'nbf');
@@ -288,118 +371,16 @@ class JwsToken{
         return $this->pending;
     }
 
-    public function error($message = ''){
+    /**
+     * This method returns error encountered during token validation.
+     *
+     */
+    public function error(){
         if(func_num_args() == 0){ return $this->error; }
-        if($message == 'exists'){
-            return ($this->error != '')? true : false;
+        if(func_num_args() == 1){
+            $this->error = func_get_args()[0];
+            return false;
         }
-        $this->error = $message;
-        return false;
     }
 
 }
-
-/* 
-  SAMPLE OF USAGE
-
-  payload can be set using the following keys
-  
-  //optional
-  iss - issued by
-  iat - issued at 
-  data - user data
-
-  //if you need to set time before or expire time, the following should be added to your payload
-  nbf - time before activation
-  exp - expire time after activation
-
-  Sample 1A: getting a token
-    
-    $jws = new \core\classes\JwsToken;   //initialize class
-
-    $payload = ['name'=>'me','nbf'=>time() + 60,'exp'=>time() + 120];
-
-    $jws->payload($payload)->sign('secret_key');
-    $token = $jws->token(); //return the token
-
-  Sample 1B: modify settings before getting a token
-    
-    $jws = new \core\classes\JwsToken;   //initialize class
-
-    $jws->set('JWS','HS512'); //default is ('JWT','HS256');
-
-    $payload = ['data'=>'mydata','somedata'=>'','nbf'=>time() + 60,'exp'=>time() + 120];
-
-    $jws->payload($payload)->sign('secret_key');
-    $token = $jws->token(); //return the token  
-    
-  Sample 1C: modify only algoritm before getting a token
-    
-    $jws = new \core\classes\JwsToken;   //initialize class
-
-    $jws->algo('HS512'); //use HS512
-
-    $payload = ['data'=>'mydata','somedata'=>''];
-
-    $jws->payload($payload)->sign('secret_key');
-    $token = $jws->token(); //return the token      
-
-  Sample 1D: using expires to set expire time
-    
-    $jws = new \core\classes\JwsToken;   //initialize class
-
-    $payload = ['data'=>'mydata','somedata'=>''];
-    $expires = time() + 120; //after one minute
-
-    $jws->payload($payload)->expires($expires)->sign('secret_key');
-    $token = $jws->token(); //return the token  
-    
-  Sample 1E: modify hash algorithm
-    
-    $jws = new \core\classes\JwsToken;   //initialize class
-
-    $payload = ['data'=>'mydata','somedata'=>'some_data_here'];
-
-    $jws->payload($payload)->sign('secret_key','sha1'); //use sha1
-    $token = $jws->token(); //return the token  
-    
- Sample 2: getting your token and decrypting the data
-    
-    $jws = new \core\classes\JwsToken;
-    $token = 'my_token_here';
-
-    if($jws->token($token)->isValid('secret_key')){
-
-        print($jws->decrypt());
-
-    }elseif($jws->error('exists')){
-
-        print($jws->error());
-
-    }
-
- Sample 3: decrypting only data
-    
-    $jws = new \core\classes\JwsToken;    
-     //syntax: $jws->decrypt('token','secret_key','hash_algo')); //default hash_algo is sha256
-
-    if($decrypt = $jws->decrypt('mytoken','secret_key','sha1'))){
-        print $decrypt; //decrypt with sha1 only when encrypted with sha1
-    }else{
-        print $jws->error;
-    }
-
- #Note: hash algorithms must match
-
- USAGE Example
-
-    $payload = ['name'=>'me','nbf'=>time() + 60,'exp'=>time() + 120];
-
-    $jws = new \core\classes\JwsToken;
-
-    $jws->payload($payload)->sign('password_here');
-    $token = $jws->token();
-    
-    print $token;
-
-*/

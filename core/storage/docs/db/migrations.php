@@ -246,7 +246,7 @@ body.--theme-dark{
     <script src='http://localhost/spoova/res/main/js/switcher.js'></script>
     
 </head>
-<body>
+<body class="--theme-dark">
 
     <script>
         $(document).ready(function(){
@@ -328,7 +328,12 @@ window.onload = function() {
          
 
 <!-- @lay('build.co.coords:header') -->
-
+    <style>
+        table.opt{
+            border-spacing: 10px;
+            border-collapse: separate;
+        }
+    </style>
  
 
      
@@ -361,7 +366,7 @@ window.onload = function() {
                <li> <a href="<?= DomUrl('docs/database/migrations') ?>" class="<?= inPath('active') ?>"><span class="ico ico-spin"></span>Handling Migrations</a> </li>
                <li> <a href="<?= DomUrl('docs/classes') ?>" class="<?= inPath('active') ?>"><span class="ico ico-spin"></span>Helper Classes</a> </li>
                <li> <a href="<?= DomUrl('docs/functions') ?>" class="<?= inPath('active') ?>"><span class="ico ico-spin"></span>Helper Functions</a> </li>
-               <li> <a href="<?= DomUrl('docs/directives') ?>" class="<?= inPath('active') ?>"><span class="ico ico-spin"></span>Helper Directives</a> </li>
+               <li> <a href="<?= DomUrl('docs/template') ?>" class="<?= inPath('active') ?>"><span class="ico ico-spin"></span>Template Engine</a> </li>
                <li> <a href="<?= DomUrl('docs/setters') ?>" class="<?= inPath('active') ?>"><span class="ico ico-spin"></span>Global Setters</a> </li>
                <li> <a href="<?= DomUrl('docs/mails') ?>" class="<?= inPath('active') ?>"><span class="ico ico-spin"></span>Handling Mails</a> </li>
                <li> <a href="<?= DomUrl('docs/cli') ?>" class="<?= inPath('active') ?>"><span class="ico ico-spin"></span>Cli Commands</a> </li>         
@@ -623,9 +628,9 @@ window.onload = function() {
                                     <div class="">
                                         Similarly to data type methods, the modifier methods are static methods that are only defined within the <code>DBSCHEMA::ALTER()</code> scope. 
                                         They take only one argument which is a callback closure argument that must return a <code>DRAFT</code> object. Since their main function is to modify an already existing table, 
-                                        tables <code>DRAFT</code> object modified or altered are be defined and returned by callback function. There are only three 
-                                        type of these method which are <code>MODIFY()</code>, <code>CHANGE()</code> and <code>DROP()</code>. It is however to note that unlike  the 
-                                        <code>MODIFY</code> and <code>CHANGE</code> methods, the <code>DROP</code> method does not implement a callback function. Assuming we have a <code>DRAFT</code> object <code>"$DRAFT"</code>, 
+                                        the <code>DRAFT</code> object is used to pivot an alteration within them and the <code>DRAFT</code> is returned back by the callback closure function. There are only three 
+                                        type of these method which are <code>MODIFY()</code>, <code>CHANGE()</code> and <code>DROP()</code>. It is however important to note that unlike the 
+                                        <code>MODIFY()</code> and <code>CHANGE()</code> methods, the <code>DROP()</code> method does not implement a callback function. Assuming we have a <code>DRAFT</code> object <code>"$DRAFT"</code>, 
                                         the <code>MODIFY</code> or <code>CHANGE</code> methods can be applied in the following format:
                                     </div> <br>
 
@@ -634,7 +639,7 @@ window.onload = function() {
 
     DBSCHEMA::ALTER($this, function(DRAFT $DRAFT){
 
-        $DRAFT::MODIFY( function(DRAFT $DRAFT) { 
+        $DRAFT::MODIFY( function($DRAFT) { 
             
             $DRAFT::DATA_TYPE(); <span class="comment">// use any of the data type method here.</span>
 
@@ -654,7 +659,7 @@ window.onload = function() {
 
     DBSCHEMA::ALTER($this, function(DRAFT $DRAFT){
 
-        <span class="c-sky-blue-dd">$DRAFT::MODIFY( fn(DRAFT $DRAFT) => $DRAFT::DATA_TYPE() );</span>
+        <span class="c-sky-blue-dd">$DRAFT::MODIFY( fn() => $DRAFT::DATA_TYPE() );</span>
 
     });
 
@@ -663,11 +668,12 @@ window.onload = function() {
                                     </div> <br><br>
 
                                     <div class="pre-area">
+                                        <div class="pxv-10 bc-silver">Example</div>
     <pre class="pre-code">
 
     DBSCHEMA::ALTER($this, function(DRAFT $DRAFT){
 
-        <span class="c-sky-blue-dd">$DRAFT::CHANGE( fn(DRAFT $DRAFT) => $DRAFT::DATA_TYPE() );</span>
+        <span class="c-sky-blue-dd">$DRAFT::CHANGE( fn() => $DRAFT::INT('fieldname', 2) );</span>
 
     });
 
@@ -676,11 +682,19 @@ window.onload = function() {
 
                                     <div class="foot-note">
                                         <p class="">
-                                            The <code>DROP()</code> method drops a database table column or database table's index. 
-                                            It takes one or two arguments depending on what is expected to be dropped. If the one argument is supplied, 
-                                            it is assumed that the migration table's field is expected to be dropped unless it is set as "PRIMARY KEY" which 
-                                            will drop the current table's primary key. However, if two arguments are supplied, then the first is assumed to be 
-                                            an index type (e.g UNIQUE) while second argument will be the index name that is expected to be dropped. An example is shown below:
+                                            <p>
+                                                In the example above, assuming the "fieldname" was a "VARCHAR" field before, the new data type "INT" will convert the field to an integer 
+                                                field using the supplied length. The second argument in this case which is the length, must be the argument accepted to be valid by the field. 
+                                            </p>
+
+                                            <p>
+                                                The <code>DROP()</code> method drops a database table column or database table's index. 
+                                                It takes one or two arguments depending on what is expected to be dropped. If one argument is supplied, 
+                                                it is assumes that the migration table's field is expected to be dropped unless it is set as "PRIMARY KEY" which 
+                                                will drop the current table's primary key. However, if two arguments are supplied, then the first is assumed to be 
+                                                an index type (e.g UNIQUE) while second argument will be the index name that is expected to be dropped. An example is shown below:
+                                            </p>
+                                            
                                         </p>
                                     </div>
 
@@ -817,14 +831,15 @@ window.onload = function() {
                                 </div> <br>
 
                                 <div class="bc-white-dd pxv-4">
+
                                     <code>$type</code> 
                                     <span>
                                         This is usually the first argument of any of the three data type methods <code>INTFIELD()</code> 
-                                        <code>BLOBFIELD</code> and <code>TEXTFIELD</code>. It mostly defines the type of a relative data type. 
-                                        The <code>$type</code> argument only defines the type of field based on relative options  as listed below 
+                                        <code>BLOBFIELD</code> and <code>TEXTFIELD</code>. It mostly defines the type of a field based on the 
+                                        relative data type through any of the options listed below 
                                         <div class="pxv-10">
 
-                                            <table class="font-em-d85 c-teal">
+                                            <table class="font-em-d85 c-teal opt">
                                                 <tr>
                                                     <th class="clip-100">Field</th>
                                                     <th class="clip-150">Description</th>
@@ -965,7 +980,7 @@ window.onload = function() {
                                 <div class="font-em-d85 c-orange-dd fb-6">SIGNED AND UNSIGNED CONSTRAINT</div>
                                 <div class="">
                                     The <code>SIGNED()</code> or <code>UNSIGNED()</code> constraints can be chained along with an <code>INT()</code> or 
-                                    <code>INTFIELD()</code> method which literally defines whether the intented integer field to be created is signed or unsigned.
+                                    <code>INTFIELD()</code> method which literally defines whether the intended integer field to be created is signed or unsigned.
                                 </div>
                             </div><br>
                             <div class="">
@@ -983,7 +998,7 @@ window.onload = function() {
                                     required because the current field is assumed to be the unique field. However, to set multiple fields as unique 
                                     fields, they must be called on the <code>CONSTRAINT()</code> method which takes an argument of the unique identifier name. If the 
                                     <code>UNIQUE()</code> method is chained on <code>CONSTRAINT()</code>, then multiple column names can be supplied as an array which denotes that 
-                                    the array lists of supplied column names are intented to be uniquely binded.
+                                    the array lists of supplied column names are intended to be uniquely binded.
                                 </div>
                             </div><br>
                             <div class="">
@@ -991,7 +1006,7 @@ window.onload = function() {
                                 <div class="">
                                     In order to define a field as a primary key field, the <code>PRIMARY_KEY()</code> method is employed. 
                                     This method can take a string or an array as the names of fields intended to be set as primary key field. 
-                                    When no argument is supplied, it uses the current field name as the intented primary key field.
+                                    When no argument is supplied, it uses the current field name as the intended primary key field.
                                 </div>
                             </div><br>
                             <div class="">
@@ -1029,6 +1044,9 @@ window.onload = function() {
                             chaining structures.
                         </div> <br>
                         <div class="pre-area">
+                            <div class="pxv-10 bc-silver">
+                               Sample: Creating a table
+                            </div>
     <pre class="pre-code">
     DBSCHEMA::CREATE('tablename', function(DRAFT $DRAFT){
 
@@ -1052,7 +1070,9 @@ window.onload = function() {
         
         $DRAFT::DATETIME('updated_on')->DEFAULT("(CURRENT_TIMESTAMP)");
         
-        $DRAFT::UNIQUE(['username', 'password'])
+        $DRAFT::UNIQUE(['username', 'password']);
+
+        return $DRAFT;
 
     })        
     </pre>
@@ -1080,6 +1100,8 @@ window.onload = function() {
         $DRAFT::VARCHAR('fullname')->AFTER('username'); <span class="comment no-select">// add fullname field after username column</span>
         $DRAFT::VARCHAR('address')->AFTER('firstname'); <span class="comment no-select">// add firstname field to the beginning of the table</span>
 
+        return $DRAFT;
+
     })        
     </pre>
                         </div>
@@ -1105,6 +1127,8 @@ window.onload = function() {
         $DRAFT::DROP('UNIQUE', 'unique2'); <span class="comment no-select">// drop the unique name "unique2" from the table.</span>
         
         $DRAFT::DROP('FOREIGN KEY', 'unique3'); <span class="comment no-select">// drop the FOREIGN KEY name "unique3" from the table.</span>
+
+        return $DRAFT;
 
     })        
     </pre>
@@ -1140,6 +1164,8 @@ window.onload = function() {
     DBSCHEMA::ALTER('users', function(DRAFT $DRAFT){
 
         $DRAFT::RENAME_TO('user_table'); <span class="comment no-select">// rename current table "users" to "user_table"</span>
+
+        return $DRAFT;
         
     })        
     </pre>
@@ -1157,13 +1183,16 @@ window.onload = function() {
     <pre class="pre-code">
     DBSCHEMA::ALTER('users', function(DRAFT $DRAFT){
 
-        $DRAFT::CHANGE(function (DRAFT $DRAFT) {
+        $DRAFT::CHANGE(function() use($DRAFT) {
 
             $DRAFT::VARCHAR(['firstname' => 'fname']); <span class="comment no-select">// change firstname to fname of VARCHAR type</span>
             
             $DRAFT::VARCHAR(['lastname' => 'lname']);  <span class="comment no-select">// change lastname to lname of VARCHAR type</span>
             
             $DRAFT::INT(['serial_no' => 'serial']); <span class="comment no-select">// change serial_no to serial field of INT type</span>
+
+            return $DRAFT;
+
         }); 
         
     })        
@@ -1172,7 +1201,8 @@ window.onload = function() {
                         <div class="foot-note mvs-10">
                             In the code above we are able to change the fields names and data types through the <code>CHANGE()</code> modifier method 
                             within the <code>DBSCHEMA::ALTER()</code> scope. It is worthy to note that only the <code>CHANGE()</code> method accepts array 
-                            arguments for data type methods, which makes it easier to change fields names.
+                            arguments for data type methods, which makes it easier to change fields names. The <code>$DRAFT</code> object can also be supplied within the 
+                            callback function instead of defining it within the <code>use()</code> function.
                         </div>
                     </div> <br>
 
@@ -1246,9 +1276,9 @@ window.onload = function() {
                                    <span class="bi-circle-fill font-em-d8 mxr-6"></span> COLUMNS
                                 </div>
                                 This specifies allows the definition of partition types as columns. For example, through this method we can have a type of 
-                                "RANGE COLUMN" and "LISTS COLUMN". This method also uses specific structures to determine if a partition is "RANGE" or "RANGE COLUMN". 
+                                "RANGE COLUMN" and "LISTS COLUMN". It also uses specific structures to determine if a partition is "RANGE" or "RANGE COLUMN". 
                                 The first argument which is expected to be an array will either set a partition type as the type defined through the 
-                                <code>PARTITION_BY</code> (i.e RANGE or LIST) or it will automatically append a the <code>"COLUMN"</code> string to the partition set if it detects 
+                                <code>PARTITION_BY()</code> (i.e RANGE or LIST) or it will automatically append a <code>"COLUMN"</code> string to the partition set if it detects 
                                 an array within a supplied array argument. For example:
                             </div> <br>
 
@@ -1259,11 +1289,7 @@ window.onload = function() {
  <pre class="pre-code">
     DBSCHEMA::CREATE('tablename', function(DRAFT $DRAFT){
 
-        $DRAFT::PARTITION_BY('RANGE', fn(DRAFT $DRAFT) =>
-
-            $DRAFT::COLUMN('col1')
-
-        );
+        $DRAFT::PARTITION_BY('RANGE', fn() => $DRAFT::COLUMN('col1') );
 
     })
  </pre>
@@ -1428,7 +1454,7 @@ window.onload = function() {
                         <div class="foot-note mvs-10">
                             The command above will execute all migration files by calling the <code>up()</code> method of each files in an ascending order. 
                             We can also execute the <code>down()</code> method by running the command below:
-                        </div>
+                        </div><br>
 
                         <div class="pre-area">
                             <div class="pxv-10 bc-silver">
@@ -1442,11 +1468,11 @@ window.onload = function() {
                         <div class="foot-note mvs-10">
                             In the cases where we want to run the migration files down in a specific number of times, we can also specify the number of times we 
                             want to run down (or reverse) the migration files just as shown below:
-                        </div>
+                        </div> <br>
 
                         <div class="pre-area">
                             <div class="pxv-10 bc-silver">
-                                Running migrations down 4 times
+                                Running migrations down in number of times
                             </div>
  <pre class="pre-code">
   >> <span class="c-orange-dd">php</span> mi migrate down 4
@@ -1458,6 +1484,21 @@ window.onload = function() {
                             file that occupies the number of times specified. This stepping down system is only applied for a down migration. 
                             Also, note that the connection used depends on the configuration file settings defined in 
                             the <code>icore/dbconfig.php</code> file. 
+                        </div> <br>
+
+                        <div class="pre-area">
+                            <div class="pxv-10 bc-silver">
+                                Getting migration status
+                            </div>
+ <pre class="pre-code">
+  >> <span class="c-orange-dd">php</span> mi migrate status
+ </pre>
+                        </div>
+
+                        <div class="foot-note mvs-10">
+                            The command above tries to fetch the migration status from the database reserved <span class="c-orange">migrations</span>. The status 
+                            table is only shown if the database connection is successful and the migrations table has been generated.
+                            table.
                         </div>
 
                     </div>

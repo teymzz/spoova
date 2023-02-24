@@ -11,6 +11,8 @@ class NavEngine extends NavBuild{
     private $calledmenu;
     private static $hiddenMenus = [];
     private static $hiddenOptions = [];
+    public $class;
+    public $main_attrs;
  
     function __construct(){
       $variable = get_class_vars(__CLASS__);
@@ -229,7 +231,6 @@ class NavEngine extends NavBuild{
                         if(!empty($merge)){
                             //update data:
                             self::$menuarray[$menu1]['menuprops'] = $merge;
-                            //self::$menuarray[$menu2]['menuprops'] = $merge;                        
                         }
 
                     }
@@ -334,7 +335,7 @@ class NavEngine extends NavBuild{
         } 
 
         foreach ($option as $opt){
-            //if(in_array($opt, $options)){
+
             //option exists, check attribute next
             
             //get option data from menuarray

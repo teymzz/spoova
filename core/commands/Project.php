@@ -297,10 +297,7 @@ class Project extends Entry{
 
         
         # Create project -----------------------------------------
-        //Cli::textView('finalizing project', 1);
-        
-        //yield from Cli::animate(4, 2);
-        
+ 
         //Remove unecessary files from new folder
         $project_path = dirname(docroot).DS.$project_name;
         $removables = ['core/custom/app','core/custom/'.$app_name];

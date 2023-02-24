@@ -176,6 +176,7 @@
 }
 
 body.--theme-dark{
+    color: rgb(125, 125, 125);
     background-color : rgba(21, 15, 39);
 }
  </style><style rel="build.css.navbars"> 
@@ -242,7 +243,7 @@ body.--theme-dark{
     <script src='http://localhost/spoova/res/main/js/switcher.js'></script>
     
 </head>
-<body>
+<body class="--theme-dark">
 
     <script>
         $(document).ready(function(){
@@ -345,6 +346,7 @@ window.onload = function() {
 
           <ul class="list-square">
                <li> <a href="<?= DomUrl('docs/installation') ?>" class="<?= inPath('active') ?>"><span class="ico ico-spin"></span>Installation</a> </li>
+               <li> <a href="<?= DomUrl('docs/wmv') ?>" class="<?= inPath('active') ?>" ><span class="ico ico-spin"></span><span class="fb-6 pointer" title="Windows Models View">WMV</span> PATTERN</a></li>
                <li> <a href="<?= DomUrl('docs/live-server') ?>" class="<?= inPath('active') ?>"><span class="ico ico-spin"></span>Live Server</a></li>
                <li> <a href="<?= DomUrl('docs/database') ?>" class="<?= inPath('active') ?>"><span class="ico ico-spin"></span>Database</a> </li>
                <li> <a href="<?= DomUrl('docs/resource') ?>" class="<?= inPath('active') ?>"><span class="ico ico-spin"></span>Resource class</a> </li>
@@ -356,12 +358,11 @@ window.onload = function() {
                <li> <a href="<?= DomUrl('docs/database/migrations') ?>" class="<?= inPath('active') ?>"><span class="ico ico-spin"></span>Handling Migrations</a> </li>
                <li> <a href="<?= DomUrl('docs/classes') ?>" class="<?= inPath('active') ?>"><span class="ico ico-spin"></span>Helper Classes</a> </li>
                <li> <a href="<?= DomUrl('docs/functions') ?>" class="<?= inPath('active') ?>"><span class="ico ico-spin"></span>Helper Functions</a> </li>
-               <li> <a href="<?= DomUrl('docs/directives') ?>" class="<?= inPath('active') ?>"><span class="ico ico-spin"></span>Helper Directives</a> </li>
+               <li> <a href="<?= DomUrl('docs/template') ?>" class="<?= inPath('active') ?>"><span class="ico ico-spin"></span>Template Engine</a> </li>
                <li> <a href="<?= DomUrl('docs/setters') ?>" class="<?= inPath('active') ?>"><span class="ico ico-spin"></span>Global Setters</a> </li>
                <li> <a href="<?= DomUrl('docs/mails') ?>" class="<?= inPath('active') ?>"><span class="ico ico-spin"></span>Handling Mails</a> </li>
                <li> <a href="<?= DomUrl('docs/cli') ?>" class="<?= inPath('active') ?>"><span class="ico ico-spin"></span>Cli Commands</a> </li>         
                <li> <a href="<?= DomUrl('docs/plugins') ?>" class="<?= inPath('active') ?>"><span class="ico ico-spin"></span>Composer and Plugins</a></li>
-               <li> <a href="<?= DomUrl('docs/wmv') ?>" class="<?= inPath('active') ?>" ><span class="ico ico-spin"></span>The <span class="fb-6 pointer" title="Windows Models View">WMV</span> PATTERN</a></li>
                <li> <a href="<?= DomUrl('docs/libraries') ?>" class="<?= inPath('active') ?>"><span class="ico ico-spin"></span>Third-Party Libraries</a> </li>
                <li> <a href="<?= DomUrl('docs/other-features') ?>" class="<?= inPath('active') ?>"><span class="ico ico-spin"></span>Other Features</a> </li>
           </ul>
@@ -392,13 +393,13 @@ window.onload = function() {
                         </div> <br>
 
                             <ol class="c-olive">
-                                <li> <a href="#path" data-scroll-hash="" data-minus="10"> path </a> </li>
-                                <li> <a href="#follows" data-scroll-hash="" data-minus="10"> follows </a> </li>
-                                <li> <a href="#islike" data-scroll-hash="" data-minus="10"> isLike </a> </li>
-                                <li> <a href="#is" data-scroll-hash="" data-minus="10"> is </a> </li>
-                                <li> <a href="#in" data-scroll-hash="" data-minus="10"> in </a> </li>
-                                <li> <a href="#hash" data-scroll-hash="" data-minus="10"> hash </a> </li>
-                                <li> <a href="#query" data-scroll-hash="" data-minus="10"> query </a> </li>
+                                <li> <a href="#path" data-scroll-hash="" data-minus="10" class="c-olive ch-orange"> path </a> </li>
+                                <li> <a href="#follows" data-scroll-hash="" data-minus="10" class="c-olive ch-orange"> follows </a> </li>
+                                <li> <a href="#islike" data-scroll-hash="" data-minus="10" class="c-olive ch-orange"> isLike </a> </li>
+                                <li> <a href="#is" data-scroll-hash="" data-minus="10" class="c-olive ch-orange"> is </a> </li>
+                                <li> <a href="#in" data-scroll-hash="" data-minus="10" class="c-olive ch-orange"> in </a> </li>
+                                <li> <a href="#hash" data-scroll-hash="" data-minus="10" class="c-olive ch-orange"> hash </a> </li>
+                                <li> <a href="#query" data-scroll-hash="" data-minus="10" class="c-olive ch-orange"> query </a> </li>
                             </ol>
                             
                         </div> 
@@ -421,7 +422,7 @@ window.onload = function() {
                             <div class="box-full">
                                 <div class="pxv-6 bc-off-white"><code>Sample: Initializing Input</code></div>
                                 <pre class="pre-code">
-    $url  = new Url;
+    $Url  = new Url;
                                 </pre>
                             </div>
                         </div>
@@ -447,9 +448,9 @@ window.onload = function() {
                                 <div class="pxv-6 bc-off-white"><code>keywords</code></div>
                                 <pre class="pre-code">
     <span class="comment">
-    url  : supplied url to be processed
+    $test_url : supplied url to be processed
 
-    path : supplied url to be compared
+    $some_url : supplied url to be compared
     </span>
                                 </pre>
                             </div>
@@ -477,7 +478,7 @@ window.onload = function() {
                                     <div class="box-full">
                                         <div class="pxv-6 bc-off-white"><code>Syntax: path</code></div>
                                         <pre class="pre-code">
-    $url->path(url)
+    $Url->path($test_url);
                                         </pre>
                                     </div>
                                 </div>
@@ -488,7 +489,7 @@ window.onload = function() {
                             <div class="box-full">
                                 <div class="pxv-6 bc-off-white"><code>Example: path</code></div>
                                 <pre class="pre-code">
-    $url->path('/user/profile/settings'); <span class="comment">// supply a url to be processed</span>
+    $Url->path('/user/profile/settings');
                                 </pre>
                             </div>
                         </div>
@@ -514,7 +515,10 @@ window.onload = function() {
                                     <div class="box-full">
                                         <div class="pxv-6 bc-off-white"><code>Syntax: follows</code></div>
                                         <pre class="pre-code">
-    $url->follow(url); 
+    $Url->follows($some_url); 
+    <span class="comment">
+      where: $some_url is the parent url structure that must be matched
+    </span>
                                         </pre>
                                     </div>
                                 </div>    
@@ -524,13 +528,13 @@ window.onload = function() {
                                         <div class="pxv-6 bc-off-white"><code>Examples: follows</code></div>
                                         <pre class="pre-code">
     <span class="comment">// Examples</span>
-    $url->path('index')->follows('index'); <span class="comment">// true</span>
+    $Url->path('index')->follows('index'); <span class="comment">// true</span>
 
-    $url->path('index/profile')->follows('index'); <span class="comment">// true</span>
+    $Url->path('index/profile')->follows('index'); <span class="comment">// true</span>
 
-    $url->path('index/profile')->follows('index/profile/user'); <span class="comment">// false</span>
+    $Url->path('index/profile')->follows('index/profile/user'); <span class="comment">// false</span>
 
-    $url->path('index/profile')->follows('profile'); <span class="comment">// false</span>
+    $Url->path('index/profile')->follows('profile'); <span class="comment">// false</span>
                                         </pre>
                                     </div>
                                 </div>
@@ -550,21 +554,15 @@ window.onload = function() {
                             </div> <br>
 
                             <div class="">
-                                The <code>isLike()</code> method returns if the url supplied is similar to the  
-                                path supplied.
+                                The <code>isLike()</code> method returns true if the url supplied into it exists as a root structure of the test url without any observable 
+                                change in form.
                                 <br><br>
 
                                 <div class="pre-area">
                                     <div class="box-full">
                                         <div class="pxv-6 bc-off-white"><code>Syntax: isLike</code></div>
                                         <pre class="pre-code">
-    $url->isLike(path); 
-
-    <span class="comment no-select">
-    where: 
-
-        path : path supplied to be tested
-    </span>
+    $Url->isLike($some_url); 
                                         </pre>
                                     </div>
                                 </div>    
@@ -573,13 +571,13 @@ window.onload = function() {
                                     <div class="box-full">
                                         <div class="pxv-6 bc-off-white"><code>Examples: isLike</code></div>
                                         <pre class="pre-code">
-    $url->path('index')->isLike('index'); <span class="comment">// true</span>
+    $Url->path('index')->isLike('index'); <span class="comment">// true</span>
 
-    $url->path('index/profile')->isLike('index'); <span class="comment">// true</span>
+    $Url->path('index/profile')->isLike('index'); <span class="comment">// true</span>
 
-    $url->path('index/profile/user')->isLike('index/profile'); <span class="comment">// true</span>
+    $Url->path('index/profile/user')->isLike('index/profile'); <span class="comment">// true</span>
 
-    $url->path('index/profile/me')->isLike('index/profile/you'); <span class="comment">// false</span>
+    $Url->path('index/profile/me')->isLike('index/profile/you'); <span class="comment">// false</span>
                                         </pre>
                                     </div>
                                 </div>
@@ -606,9 +604,9 @@ window.onload = function() {
                                     <div class="box-full">
                                         <div class="pxv-6 bc-off-white"><code>Examples: is</code></div>
                                         <pre class="pre-code">
-    $url->path('index')->is('index');  <span class="comment">// true</span>
+    $Url->path('index')->is('index');  <span class="comment">// true</span>
 
-    $url->path('index/user', 'index/person');  <span class="comment">//false</span>
+    $Url->path('index/user', 'index/person');  <span class="comment">//false</span>
                                         </pre>
                                     </div>
                                 </div>
@@ -635,9 +633,9 @@ window.onload = function() {
                                     <div class="box-full">
                                         <div class="pxv-6 bc-off-white"><code>Examples: in</code></div>
                                         <pre class="pre-code">
-    $url->path('index')->in(['index', 'profile']); <span class="comment">// true</span>
+    $Url->path('index')->in(['index', 'profile']); <span class="comment">// true</span>
 
-    $url->path('index')->in(['home', 'profile');   <span class="comment">// false</span>
+    $Url->path('index')->in(['home', 'profile']);   <span class="comment">// false</span>
                                         </pre>
                                     </div>
                                 </div>
@@ -663,10 +661,9 @@ window.onload = function() {
                                     <div class="box-full">
                                         <div class="pxv-6 bc-off-white"><code>Examples: hash</code></div>
                                         <pre class="pre-code">
-    <span class="comment">//test data</span>
-    $url->path('index#user'); 
+    $Url->path('index#user');
 
-    var_dump( $url->hash() );     <span class="comment">// user</span>
+    var_dump( $Url->hash() ); <span class="comment">//returns user</span>
                                         </pre>
                                     </div>
                                 </div>
@@ -692,8 +689,8 @@ window.onload = function() {
                                     <div class="box-full">
                                         <div class="pxv-6 bc-off-white"><code>Example: query</code></div>
                                         <pre class="pre-code">
-    $url->path("http://site.com/user?name=foo&class=bar"); 
-    var_dump( $url->query() ); <span class="comment">//['name'=>'foo', 'class' => 'bar']</span>
+    $Url->path("http://site.com/user?name=foo&class=bar"); 
+    var_dump( $Url->query() ); <span class="comment">//['name'=>'foo', 'class' => 'bar']</span>
                                         </pre>
                                     </div>
                                 </div>
