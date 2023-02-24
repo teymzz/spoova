@@ -20,7 +20,7 @@ class Entry extends Console{
     protected const spack = 'spack_';
     protected const crest = self::spack.SP_VERSION;
 
-    protected const root = [ 'version', 'support', 'features', 'cli', 'functions', 'classes', 'repack', ':interactive' ];
+    protected const root = [ 'version', 'support', 'features', 'cli', 'functions', 'classes', 'repack', ':wiz' ];
 
     /**
      * commands for configurations

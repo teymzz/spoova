@@ -244,7 +244,7 @@ body.--theme-dark{
     <script src='http://localhost/spoova/res/main/js/switcher.js'></script>
     
 </head>
-<body>
+<body class="--theme-dark">
 
     <script>
         $(document).ready(function(){
@@ -347,6 +347,7 @@ window.onload = function() {
 
           <ul class="list-square">
                <li> <a href="<?= DomUrl('docs/installation') ?>" class="<?= inPath('active') ?>"><span class="ico ico-spin"></span>Installation</a> </li>
+               <li> <a href="<?= DomUrl('docs/wmv') ?>" class="<?= inPath('active') ?>" ><span class="ico ico-spin"></span><span class="fb-6 pointer" title="Windows Models View">WMV</span> PATTERN</a></li>
                <li> <a href="<?= DomUrl('docs/live-server') ?>" class="<?= inPath('active') ?>"><span class="ico ico-spin"></span>Live Server</a></li>
                <li> <a href="<?= DomUrl('docs/database') ?>" class="<?= inPath('active') ?>"><span class="ico ico-spin"></span>Database</a> </li>
                <li> <a href="<?= DomUrl('docs/resource') ?>" class="<?= inPath('active') ?>"><span class="ico ico-spin"></span>Resource class</a> </li>
@@ -363,7 +364,6 @@ window.onload = function() {
                <li> <a href="<?= DomUrl('docs/mails') ?>" class="<?= inPath('active') ?>"><span class="ico ico-spin"></span>Handling Mails</a> </li>
                <li> <a href="<?= DomUrl('docs/cli') ?>" class="<?= inPath('active') ?>"><span class="ico ico-spin"></span>Cli Commands</a> </li>         
                <li> <a href="<?= DomUrl('docs/plugins') ?>" class="<?= inPath('active') ?>"><span class="ico ico-spin"></span>Composer and Plugins</a></li>
-               <li> <a href="<?= DomUrl('docs/wmv') ?>" class="<?= inPath('active') ?>" ><span class="ico ico-spin"></span>The <span class="fb-6 pointer" title="Windows Models View">WMV</span> PATTERN</a></li>
                <li> <a href="<?= DomUrl('docs/libraries') ?>" class="<?= inPath('active') ?>"><span class="ico ico-spin"></span>Third-Party Libraries</a> </li>
                <li> <a href="<?= DomUrl('docs/other-features') ?>" class="<?= inPath('active') ?>"><span class="ico ico-spin"></span>Other Features</a> </li>
           </ul>
@@ -445,8 +445,9 @@ window.onload = function() {
                             </div> <br>
 
                             <div class="">
-                                The <code>set</code> method is used to set parameters 
-                                into the input class.
+                                The <code>set</code> method is used to set parameters to be validated by
+                                the input class. It's alias method is the <code>test()</code> method which takes the same number 
+                                of arguments as parameters.
                                 <br><br>
                             
                                 <div class="pre-area shadow">
@@ -454,6 +455,8 @@ window.onload = function() {
                                         <div class="pxv-6 bc-off-white"><code>Syntax: set</code></div>
                                         <pre class="pre-code">
     $input->set($value, $config, $bool);
+
+    $input->test($value, $config, $bool); <span class="comment">// same as above</span>
     <span class="comment no-select">
       where:
         
@@ -495,10 +498,10 @@ window.onload = function() {
                             <br>
                             <div class="">
                                 <div class="">
-                                    <code>type</code> - defines the type of validation. Options are [string | text | email | integer | number | phone | url | pregmatch]
+                                    <code>type</code> - defines the type of validation. Options are [string | text | email | integer | number | phone | url | range | pregmatch]
                                 </div>
                                 <div class="">
-                                    <code>length</code> - defines the maximum number of characters to be allowed
+                                    <code>length</code> - defines the minimum and maximum number of characters to be allowed where maximum is default if one value is supplied.
                                 </div>
                                 <div class="">
                                     <code>range</code> - defines an array list which a value must be a member of. 
@@ -537,6 +540,12 @@ window.onload = function() {
 
     $input->set('http://site.com', ['type' => 'url']); <span class="comment">// returns http://site.com</span>                              
     $input->set('site', ['type' => 'url']); <span class="comment">// returns null, value is not a valid url</span> 
+    
+    $input->set('foobar', ['type' => 'string', 'pattern' => 'a-zA-z']); <span class="comment">// match data type using pattern</span>
+    
+    $input->set('400', ['type' => 'number', 'range' => [100, 700]]); <span class="comment">// match data type using specific range of values</span>
+
+    $input->set('foobar', ['type' => 'string', 'length' => [3, 7]]); <span class="comment">// matches a minimum and maximum length of character a data must contain.</span> 
                                 </pre>
                             </div>
                         </div>
@@ -582,8 +591,13 @@ window.onload = function() {
                         </div>
                         
                             </div>
-                        </div> <br>
-                    </div>
+                        </div>
+                        <div class="foot-note mvt-10">
+                            The <code>strict()</code> method when set to true, is used to to stop a validation process if any of the <code>set()</code> method 
+                            cannot validate the data supplied. Once any error occurs in any earlier validation, other subsequent validations after will fail 
+                            by returning an empty value.
+                        </div>
+                    </div> <br>
 
                     <div id="default_type" class="">
                         <div class="">
@@ -703,8 +717,8 @@ window.onload = function() {
                                         <pre class="pre-code">
     $input->default_range(['ball', 'cat', 'dog']); <span class="comment"> // set default range</span>
     
-    $input->set('cat'); <span class="comment">// returns cat</span>
-    $input->set('bird'); <span class="comment">// returns null</span>
+    $input->test('cat'); <span class="comment">// returns cat</span>
+    $input->test('bird'); <span class="comment">// returns null</span>
                                         </pre>
                                     </div>
                                 </div>
@@ -723,8 +737,7 @@ window.onload = function() {
                             </div> <br>
                             
                             <div class="">
-                                The <code>arrGetsVoid</code> checks if a supplied array has an empty value for any key
-                                within it.
+                                The <code>arrGetsVoid</code> checks if a supplied array has any index key having an empty value within it.
                                 <br><br>
                     
                                 <div class="pre-area shadow">

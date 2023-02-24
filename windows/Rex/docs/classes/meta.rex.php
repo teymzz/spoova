@@ -1,8 +1,6 @@
 
 @template('template.t-tut')
 
-    <!-- @lay('build.co.coords:header') -->
-
     @lay('build.co.navbars:left-nav')
 
     <div class="box-full pxl-2 bc-white-dd pull-right">
@@ -59,8 +57,7 @@
                             </div>
                         </div> <br>
                         <div class="">
-                        This method is used to set the charset of meta tags. Example is shown 
-                        Example is shown below: <br><br>
+                        This method is used to set the charset of meta tags. Example is shown below: <br><br>
                         
                         <div class="pre-area shadow">
                             <div class="box-full">
@@ -164,7 +161,7 @@
                                 <div class="box-full">
                                     <div class="pxv-6 bc-off-white"><code>Syntax: adding property tags</code></div>
                                     <pre class="pre-code">
-  $meta->prop(property, content); 
+  $meta->name(name, content); 
   <span class="comment"> 
     where: 
 

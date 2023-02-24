@@ -1,6 +1,7 @@
 <?php
 
 use spoova\core\classes\EInfo;
+use spoova\core\classes\FileManager;
 use spoova\core\commands\Cli;
 
 class ErrorHandler extends Exception{
@@ -158,9 +159,17 @@ class ErrorHandler extends Exception{
         if(self::$err_displayed == self::$err_displays) return;
         if(self::$addedRes) $res = '';
 
+        $Filemanager = new FileManager;
+        $Filemanager->setUrl(_icore.'init');
+        $theme = "";
+
+        if($Filemanager->openFile()){
+            $theme = "_".$Filemanager->readFile('ERROR_THEME');
+        }
+
         $body = ' 
         
-            <div class="font-em-1d2 pxv-10 calibri xdebug-error custom-error-pane">
+            <div class="font-em-1d2 pxv-10 calibri xdebug-error '.$theme.' custom-error-pane">
                 '.$res.'
                 <div class="box-full rad-5 pxv-10 err-wrapper">
                     <div class="err-header">
@@ -281,20 +290,6 @@ class ErrorHandler extends Exception{
 
     private static function filterTraces($message, $errfileInfo = '') {
 
-        // $ignore = false;
-
-        // foreach($filters as $filter => $file) {
-        //     if(stristr($trace, $filter) !== false){
-
-        //         $text = substr($trace, 0, -strlen($filter));
-        //         $text .= $filter;
-
-        //         if($text == $trace){
-        //             $ignore = true;
-        //         }
-        //     }
-        // }
-
         if(self::$addfile) $message .= $errfileInfo;
 
         return $message;
@@ -323,10 +318,8 @@ class ErrorHandler extends Exception{
 
         $counter = 0;
 
-        //print $eInfoFile;
-
         $excludes = [$eInfoFile, $eHandlerFile, 'spoova\core\classes\EInfo', ''];
-        $excldes = [];
+
         foreach($backTraces as $backTrace){
 
             foreach($excludes as $exclude){
@@ -346,7 +339,6 @@ class ErrorHandler extends Exception{
         }
 
         ksort($backTraces);
-        //$backTraces = array_reverse($backTraces);
 
         $build = ''; $traces = [];
 
@@ -367,17 +359,9 @@ class ErrorHandler extends Exception{
                 </div>
             ';
 
-            //print $debugger;
-
         }
 
         self::$backTrace = $traces;
-
-        // print 
-        // "<div>".self::getErrors()['message']."</div>";
-
-
-        //print_r($backTraces);
 
     }
 
@@ -392,12 +376,15 @@ class ErrorHandler extends Exception{
 
         if($class){
             $call = $class.$type.$func.'()';
+            // if($type === "->"){
+                //     $call = '$this'.$type.$func.'()';
+                // }else{
+                // $call = $class.$type.$func.'()';
+            // }
         }else{
             $call = $func.'()';
         }
-        //print br('<br>', 10);
-        //print_r($backTrace);
-        //print br('<br>', 10);
+
         if($line){
 
             $traces[] = [

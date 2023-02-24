@@ -178,6 +178,7 @@
 }
 
 body.--theme-dark{
+    color: rgb(125, 125, 125);
     background-color : rgba(21, 15, 39);
 }
  </style><style rel="build.css.navbars"> 
@@ -244,7 +245,7 @@ body.--theme-dark{
     <script src='http://localhost/spoova/res/main/js/switcher.js'></script>
     
 </head>
-<body>
+<body class="--theme-dark">
 
     <script>
         $(document).ready(function(){
@@ -347,6 +348,7 @@ window.onload = function() {
 
           <ul class="list-square">
                <li> <a href="<?= DomUrl('docs/installation') ?>" class="<?= inPath('active') ?>"><span class="ico ico-spin"></span>Installation</a> </li>
+               <li> <a href="<?= DomUrl('docs/wmv') ?>" class="<?= inPath('active') ?>" ><span class="ico ico-spin"></span><span class="fb-6 pointer" title="Windows Models View">WMV</span> PATTERN</a></li>
                <li> <a href="<?= DomUrl('docs/live-server') ?>" class="<?= inPath('active') ?>"><span class="ico ico-spin"></span>Live Server</a></li>
                <li> <a href="<?= DomUrl('docs/database') ?>" class="<?= inPath('active') ?>"><span class="ico ico-spin"></span>Database</a> </li>
                <li> <a href="<?= DomUrl('docs/resource') ?>" class="<?= inPath('active') ?>"><span class="ico ico-spin"></span>Resource class</a> </li>
@@ -358,12 +360,11 @@ window.onload = function() {
                <li> <a href="<?= DomUrl('docs/database/migrations') ?>" class="<?= inPath('active') ?>"><span class="ico ico-spin"></span>Handling Migrations</a> </li>
                <li> <a href="<?= DomUrl('docs/classes') ?>" class="<?= inPath('active') ?>"><span class="ico ico-spin"></span>Helper Classes</a> </li>
                <li> <a href="<?= DomUrl('docs/functions') ?>" class="<?= inPath('active') ?>"><span class="ico ico-spin"></span>Helper Functions</a> </li>
-               <li> <a href="<?= DomUrl('docs/directives') ?>" class="<?= inPath('active') ?>"><span class="ico ico-spin"></span>Helper Directives</a> </li>
+               <li> <a href="<?= DomUrl('docs/template') ?>" class="<?= inPath('active') ?>"><span class="ico ico-spin"></span>Template Engine</a> </li>
                <li> <a href="<?= DomUrl('docs/setters') ?>" class="<?= inPath('active') ?>"><span class="ico ico-spin"></span>Global Setters</a> </li>
                <li> <a href="<?= DomUrl('docs/mails') ?>" class="<?= inPath('active') ?>"><span class="ico ico-spin"></span>Handling Mails</a> </li>
                <li> <a href="<?= DomUrl('docs/cli') ?>" class="<?= inPath('active') ?>"><span class="ico ico-spin"></span>Cli Commands</a> </li>         
                <li> <a href="<?= DomUrl('docs/plugins') ?>" class="<?= inPath('active') ?>"><span class="ico ico-spin"></span>Composer and Plugins</a></li>
-               <li> <a href="<?= DomUrl('docs/wmv') ?>" class="<?= inPath('active') ?>" ><span class="ico ico-spin"></span>The <span class="fb-6 pointer" title="Windows Models View">WMV</span> PATTERN</a></li>
                <li> <a href="<?= DomUrl('docs/libraries') ?>" class="<?= inPath('active') ?>"><span class="ico ico-spin"></span>Third-Party Libraries</a> </li>
                <li> <a href="<?= DomUrl('docs/other-features') ?>" class="<?= inPath('active') ?>"><span class="ico ico-spin"></span>Other Features</a> </li>
           </ul>
@@ -390,10 +391,10 @@ window.onload = function() {
                         <div class="">
 
                         <div class="">
-                            <code>Jsonfy</code> class is a tool that is used to handle a two 
-                            level dimensionsional json string. It may convert a json string to 
-                            an array, convert a two-dimensional array to json, modify an existing json 
-                            string, fetch or remove data from a json string. The methods available are as follows: 
+                            <code>Jsonfy</code> class is used to handle a two 
+                            level dimensionsional array or json string. It may convert a json string to 
+                            an array, convert an array to json, modify an existing json or array data 
+                            , fetch or remove data from a json string. The methods available are as follows: 
 
                         </div> <br> <br>
 
@@ -461,12 +462,6 @@ window.onload = function() {
     $json  : sample json used - {"name": "foo", "class": "bar"};
 
     data   : uses json string or array data 
-
-    payload   : a data array having predefined keysets <code>iss</code> <code>nbf</code> and <code>exp</code> expected to be hashed
-
-    token     : currently or previously generated token
-
-    $token    : previously generated token
     </span>
                                 </pre>
                             </div>
@@ -558,7 +553,7 @@ window.onload = function() {
      name  : name of a given index of an associative array 
      value : value of a given index of an associative or 2-level multidimentional array 
      key   : subkey of a 2-level multidimentional array
-     null  : numbered index (e.g 0, 1, 2 ...)
+     null  : numbered index (e.g 0, 1, 2 ...) or empty string
 
     Note: This may look comprehensive but a series of examples will provide guidance 
     </span>
@@ -570,23 +565,23 @@ window.onload = function() {
                                     <div class="box-full">
                                         <div class="pxv-6 bc-off-white"><code>Examples: add</code></div>
                                         <pre class="pre-code">
-    <span class="comment">Note:: case lines below are assumed to be the first list</span>
+    <span class="c-orange-d">Note:: all case lines below are assumed to be the first line</span>
 
     <span class="comment">//case 1 - one argument</span>
-    $jsonfy->add('');                 <span class="comment">//['0'=>'']</span>
-    $jsonfy->add('foo');              <span class="comment">//['foo'=>'']</span>
+    <span class="comment">sample:</span> $jsonfy->add('');                 <span class="comment">//['0'=>'']</span>
+    <span class="comment">sample:</span> $jsonfy->add('foo');              <span class="comment">//['foo'=>'']</span>
 
     <span class="comment">//case 2 - two arguments</span>
-    $jsonfy->add('', '');             <span class="comment">//['0'=>'']</span>
-    $jsonfy->add('', 'bar');          <span class="comment">//['0'=>'bar']</span>
-    $jsonfy->add('foo', 'bar');       <span class="comment">//['foo'=>'bar']</span>
+    <span class="comment">sample:</span> $jsonfy->add('', '');             <span class="comment">//['0'=>'']</span>
+    <span class="comment">sample:</span> $jsonfy->add('', 'bar');          <span class="comment">//['0'=>'bar']</span>
+    <span class="comment">sample:</span> $jsonfy->add('foo', 'bar');       <span class="comment">//['foo'=>'bar']</span>
 
     <span class="comment">//case 3 - three arguments</span>
-    $jsonfy->add('', '', '');         <span class="comment">//['0'=>['0'=>'']]</span>
-    $jsonfy->add('foo', 'bar', 'me'); <span class="comment">//['foo'=>['bar'=>'me']]</span>
-    $jsonfy->add('', 'bar', 'me');    <span class="comment">//['0'=>['bar'=>'me']]</span>
-    $jsonfy->add('', 'me', '');       <span class="comment">//['0'=>['me'=>'']]</span>
-    $jsonfy->add('', '', 'me');       <span class="comment">//['0'=>['0'=>'me']]</span>
+    <span class="comment">sample:</span> $jsonfy->add('', '', '');         <span class="comment">//['0'=>['0'=>'']]</span>
+    <span class="comment">sample:</span> $jsonfy->add('foo', 'bar', 'me'); <span class="comment">//['foo'=>['bar'=>'me']]</span>
+    <span class="comment">sample:</span> $jsonfy->add('', 'bar', 'me');    <span class="comment">//['0'=>['bar'=>'me']]</span>
+    <span class="comment">sample:</span> $jsonfy->add('', 'me', '');       <span class="comment">//['0'=>['me'=>'']]</span>
+    <span class="comment">sample:</span> $jsonfy->add('', '', 'me');       <span class="comment">//['0'=>['0'=>'me']]</span>
                                         </pre>
                                     </div>
                                 </div>
@@ -595,7 +590,7 @@ window.onload = function() {
                         </div> <br>
 
                         <div class="font-menu">
-                            In the above, all null (i.e '') data resolves to <code>numbers</code> except in few 
+                            In the above, all empty strings (i.e '') resolves to <code>numbers</code> except in few 
                             occassions. Kindly note the following<br>
                             <ol>
                                 <li>
@@ -654,7 +649,7 @@ window.onload = function() {
                                         <pre class="pre-code">
     <span class="comment">Note:: very line below is assumed to be the first list</span>
 
-    $jsonfy->newData(['user'=> 'foo', 'class' => 'bar']);
+    $jsonfy->newData(['user'=> 'foo', 'class' => 'bar']); <span class="comment">or {"name": "foo", "class": "bar"}</span>
 
     var_dump( $jsonfy->datakey('foo') ); <span class="comment">// user</span>
     var_dump( $jsonfy->datakey('bar') ); <span class="comment">// class</span>
@@ -684,16 +679,16 @@ window.onload = function() {
                                         <div class="pxv-6 bc-off-white"><code>Examples: update</code></div>
                                         <pre class="pre-code">
     <span class="comment">//example 1</span>
-    $jsonfy->add('name', 'foo');     <span class="comment">//['name'=>'foo']</span>
-    $jsonfy->update('name', 'voo');  <span class="comment">//['name'=>'voo']</span>
+    $jsonfy->add('name', 'foo');                     <span class="comment">//['name'=>'foo']</span>
+    $jsonfy->update('name', 'voo');                  <span class="comment">//['name'=>'voo']</span>
 
     <span class="comment">//example 2</span>
-    $jsonfy->add('', 'foo');             <span class="comment">//['0'=>'foo']</span>
-    $jsonfy->update($jsonfy->datakey('foo'), 'bar');          <span class="comment">//['0'=>'bar']</span>
+    $jsonfy->add('', 'foo');                         <span class="comment">//['0'=>'foo']</span>
+    $jsonfy->update($jsonfy->datakey('foo'), 'bar'); <span class="comment">//['0'=>'bar']</span>
 
     <span class="comment">//example 3</span>
-    $jsonfy->add('user','foo','bar');         <span class="comment">//['user'=>['foo'=>'bar']]</span>
-    $jsonfy->update('user', 'foo', 'me'); <span class="comment">//['user'=>['foo'=>'me']]</span>
+    $jsonfy->add('user','foo','bar');                <span class="comment">//['user'=>['foo'=>'bar']]</span>
+    $jsonfy->update('user', 'foo', 'me');            <span class="comment">//['user'=>['foo'=>'me']]</span>
                                         </pre>
                                     </div>
                                 </div>
@@ -723,13 +718,13 @@ window.onload = function() {
                                         <div class="pxv-6 bc-off-white"><code>Examples: delete</code></div>
                                         <pre class="pre-code">
     <span class="comment">//test data</span>
-    $jsonfy->add('user','foo','bar');         <span class="comment">//['user'=>['foo'=>'bar']]</span>
+    $jsonfy->add('user','foo','bar'); <span class="comment">//['user'=>['foo'=>'bar']]</span>
     
     <span class="comment">//example 1</span>
-    $jsonfy->delete('user', 'foo');     <span class="comment">//['user'=>'']</span>
+    $jsonfy->delete('user', 'foo');   <span class="comment">//['user'=>'']</span>
 
     <span class="comment">//example 2</span>
-    $jsonfy->delete('user');     <span class="comment">//[]</span>
+    $jsonfy->delete('user');          <span class="comment">//[]</span>
                                         </pre>
                                     </div>
                                 </div>
@@ -753,7 +748,7 @@ window.onload = function() {
                     
                                 <div class="pre-area shadow">
                                     <div class="box-full">
-                                        <div class="pxv-6 bc-off-white"><code>Syntax: expires</code></div>
+                                        <div class="pxv-6 bc-off-white"><code>Syntax: read</code></div>
                                         <pre class="pre-code">
     $jsonfy->read(key); 
     <span class="comment">
@@ -770,13 +765,13 @@ window.onload = function() {
                                         <div class="pxv-6 bc-off-white"><code>Examples: read</code></div>
                                         <pre class="pre-code">
     <span class="comment">//example 1</span>
-    $jsonfy->add('user','foo','bar'); <span class="comment">//['user'=>['foo'=>'bar']]</span>
-    var_dump( $jsonfy->read('user') );            <span class="comment">//['foo'=>'bar']</span>
+    $jsonfy->add('user','foo','bar');   <span class="comment">//['user'=>['foo'=>'bar']]</span>
+    var_dump( $jsonfy->read('user') );  <span class="comment">//['foo'=>'bar']</span>
 
 
     <span class="comment">//example 2</span>
-    $jsonfy->add('user','foo'); <span class="comment">//['user'=>'foo']</span>
-    var_dump( $jsonfy->read('user') );      <span class="comment">//foo</span>
+    $jsonfy->add('user','foo');         <span class="comment">//['user'=>'foo']</span>
+    var_dump( $jsonfy->read('user') );  <span class="comment">//foo</span>
 
     <span class="comment">Note: when an index key does not exist, it returns a boolean of false</span>
                                         </pre>
@@ -828,11 +823,11 @@ window.onload = function() {
 
     var_dump($jsonfy->data('source')); <span class="comment">// ['foo' => 'bar']</span>
 
-    var_dump($jsonfy->data()); <span class="comment">// ['foo' => 'bar']</span>
+    var_dump($jsonfy->data());         <span class="comment">// ['foo' => 'bar']</span>
 
-    var_dump($jsonfy->data('json')); <span class="comment">// {"foo": "bar"}</span>
+    var_dump($jsonfy->data('json'));   <span class="comment">// {"foo": "bar"}</span>
 
-    var_dump($jsonfy->data('count')); <span class="comment">// 1</span>
+    var_dump($jsonfy->data('count'));  <span class="comment">// 1</span>
                                         </pre>
                                     </div>
                                 </div>

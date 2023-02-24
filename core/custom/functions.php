@@ -475,8 +475,8 @@ function isAbsolutePath(string $path = null) : bool {
  */
 function arrInside(array $value) : bool{
   //check if array exists inside another $value
-  foreach ($value as $arrVal => $val) {
-    return is_array($val);
+  foreach ($value as $val) {
+    if(is_array($val)) return true;
   }
   return false;
 }

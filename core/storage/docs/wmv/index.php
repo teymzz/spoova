@@ -176,6 +176,7 @@
 }
 
 body.--theme-dark{
+    color: rgb(125, 125, 125);
     background-color : rgba(21, 15, 39);
 }
  </style><style rel="build.css.navbars"> 
@@ -242,7 +243,7 @@ body.--theme-dark{
     <script src='http://localhost/spoova/res/main/js/switcher.js'></script>
     
 </head>
-<body>
+<body class="--theme-dark">
 
     <script>
         $(document).ready(function(){
@@ -357,7 +358,7 @@ window.onload = function() {
                <li> <a href="<?= DomUrl('docs/database/migrations') ?>" class="<?= inPath('active') ?>"><span class="ico ico-spin"></span>Handling Migrations</a> </li>
                <li> <a href="<?= DomUrl('docs/classes') ?>" class="<?= inPath('active') ?>"><span class="ico ico-spin"></span>Helper Classes</a> </li>
                <li> <a href="<?= DomUrl('docs/functions') ?>" class="<?= inPath('active') ?>"><span class="ico ico-spin"></span>Helper Functions</a> </li>
-               <li> <a href="<?= DomUrl('docs/directives') ?>" class="<?= inPath('active') ?>"><span class="ico ico-spin"></span>Helper Directives</a> </li>
+               <li> <a href="<?= DomUrl('docs/template') ?>" class="<?= inPath('active') ?>"><span class="ico ico-spin"></span>Template Engine</a> </li>
                <li> <a href="<?= DomUrl('docs/setters') ?>" class="<?= inPath('active') ?>"><span class="ico ico-spin"></span>Global Setters</a> </li>
                <li> <a href="<?= DomUrl('docs/mails') ?>" class="<?= inPath('active') ?>"><span class="ico ico-spin"></span>Handling Mails</a> </li>
                <li> <a href="<?= DomUrl('docs/cli') ?>" class="<?= inPath('active') ?>"><span class="ico ico-spin"></span>Cli Commands</a> </li>         
@@ -602,7 +603,7 @@ window.onload = function() {
                                          (or current) url's entry point name. Since, Index is the entry server file, then, 
                                          <code>index</code> will be returned. Also, <code>window(':user')</code> will return 
                                          <code>index/user</code>. Since <code>call()</code> is a shutter method, 
-                                         if the method <code>user_method()</code> does not exist or the when the <code>http://domain/index/user</code>, 
+                                         if the method <code>user_method()</code> does not exist or when the <code>http://domain/index/user</code>, 
                                          page is visited, then a 404 error will be returned. Once a method is defined, developer is left 
                                          to handle how to close such urls. Any of a window's method can use the shutter methods. It is important to note that 
                                          shutter methods are specifically built for standard logic. Hence, they may work differently under a different logic.
@@ -654,13 +655,13 @@ window.onload = function() {
                             <br><br>
                             
                             <ul>
-                                <li>Should be placed in a "Frame" folder, a direct subdirectory of windows folder</li>
+                                <li>Should be placed in a "Frames" folder, a direct subdirectory of windows folder</li>
                                 
                                 <li>A frame file (class) should extend to the root Windows class</li>
                                 <li>A frame file (class) should never be used to close a window</li>
                                 <li>A frame file (class) should contain only data essential for its children classes</li>
                                 
-                                <li>A frame file (class) should not be used to render template engines.</li>
+                                <li>A frame file (class) should not be used to render rex template files.</li>
                                 <li>A frame file (class) may be attached to a specific session channel, thereby including data specific only to that session.</li>    
                             </ul>
                             

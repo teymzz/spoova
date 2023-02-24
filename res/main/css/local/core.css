@@ -149,6 +149,70 @@
     color: white;
 }
 
+/* spoova x-debug pane: theme-brown */
+.xdebug-error._brown .err-wrapper {
+    background-color: #77455a;
+    color: rgb(255, 255, 255);
+    box-shadow: 0 0 100px #3e0505 inset;
+}
+
+.xdebug-error._brown .err-btns {
+    background-color: rgb(252, 252, 252);
+    color: #d20e0e;
+}
+
+.xdebug-error._brown .error-desc {
+    background-color: rgba(var(--silver), var(--bco-opacity));
+}
+.xdebug-error._brown .err-stack-btn {
+    border: solid 2px #862742;
+    box-shadow: 0 0 0 2px #640116 inset;
+    background-color: rgb(106, 17, 17);
+    color: white;
+}
+
+.xdebug-error._brown .err-stack-line {
+    border: solid 2px #fff3f3;
+    background-color: rgb(255, 255, 255);
+    color: #917673;
+}
+
+.xdebug-error._brown .err-stack-division {
+    background-color: rgb(89, 19, 19);
+    color: white;
+}
+
+/* spoova x-debug pane: theme-blue */
+.xdebug-error._blue .err-wrapper {
+    background-color: #301c79;
+    color: rgb(255, 255, 255);
+    box-shadow: 0 0 35px 12px #1d1264 inset;
+}
+
+.xdebug-error._blue .err-btns {
+    background-color: rgb(252, 252, 252);
+    color: #d20e0e;
+}
+
+.xdebug-error._blue .err-stack-btn {
+    border: solid 2px #231068;
+    box-shadow: 0 0 0 2px #1c0b5e inset;
+    background-color: rgb(48, 28, 121);
+    color: white;
+}
+
+.xdebug-error._blue .err-stack-line {
+    border: solid 2px #1a0a54;
+    background-color: rgb(255, 255, 255);
+    color: #1a0a55;
+}
+
+.xdebug-error._blue .err-stack-division {
+    background-color: rgb(27, 11, 86);
+    color: #e4e8f3;
+    box-shadow: 0px 0px 13px 10px inset #1c0b4c;
+}
+
 
 @keyframes spoove{
     70% {

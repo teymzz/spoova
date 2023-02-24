@@ -244,7 +244,7 @@ body.--theme-dark{
     <script src='http://localhost/spoova/res/main/js/switcher.js'></script>
     
 </head>
-<body>
+<body class="--theme-dark">
 
     <script>
         $(document).ready(function(){
@@ -347,6 +347,7 @@ window.onload = function() {
 
           <ul class="list-square">
                <li> <a href="<?= DomUrl('docs/installation') ?>" class="<?= inPath('active') ?>"><span class="ico ico-spin"></span>Installation</a> </li>
+               <li> <a href="<?= DomUrl('docs/wmv') ?>" class="<?= inPath('active') ?>" ><span class="ico ico-spin"></span><span class="fb-6 pointer" title="Windows Models View">WMV</span> PATTERN</a></li>
                <li> <a href="<?= DomUrl('docs/live-server') ?>" class="<?= inPath('active') ?>"><span class="ico ico-spin"></span>Live Server</a></li>
                <li> <a href="<?= DomUrl('docs/database') ?>" class="<?= inPath('active') ?>"><span class="ico ico-spin"></span>Database</a> </li>
                <li> <a href="<?= DomUrl('docs/resource') ?>" class="<?= inPath('active') ?>"><span class="ico ico-spin"></span>Resource class</a> </li>
@@ -355,14 +356,15 @@ window.onload = function() {
                <li> <a href="<?= DomUrl('docs/forms') ?>" class="<?= inPath('active') ?>"><span class="ico ico-spin"></span>Handling Forms</a> </li>
                <li> <a href="<?= DomUrl('docs/useraccounts') ?>" class="<?= inPath('active') ?>"><span class="ico ico-spin"></span>Handling Users</a> </li>
                <li> <a href="<?= DomUrl('docs/database/data-model') ?>" class="<?= inPath('active') ?>"><span class="ico ico-spin"></span>Handling DBModels</a> </li>
+               <li> <a href="<?= DomUrl('docs/database/migrations') ?>" class="<?= inPath('active') ?>"><span class="ico ico-spin"></span>Handling Migrations</a> </li>
                <li> <a href="<?= DomUrl('docs/classes') ?>" class="<?= inPath('active') ?>"><span class="ico ico-spin"></span>Helper Classes</a> </li>
                <li> <a href="<?= DomUrl('docs/functions') ?>" class="<?= inPath('active') ?>"><span class="ico ico-spin"></span>Helper Functions</a> </li>
-               <li> <a href="<?= DomUrl('docs/directives') ?>" class="<?= inPath('active') ?>"><span class="ico ico-spin"></span>Helper Directives</a> </li>
+               <li> <a href="<?= DomUrl('docs/template') ?>" class="<?= inPath('active') ?>"><span class="ico ico-spin"></span>Template Engine</a> </li>
+               <li> <a href="<?= DomUrl('docs/template/directives') ?>" class="<?= inPath('active') ?>"><span class="ico ico-spin"></span>Template Directives</a> </li>
                <li> <a href="<?= DomUrl('docs/setters') ?>" class="<?= inPath('active') ?>"><span class="ico ico-spin"></span>Global Setters</a> </li>
                <li> <a href="<?= DomUrl('docs/mails') ?>" class="<?= inPath('active') ?>"><span class="ico ico-spin"></span>Handling Mails</a> </li>
                <li> <a href="<?= DomUrl('docs/cli') ?>" class="<?= inPath('active') ?>"><span class="ico ico-spin"></span>Cli Commands</a> </li>         
                <li> <a href="<?= DomUrl('docs/plugins') ?>" class="<?= inPath('active') ?>"><span class="ico ico-spin"></span>Composer and Plugins</a></li>
-               <li> <a href="<?= DomUrl('docs/wmv') ?>" class="<?= inPath('active') ?>" ><span class="ico ico-spin"></span>The <span class="fb-6 pointer" title="Windows Models View">WMV</span> PATTERN</a></li>
                <li> <a href="<?= DomUrl('docs/libraries') ?>" class="<?= inPath('active') ?>"><span class="ico ico-spin"></span>Third-Party Libraries</a> </li>
                <li> <a href="<?= DomUrl('docs/other-features') ?>" class="<?= inPath('active') ?>"><span class="ico ico-spin"></span>Other Features</a> </li>
           </ul>
@@ -376,7 +378,7 @@ window.onload = function() {
             <div class="font-em-1d2">
 
                 
- <div class="font-menu pvs-4"> <a href="http://localhost/spoova/tutorial">Tutorial</a> <span class="bi-chevron-right"></span> <a href="http://localhost/spoova/tutorial/wmv">Wmv</a> <span class="bi-chevron-right"></span> <a href="http://localhost/spoova/tutorial/wmv/apis">APIs</a>  </div>
+ <div class="font-menu pvs-4"> <a href="http://localhost/spoova/docs">Docs</a> <span class="bi-chevron-right"></span> <a href="http://localhost/spoova/docs/wmv">Wmv</a> <span class="bi-chevron-right"></span> <a href="http://localhost/spoova/docs/wmv/apis">APIs</a>  </div>
 
 
                 <div class="start font-em-d8">
@@ -385,43 +387,65 @@ window.onload = function() {
                     <div class="font-em-1d5 c-orange">Handling APIs</div> <br>  
                     
                     <div class="setters-intro">
-                        <div class="fb-6">Introduction</div>
+                        <div class="fb-6 mvb-6">Introduction</div>
                         <div class="">
-                           APIs in spoova are windows that are rendered as api channel. Since spoova handle pages using 
-                           windows and frames, APIs are also extensions of windows or frame. This means that they can inherit 
+                           API in spoova are windows that are declared as api channel. Since spoova handle pages using 
+                           windows and frames, APIs are also extensions of windows or frame files. This means that they can inherit 
                            all the properties of a window page or url as the case may be. One of the advantages of using 
                            route <a href="<?= DomUrl('docs/wmv/calls') ?>">shutter</a> methods is that they have capacity 
-                           ton naturally determine the response of any window url or web page. Shutter methods, that is 
+                           to naturally determine the response of any window url or web page. Shutter methods, that is 
                            <code>call()</code>, <code>rootcall()</code>, <code>basecall()</code> and <code>pathcall()</code> 
                            methods are designed to detect the type of a window, if it is a normal webpage or an <code>API</code> 
-                           route. It is very easy to deterime the type of any window by declaring within the window the type of window 
+                           route. It is very easy to determine the type of any window by declaring within the window the type of window 
                            it is using the <code>integerateAPI()</code> method.
                             <p>
-                                <div class="c-orange">API Integeration</div>
+                                <div class="c-orange mvb-6">API Integeration</div>
                                 The figure below explains how to integerate an API with any window page <br>
 <!-- code begins -->
                                 <div class="pre-area shadow mvt-6">
   <div class="pxv-6 bc-silver">Syntax: integerateAPI</div>
                                     <pre class="pre-code">
-  Window::integerateAPI(type)  
+  Window::integerateAPI($type)  
   <span class="comment">
     where: 
 
-     type : [ajax|json|ajax:json|json:ajax]
+     $type : [ajax|json|ajax:json|json:ajax]
   </span>
                                     </pre>
                                 </div>
 <!-- code ends -->
 <!-- code description -->
                                 <div class="font-em-d8 mvt-6">
-                                    The <code>type</code> above defines how a window responds to its shutter methods. 
-                                    The <code>integerateAPI()</code> method, already defines that the window should respond 
-                                    as an api route. However, there are 
+                                    The <code>type</code> above defines how a window responds to its shutter methods
+                                    while the <code>integerateAPI()</code> method defines that the window should respond 
+                                    as an api route.
+                                </div><br>
+<!-- code description ends -->
+<!-- code begins -->
+                                <div class="pre-area shadow mvt-6">
+  <div class="pxv-6 bc-silver">Example: integerateAPI</div>
+                                    <pre class="pre-code">
+  <span class="comment">...</span>
+  
+  class HomeAPI {
+
+    function __construct() {
+
+        self::integerateAPI('ajax');
+
+    }
+
+  }
+                                    </pre>
+                                </div>
+                                <div class="foot-note pvs-10">
+                                    The example above defined how to set up an api window url by using the <code>self::integerateAPI()</code> method.
+                                    There are 
                                     three different response types which are <code>ajax</code>, 
                                     <code>json</code> and <code>ajax:json</code> or <code>json:ajax</code>.  The behavioral pattern 
                                     or how these types respond to shutter methods are further explained below under their own subheadings.
                                 </div>
-<!-- code description ends -->
+<!-- code ends -->
                             </p>
 
                             <p>
@@ -457,7 +481,7 @@ window.onload = function() {
                                 <div class="c-orange">JSON Respose Type</div>
                                     The <code>json</code> type is used to declare that the content of a page should be of json format. This 
                                     follows a strict content-type for any window api. If the content-type is not of a valid <code>json</code> content type, 
-                                    the response returned will be json SyntaxError notifying that the content cannot be passed as revealed in the figure below: 
+                                    the response returned will be json SyntaxError notifying that the content cannot be parsed as revealed in the figure below: 
 <!-- figure begins -->
                                 <div id="figure1" class="pre-area shadow mvt-6">
   <div class="pxv-6 bc-silver">Figure 1: Json Parse Error</div>
@@ -521,7 +545,7 @@ window.onload = function() {
                                     message of the <code>json:ajax</code> api. This can be supplied through a second argument 
                                     (i.e <code>integrateAPI('ajax:json', 'invalid request protocol')</code>). The response default error code <code>"401"</code> can also 
                                     be modified through a third argument. For example : <code>integrateAPI('ajax:json', 'invalid request protocol', 402)</code>. 
-                                    It is important to learn and have a good understanding of the <code>Ajax</code> class from <a href="">here</a>. 
+                                    It is important to learn and have a good understanding of the <code>Ajax</code> class from <a href="<?= DomUrl('docs/classes/ajax') ?>">here</a>. 
                                 </p>
                                 <p>
                                     Whenever a page 
@@ -551,7 +575,7 @@ window.onload = function() {
         
         if(Ajax::isAjax()){
 
-            <span class="comment">If this request is not an Ajax, run this block code</span>
+            <span class="comment">If this request is an Ajax request, run this block code</span>
 
             return response(404, 'message here');
 
@@ -572,10 +596,10 @@ window.onload = function() {
 <!-- code ends -->
 <!-- code description -->
                                 <div class="font-em-d8 mvt-6">
-                                    The example above shows different methods of setting an api route. We suggest to visit the <a href="">ajax documentation</a> 
+                                    The example above shows different methods of setting an api route. We suggest to visit the <a href="<?= DomUrl('docs/classes/ajax') ?>">ajax documentation</a> 
                                     to understand how the <code>Ajax</code> class works. The window pattern is structurally designed in a way that api can 
                                     be built on urls whose parent url are not of ajax or json types. An example below shows how this can be achieved.
-                                </div>
+                                </div> <br>
 <!-- code description ends -->
 <!-- code begins -->
                                 <div class="pre-area shadow mvt-6">
@@ -719,11 +743,11 @@ window.onload = function() {
                             </p>
 
                             <div class="flex-in midv rad-4 bc-silver"> 
-                                <div class="bc-red-orange-dd c-white pxv-4">Warning:</div>
+                                <div class="bc-red-orange-dd pxv-4" style="color:#efefef">Warning:</div>
                                 <div class="font-em-d8 pxs-4">
                                     Ajax urls should not contain any 
                                     special character including underscore ('_') 
-                                    as this can lead to loss of data forwarded. However, 
+                                    as this can lead to loss of data if data is forwarded. However, 
                                     urls can contain digits.
                                 </div>
                             </div>

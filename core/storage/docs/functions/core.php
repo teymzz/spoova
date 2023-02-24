@@ -178,6 +178,7 @@
 }
 
 body.--theme-dark{
+    color: rgb(125, 125, 125);
     background-color : rgba(21, 15, 39);
 }
  </style><style rel="build.css.navbars"> 
@@ -244,7 +245,7 @@ body.--theme-dark{
     <script src='http://localhost/spoova/res/main/js/switcher.js'></script>
     
 </head>
-<body>
+<body class="--theme-dark">
 
     <script>
         $(document).ready(function(){
@@ -347,6 +348,7 @@ window.onload = function() {
 
           <ul class="list-square">
                <li> <a href="<?= DomUrl('docs/installation') ?>" class="<?= inPath('active') ?>"><span class="ico ico-spin"></span>Installation</a> </li>
+               <li> <a href="<?= DomUrl('docs/wmv') ?>" class="<?= inPath('active') ?>" ><span class="ico ico-spin"></span><span class="fb-6 pointer" title="Windows Models View">WMV</span> PATTERN</a></li>
                <li> <a href="<?= DomUrl('docs/live-server') ?>" class="<?= inPath('active') ?>"><span class="ico ico-spin"></span>Live Server</a></li>
                <li> <a href="<?= DomUrl('docs/database') ?>" class="<?= inPath('active') ?>"><span class="ico ico-spin"></span>Database</a> </li>
                <li> <a href="<?= DomUrl('docs/resource') ?>" class="<?= inPath('active') ?>"><span class="ico ico-spin"></span>Resource class</a> </li>
@@ -358,12 +360,11 @@ window.onload = function() {
                <li> <a href="<?= DomUrl('docs/database/migrations') ?>" class="<?= inPath('active') ?>"><span class="ico ico-spin"></span>Handling Migrations</a> </li>
                <li> <a href="<?= DomUrl('docs/classes') ?>" class="<?= inPath('active') ?>"><span class="ico ico-spin"></span>Helper Classes</a> </li>
                <li> <a href="<?= DomUrl('docs/functions') ?>" class="<?= inPath('active') ?>"><span class="ico ico-spin"></span>Helper Functions</a> </li>
-               <li> <a href="<?= DomUrl('docs/directives') ?>" class="<?= inPath('active') ?>"><span class="ico ico-spin"></span>Helper Directives</a> </li>
+               <li> <a href="<?= DomUrl('docs/template') ?>" class="<?= inPath('active') ?>"><span class="ico ico-spin"></span>Template Engine</a> </li>
                <li> <a href="<?= DomUrl('docs/setters') ?>" class="<?= inPath('active') ?>"><span class="ico ico-spin"></span>Global Setters</a> </li>
                <li> <a href="<?= DomUrl('docs/mails') ?>" class="<?= inPath('active') ?>"><span class="ico ico-spin"></span>Handling Mails</a> </li>
                <li> <a href="<?= DomUrl('docs/cli') ?>" class="<?= inPath('active') ?>"><span class="ico ico-spin"></span>Cli Commands</a> </li>         
                <li> <a href="<?= DomUrl('docs/plugins') ?>" class="<?= inPath('active') ?>"><span class="ico ico-spin"></span>Composer and Plugins</a></li>
-               <li> <a href="<?= DomUrl('docs/wmv') ?>" class="<?= inPath('active') ?>" ><span class="ico ico-spin"></span>The <span class="fb-6 pointer" title="Windows Models View">WMV</span> PATTERN</a></li>
                <li> <a href="<?= DomUrl('docs/libraries') ?>" class="<?= inPath('active') ?>"><span class="ico ico-spin"></span>Third-Party Libraries</a> </li>
                <li> <a href="<?= DomUrl('docs/other-features') ?>" class="<?= inPath('active') ?>"><span class="ico ico-spin"></span>Other Features</a> </li>
           </ul>
@@ -770,13 +771,82 @@ window.onload = function() {
             </div>
             
             <div class="mvt-10">
-            This function dumps the information of a value supplied while exiting the page.
+            This function dumps the information of a value supplied while exiting the page. When dumping values, it provides special divisions of information based on the 
+            data type returned.
             </div>    
           </div>        
 
+          <!-- vdump -->
+          <div id="env" class="env"> <br>
+            <div class="lacier font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8">
+                16. env
+            </div>
+            
+            <div class="mvt-10">
+            The <code>env</code> function is used to access keys declared within the <code>$_ENV</code> global variable. It takes two arguments. The first argument 
+            is the access key any stored value while the second argument is a modifier option that specfies where data should be obtained. This function also  
+            works along with the <code>Filemanager::loadenv()</code> method. The samples below reveals the response of <code>env()</code> function. 
+
+              <div class="sample-1">
+                <div class="pre-area">
+                  <div class="pxv-10 bc-silver">
+                    Sample 1: Filemanager::loadenv()
+                  </div>
+                  <pre class="pre-code">
+    Filemanager::loadenv('some_path');
+  
+    env('some_key');
+                  </pre>
+                </div>
+                <div class="foot-note">
+                  In the format above, assuming the path <code>"some_path"</code> contains a configuration key <code>"some_key"</code>, when the <code>env("some_key")</code> 
+                  method is used, it tries to search for the value of "some_key" in the <code>$_ENV</code> global varible. If the index key does not exist in the global scope, 
+                  since by default, <code>Filemanager::loadenv()</code> stores value into the <code>":ENV"</code> key, the <code>env()</code> will search for the key within the 
+                  <code>$_ENV[':ENV']</code> global access key and if the key does not exist also, then an empty string is returned.
+                </div> 
+              </div><br>
+
+              <div class="sample-2">
+                <div class="pre-area">
+                  <div class="pxv-10 bc-silver">
+                    Sample 2: Filemanager::loadenv()
+                  </div>
+                  <pre class="pre-code">
+    FileManager::loadenv('some_path');
+  
+    env('some_key', true);
+                  </pre>
+                </div>
+                <div class="foot-note">
+                 Using sample 1 as reference, when second argument of <code>env()</code> is set as true, then only global keys will be fetched and the <code>FileManager::loadenv()</code> 
+                 method will be ignored.
+                </div> 
+              </div><br>
+
+              <div class="sample-1">
+                <div class="pre-area">
+                  <div class="pxv-10 bc-silver">
+                    Sample 3: Filemanager::loadenv()
+                  </div>
+                  <pre class="pre-code">
+    FileManager::loadenv('some_path');
+  
+    env('child_key', 'parent_key');
+                  </pre>
+                </div>
+                <div class="foot-note">
+                 Also, using sample 1 as reference, when second argument of <code>env()</code> is a non-empty string, the <code>env()</code> function will look within the <code>"parent_key"</code> 
+                 for a <code>"child_key"</code> and the value of the <code>"child_key"</code> will be returned if it exists.
+                </div> 
+              </div>
+
+
+            </div>    
+          </div> <br>       
+
           <div id="urlparams" class="urlparams"> <br>
             <div class="lacier font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8">
-                16. urlParams
+                17. urlParams
             </div>
             
             <div class="mvt-10">
@@ -796,7 +866,7 @@ window.onload = function() {
           
           <div id="url" class="url"> <br>
             <div class="lacier font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8">
-                17. url
+                18. url
             </div>
             
             <div class="mvt-10">
@@ -820,7 +890,7 @@ window.onload = function() {
           <!-------------------------------- compile -->
           <div id="compile" class="compile"> <br>
             <div class="lacier font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8">
-                18. compile
+                19. compile
             </div>
             
             <div class="mvt-10">
@@ -842,7 +912,7 @@ window.onload = function() {
                 <pre class="pre-code">
   class Home {
     
-    function construct(){
+    function __construct(){
 
       self::load('file', fn => compile());
 
@@ -864,7 +934,7 @@ window.onload = function() {
 
   <span class="c-green">class Home extends Window{</span> 
     
-    function construct(){
+    function __construct(){
 
       self::load('file', fn => compile());
 
@@ -897,7 +967,7 @@ window.onload = function() {
 
   <span class="c-green">class Home extends Window{</span> 
     
-    function construct(){
+    function __construct(){
 
       $var = ['name' => 'foo', 'title' => 'bar'];
 
@@ -914,7 +984,7 @@ window.onload = function() {
           <!-------------------------------- view -->
           <div id="view" class="view"> <br>
             <div class="lacier font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8">
-                19. view
+                20. view
             </div>
               
             <div class="mvt-10">
@@ -935,8 +1005,7 @@ window.onload = function() {
 
     
             <div class="font-menu font-em-d85">
-              It should be noted that the first example above will work but the second example will not work.
-              In order for example 2 to work, it must be extended to a controller or windows file just as below:
+              The code above can also be used within a window file as shown below:
             </div> <br>
 
             <div class="pre-area shadow">
@@ -945,7 +1014,7 @@ window.onload = function() {
 
   <span class="c-green">class Home extends Window{</span> 
     
-    function construct(){
+    function __construct(){
 
       $file1 = view('file1');
       $file2 = view('file2');
@@ -982,7 +1051,7 @@ window.onload = function() {
 
   <span class="c-green">class Home extends window{</span> 
     
-    function construct(){
+    function __construct(){
 
       $args = ['name' => 'foo', 'title' => 'bar'];
 
