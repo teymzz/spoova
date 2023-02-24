@@ -138,8 +138,8 @@ class NavHandle{
  *        #----------------@-*  required
  *        #----------------@-[-]  not done/not working
  *
- *  $NavBar  = new \core\tools\NavHandle($Nav);              #-----------------new Handle with initiated class call $Nav
- *  //$Nav = $NavBar::maincall();        #-----------------class Call if not initialized
+ *  $NavBar  = new \core\widget\NavHandle($Nav);              #-----------------new Handle with initialized $Nav as referencing variable.
+ *  //$Nav = $NavBar::maincall();        #-----------------class Call if not previously referenced.
  * 
  *  //add menu
  *  $home    = $NavBar::addmenu('home');       #-----------------new menu
@@ -153,10 +153,10 @@ class NavHandle{
  *                      #2------------------ sets default properties
  *  
  *  $Nav->hide(true)        #1------------------ hide all menu
- *  $Nav->hide($menu)   #2 @param $menu [string | array] menu(s) to be hidden
+ *  $Nav->hide($menu)   #2 @param $menu [string|array] menu(s) to be hidden
  * 
  *  $Nav->show(true)        #1------------------ show all menu
- *  $Nav->show($menu)   #2 @param $menu [string | array] menu(s) to be shown
+ *  $Nav->show($menu)   #2 @param $menu [string|array] menu(s) to be shown
  * 
  *  $home->props(['class'=>'one']);  #1----------------- add menu properties
  *  $home->props(['id'=>'2',class'=>'two']);  #2---------overwrites all properties above
@@ -169,10 +169,10 @@ class NavHandle{
  *  $home->merge_ops([]);                              #----- merge all options in menu with new properties
  *   
  *  $home->hide(true)        #1------------------ hide all home options
- *  $home->hide($option)   #2 @param $option [string | array] option(s) to be hidden
+ *  $home->hide($option)   #2 @param $option [string|array] option(s) to be hidden
  * 
  *  $home->show(true)        #1------------------ show all option
- *  $home->show($option)   #2 @param $option [string | array] option(s) to be shown
+ *  $home->show($option)   #2 @param $option [string|array] option(s) to be shown
  * 
  *  $NavMain->merge_ops([])                            #----- merge all menu options properties
  *  $NavMain->merge_ops(['name'=>""],true)             #----- [-]merge all menu options properties with specific option name
@@ -200,7 +200,7 @@ class NavHandle{
     $NavMain->merge_props(['data-attr'=>'okay']);           #--add attribute 'data-attr' to all menu (don't overwrite existing 'data-attr') 
     $NavMain->merge_props(['data-attr'=>'okay'],true);      #--add attribute 'data-attr' to all menu (overwrites existing 'data-attr') 
     $home->unsetmenu(); #--------------------------------------unsets menu
-    $faq->inject(); #------------------------------------------adds a removed menu back as a new menu
+    $home->inject(); #------------------------------------------adds a removed menu back as a new menu
     $NavMain->build('menu-id-here'); //build construct
     print_r($NavMain->getBuild()); //return the build data (html)
 */

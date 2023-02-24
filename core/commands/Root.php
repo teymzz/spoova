@@ -15,7 +15,7 @@ class Root extends Entry{
     function __construct(string $arg)
     {
         
-        if($arg === ':interactive'){
+        if($arg === ':wiz'){
 
             new InteractiveConsole;
 
@@ -223,13 +223,8 @@ class Root extends Entry{
         $Filemanager->setUrl(_core.'custom/app'); 
         $app = $Filemanager::load(_core.'custom/app');
 
-        yield true;
-        
-        // //* Handle no system root installer
-        // if($app['complete'] == 'true'){
-        //     $this->addLog('app already installed');
-        //     return;
-        // }
+        yield 1;
+ 
 
         //* Handle incomplete setup
         if(isset($app['root'])) $Filemanager->textDelete(['root']);
@@ -239,7 +234,7 @@ class Root extends Entry{
         $this->complete_setup($crest_root);
         
         Cli::textView(
-            Cli::alert(Cli::emos('hot',1).'spoova repacked successfully'), 2, [2, 1], 1 
+            Cli::alert(Cli::emos('hot',1).'spoova repacked successfully'), 2, "2|1", 1 
         );
         
     }

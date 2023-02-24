@@ -178,6 +178,7 @@
 }
 
 body.--theme-dark{
+    color: rgb(125, 125, 125);
     background-color : rgba(21, 15, 39);
 }
  </style><style rel="build.css.navbars"> 
@@ -244,7 +245,7 @@ body.--theme-dark{
     <script src='http://localhost/spoova/res/main/js/switcher.js'></script>
     
 </head>
-<body>
+<body class="--theme-dark">
 
     <script>
         $(document).ready(function(){
@@ -325,8 +326,6 @@ window.onload = function() {
         </div>
          
 
-  <!-- @lay('build.co.coords:header') -->
-
    
 
      
@@ -359,7 +358,7 @@ window.onload = function() {
                <li> <a href="<?= DomUrl('docs/database/migrations') ?>" class="<?= inPath('active') ?>"><span class="ico ico-spin"></span>Handling Migrations</a> </li>
                <li> <a href="<?= DomUrl('docs/classes') ?>" class="<?= inPath('active') ?>"><span class="ico ico-spin"></span>Helper Classes</a> </li>
                <li> <a href="<?= DomUrl('docs/functions') ?>" class="<?= inPath('active') ?>"><span class="ico ico-spin"></span>Helper Functions</a> </li>
-               <li> <a href="<?= DomUrl('docs/directives') ?>" class="<?= inPath('active') ?>"><span class="ico ico-spin"></span>Helper Directives</a> </li>
+               <li> <a href="<?= DomUrl('docs/template') ?>" class="<?= inPath('active') ?>"><span class="ico ico-spin"></span>Template Engine</a> </li>
                <li> <a href="<?= DomUrl('docs/setters') ?>" class="<?= inPath('active') ?>"><span class="ico ico-spin"></span>Global Setters</a> </li>
                <li> <a href="<?= DomUrl('docs/mails') ?>" class="<?= inPath('active') ?>"><span class="ico ico-spin"></span>Handling Mails</a> </li>
                <li> <a href="<?= DomUrl('docs/cli') ?>" class="<?= inPath('active') ?>"><span class="ico ico-spin"></span>Cli Commands</a> </li>         
@@ -412,6 +411,8 @@ window.onload = function() {
                   <li> <a href="<?= route('::forms'); ?>"> Form </a> </li>
                   <li> <a href="<?= route('::url'); ?>"> Url </a> </li>
                   <li> <a href="<?= route('::urlmapper'); ?>"> UrlMapper </a> </li>
+                  <li> <a href="<?= route('::cli'); ?>"> Cli </a> </li>
+                  <li> <a href="<?= route('::benchmark'); ?>"> Benchmark </a> </li>
                 </ul>
                 
             </div> 

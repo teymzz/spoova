@@ -103,7 +103,7 @@ class MkMigrator extends MkBase{
 
               public function down() {
 
-                 DBSCHEMA::DROP(\$this);
+                 DBSCHEMA::DROP_TABLE(\$this);
 
               }  
 

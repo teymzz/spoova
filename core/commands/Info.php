@@ -84,21 +84,21 @@ class Info extends Entry{
             #---------------------           
             'add:rex'        => 'Adds a new rex file into the rex template folder
             
- Syntax : '.Cli::color('add:rex', 'red').' [path?].<filename>
+ Syntax : '.Cli::danger('add:rex').' [path?].<filename>
  
  '.Cli::alert('Note 1 :').' Path when supplied should be a subdirectory of the rex template directory
 
  '.Cli::alert('Note 2 :').' Paths can be supplied using dots while the last name is assumed to be file name',
 
             #---------------------           
-            'add:route'     => 'Adds a new route file into the "window/Routes" directory
+            'add:route'      => 'Adds a new route file into the "window/Routes" directory
             
- Syntax : '.Cli::color('add:route', 'red').' <routeName>
- 
- '.Cli::alert('Note 1 :').' Path when supplied should be a subdirectory of the windows/Routes directory
+ '.Cli::emo('ribbon-arrow').' Syntax :'.self::mi('add:route','','','').Cli::warn('<dir/?><name>', 1).Cli::danger('[-O]').Cli::br(2)
+ .Cli::textIndent(Cli::warn('dir').' ...... optional: directory of route file within \'windows/Routes\' directory ', 1).Cli::br(2)
+ .Cli::textIndent(Cli::warn('name').' ..... name of route file (or class) ', 1).Cli::br(2)
+ .Cli::textIndent(Cli::danger('-O').' ....... overwrite existing file', 1).Cli::br(2)
 
- '.Cli::alert('Note 2 :').' Paths can be supplied using dots while the last name is assumed to be file name',
-
+ .Cli::textIndent(Cli::alert('Note :').' Paths can be supplied using dots while the last name is assumed to be file (or class) name', 1),
             
             #---------------------            
             'add:window'     => 'Adds a window class into windows folder

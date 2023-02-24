@@ -8,10 +8,43 @@ use spoova\core\classes\Collection;
 use spoova\core\classes\Url;
 use spoova\core\classes\DomUrl;
 use spoova\core\classes\EInfo;
+use spoova\core\classes\FileManager;
 use spoova\core\classes\ModelOptimizer;
 use spoova\core\classes\SETTER;
 use spoova\core\classes\Spoova;
 use spoova\core\classes\UserDB;
+
+if(!function_exists('env')){
+  /**
+   * Reads the last data obtained from Filemanager::loadEnv() method
+   * @param $key an access key
+   * @param $super defines environment where data should be pulled.
+   *  - When $super is not defined or set as false, data returned may be from global scope and if not found, from Filemanager::env_data() 
+   *  - When $super is set as true, $key must exist as a global key only or empty value is returned.
+   *  - When $super is set as a string, $key must be a subkey of $super or empty value is returned.
+   * @return array|string
+   */
+  function env(string $key, bool|string $super = false) : array|string {
+
+    if((func_num_args() === 1) | ($super === false)){
+      $data = FileManager::env_data();
+      return $_ENV[$key] ?? $data[$key] ?? '';
+    }else{
+      if($super === true){
+        return $_ENV[$key] ?? '';
+      }else{
+
+        if(isset($_ENV[$super])){
+          return $_ENV[$super][$key] ?? '';
+        }
+
+        return '';
+      }
+    }
+    
+    
+  }
+}
 
 if(!function_exists('scheme')){
   /**

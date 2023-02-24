@@ -21,7 +21,7 @@
                         By default, when a window file does not exist and the corresponding url is called, the shutter automatically closes
                         unless a logic is applied on the window entry point which tells the system that such url should be opened. 
                         This behaviour is one designed to prevent any access to a non-existing window 
-                        in which the resulting effect will be a blank page. 
+                        in which the resulting effect could have been a blank page. 
 
                         However, when a window file exists and is called, the shutters are left opened to be manually closed by the respective window class 
                         or method. 

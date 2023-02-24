@@ -1,8 +1,6 @@
 
 @template('template.t-tut')
 
-<!-- @lay('build.co.coords:header') -->
-
 @lay('build.co.navbars:left-nav')
 
     <div class="box-full pxl-2 bc-white-dd pull-right">
@@ -132,14 +130,14 @@
                             
                         <div class="pre-area shadow">
                             <div class="box-full">
-                                <div class="pxv-6 bc-off-white"><code>Example: setting files</code></div>
+                                <div class="pxv-6 bc-off-white"><code>Example: setting hash</code></div>
                                 <pre class="pre-code">
 
-    $hasher->sethash(['user' => 'foo']); <span class="comment">// set a data to be hashed</span>
+    $hasher->sethash('sometext'); <span class="comment">// set a string to be hashed</span>
+    
+    $hasher->sethash(['user' => 'foo']); <span class="comment">// set an array to be hashed</span>
 
-    $hasher->sethash(['user' => 'foo'], 'HS384'); <span class="comment">// set data to be hased with a secret password</span>
-
-    $hasher->sethash('sometext'); <span class="comment">// set a string text to be hashed</span>
+    $hasher->sethash(['user' => 'foo'], 'password123'); <span class="comment">// set an array to be hashed with a secret password</span>
 
                                 </pre>
                             </div>
@@ -187,10 +185,10 @@
     $hasher->randomHash(50, 'abc');  <span class="comment no-select">generate 50 character string from abc</span>
 
     $hasher->randomHash('', 'abc', 'sha1');  <span class="comment no-select">hash 'abc' with sha1 + time</span>
-
+    
     <span class="comment no-select">
-        Note: When using hash algorithms, length of character returned depends on the hash algorithm itself. 
-            Hence using lengths does not have any effect.
+    When using hash algorithms, length of character returned depends on the hash algorithm itself. 
+    This means that using lengths does not have any on code sample 3 above.
     </span>
                                         </pre>
                                     </div>
@@ -294,7 +292,7 @@
 
     $hash3 = $hasher->hashify();  <span class="comment">//third hash</span>
 
-    $hash4 = $hasher->hashify(0); <span class="comment">//reset hash</span>
+    $hash4 = $hasher->hashify(0); <span class="comment">//reset hash to first hash</span>
 
     $hash5 = $hasher->hashify();  <span class="comment">//second hash</span>
     <span class="comment no-select"> 
@@ -380,7 +378,7 @@
                     
                                 <div class="pre-area shadow">
                                     <div class="box-full">
-                                        <div class="pxv-6 bc-off-white"><code>Syntax: sign</code></div>
+                                        <div class="pxv-6 bc-off-white"><code>Syntax: randomize</code></div>
                                         <pre class="pre-code">
     $hasher->randomize(bool|string); 
     <span class="comment">

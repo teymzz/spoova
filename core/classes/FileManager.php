@@ -12,10 +12,12 @@ use RecursiveDirectoryIterator;
  */
 class FileManager extends Enlist{
 
-    private $url;
-    private $lastDir;
+    private static string $envKey = ':ENV';
+    private static array $envData = [];
+    private string $url = '';
+    private string $lastDir = '';
     private $zipName;
-    private $response;
+    private $response = '';
     private $error;
 
     /**
@@ -637,7 +639,7 @@ class FileManager extends Enlist{
     /**
      * Replace a line with a new text
      *
-     * @param array $data multidimentional array containing old key having new values
+     * @param array $data associative array containing old key having new values
      * @param string $separator key-to-value separator
      * @return array array of replacements made
      */
@@ -724,31 +726,63 @@ class FileManager extends Enlist{
 
     /**
      * Reads supplied url and saves into $_ENV
-     * using a defined key and separator. (delimiter as semicolon)
-     * Note: This Class will overwrite existing values
-     * 
+     *  
      * @param string $url file url
-     * @param string $separator a unique separator
-     * @param bool $overwrite overwrites old $_ENV key values with new when set as true
-     * @return pairs of keys and values
+     * @param string $key 
+     *  - $_ENV will localize data into $key if not empty. This will not be reflected in data returned by this method.
+     *  - True will use global config keys from data returned that may overwrite any pre-existing key found in $_ENV.
+     *  - False will use global config keys from data returned that will NOT overwrite any pre-existing key found in $_ENV
+     * @param string $separator a unique key to value separator.
+     * @return array pairs of keys and values
      */
-    public static function loadenv($url, $separator = ':', bool $overwrite = false){
+    public static function loadenv($url, bool|string $key = ':ENV', string $separator = '='){
 
-        $configs = self::load($url, $separator);
-        
-        //load data into the env 
-        $DATA = [];
+      $configs = self::load($url, $separator);
+      
+      //load data into the env 
+      $DATA = [];
 
-        foreach($configs as $config => $value){
-            $DATA[$config] = $value;
-            if(isset($_ENV[$config]) and $overwrite == false){
-              continue;
+      self::$envKey = $key;
+
+      foreach($configs as $config => $value){
+          $DATA[$config] = $value;
+
+          if(is_string($key) && trim($key)){
+
+            $_ENV[$key][$config] = $value;
+
+          }else{
+
+            if(isset($_ENV[$config])){
+              if($key === false){ continue; }
             }
             $_ENV[$config] = $value;
-        }
-        return $DATA;
-    }
-    
+
+          }
+          
+      }
+      self::$envData = $DATA;
+      return $DATA;
+  }
+
+  /**
+   * Returns the last environment key used by the Filemanager::loadenv() method.
+   *
+   * @return bool|string
+   */
+  public static function env_key():bool|string{
+    return self::$envKey;
+  }
+
+  /**
+   * Returns the last data obtained by Filemanager::loadenv() method.
+   *
+   * @return array
+   */
+  public static function env_data(): array{
+    return self::$envData;
+  }
+  
     /**
      * reformats the structure of a text to be inserted 
      * into a file based on the contents of that file
@@ -851,8 +885,6 @@ class FileManager extends Enlist{
 
       $zip->close();
       
-      // $zip->open($dir.'/'.$output_name);
-      // $zip->extractTo($dir.'/backup/');
       $this->lastDir = realpath($output_name); 
       $this->zipName = $output_name;
     
@@ -1056,6 +1088,7 @@ class FileManager extends Enlist{
      * Deletes a supplied file or folder directory
      *
      * @param string $dir
+     *  - When not defined, deletes the last defined url.
      * @return boolean
      */
     public function deleteFile($dir = '') : bool {

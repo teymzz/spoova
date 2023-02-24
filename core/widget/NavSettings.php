@@ -16,6 +16,8 @@ abstract class NavSettings{
      */
     private ?NavBuild $NavBar = null;
 
+    public string $build;
+
     /**
      * Settings for NavHandle
      *

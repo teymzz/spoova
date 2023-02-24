@@ -66,6 +66,7 @@
                       <li> <a href="@route('::core#response')"> response </a> </li>
                       <li> <a href="@route('::core#setvar')"> setVar </a> </li>
                       <li> <a href="@route('::core#vdump')"> vdump </a> </li>
+                      <li> <a href="@route('::core#env')"> env </a> </li>
                       <li> <a href="@route('::core#urlparams')"> urlParams </a> </li>
                       <li> <a href="@route('::core#url')"> url </a> </li>
                       <li style="list-style: square;">

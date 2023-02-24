@@ -42,6 +42,7 @@ trait TBPARTITION {
                 self::$TYPE[0] = self::$TYPE['OLD'];
                 unset(self::$TYPE['OLD']);
                 self::$TYPE[1] = '';
+                return $DRAFT;
             }else{
                 self::callError(Cli::error(" closure argument(#2) of PARTITION_BY must return a DRAFT object. ")); 
             }
@@ -51,47 +52,6 @@ trait TBPARTITION {
         }
         
         return self::$instance;
-
-        //PARTITION BY RANGE VALUES LESS THAN
-        // VALUES
-
-        /* 
-
-            $DRAFT::PARTITION_BY('RANGE')->COLUMNS()->
-            ->PARTITION('VALUES LESS THAN (UNIX_TIMESTAMP('2013-04-01'));')
-            ->PARTITION('VALUES LESS THAN (UNIX_TIMESTAMP('2013-05-01'));')
-            
-            $DRAFT::PARTITION_BY('RANGE', function(DRAFT $DRAFT){
-
-                $DRAFT::COLUMNS([])
-                            
-                        -> PARTITION('p0',"LESS THAN")->VALUE('')
-                        -> PARTITION('p0',"LESS THAN")->VALUE('')
-                        -> PARTITION('p0',"LESS THAN")->VALUE('')
-                        -> PARTITION('p0',"LESS THAN")->VALUE('')
-                    
-
-            })   
-            
-            
-            
-            
-            
-            
-            $DRAFT ->COLUMNS([]);
-                       ->WITH('p0')->LESS_THAN();
-                       ->WITH('p1')->LESS_THAN();
-                       ->WITH('p2')->IN();
-
-                       WITH('p0', "LESS THAN")->VALUE('UNIX_TIMESTAMP()')
-                       WITH('p0', "IN")->VALUE('UNIX_TIMESTAMP()')
-        */
-
-        // PARTITION BY RANGE
-        // PARTITION BY LIST
-        // PARTITION BY COLUMNS
-        // PARTITION BY HASH
-        // PARTITION BY KEY
 
     }
 

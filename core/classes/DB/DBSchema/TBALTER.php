@@ -109,7 +109,7 @@ trait TBALTER {
     static function MODIFY(Closure $callback){ 
         self::callables(__FUNCTION__);
         
-        $DRAFT = $callback();
+        $DRAFT = $callback(self::$instance);
 
         unset(self::$TYPE[1]);
 
@@ -137,7 +137,7 @@ trait TBALTER {
 
         self::callables(__FUNCTION__);
         
-        $DRAFT = $callback();
+        $DRAFT = $callback(self::$instance);
 
         unset(self::$TYPE[1]);
 

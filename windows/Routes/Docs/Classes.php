@@ -3,12 +3,13 @@
  namespace spoova\windows\Routes\Docs;
  
  use spoova\windows\Frames\UserFrame;
+ use spoova\windows\Routes\Docs\Cli\Cli;
 
  class Classes extends UserFrame{
 
     function __construct($vars)
     {
-
+        
         self::pathcall($this,
             [
                 'classes' => 'root',
@@ -24,8 +25,13 @@
             [
                 $path => basename(window('path')),
                 SELF::ARG => $vars
-            ]
+            ], false
         );
+
+        self::basecall($this, [
+            lastCall('/cli') => 'win:Routes\Docs\Cli\Cli',                
+            SELF::ARG => $vars
+        ]);
 
     }
 
@@ -88,6 +94,11 @@
 
     function timeclass($vars) {
         self::load('docs.classes.timeclass', fn() => compile($vars) );
+    }
+
+    function benchmark($vars) {
+        self::addRex();
+        self::load('docs.classes.benchmark', fn() => compile($vars) );
     }
 
  }

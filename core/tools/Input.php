@@ -84,7 +84,7 @@ class Input{
     if(trim($value) == null) return $this->response("no value set"); 
 
     //check if type was set
-    if(!$this->set_type($config['type'])) return $this->response("no type set");
+    if(!$this->set_type($config['type']??'')) return $this->response("no type set");
 
     $this->value = $value;
     
@@ -110,9 +110,9 @@ class Input{
     }
 
     //set preg_match
-    if(array_key_exists('pregmatch', $config)){
+    if(array_key_exists('pregmatch', $config) || array_key_exists('pattern', $config)){
 
-      $this->pregmatch = $config['pregmatch'];
+      $this->pregmatch = $config['pattern'] ?? $config['pregmatch'];
 
       if(!$this->matched($value)) return false;
 
@@ -158,6 +158,24 @@ class Input{
 
     }
 
+  }
+
+  /**
+   * sets a value to be validated along with some custom settings
+   *
+   * @param string $value
+   * @param array $config 
+   *                [
+   *                 'type'  => @property const types,
+   *                 'range' => [value_a, value_b],
+   *                 'length' =>[min, max],
+   *                 'pregmatch' => 'pattern'
+   *                ]
+   * @param boolean $check_space
+   * @return bool|string
+   */
+  public function test($value, array $config, $check_space = false) {
+    return $this->set(...func_get_args());
   }
 
   /**
@@ -229,7 +247,7 @@ class Input{
     return self::$voidKey;
   }
 
-  private function set_type($type=null){
+  private function set_type($type = null){
 
     $types = self::types;
     $type  = ($type == null)? strtolower($this->default['type']) : strtolower($type);
@@ -248,7 +266,7 @@ class Input{
 
   }
 
-  private function findSpace($value,$check = false){
+  private function findSpace($value, $check = false){
     if($check){
       if(strpos($value," ")) {
         $this->response("value does not allow space",false);
@@ -474,7 +492,11 @@ class Input{
     $value = $this->value;
     $pattern = '@'.$this->pregmatch.'@';
 
-    return (preg_match($pattern, $value))? $value : false;
+    if(preg_match($pattern, $value)){
+      return $value;
+    } 
+
+     return $this->response("$value does not match specified pattern");
   }
 
 

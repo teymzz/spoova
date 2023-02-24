@@ -1,9 +1,9 @@
-@template('template.t-doc')
+@template('template.t-tut')
 
-    @lay('build.co.coords:header')
+    @lay('build.co.navbars:left-nav')
     
-    
-      <div class="pxv-20 c-black-ll">
+    <div class="box-full pxl-2 bc-white pull-right">
+      <div class="pxv-20 tutorial mails c-black-ll">
         
         @lay('build.co.links:tutor_pointer')
 
@@ -22,12 +22,12 @@
             <div class="">
 
               <div class="">
-                  Templating involves the use to template files to handle mails. These template 
+                  Templating involves the use of template files to handle mails. These template 
                   files can contain series of placeholders that are used to obtain variables that 
                   are later expected to be injected or passed across to them. These template files can 
-                  later on be loaded, rendered and forwarded as mail using either the 
-                  <a href="@domurl('docs/mails/content')"><code>content</code></a> or the 
-                  <a href="@domurl('docs/mails/content')">sendmail()</a> method. When handling template files, 
+                  later be loaded, rendered and forwarded as mail using either the 
+                  <a href="@domurl('docs/mails/content')">content()</a> or the 
+                  <code>sendmail()</code> method. When handling template files, 
                   there are few things to take note <br><br>
 
                   <ul>
@@ -151,9 +151,10 @@
     <span class="comment">//.. Define a global variable</span>
     $globalvar = 'Foo';
 
-    <span class="comment">// Set the mailer parameters</span>
+    <span class="comment">// Initialize mailer class</span>
     $mailer = new Mailer;
-
+    
+    <span class="comment">// Set or load the mailer configuration parameters</span>
     $mailer->server('mail.server');
 
     $mailer->setup('mail.setup');
@@ -227,6 +228,7 @@
 
         @lay('build.co.links:tutor_pointer')
 
+      </div>
     </div>
     
     @lay('build.co.coords:footer')

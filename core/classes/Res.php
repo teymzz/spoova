@@ -7,7 +7,6 @@ use spoova\core\classes\Router;
 use spoova\core\classes\Slicer;
 use spoova\core\classes\Request;
 use spoova\core\classes\Resource;
-use spoova\core\commands\Console;
 use spoova\core\classes\Application;
 use spoova\core\classes\FileManager;
 
@@ -27,6 +26,14 @@ final class Res extends Resource implements Resin{
     private static ?Application $app = null;
     private static $parse;
     private static $method;
+
+    /**
+     * This defines that a rex file should be created if it does not exist. 
+     * String argument should be an existing rex file that should be imported through the template directive.
+     *
+     * @var boolean|string
+     */
+    private static bool|string $addRex = false;
     
     /**
      * store local varibles for use
@@ -209,6 +216,17 @@ final class Res extends Resource implements Resin{
         return $result;
     }
 
+
+    /**
+     * Defines that a rex file should be created if it does not exist
+     *
+     * @param boolean $add
+     * @return void
+     */
+    public static function addRex(bool|string $add = true){
+      self::$addRex = $add;
+    }
+
    /**
     * Renders the res template files
 
@@ -287,6 +305,30 @@ final class Res extends Resource implements Resin{
         $file = !$escape? Slicer::sliceUrl($fileUrl): $file;
 
         if(!$isScreen && !is_file($file)) {
+          $addRex = self::$addRex;
+          if($addRex){
+            //create rex file... 
+            $Filemanager = new FileManager;
+            if($Filemanager->openFile(true, $file)){
+                
+              if(is_string($addRex) && is_file(docroot.'/windows/Rex/'.to_frontslash($addRex, true).".rex.php") ) {          
+                
+                  $template = <<<Template
+                    @template('$addRex')
+    
+                    @template;
+                  Template;
+  
+              }  else {
+
+                $template = "@live";
+
+              }   
+              
+              file_put_contents($file, $template);
+            }
+            monitor();
+          }
           return EInfo::view('Template file: <i><u>'.Slicer::sliceUrl($rexpath).'</u></i> does not exists. Ensure your template file is of php extension within "rex" directory');
         }
 
@@ -423,7 +465,7 @@ final class Res extends Resource implements Resin{
 
       $ref = new ReflectionClass(__CLASS__);
       $props = $ref->getProperties();
-      $exc = ['router','app', 'self','notice', 'off', 'use_watch','watched','initAutoload', 'noheaders','initialized_watch','locals'];
+      $exc = ['router','app', 'self','notice', 'off', 'use_watch','watched','initAutoload', 'noheaders','initialized_watch','locals', 'addRex'];
       
       foreach($props as $prop){
           $key = $prop->getName();

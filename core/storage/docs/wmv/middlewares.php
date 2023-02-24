@@ -242,7 +242,7 @@ body.--theme-dark{
     <script src='http://localhost/spoova/res/main/js/switcher.js'></script>
     
 </head>
-<body>
+<body class="--theme-dark">
 
     <script>
         $(document).ready(function(){
@@ -357,7 +357,8 @@ window.onload = function() {
                <li> <a href="<?= DomUrl('docs/database/migrations') ?>" class="<?= inPath('active') ?>"><span class="ico ico-spin"></span>Handling Migrations</a> </li>
                <li> <a href="<?= DomUrl('docs/classes') ?>" class="<?= inPath('active') ?>"><span class="ico ico-spin"></span>Helper Classes</a> </li>
                <li> <a href="<?= DomUrl('docs/functions') ?>" class="<?= inPath('active') ?>"><span class="ico ico-spin"></span>Helper Functions</a> </li>
-               <li> <a href="<?= DomUrl('docs/directives') ?>" class="<?= inPath('active') ?>"><span class="ico ico-spin"></span>Helper Directives</a> </li>
+               <li> <a href="<?= DomUrl('docs/template') ?>" class="<?= inPath('active') ?>"><span class="ico ico-spin"></span>Template Engine</a> </li>
+               <li> <a href="<?= DomUrl('docs/template/directives') ?>" class="<?= inPath('active') ?>"><span class="ico ico-spin"></span>Template Directives</a> </li>
                <li> <a href="<?= DomUrl('docs/setters') ?>" class="<?= inPath('active') ?>"><span class="ico ico-spin"></span>Global Setters</a> </li>
                <li> <a href="<?= DomUrl('docs/mails') ?>" class="<?= inPath('active') ?>"><span class="ico ico-spin"></span>Handling Mails</a> </li>
                <li> <a href="<?= DomUrl('docs/cli') ?>" class="<?= inPath('active') ?>"><span class="ico ico-spin"></span>Cli Commands</a> </li>         
@@ -404,7 +405,7 @@ window.onload = function() {
                                     This method can be applied to specific urls the immediately a url is resolved but not before it is authenticated. 
                                     A url becomes must first be resolved before it is allowed to render. Between the resolving and rendering of a url, 
                                     middlewares are allowed to act as bridge to determine how a url responds.   
-                                    (i.e visited). The <code>preload()</code> method takes a list of direct urls as its first argument and a boot function as its second argument.
+                                    The <code>preload()</code> method takes a list of direct urls as its first argument and a boot function as its second argument.
                                     A syntax and an example is shown below: <br><br>
                                     
                           
@@ -416,7 +417,7 @@ window.onload = function() {
 
   $acceptableUrls <span class="comment">//an array list of valid urls</span>
   
-  $boot  <span class="comment">//a function that is called before a url are rendered</span>
+  $boot  <span class="comment">//a function that is called before a url is rendered</span>
  </pre>
                                         </div>
                                     </div> <br> <br>  
@@ -428,7 +429,7 @@ window.onload = function() {
 
     use Window;
 
-    class Home extends Window {
+    class Docs extends Window {
 
         function __construct() {
 
@@ -597,7 +598,7 @@ window.onload = function() {
                             <div class="font-em-d87">
                                 <div class="c-orange font-em-1d1 bc-white-dd pxv-10">SELF::ONCALL - RECOMMENDED</div> <br> 
                                 <div class="">
-                                    This <code>SELF::ONCALL</code> key is a preload method can be applied within any list of urls for any of the four shutter methods. We don't have to apply any option since we are within the shutter itself.<br><br>
+                                    This <code>SELF::ONCALL</code> key is a preload method can be applied within any list of urls for any of the four shutter methods. We don't have to apply any casted option since we are within the shutter itself.<br><br>
                                     <div class="pre-area shadow">
                                         <div class="font-em-1d2">
                                             <div class="no-select bc-silver-d pxv-10">Sample:  SELF::ONCALL</div>
@@ -633,6 +634,8 @@ window.onload = function() {
                                 understandable than when we applied the <code>SELF::ONCALL()</code> method. The only difference is that here, 
                                 our function is more localized and will not extend to a subsequent call method. For example, if the <code>SELF::CALL()</code> 
                                 method above was pended, then another <code>SELF::CALL()</code> or any shutter method below it will not inherit the <code>SELF::ONCALL</code> constant. 
+                                The <code>invoked()</code> function is a case sensitive function that helps to match the current page url with the supplied url. Hence, this 
+                                makes it easier to determine and test the url called at a particular time.
                             </div>
 
 

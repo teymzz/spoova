@@ -139,6 +139,7 @@ class Cli
     private static $textView = '';
 
     private static $prompt = [];
+    private static $ipromptCounter = 0;
     private static $q = [];
 
     private static $storage = [];
@@ -164,7 +165,7 @@ class Cli
      * @notice - when animating, yield false is used to denote that an error has occured
      *         - class methods must be set as public to make it callable
      */
-    static function runAnime($function, $final_callback = []) {
+    static function runAnime(array|string $function, $final_callback = []) {
 
         return (new self)->animeLoad(true, $function, $final_callback);
 
@@ -174,15 +175,13 @@ class Cli
      * Display a message to a console or page
      *
      * @param string $message
-     * @param integer|array|bool|string $yield
-     * @param integer $pause pause after animation in seconds
-     * @param integer $break assign line breaks after animated text is printed
+     * @param integer|array|bool|string $yield]
      * @return void
      * 
      * @notice: - when $yield is set as integer, it must not be less than 1.
      *          - ensure to use yield from textYield().
      */
-    static function textYield(string $message, $yield = 1, int $pause = 0, $break = 0, $spaces = '0|0'){
+    static function textYield(string $message, $yield = 1, int $pause = 0){
         
         static $count = 0;
         $count++;
@@ -364,39 +363,30 @@ class Cli
     static function animeTest(){
         $i = 0;
         
-        yield 1; // Stage 1 - function processing
+        yield 1; // Stage 1 - loading
         // while($i < 20){ usleep(50000); $i++; if($i == 20){ $i = 0; break; } }
         
-        yield 2; // Stage 2 - function processing
+        yield 2; // Stage 2 - loading
         // while($i < 20){ usleep(50000); $i++; if($i == 20){ $i = 0; break; } }
 
-        yield 3; // Stage 3 - function processing
+        yield 3; // Stage 3 - loading
         //slows progress bar  
         while($i < 20){ usleep(50000); $i++; if($i == 20){ $i = 0; break; } }
 
-        yield 4; // Stage 4 - function processing
+        yield 4; // Stage 4 - loading
         //slows progress bar more 
         while($i < 100){ usleep(50000); $i++; if($i == 100){ $i = 0; break; } }
 
-        yield 5; // Stage 5 - function processing
+        yield 5; // Stage 5 - loading
         //slows progress bar even more  
         while($i < 200){ usleep(50000); $i++; if($i == 200){ $i = 0; break; } }
 
-        yield 6; // Stage 5 - function processing
+        yield 6; // Stage 5 - loading
 
-        // last stage (yield true) completed here
+        // last stage (yield true) completed here. Exit animation
         yield true;
     }
-
-    /**
-     * A sample final callback function
-     *
-     * @return void
-     */
-    function animeDone() {
-        print 'process completed successfully';
-    }
-
+    
     /**
      * Sets the load time in microseconds
      *
@@ -483,6 +473,8 @@ class Cli
 
                 if($process === false){
                     return false;
+                }elseif($process === true){
+                    return true;
                 }
 
                 $j = 1; $back = "\033[1D";
@@ -579,8 +571,6 @@ class Cli
             $dotsNum = 0;
         }
 
-        //print br($text.": ".$dotsNum);
-
         return str_repeat($char, $dotsNum);
 
     }
@@ -628,7 +618,7 @@ class Cli
    * @param array $options Valid options to be tested
    * @param \Closure $callback callback function to be applied on option
    * @param $terminate terminate prompt (in number of times) if option is not valid
-   * @param $new determines if a new prompt is called.. Default value should not be modified
+   * @param $new determines if a new prompt is called. Default value should not be manually modified
    *    - True terminates once
    *    - Integers determines the number of acceptable error times 
    * @return string
@@ -653,7 +643,7 @@ class Cli
             self::$prompt['invalid'] = true;
             self::$prompt['trials'] = $trials;
             self::$prompt['terminate'] = $terminate;
-            $callback(self::$prompt['val'] ?? '', $options, self::$prompt);
+            if($callback) $callback(self::$prompt['val'] ?? '', $options, self::$prompt);
             return self::$prompt['val'] ?? '';
         }
 
@@ -670,7 +660,7 @@ class Cli
                 self::$prompt['trials'] = $counter;
                 self::$prompt['terminate'] = $terminate;
                 self::$prompt['invalid'] = true;
-                $callback($input, $options, self::$prompt);
+                if($callback) $callback($input, $options, self::$prompt);
 
                 if( ($terminate === false || is_int($terminate)) ){
                     self::prompt($options, $callback, $terminate, false);
@@ -685,7 +675,7 @@ class Cli
                     self::$prompt['trials'] = $counter;
                     self::$prompt['terminate'] = $terminate;
                     self::$prompt['invalid'] = true;
-                    $callback($input, $options, self::$prompt);  
+                    if($callback) $callback($input, $options, self::$prompt);  
                     self::prompt($options, $callback, $terminate, false);
                 }else{
                     Cli::break(2);
@@ -699,6 +689,75 @@ class Cli
         if($options && !in_array($input, $options)) self::$prompt['invalid'] = true;
         return self::$prompt['val'] ?? '';
 
+    }
+    
+  /**
+   * Cli prompt
+   *
+   * @param array $options Valid options to be tested
+   * @param \Closure $callback callback function to be applied on option
+   * @param $terminate terminate prompt (in number of times) if option is not valid
+   * @param $new determines if a new prompt is called. Default value should not be manually modified
+   *    - True terminates once
+   *    - Integers determines the number of acceptable error times 
+   * @return string
+   */
+   public static function iprompt($input = '',  \Closure $callback = null): string {
+
+        $contents = '';
+        $handle = fopen('php://stdin',"r");
+
+        if($callback){
+            $array = $callback();
+
+            if(is_array($array)){
+
+                $boot = $array['boot'] ?? '';
+                $final = $array['final'] ?? '';
+
+                if($boot && !($boot instanceof Closure)){
+
+                    Cli::error('boot of "iprompt" callback must be a closure.', 0, "|2");
+                    return false;
+                }
+                if($final && !($final instanceof Closure)){
+
+                    Cli::error('final of "iprompt" callback must be a closure.', 0, "|2");
+                    return false;
+                }
+            }else{
+                Cli::error('callback of "iprompt" must return an array', 0, "|2");
+                return false;
+            }
+            
+        }
+        
+        self::$ipromptCounter = $counter = $starter = 1;
+        while(!feof($handle)){
+            if($boot) $boot($starter);
+            $starter++;
+            $new = fread($handle, 1024);
+            if(trim($new) && (trim($new) != ";")) self::$ipromptCounter = $counter++;
+            preg_match('~.*?(\)--;?)~', $new, $matches);
+            if(isset($matches[0])){
+                $new = str_replace(')--', ')- -', $new);
+            }
+            $contents .= $new;
+            if(trim($new) == ";"){
+                break;
+            }
+        };
+
+        fclose($handle);
+        
+        if($final) $final($contents);
+
+        return $input;
+
+    }
+
+    public static function ipromptCounter() {
+        return self::$ipromptCounter;
     }
 
     /**

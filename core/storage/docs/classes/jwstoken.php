@@ -242,7 +242,7 @@ body.--theme-dark{
     <script src='http://localhost/spoova/res/main/js/switcher.js'></script>
     
 </head>
-<body>
+<body class="--theme-dark">
 
     <script>
         $(document).ready(function(){
@@ -381,7 +381,7 @@ window.onload = function() {
 
                 <div class="start font-em-d8">
 
-                    <div class="font-em-1d5 c-orange">FileUploader</div> <br>  
+                    <div class="font-em-1d5 c-orange">JWSToken</div> <br>  
                     
                     <div class="helper-classes">
                         <div class="fb-6">Introduction</div> <br>
@@ -619,13 +619,13 @@ window.onload = function() {
                                 <br>
                                 <code>iss</code> defines the user who issued a token.<br>
                                 <code>nbf</code> defines the time when a generated token should become active in seconds<br>
-                                <code>exp</code> defined the time when a generated token should expire in seconds. <br> <br>
-                                Example: The following payload data <code>['nbf'=> 60, 'iss' =>'user', 'exp'=>120]</code> tells the 
-                                jwstoken to issue a token from "user" that is active after 1 minute (60secs) it ws generated 
+                                <code>exp</code> defines the time when a generated token should expire in seconds. <br> <br>
+                                Example: The following payload data <code>['iss' =>'user', 'nbf'=> 60, 'exp'=>120]</code> tells the 
+                                jwstoken to issue a token from "user" that becomes active only after 1 minute (60secs) it was generated 
                                 and valid for 2 minutes (120secs). It should be noted that this token will only have a total of 
                                 1 minute activeness because 1 minute is used out of the accessible 2 minutes to pend the token. It is 
-                                also possible to set tokens that do not expire by not defining the expire time. This is also possible for 
-                                <code>nbf</code> .
+                                also possible to set tokens that do not expire by not defining the expire time. The
+                                <code>nbf</code> can also be avoided by not defining it .
                             </p>
 
                         </div>

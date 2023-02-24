@@ -6,7 +6,7 @@ namespace spoova\core\classes;
  * JsonFy is a tool for creating or manupulating simple arrays
  * or json structure easily on a two dimentional level. It is important
  * to note that this class was not built to handle data more than two
- * dimentional level which is its only know limitation.
+ * dimentional level which is its only known limitation.
  * 
  * @package spoova\core\classes
  * @Author Akinola Saheed <teymss@gmail.com>
@@ -184,79 +184,3 @@ class Jsonfy{
     }
 
 }
-
-/**
- * DOCUMENTATION
- * 
- * newData($data) //optional method for setting already existing $data. Can be skipped if $data is generated internally
- * 
- * add($name,$key,$value) // add data into $data
- * add($name,$key,$value) // updates data in $data
- * delete($key,$value) // deletes key in $data
- * read($key) //read $key from $data
- * data($type) //return $data in format of defined $type
- * datakey($value) // returns keyname for value $value in @var array $data 
- */
-/* 
-	INITIALIZE CLASS
-
-		new \core\classes\Jsonfy;
-	
-	SUPPLY AN EXISTING DATA FOR MODIFICATION
-
-		$Jsonfy->newData($mydata); //this is optional except for existing data modification 
-
-	SAMPLES FOR ADDING DATA
-
-	// Please note: when a method is called, it modifies the old one if neccessary. However, every line below is assumed to be the first declaration of the method, coming immediately after the class was initialized or after new data was set
-
-	// $Jsonfy->add(''); //['0'=>'']
-	// $Jsonfy->add('ade'); //['ade'=>'']
-	// $Jsonfy->add('',''); //['0'=>'']
-	// $Jsonfy->add('','me'); //['0'=>'me']
-	// $Jsonfy->add('ade','me'); //['ade'=>'me']
-	// $Jsonfy->add('','',''); //['0'=>['0'=>'']]
-	// $Jsonfy->add('ade','me','you');  //['ade'=>['me'=>'you']]
-	// $Jsonfy->add('','me','you');  //['0'=>['me'=>'you']]
-	// $Jsonfy->add('','you','');  //['0'=>['you'=>'']]
-	// $Jsonfy->add('','','you');  //['0'=>['0'=>'you']]
-
-	//To view this all, use $Jsonfy->data() after each declaration;
-
-	
-	SAMPLES FOR UPDATING DATA
-
-	// Please note: when a method is called, it modifies the old one if neccessary. However, every line below is assumed to be the first declaration of the method, coming immediately after the class was initialized or after new data was set
-
-	// $Jsonfy->add('','felix'); //['0'=>'felix']
-	// $Jsonfy->update($Jsonfy2->datakey('felix'),'tina'); //['0'=>'tina']
-
-	// $Jsonfy->add('users','felix'); //['users'=>'felix']
-	// $Jsonfy->update('users','tina'); //['users'=>'tina']
-
-	// $Jsonfy->add('users','felix','stand'); //['users'=>['felix'=>'stand']]
-	// $Jsonfy->update('users','tina','sit'); //[users'=>['felix'=>'stand','tina'=>'sit']]
-	// $Jsonfy->update('users','felix','run'); //[users'=>['felix'=>'run','tina'=>'sit']]
-
-	//To view this all, use $Jsonfy->data() after each declaration;
-
-	
-	SAMPLES FOR DELETING DATA
-
-	// Please note: when a method is called, it modifies the old one if neccessary. However, every line below is assumed to be the first declaration of the method, coming immediately after the class was initialized or after new data was set
-
-	$Jsonfy2->add('users','see','me'); //['users'=>['see'=>'me']];
-	
-	// // deleting subkey only
-	// $Jsonfy2->delete('users','see');
-	// $Jsonfy->data(); // ['users'=>''];
-	
-	// //deleting main key
-	// $Jsonfy2->delete('users');
-	// $Jsonfy->data(); // [];
-
-
-	SAMPLES FOR READING DATA
-	$Jsonfy2->read('users'); // returns the value of 'users'
-
-*/

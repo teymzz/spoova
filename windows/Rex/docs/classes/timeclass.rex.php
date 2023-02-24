@@ -2,7 +2,6 @@
 
     @lay('build.co.coords:header')
     
-    
       <div class="pxv-20 c-black-ll">
         
         @lay('build.co.links:tutor_pointer')

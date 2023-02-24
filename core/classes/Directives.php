@@ -960,10 +960,10 @@ abstract class Directives{
                 if(pathinfo($url, PATHINFO_EXTENSION) === ''){
                     $url .= self::defaultExtension;
                 }
-                
+
                 //build a layout pattern from layoutId values
-                /* $layoutIdPattern = "~<@LayoutId\s{$value}\s?\/?>~"; */ //pattern to be replaced
-                $layoutPattern = "~@layout:{$id}\s(.)*?@layout;~is";//replacement 
+                $layoutPattern = "~@layout:{$id}.*?@layout;~is";//replacement 
+
 
                 //load layoutId's supplied template url
                 $path =  docroot.DS.WIN_REX.ltrim($url, '/');
@@ -998,7 +998,6 @@ abstract class Directives{
                     preg_match($layoutPattern, $templateContent, $contentsMatched);
                     $contentMatched = $contentsMatched[0]?? '';
                     $replacement = str_ireplace(["@layout:$id", "@layout;"], '', $contentMatched);
-
 
                 }
                 //vdump($replacement);    

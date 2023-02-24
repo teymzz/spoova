@@ -1,10 +1,9 @@
 <?php
 
 namespace spoova\core\commands;
-
-use PDO;
 use spoova\core\classes\DB;
 use spoova\core\classes\DB\DBConfig;
+use spoova\core\classes\FileManager;
 
 class Config extends Entry{
 
@@ -14,7 +13,7 @@ class Config extends Entry{
     /* methods that are allowed to be called directly on config */
     private $direct = [
         'meta', 'watch', 'init', 'install', 'usersTable', 'cookieField', 'idField',
-        'all'
+        'all', 'env'
     ];   
 
     private static array $offline = []; 
@@ -36,7 +35,7 @@ class Config extends Entry{
             Cli::textView(Cli::emos('hot', 1).'sets configuration', 0, '2|1');
             Cli::textView(Cli::emo('ribbon-arrow','|1').'Syntax:'.self::mi('config:','','','').Cli::warn('[option] <args>'), 0, '1|2');
 
-            Cli::textView(Cli::warn('[option] => '). "[dbonline|dboffline|meta|usersTable|cookieField|idField]", 3, "|2");
+            Cli::textView(Cli::warn('[option] => '). "[all|dbonline|dboffline|env|meta|usersTable|cookieField|idField]", 3, "|2");
             Cli::textView('Type '.self::mi('info').Cli::danger('config:', 1).Cli::warn('[option]').' to see specified option syntax', 3, "|2");
             
             return;   
@@ -65,7 +64,8 @@ class Config extends Entry{
 
         Cli::textView(Cli::alert("Please setup the following configuration parameters"), "0|0", "|2");
 
-        Cli::textView(Cli::warn("Database parameters (offline): "), 0, "");
+        Cli::textView(Cli::warn("Database connection parameters (offline): \"name user pass server port\""), 0, "|1");
+        Cli::textView(Cli::emo("ribbon-arrow", "1|1"), 2);
         $response = Cli::prompt([], null, true);
 
         if(trim($response)) {
@@ -77,7 +77,8 @@ class Config extends Entry{
             Cli::textView(Cli::warn('skipping offline database parameters...'), 0, "|2");
         }
 
-        Cli::textView(Cli::warn("Database parameters (online) : "), "0|0");
+        Cli::textView(Cli::warn("Database connection parameters (offline): \"name user pass server port\""), 0, "|1");
+        Cli::textView(Cli::emo("ribbon-arrow", "1|1"), 2);
         $response = Cli::prompt([], null, true);    
 
         if(trim($response)) {
@@ -198,15 +199,15 @@ class Config extends Entry{
             Cli::break(1);
         }
 
-        Cli::textView(Cli::alert("set users data table name (USERS_TABLE) : "));       
+        Cli::textView(Cli::alert("Set users data table name (USERS_TABLE) : "));       
         $useridTable = Cli::prompt([], null, true); 
         
         Cli::clearUp();        
-        Cli::textView(Cli::alert("set userid column name (USER_ID_FIELDNAME) : "));         
+        Cli::textView(Cli::alert("Set userid column name (USER_ID_FIELDNAME) : "));         
         $useridField = Cli::prompt([], null, true);        
         
         Cli::clearUp();         
-        Cli::textView(Cli::alert("set cookie column name (USER_COOKIE_FIELDNAME) : "));        
+        Cli::textView(Cli::alert("Set cookie column name (USER_COOKIE_FIELDNAME) : "));        
         $cookie = Cli::prompt([], null, true);     
         Cli::clearUp(2);
         
@@ -215,6 +216,57 @@ class Config extends Entry{
         $this->idField($useridField);
         Cli::clearUp(1);
         $this->cookieField($cookie); 
+
+        //Generate First migration file 
+        if($useridTable && ($useridField || $cookie) ) {
+
+            $db = (new DB)->openDB();
+
+            if(!$db->table_exists($useridTable)) {
+
+                Cli::textView(Cli::warn("Notice: ").("table \"$useridTable\" is required by session class but does not exist in database."), 0, "|2");
+
+                $options = ['y', 'n'];
+                
+                Cli::save(1, function() use($options) {
+                    
+                    Cli::textView(Cli::alert("Create migration file? [Y/N] "));
+
+                }, true);
+
+                $response = Cli::q($options, fn() => 
+
+                    [
+                        'test' => fn($input) => 
+                            in_array(strtolower($input), $options),
+
+                        'failed' => function($input, $options, $counter){
+
+                            if($counter == 1){
+                              Cli::clearUp();
+                              Cli::textView(Cli::danger('Error: ').'invalid option will abort this process', 0, "|2");
+                              Cli::fn(1);
+                              return true;
+                            }                          
+
+                        } 
+                    ]
+                
+                );
+
+                if(strtolower($response) === 'y') {
+
+                    Cli::runAnime([[$this, 'create_migration'], [$useridTable, $useridField, $cookie] ]);
+
+                }else{
+
+                    Cli::textView(Cli::warn("skipping migration file generation..."), "0", "1");
+
+                }
+
+            }
+        }
+
 
         //meta option     
         Cli::textView(Cli::alert("Allow resource class to build meta tags from setup file? [Y/N] "));        
@@ -231,6 +283,181 @@ class Config extends Entry{
         
         Cli::textView("All configurations added successfully");
         Cli::break(2);
+
+    }
+
+    public function env() {
+        
+        self::commandTitle('config:env'.Cli::br());
+
+        $args = func_get_args();
+
+        if(func_num_args() > 2){
+
+            Cli::textView(Cli::error('invalid number of arguments supplied!'), 0, "|2");
+
+            Cli::textView(Cli::emo('ribbon-arrow','|1').'Syntax:'.self::mi('config:env ','','','').Cli::warn('key ').Cli::color('value', 'purple'), 2, '|2');
+            
+        }else{
+
+            $key = $args[0] ?? '';
+            $value = $args[1] ?? '';
+
+            $FileManager = new FileManager;
+            $FileManager->setUrl(_icore.".env");
+
+            Cli::save(1, function() {
+                        
+                Cli::textView(Cli::error('key configuration failed'), 0, "|2");
+
+            });
+
+            if($FileManager->openFile()){
+                $FileManager->textDelete([$key], $dels, '=');
+                if( $FileManager->textUpdate([$key => $value], $upds, '=') ) {
+    
+                    if( $FileManager->readFile($key, '=') === $value ) {
+                        
+                        Cli::textView(Cli::success('key configuration successful'), 0, "|2");
+                        
+                    } else {
+
+                        Cli::fn(1);
+                        
+                    }
+                    
+                }else{
+                    
+                    Cli::fn(1);
+                
+                }
+            }
+
+
+
+        }
+
+    }
+
+    public function create_migration($arg) {
+
+        Cli::textView("Creating migration file ...", 0, '1');
+        yield from [10, 20, 10, 100];
+
+        //create migration file 
+
+        $table = $arg[0];
+        $idField = $arg[1];
+        $cookieField = $arg[2];
+
+                    
+        $content = <<<FIELD
+        \$DRAFT::ID();
+        FIELD;
+
+        if($idField != 'id') {
+            $content .= <<<FIELD
+            \n        \$DRAFT::VARCHAR('$idField', 191)->UNIQUE();
+            FIELD;
+        }
+        
+        if($cookieField){
+            $content .= <<<FIELD
+            \n        \$DRAFT::VARCHAR('cookie', 255);
+            FIELD;                
+        }
+
+        //Generate File ... 
+        $up = <<<UP
+            
+            DBSCHEMA::CREATE(\$this, function(DRAFT \$DRAFT){
+
+                $content
+                return \$DRAFT;
+
+            });
+        UP;
+
+        $down = <<<DOWN
+        DBSCHEMA::DROP_TABLE(\$this);
+        DOWN;
+       
+        $prefix = 'M'.time().'_'; //generate migration file name
+
+        $filename = $prefix.'create_'.$table;
+        $nameSpace = scheme('core\migrations', false);
+
+        $format = <<<MIGRATION
+        <?php
+
+        namespace $nameSpace;
+
+        use spoova\core\classes\DB\DBSchema\DBSCHEMA;
+        use spoova\core\classes\DB\DBSchema\DRAFT;
+
+        class $filename {
+            
+            public function up() {
+
+                $up
+
+            }
+
+            public function down() {
+
+                $down
+
+            }  
+
+            public function table() : string {
+
+                return '$table';
+
+            }
+
+        }
+
+        MIGRATION;
+
+        $fileDir = "core/migrations";
+        $filepath = docroot."/{$fileDir}/".$filename.".php";
+        $Filemanager = new FileManager;
+        $classSpace = $nameSpace."\\".$filename;
+
+        if($Filemanager->openFile(true, $filepath)) {
+            
+            file_put_contents($filepath, $format);        
+            
+            yield from [10, 20, 10, 100];
+                        
+            if(is_file($filepath)){
+
+                if(class_exists("\\".$classSpace)){
+
+                    Cli::clearUp();
+                    Cli::textView(Cli::success("migration file ").Cli::warn($filename)." added successfully to ".Cli::warn($fileDir), 0, "1|");
+                    Cli::break(2);
+                    yield true;
+
+                }else{
+
+                    Cli::clearUp();
+                    Cli::textView(Cli::warn("Notice: ")."migration file \"".Cli::warn("$fileDir/".$filename)."\" generated seems to contain some errors.", 0, "1|");
+                    Cli::textView(Cli::warn("Notice: ")."$classSpace", 0, "1|");
+                    Cli::break(2);
+
+                }
+
+
+            }  else {
+
+                    Cli::clearUp();
+                    Cli::textView(Cli::error("migration file ").Cli::warn($filename)." failed to create in \"".Cli::warn($fileDir)."\" directory.", 0, "1|");
+                    Cli::break(2);
+
+            } 
+
+        }
 
     }
 

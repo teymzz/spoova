@@ -1,7 +1,5 @@
 @template('template.t-tut')
 
-    <!-- @lay('build.co.coords:header') -->
-
     @lay('build.co.navbars:left-nav')
 
     <div class="box-full pxl-2 bc-white-dd pull-right">

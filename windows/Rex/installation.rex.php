@@ -40,7 +40,7 @@
                                <li>When using the inbuilt web installation tool, you can choose the hard install (e.g http://localhost/app/install?refresh) option on the home page to reset previously defined configurations </li>
                            </ul>
                            <div class="bc-silver rad-3 flow-x flex font-em-d85 pvs-10 pxs-10"> 
-                            <div class="box bc-red-dd bd-1 bd-red-dd pxv-4 c-white-d"> <span class="bi-exclamation-triangle"></span> Note:</div> 
+                            <div class="box bc-red-dd bd-1 bd-red-dd pxv-4 c-white-d no-wrap"> <span class="bi-exclamation-triangle"></span> Note:</div> 
                             <div class="box bd-1 bd-silver-d pxv-4 wid-full">It is highly discourged to use the spoova source pack as project folder.</div>
                            </div>
                        </div>
@@ -193,7 +193,8 @@
                                <span class="fb-6 c-orange-dd">icore/dbconfig.php :</span> <br> File should contain the correct definition of your database configuration for offline or online environments (or both) <br><br>
 
                                <span class="fb-6 c-orange-dd">icore/init :</span> <br> File should contain other configuration keys and respective values.<br><br>
-
+                               
+                               <span class="fb-6 c-orange-dd">Session control :</span> <br> The session class requires a user table which is defined in the "icore/init" file. This must be created before using session class.<br><br>
 
                                <div class="flex-in midv shadow rad-4">
                                     <div class="box bc-orange c-white-d pxv-6">

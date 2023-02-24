@@ -178,6 +178,7 @@
 }
 
 body.--theme-dark{
+    color: rgb(125, 125, 125);
     background-color : rgba(21, 15, 39);
 }
  </style><style rel="build.css.navbars"> 
@@ -357,7 +358,7 @@ window.onload = function() {
                <li> <a href="<?= DomUrl('docs/database/migrations') ?>" class="<?= inPath('active') ?>"><span class="ico ico-spin"></span>Handling Migrations</a> </li>
                <li> <a href="<?= DomUrl('docs/classes') ?>" class="<?= inPath('active') ?>"><span class="ico ico-spin"></span>Helper Classes</a> </li>
                <li> <a href="<?= DomUrl('docs/functions') ?>" class="<?= inPath('active') ?>"><span class="ico ico-spin"></span>Helper Functions</a> </li>
-               <li> <a href="<?= DomUrl('docs/directives') ?>" class="<?= inPath('active') ?>"><span class="ico ico-spin"></span>Helper Directives</a> </li>
+               <li> <a href="<?= DomUrl('docs/template') ?>" class="<?= inPath('active') ?>"><span class="ico ico-spin"></span>Template Engine</a> </li>
                <li> <a href="<?= DomUrl('docs/setters') ?>" class="<?= inPath('active') ?>"><span class="ico ico-spin"></span>Global Setters</a> </li>
                <li> <a href="<?= DomUrl('docs/mails') ?>" class="<?= inPath('active') ?>"><span class="ico ico-spin"></span>Handling Mails</a> </li>
                <li> <a href="<?= DomUrl('docs/cli') ?>" class="<?= inPath('active') ?>"><span class="ico ico-spin"></span>Cli Commands</a> </li>         
@@ -417,10 +418,13 @@ window.onload = function() {
               <li><a href="#add-route">add:route</a></li>
               <li><a href="#add-api">add:api</a></li>
               <li><a href="#add-rex">add:rex</a></li> 
+              <li><a href="#backup-projet">backup project</a></li> 
+              <li><a href="#backup-clear">backup :clear</a></li> 
               <li><a href="#clean-storage">clean storage</a></li> 
               <li><a href="#config-all">config:all</a></li>
               <li><a href="#config-dbonline">config:dbonline</a></li>
               <li><a href="#config-dbonline">config:dboffline</a></li>
+              <li><a href="#config-env">config:env</a></li>
               <li><a href="#config-usersTable">config:usersTable</a></li>
               <li><a href="#config-cookieField">config:cookieField</a></li>
               <li><a href="#config-idField">config:idField</a></li>
@@ -433,6 +437,7 @@ window.onload = function() {
               <li><a href="#support">support</a></li>
               <li><a href="#version">version</a></li>
               <li><a href="#watch">watch</a></li>
+              <li><a href="#wiz">:wiz</a></li>
             </ul>
           </div>
           
@@ -670,10 +675,56 @@ window.onload = function() {
             </div> 
           </div> 
           
+          <div id="backup-project"> 
+            <br>
+            <div class="font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
+              <div class="flex-full midv"> <span class="bi-file-text mxr-8 c-lime-dd"></span> backup project </div>
+
+            </div>
+            
+            <div>
+
+              <div class="pvs-10">
+                This command is used to storage backups. It uses interactive console steps to determine how best to generate project backups. 
+                The default backup folder name is "backup". 
+              </div>
+
+              <div class="pre-area shadow">
+                <div class="pxv-6 bc-silver">Syntax</div>
+                <pre class="pre-code">
+  php mi backup project
+                </pre>
+              </div>
+            </div> 
+          </div> 
+          
+          <div id="backup-clear"> 
+            <br>
+            <div class="font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
+              <div class="flex-full midv"> <span class="bi-file-text mxr-8 c-lime-dd"></span> bac                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               
+
+            </div>
+            
+            <div>
+
+              <div class="pvs-10">
+                This command is mostly used to delete storage backups from the project's root. Bo                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               
+                This is the reason why it is essehtial to trend carefully when applying this code.z 
+              </div>
+
+              <div class="pre-area shadow">
+                <div class="pxv-6 bc-silver">Syntax</div>
+                <pre class="pre-code">
+  php mi backup clear
+                </pre>
+              </div>
+            </div> 
+          </div> 
+
           <div id="clean-storage"> 
             <br>
             <div class="font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
-              <div class="flex-full midv"> <span class="bi-file-text mxr-8 c-lime-dd"></span> clean storage </div>
+              <div class="flex-full midv"> <span class="bi-file-text mxr-8 c-lime-dd"></span> q`q </div>
 
             </div>
             
@@ -816,6 +867,39 @@ window.onload = function() {
             </div> 
           </div> 
                   
+          <div id="config-env"> 
+            <br>
+            <div class="font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
+              <div class="flex-full midv"> <span class="bi-gear mxr-8 c-lime-dd"></span> config:env </div>
+
+            </div>
+            
+            <div>
+
+              <div class="pvs-10">
+                This configures the <code>icore/.env</code> environment keys.
+              </div>
+
+              <div class="pre-area shadow">
+                <div class="pxv-6 bc-silver">Syntax</div>
+                <pre class="pre-code">
+  php mi config:env key value
+  <span class="comment">
+    where: 
+
+      key   : key to be configured
+
+      value : value of key
+
+      Ex: <span class="c-orange-dd">php mi config:env API_KEY some_value</span>
+  </span>
+                </pre>
+
+              </div>
+
+            </div> 
+          </div> 
+
           <div id="config-userstable"> 
             <br>
             <div class="font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
@@ -1185,6 +1269,37 @@ window.onload = function() {
                 </pre>
 
               </div>
+            </div> 
+          </div> 
+                  
+          <div id="wiz"> 
+            <br>
+            <div class="font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
+              <div class="flex-full midv"> <span class="helvetica mxr-6"><span class="bi-code-slash"></span></span> <span>wiz</span> </div>
+
+            </div>
+            
+            <div>
+
+                <div class="pvs-10">
+                  This command starts a wizard that is capable of running php codes in the command line in the offline environment. The <code>wiz</code> 
+                  also allows pasting of code lines on the command line. In order to execute commands, developer must end code with a newline followed by 
+                  semicolon delimiter and then an enter. This tells the wiz to run or process the code. If the delimiter is not added on a separate line, 
+                  the wiz will just assume that the delimiter is part of the code and will not execute it.
+                </div>
+            
+
+                <div class="pre-area shadow">
+                  <div class="pxv-6 bc-silver">Syntax</div>
+                  <pre class="pre-code">
+  php mi :wiz
+                  </pre>
+                </div>
+
+                <div class="foot-note pvs-10">
+                  When working with wiz, all important namespaces must be fully defined in a way that it becomes accessible.
+                </div>
+
             </div> 
           </div> 
           
