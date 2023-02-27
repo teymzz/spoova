@@ -105,6 +105,9 @@ class Welcome {
                     width: var(--em-2);
                     height: var(--em-2);
                 }
+                .ct-1{
+                    color-847b95
+                }
                 @media (min-width:1000px) {
                     body{
                         font-size: initial;
@@ -119,7 +122,7 @@ class Welcome {
                 <div class="in-flex midv">
                         <div class="">
                             <span class="c-orange">Hello!</span> 
-                            <span class="{{ spoovaLoaded('c-sea-blue','c-blue') }}">From</span> 
+                            <span class="{{ spoovaLoaded('c-sea-blue','ct-1') }}">From</span> 
                         </div>
                         <div class="animate__animated animate__rubberBand flex-icon mxs-10 mid pxv-10 theme-btn box bd bd-silver rad-r anc-btn-link flow-hide bc-deeper bc-deeper-blue ripple relative">
                                 <div class="flex px-80 bc-deeper-blue-dd rad-r">
@@ -130,7 +133,7 @@ class Welcome {
                                 </div>
                         </div>
                         <div href="@Domurl()" class="in-flex f-col">
-                            <div class="flex midv fb-9 font-menu font-em-1d2 {{ spoovaLoaded('c-sea-blue','c-blue') }}">POOVA</div>
+                            <div class="flex midv fb-9 font-menu font-em-1d2 {{ spoovaLoaded('c-sea-blue','ct-1') }}">POOVA</div>
                             <div class="font-em-d2 absolute pxs-6 c-sky-blue" @onShow('spoovaLoaded', 'true')>app connected <span class="bi bi-check"></span></div>
                         </div>
                     </div>
