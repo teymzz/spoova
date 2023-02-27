@@ -431,12 +431,37 @@
                     </div> <br>
                 </div>
 
-                <div id="dump" class="">
+                <div id="export" class="">
                     <div class="">
                         <div class="font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
                             <div class="flex-full midv"> 
                                 <span class=" mxr-8 c-lime-dd">
                                     <span class="numb-box">10.</span>
+                                </span> export
+                            </div>
+                        </div> <br>
+                        <div class="">
+                            The <code>export()</code> method displays all stored meta definitions from storage list on each line.
+                            <br><br>
+                            
+                            <div class="pre-area shadow">
+                                <div class="box-full">
+                                    <div class="pxv-6 bc-off-white"><code>Sample: display all stored meta tags</code></div>
+                                    <pre class="pre-code">
+    $meta->export(); <span class="comment">// displays each predefined meta tags in a listed order</span> 
+                                    </pre>
+                                </div>
+                            </div>
+                        </div>
+                    </div> <br>
+                </div>
+
+                <div id="dump" class="">
+                    <div class="">
+                        <div class="font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
+                            <div class="flex-full midv"> 
+                                <span class=" mxr-8 c-lime-dd">
+                                    <span class="numb-box">11.</span>
                                 </span> dump
                             </div>
                         </div> <br>
@@ -463,7 +488,7 @@
                         <div class="font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
                             <div class="flex-full midv"> 
                                 <span class=" mxr-8 c-lime-dd">
-                                    <span class="numb-box">11.</span>
+                                    <span class="numb-box">12.</span>
                                 </span> sample
                             </div>
                         </div> <br>
