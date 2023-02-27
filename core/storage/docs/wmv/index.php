@@ -410,11 +410,11 @@ window.onload = function() {
                         </div> <br>
 
                         <div class="">
-                            The first thing to take note of when creating a windows project file is the windows folder.
-                            The windows folder is expected to have a server entry point. By order of standard, spoova employs 
-                            a standard logic which uses an <code>Index.php</code> file as a server entry point. This file exists within the 
-                            windows root directory (i.e <code>window/Routes/Index.php</code> )  which extends to the 
-                            root <code>Window</code> class. By default, when running our application, whenever a page is loaded,
+                            The first thing to take note of when creating a window files is the windows folder.
+                            The windows folder is a reserved folder storing for Routes, APIs, Frames, Models and Rex files. By order of standard, spoova employs 
+                            a standard logic which uses different window files as route entry points. These file are added to the 
+                            windows route directory (i.e <code>windows/Routes</code> )  and each window file extends to a 
+                            root <code>Window</code> class which is the main controller. By default, when running our application, whenever a page is loaded,
                             the url is transferred to the windows management structure. This will try to resolve the url by looking for 
                             a route file within the windows/Routes folder. If a window entry class file matching a url's entry 
                             name does not exist, spoova will return a 404 error. It is however worth emphasizing that all window file names should be initialized with an 
