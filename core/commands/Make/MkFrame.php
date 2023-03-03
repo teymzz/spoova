@@ -82,9 +82,6 @@ class MkFrame extends MkBase{
                     Cli::break();
                  }
 
-                //  Cli::textView(Cli::alert("Notice:")." use directive \"-O\" to overwrite ", 0, '|2');
-                //  return false;
-
             }
 
             $content = <<<Frame

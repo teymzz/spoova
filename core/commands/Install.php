@@ -7,7 +7,6 @@ use spoova\core\classes\FileManager;
 use User;
 
 /**
- * @package core/commands
  * @author Akinola Saheed <teymss@gmail.com> .
  * 
  * Handles the Installation of the init file

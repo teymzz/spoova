@@ -3,7 +3,7 @@
 namespace spoova\core\classes;
 
 /**
- * @package spoova\core\classes
+ * This class handles route request
  */
 class Request
 {

@@ -178,6 +178,7 @@
 }
 
 body.--theme-dark{
+    color: rgb(125, 125, 125);
     background-color : rgba(21, 15, 39);
 }
  </style><style rel="build.css.navbars"> 
@@ -244,7 +245,7 @@ body.--theme-dark{
     <script src='http://localhost/spoova/res/main/js/switcher.js'></script>
     
 </head>
-<body>
+<body class="--theme-dark">
 
     <script>
         $(document).ready(function(){
@@ -359,7 +360,7 @@ window.onload = function() {
                <li> <a href="<?= DomUrl('docs/database/migrations') ?>" class="<?= inPath('active') ?>"><span class="ico ico-spin"></span>Handling Migrations</a> </li>
                <li> <a href="<?= DomUrl('docs/classes') ?>" class="<?= inPath('active') ?>"><span class="ico ico-spin"></span>Helper Classes</a> </li>
                <li> <a href="<?= DomUrl('docs/functions') ?>" class="<?= inPath('active') ?>"><span class="ico ico-spin"></span>Helper Functions</a> </li>
-               <li> <a href="<?= DomUrl('docs/directives') ?>" class="<?= inPath('active') ?>"><span class="ico ico-spin"></span>Helper Directives</a> </li>
+               <li> <a href="<?= DomUrl('docs/template') ?>" class="<?= inPath('active') ?>"><span class="ico ico-spin"></span>Template Engine</a> </li>
                <li> <a href="<?= DomUrl('docs/setters') ?>" class="<?= inPath('active') ?>"><span class="ico ico-spin"></span>Global Setters</a> </li>
                <li> <a href="<?= DomUrl('docs/mails') ?>" class="<?= inPath('active') ?>"><span class="ico ico-spin"></span>Handling Mails</a> </li>
                <li> <a href="<?= DomUrl('docs/cli') ?>" class="<?= inPath('active') ?>"><span class="ico ico-spin"></span>Cli Commands</a> </li>         
@@ -386,36 +387,76 @@ window.onload = function() {
           <div class="font-em-1d5 c-orange">Composer / Plugins</div> <br>  
           
           <div class="resource-intro">
-              <div class="fb-6">Introduction</div>
               <div class="">
-                  Installation of plugins using composer should be within the <code>core/vendor</code>
-                  folder. Spoova does not place its vendor folder in the application root. Therefore, to install 
-                  using composer, developers should navigate to the <code>core</code> folder which is the root 
-                  folder for the <code>vendor</code> folder.  
+                  The spoova project application applies a specific structure in handling php composer dependency manager. 
+                  While most frameworks places the composer <code>vendor</code> folder in the root of their application, spoova 
+                  suggests that the vendor folder which is a core aspect of the application, should be placed in the <code>core/</code> 
+                  directory. This means that developers will have to navigate to the <code>core/</code> directory in order to run composer commands and also install composer packages. 
                   <br><br>
                   
-                  For the purpose of file structuring, it is believed that vendor folder should be part of the core 
-                  framework. All core applications and classes are stored within the core folder which is the reason 
-                  for placing vendor folder into core folder.
+                  However, since spoova is a very flexible framework, developers are allowed to move the <code>vendor</code> folder outside of the <code>core/</code> into the root of the 
+                  application by following the process below:
                   
               </div> 
           </div>
           
-          <div id="core" class="core-helpers"> 
+          <div id="vendor" class=""> 
               <br>
               <div class="font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
-                <div class="flex-full midv"> <span class="bi-folder mxr-8 c-lime-dd"></span> Core Folder </div>
-                <div class="flex mid">
-                  <span class="bi-chevron-double-right"></span>
+                <div class="flex-full midv"> <span class="bi-folder-fill mxr-8 c-lime-dd"></span> Vendor Folder </div>
+              </div> <br>
+
+              <div class="">
+                <div class="">The composer vendor folder can be moved by applying the following processes</div>
+                <br>
+
+                <div class="">
+
+                  <ul>
+                    <li>Move the <code>vendor</code> folder out of the <code>core</code> directory.</li>
+                    <li>Move the <code>composer.json</code> file out of the vendor folder</li>
+                    <li>Edit the json file <code>autoload</code> key such that it becomes as shown below 
+
+                      <div class="pre-area">
+                        <pre class="pre-code">
+    "autoload": {
+
+        "psr-4": {
+            "spoova\\": "./",
+            "Spoova\\": "./"
+        }
+
+    },
+                        </pre>
+                      </div>
+                    </li>
+                    <li>
+                      Run the <code>composer dump-autoload -o</code> command to update the application
+                    </li>
+                    <div class="">
+                      Refresh your application to ensure that it runs perfectly fine
+                    </div>
+                    <div class="">
+                      Once the application runs well, return <code>composer.json</code> back into the <code>vendor</code> folder.
+                    </div>
+                  </ul>
+
                 </div>
+              </div>
+        
+          </div>  <br>
+
+          <div id="core"> 
+
+              <div class="font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
+                <div class="flex-full midv"> <span class="bi-gear mxr-8 c-lime-dd"></span> Core Folder </div>
               </div> <br>
               
               <div>
-                  Aside from installing into plugins into the core folder, developers should avoid tampering with the core folder . 
-                  If new classes will be created, spoova supports creating special folders for classes. These folders could be 
-                  located within the core folder itself away from the default folders or at the root of the application. The root 
-                  folder itself is named <code>spoova</code> . Therefore, the namespaces follow the pattern of <code>spoova\</code> where 
-                  <code>spoova</code> is the root name of the application. 
+                  Developers should avoid tampering with the core files in the core folder. If new classes will be created, custom folders may be used for classes. 
+                  If the <code>vendor</code> folder is shifted out of the <code>core\</code> directory, packages can be installed directly into the vendor folder using the 
+                  <code>composer.json</code> file.  The root app namespaces follow the pattern of <code><?= ( rtrim(scheme('',false),'\\') )?? "" ?></code>, hence, custom classes 
+                  defined in <code>core\</code> directory should use the predefined namespace. 
               </div> <br>
         
           </div>  

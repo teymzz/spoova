@@ -5,8 +5,7 @@ namespace spoova\core\classes;
 /**
  * Generates different hash types.
  * 
- * @package spoova\core\classes
- * @Author Akinola Saheed <teymss@gmail.com>
+ * @author Akinola Saheed <teymss@gmail.com>
  */
 class Hasher{
   

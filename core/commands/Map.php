@@ -1,7 +1,6 @@
 <?php
 
 /**
- * @package core/commands
  * @author Akinola Saheed <teymss@gmail.com> .
  * 
  * This class is for development process. 

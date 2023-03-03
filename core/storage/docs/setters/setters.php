@@ -540,11 +540,11 @@ window.onload = function() {
   <span class="c-green-l">GET('NAME 1')</span> <span class="comment">// returns Felix</span>
   <span class="c-orange-dd">GET('NAME 1', 'hash234')</span> <span class="comment">// returns Felix, but triggers error</span>
 
-  <span class="c-green-l">GET('NAME 2')</span> <span class="comment">// returns Felix</span>
-  <span class="c-orange-dd">GET('NAME 2', 'hash234')</span> <span class="comment">// returns Felix, but triggers error</span>
+  <span class="c-green-l">GET('NAME 2')</span> <span class="comment">// returns Rolland</span>
+  <span class="c-orange-dd">GET('NAME 2', 'hash234')</span> <span class="comment">// returns Rolland, but triggers error</span>
 
   <span class="c-red-dd">GET('NAME 3')</span> <span class="comment">// invalid hash triggers error</span>
-  <span class="c-green-l">GET('NAME 3', 'hash123')</span> <span class="comment">// returns Felix</span>
+  <span class="c-green-l">GET('NAME 3', 'hash123')</span> <span class="comment">// returns Charley</span>
   <span class="c-red-dd">GET('NAME 3', 'hash234')</span> <span class="comment">// invalid hash triggers error </span>
                                     </pre>
                                 </div>

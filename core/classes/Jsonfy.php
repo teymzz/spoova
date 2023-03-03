@@ -8,8 +8,7 @@ namespace spoova\core\classes;
  * to note that this class was not built to handle data more than two
  * dimentional level which is its only known limitation.
  * 
- * @package spoova\core\classes
- * @Author Akinola Saheed <teymss@gmail.com>
+ * @author Akinola Saheed <teymss@gmail.com>
  */
 class Jsonfy{
 

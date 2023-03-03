@@ -5,8 +5,7 @@ namespace spoova\core\classes;
 /**
  * This class is used mainly to Rename multiple images at once
  * 
- * @package spoova\core\classes
- * @Author Akinola Saheed <teymss@gmail.com>
+ * @author Akinola Saheed <teymss@gmail.com>
  */
 class Enlist{
 

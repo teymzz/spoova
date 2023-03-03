@@ -180,6 +180,7 @@
 }
 
 body.--theme-dark{
+    color: rgb(125, 125, 125);
     background-color : rgba(21, 15, 39);
 }
  </style><style rel="build.css.navbars"> 
@@ -1356,7 +1357,7 @@ window.onload = function() {
  <pre class="pre-code">
     DBSCHEMA::CREATE('tablename', function(DRAFT $DRAFT){
 
-        $DRAFT::PARTITION_BY('RANGE', fn(DRAFT $DRAFT) =>
+        $DRAFT::PARTITION_BY('RANGE', fn() =>
 
             $DRAFT::COLUMNS('col1')
 

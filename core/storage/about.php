@@ -405,17 +405,17 @@ window.onload = function() {
                             <p>
                                 The spoova window system can be likened to a real house. Every house has a door and a window. 
                                 In WVM, there are three logics that can be applied to manage web urls. The most important thing to note is that the idea 
-                                is but upon the concept that there can be base entry point(s) which can be active or passive depending on the 
-                                availability of a root window entry point that leads to a view. All webpages are window pages. They 
-                                exist due to the availability of a single entry point. While different urls may have a similar entry point (window), 
-                                there can also exists different urls with different entry points. However, every url must be handled by a window file which sorts 
+                                is built upon the concept of base entry point(s) which can be active or passive depending on the 
+                                availability of a root window entry point that leads to a view. All webpages are window pages and they 
+                                exist due to the availability of a single or multiple entry points. While different urls may have a similar entry point (window), 
+                                there can also exists different urls with different entry points. However, every url must be handled by a window (route) file which sorts 
                                 and manages its relative paths and determines how urls load their contents. The window files are placed 
-                                within the "windows" directory. 
+                                within the <code>windows/</code> directory while route files are placed in the <code>windows/Routes/</code> directory. 
                             </p>
                             <p>
                                 There are different ways by which a window url can be handled. Spoova's flexibility supports 
                                 multiple ways of loading urls but however, favors a standard logic and provides a great support for it. In order for the logic to 
-                                work, all window files (or entry points) and window subdirectories containing window files are expected to be placed within the "windows\Routes" directory including all APIs. 
+                                work, all window files (or entry points) and window subdirectories containing window files are expected to be placed within the <code>windows/Routes/</code> directory including all APIs. 
                                 The standard logic uses the window files as the base for any url visited. This means that any url visited that does not have its 
                                 entry point within the Routes folder is considered as an invalid url. This structure helps in file organization and code deployment. 
                                 It also helps to locate files easily with a minimal level of stress.
@@ -432,10 +432,25 @@ window.onload = function() {
                         </div>
     
                         <div class="pxv-20 pvb-1 font-em-d85">
-                            Although great care has be taken to provide an environment for building secure applications, developers should trend 
-                            carefully with form inputs. Proper validation should be done for form inputs as improper 
-                            validation may lead to undesired responses. All php files are protected along with some core directories. This behaviour can 
-                            affect file download. A solution will be to fix this by creating window url and setting header content-type of that url<br><br>
+
+                            <div class="">
+                                Although great care has be taken to provide an environment for building secure applications, developers should trend 
+                                carefully with form inputs, especially inputs that may have close relationships with directive comments. 
+                            </div> <br>
+                            
+                            <ul class="list-square pxl-14">
+                                <li>
+                                    Proper validation should be done for form inputs as improper validation may lead to undesired responses.
+                                </li>
+                                <li>
+                                    By default, all php files are protected along with some core directories. This behaviour may affect file download which 
+                                    can be fixed by creating a route and setting header content-type of that url
+                                </li>
+                                <div class="">
+                                    All texts with the <code>@</code> symbol should be properly commented with <code>&#64;()@</code> to avoid conflicts with the 
+                                    template directives. When dealing with forms inputs, this can be solved with the php <code>htmlentities()</code> inbuilt function.
+                                </div>
+                            </ul>
                         </div>
                     </div>
 
