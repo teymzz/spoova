@@ -1,6 +1,6 @@
 <?php
 
-namespace spoova\core\classes;
+namespace teymzz\spoova\core\classes;
 
 /**
  * JsonFy is a tool for creating or manupulating simple arrays

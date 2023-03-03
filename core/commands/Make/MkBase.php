@@ -1,8 +1,8 @@
 <?php
 
-namespace spoova\core\commands\Make;
+namespace teymzz\spoova\core\commands\Make;
 
-use spoova\core\commands\Cli;
+use teymzz\spoova\core\commands\Cli;
 
 abstract class MkBase{
 

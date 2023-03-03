@@ -1,6 +1,6 @@
 <?php
 
-namespace spoova\core\classes\DB;
+namespace teymzz\spoova\core\classes\DB;
 
 /**
  * This class forms the basis of all connection handlers

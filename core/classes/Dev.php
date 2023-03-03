@@ -1,8 +1,8 @@
 <?php
 
-use spoova\core\classes\FileManager;
-use spoova\core\commands\Install;
-use spoova\core\commands\Project;
+use teymzz\spoova\core\classes\FileManager;
+use teymzz\spoova\core\commands\Install;
+use teymzz\spoova\core\commands\Project;
 
 /**
  * Development contoller

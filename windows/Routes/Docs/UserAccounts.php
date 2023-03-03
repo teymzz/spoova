@@ -1,11 +1,8 @@
 <?php
 
-namespace spoova\windows\Routes\Docs;
+namespace teymzz\spoova\windows\Routes\Docs;
 
-use spoova\core\classes\DB;
-use spoova\core\classes\DBBot;
-use spoova\windows\Frames\UserFrame;
-use User;
+use teymzz\spoova\windows\Frames\UserFrame;
 
 class UserAccounts extends UserFrame {
 

@@ -1,14 +1,13 @@
 <?php
 
-namespace spoova\core\classes;
+namespace teymzz\spoova\core\classes;
 
 use Closure;
-use spoova\core\commands\Cli;
+use teymzz\spoova\core\commands\Cli;
 
 class Benchmark {
 
     private static $start;
-    private static $stop;
     private static $name;
     private static $maxlength = 6;
 

@@ -72,7 +72,7 @@
     <div class="pxs-10 bc-off-white c-green">
     The following model can be created in any folder within the app folder.
     </div>
-    use spoova\core\classes\Model;
+    use teymzz\spoova\core\classes\Model;
 
     class FormModel extends Model{
 

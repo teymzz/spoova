@@ -1,12 +1,12 @@
 <?php
 
-use spoova\core\classes\Ajax;
-use spoova\core\classes\constants\CASTED;
-use spoova\core\classes\Controller;
-use spoova\core\classes\EInfo;
-use spoova\core\classes\Request;
-use spoova\core\classes\UrlMapper;
-use spoova\windows\Routes\Docs\Wmv;
+use teymzz\spoova\core\classes\Ajax;
+use teymzz\spoova\core\classes\constants\CASTED;
+use teymzz\spoova\core\classes\Controller;
+use teymzz\spoova\core\classes\EInfo;
+use teymzz\spoova\core\classes\Request;
+use teymzz\spoova\core\classes\UrlMapper;
+use teymzz\spoova\windows\Routes\Docs\Wmv;
 
 /**
  * Controls view from windows frame
@@ -93,8 +93,8 @@ use spoova\windows\Routes\Docs\Wmv;
     protected static $winAPI = false;
     
 
-    private const folder = 'spoova\windows';
-    private const Server  = 'Server';
+    private const folder = 'windows';
+    private const Server = 'Server';
     
     #resolved classes
     protected $resolved = false;
@@ -270,16 +270,15 @@ use spoova\windows\Routes\Docs\Wmv;
     }
 
     /**
-     * Checks if supplied path exists in the Windows/Routes folder
+     * Checks if supplied path exists in the windows/Routes folder
      *
-     * @param string $path
+     * @param string $path 
+     *  - Supplied path will be searched within the windows/Routes folder
      * @return bool true if route file exists
      */
     final static function inRoutes(string $path){
 
-        $class = '\spoova\windows\Routes\\'.$path;
-
-        return (routeExists($class));
+        return (routeExists($path));
 
     }
 
@@ -1048,7 +1047,7 @@ use spoova\windows\Routes\Docs\Wmv;
     private static function onOpen($path = '') {
 
       if($path) static::loadBase($path);
-      $path = static::folder.'\\'.ucfirst(static::wvm('root'));
+      $path = scheme(static::folder.'\\'.ucfirst(static::wvm('root')), false);
 
       if(@class_exists($path)){ 
         http_response_code(200);

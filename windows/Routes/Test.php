@@ -1,8 +1,7 @@
 <?php
 
-    namespace spoova\windows\Routes;
+    namespace teymzz\spoova\windows\Routes;
 
-    use spoova\core\classes\EInfo;
     use Window;
 
     class Test extends Window{

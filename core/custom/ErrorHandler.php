@@ -1,8 +1,7 @@
 <?php
 
-use spoova\core\classes\EInfo;
-use spoova\core\classes\FileManager;
-use spoova\core\commands\Cli;
+use teymzz\spoova\core\classes\FileManager;
+use teymzz\spoova\core\commands\Cli;
 
 class ErrorHandler extends Exception{
 
@@ -318,7 +317,7 @@ class ErrorHandler extends Exception{
 
         $counter = 0;
 
-        $excludes = [$eInfoFile, $eHandlerFile, 'spoova\core\classes\EInfo', ''];
+        $excludes = [$eInfoFile, $eHandlerFile, scheme('core\classes\EInfo', false), ''];
 
         foreach($backTraces as $backTrace){
 

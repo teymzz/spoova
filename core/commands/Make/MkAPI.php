@@ -1,10 +1,10 @@
 <?php
 
-namespace spoova\core\commands\Make;
+namespace teymzz\spoova\core\commands\Make;
 
 use ErrorHandler;
-use spoova\core\classes\FileManager;
-use spoova\core\commands\Cli;
+use teymzz\spoova\core\classes\FileManager;
+use teymzz\spoova\core\commands\Cli;
 
 /**
  * This class is an alias for MKWinRoute

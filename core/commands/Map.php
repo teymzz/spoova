@@ -7,9 +7,9 @@
  * Warning: The usage of this class will alter installation files. 
  *  This may cause app to break or lead to other undesired errors.
  */
-namespace spoova\core\commands;
+namespace teymzz\spoova\core\commands;
 
-use spoova\core\classes\FileManager;
+use teymzz\spoova\core\classes\FileManager;
 
 class Map extends Entry{
 

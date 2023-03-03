@@ -1,8 +1,8 @@
 <?php 
 
-namespace spoova\core\classes\DB;
+namespace teymzz\spoova\core\classes\DB;
 
-use spoova\core\commands\Make\MkMigrator;
+use teymzz\spoova\core\commands\Make\MkMigrator;
 
 class DBMigrate {
 

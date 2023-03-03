@@ -1,9 +1,8 @@
 <?php
 
- namespace spoova\windows\Routes\Docs;
+ namespace teymzz\spoova\windows\Routes\Docs;
  
- use spoova\windows\Frames\UserFrame;
- use spoova\windows\Routes\Docs\Cli\Cli;
+ use teymzz\spoova\windows\Frames\UserFrame;
 
  class Classes extends UserFrame{
 

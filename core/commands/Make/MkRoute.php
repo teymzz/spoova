@@ -1,9 +1,9 @@
 <?php
 
-namespace spoova\core\commands\Make;
+namespace teymzz\spoova\core\commands\Make;
 
-use spoova\core\commands\Cli;
-use spoova\core\classes\FileManager;
+use teymzz\spoova\core\commands\Cli;
+use teymzz\spoova\core\classes\FileManager;
 
 /**
  * This class is an alias for MKWinRoute

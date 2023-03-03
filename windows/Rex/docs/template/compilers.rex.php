@@ -116,7 +116,7 @@
               <pre class="pre-code">
   &lt;?php
 
-  namespace spoova\core\windows\Routes;
+  namespace teymzz\spoova\core\windows\Routes;
 
   use Window;
 

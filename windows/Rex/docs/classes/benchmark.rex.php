@@ -44,17 +44,17 @@
                                     <div class="box-full">
                                         <div class="pxv-6 bc-off-white"><code>Sample code: Benchmark</code></div>
                                         <pre class="pre-code">
-    \spoova\core\classes\Benchmark::fn([
+    \teymzz\spoova\core\classes\Benchmark::fn([
 
         'querie' => function(){
-            $Hasher = new \spoova\core\classes\Hasher;
+            $Hasher = new \teymzz\spoova\core\classes\Hasher;
             $Hasher->setHash(['loomars'], '1234');
             $hash = $Hasher->hashify();
         },
 
         'querier' => function(){
             for($i = 0; $i <= 99999; $i++){
-                $Hasher = new \spoova\core\classes\Hasher;
+                $Hasher = new \teymzz\spoova\core\classes\Hasher;
                 $Hasher->setHash(['loomars'], '1234');
                 $hash = $Hasher->hashify();
             }

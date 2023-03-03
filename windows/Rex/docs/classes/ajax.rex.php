@@ -105,7 +105,7 @@
 <div class="pre-area mvt-6">
     <div class="bc-silver pxv-10">Ajax initialization syntax</div>
     <pre class="pre-code">
-  use spoova\core\classes\Ajax;
+  use teymzz\spoova\core\classes\Ajax;
 
   new Ajax($response, $ecode);
   <span class="comment">
@@ -136,7 +136,7 @@
  <div class="pre-area mvt-6">
     <div class="bc-silver pxv-10">Example 1a: Ajax initialization</div>
     <pre class="pre-code">
-  use spoova\core\classes\Ajax;
+  use teymzz\spoova\core\classes\Ajax;
 
   new Ajax();
     </pre>
@@ -153,7 +153,7 @@
  <div class="pre-area mvt-6">
     <div class="bc-silver pxv-10">Example 1b: Ajax initialization</div>
     <pre class="pre-code">
-  use spoova\core\classes\Ajax;
+  use teymzz\spoova\core\classes\Ajax;
 
   new Ajax('invalid request', 401);
     </pre>

@@ -422,8 +422,8 @@ window.onload = function() {
     "autoload": {
 
         "psr-4": {
-            "spoova\\": "./",
-            "Spoova\\": "./"
+          "Teymzz\\spoova\\": "./",
+          "Teymzz\\Spoova\\": "./"
         }
 
     },

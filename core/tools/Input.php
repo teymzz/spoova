@@ -1,6 +1,6 @@
 <?php
  
-namespace spoova\core\tools;
+namespace teymzz\spoova\core\tools;
 
 /**
  * This class is a simply used for validating the following lists.

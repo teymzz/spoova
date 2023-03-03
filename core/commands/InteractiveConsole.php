@@ -1,9 +1,9 @@
 <?php 
 
-namespace spoova\core\commands;
+namespace teymzz\spoova\core\commands;
 
-use spoova\core\classes\FileManager;
-use spoova\core\commands\Cli;
+use teymzz\spoova\core\classes\FileManager;
+use teymzz\spoova\core\commands\Cli;
 
 class InteractiveConsole {
 

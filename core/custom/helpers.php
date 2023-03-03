@@ -3,16 +3,16 @@
 /* Custom Helper Functions: Mainly for classes */
 // NOTICE : These functions should not be modified
 
-use spoova\core\classes\Collectibles;
-use spoova\core\classes\Collection;
-use spoova\core\classes\Url;
-use spoova\core\classes\DomUrl;
-use spoova\core\classes\EInfo;
-use spoova\core\classes\FileManager;
-use spoova\core\classes\ModelOptimizer;
-use spoova\core\classes\SETTER;
-use spoova\core\classes\Spoova;
-use spoova\core\classes\UserDB;
+use teymzz\spoova\core\classes\Collectibles;
+use teymzz\spoova\core\classes\Collection;
+use teymzz\spoova\core\classes\Url;
+use teymzz\spoova\core\classes\DomUrl;
+use teymzz\spoova\core\classes\EInfo;
+use teymzz\spoova\core\classes\FileManager;
+use teymzz\spoova\core\classes\ModelOptimizer;
+use teymzz\spoova\core\classes\SETTER;
+use teymzz\spoova\core\classes\Spoova;
+use teymzz\spoova\core\classes\UserDB;
 
 if(!function_exists('env')){
   /**
@@ -368,7 +368,7 @@ if(!function_exists('url')){
    * Handle urls by using the Url class
    * 
    * @param string $url path to be tested
-   * @return \spoova\core\classes\Url
+   * @return \teymzz\spoova\core\classes\Url
    */  
   function url($url){
     $Url = new Url;

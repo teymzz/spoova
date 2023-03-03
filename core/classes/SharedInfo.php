@@ -6,9 +6,9 @@
  * are not permitted to modify it. 
  * UserAuth is the default modifier class capable of modifying this connection.         
  */
-namespace spoova\core\classes;
+namespace teymzz\spoova\core\classes;
 
-use spoova\core\classes\DB\DBHandler;
+use teymzz\spoova\core\classes\DB\DBHandler;
 
 /**
  * - Contains information shared by current connection

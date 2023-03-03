@@ -1,12 +1,10 @@
 <?php
   
-namespace spoova\core\classes;
+namespace teymzz\spoova\core\classes;
 
-use spoova\core\classes\DB\DBMigrator;
+use teymzz\spoova\core\classes\DB\DBMigrator;
 
-
- class Application
- {
+class Application{
    
    public static $ROOT_DIR;
    private Router $router;
@@ -30,7 +28,6 @@ use spoova\core\classes\DB\DBMigrator;
      $this->notice   = new Notice();
      $this->router = new Router($this->request, $this->response);
      $this->setController(new Controller); 
-     // code...
 
      $this->dbbot = new DBMigrator();
    }
