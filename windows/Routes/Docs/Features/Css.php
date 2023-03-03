@@ -1,6 +1,6 @@
 <?php
 
-namespace spoova\windows\Routes\Docs\Features;
+namespace teymzz\spoova\windows\Routes\Docs\Features;
 
 use Window;
 
@@ -10,7 +10,6 @@ class Css extends Window {
 
         $path = url(window('path'))->pathFrom('other-features/css');
 
-        //$path = window(':other-features.css');
         $acceptedRoutes = [
             '',
             'display-properties',
@@ -32,6 +31,7 @@ class Css extends Window {
             'animation-effects',
         ];
 
+        //$path = window(':other-features.css');
         if(in_array($path, $acceptedRoutes)){
 
             self::call($this, [

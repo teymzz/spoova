@@ -432,7 +432,7 @@ window.onload = function() {
  <div class="pxv-10 bc-silver">File - SampleModel.php</div>
  <pre class="pre-code">
 
-  namespace spoova\window\Models;
+  namespace teymzz\spoova\window\Models;
 
   use Model;
 
@@ -451,8 +451,8 @@ window.onload = function() {
  <pre class="pre-code">
   namespace windows\Routes;
 
-  use spoova\windows\Models\SampleModel;
-  use spoova\core\classes\Request;
+  use teymzz\spoova\windows\Models\SampleModel;
+  use teymzz\spoova\core\classes\Request;
 
   class Home extends Window {
 
@@ -529,8 +529,8 @@ window.onload = function() {
  <pre class="pre-code">
  namespace windows\Routes;
 
- use spoova\windows\Models\SampleModel;
- use spoova\core\classes\Request;
+ use teymzz\spoova\windows\Models\SampleModel;
+ use teymzz\spoova\core\classes\Request;
  
  class Home extends Window {
  
@@ -603,8 +603,8 @@ window.onload = function() {
  <pre class="pre-code">
  namespace windows\Routes;
 
- use spoova\windows\Models\SampleModel;
- use spoova\core\classes\Request;
+ use teymzz\spoova\windows\Models\SampleModel;
+ use teymzz\spoova\core\classes\Request;
  
  class Home extends Window {
  

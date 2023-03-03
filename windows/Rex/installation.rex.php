@@ -69,7 +69,7 @@
             <pre class="pre-code">
     &lt?php
 
-    namespace spoova\windows\Routes;
+    namespace teymzz\spoova\windows\Routes;
 
     use Installer;
     use Window;

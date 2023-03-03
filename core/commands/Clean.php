@@ -1,8 +1,6 @@
 <?php
 
-namespace spoova\core\commands;
-use spoova\core\classes\FileManager;
-use spoova\core\classes\DBConfig;
+namespace teymzz\spoova\core\commands;
 
 class Clean extends Entry{
 

@@ -6,12 +6,11 @@ if(!is_file('icore/filebase')) header('location:../');
 //include core framework
 include_once 'icore/filebase.php';
 
-use spoova\core\commands\Info;
-use spoova\core\commands\Root;
-use spoova\core\commands\Entry;
-use spoova\core\commands\Syntax;
-use spoova\core\classes\FileManager;
-use spoova\core\commands\Cli;
+use teymzz\spoova\core\commands\Root;
+use teymzz\spoova\core\commands\Entry;
+use teymzz\spoova\core\commands\Syntax;
+use teymzz\spoova\core\classes\FileManager;
+use teymzz\spoova\core\commands\Cli;
 
 class spoova extends Entry{
 
@@ -140,7 +139,7 @@ class spoova extends Entry{
                 array_shift($commands);
                 $arguments = array_values($commands);
                 
-                $class = 'spoova\core\commands\\'.$command;
+                $class = scheme('core\commands\\'.$command, false);
 
                 if(@class_exists($class)){
                     (new $class($arguments));
@@ -161,7 +160,7 @@ class spoova extends Entry{
 
             array_shift($commands);
             $arguments = array_values($commands);
-            $class = 'spoova\core\commands\\'.$command;
+            $class = scheme('core\commands\\'.$command);
         
             if(@class_exists($class)){
                 (new $class($arguments));

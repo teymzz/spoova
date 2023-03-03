@@ -1,12 +1,12 @@
 <?php
 
-namespace spoova\windows\Routes;
+namespace teymzz\spoova\windows\Routes;
 
 use Res;
 use Session;
-use spoova\core\classes\Request;
-use spoova\windows\Frames\AccessFrame;
-use spoova\windows\Models\Access\AccessModel;
+use teymzz\spoova\core\classes\Request;
+use teymzz\spoova\windows\Frames\AccessFrame;
+use teymzz\spoova\windows\Models\Access\AccessModel;
 
 class Login extends AccessFrame {
     

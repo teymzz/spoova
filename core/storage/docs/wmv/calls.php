@@ -756,7 +756,7 @@ window.onload = function() {
                                 <div class="pre-area">
 <div class="pxv-10 bc-silver-d">pathcall method to load acceptable paths on entry points.</div> <br>
 <pre class="pre-code pxs-6">
-  namespace spoova\windows;
+  namespace teymzz\spoova\windows;
 
   use Window;
 
@@ -831,7 +831,7 @@ window.onload = function() {
                                     <div class="pre-area mvt-10">
 <pre class="pre-code">
   &lt;?php
-    namespace spoova\windows;
+    namespace teymzz\spoova\windows;
 
     <span class="c-lime-dd">use Window;</span>
 
@@ -1281,7 +1281,7 @@ window.onload = function() {
 
   <span class="comment no-select">...</span>
 
-  namespace spoova\windows\Routes;
+  namespace teymzz\spoova\windows\Routes;
 
   class Home {
 
@@ -1319,7 +1319,7 @@ window.onload = function() {
 
   <span class="comment no-select">...</span>
 
-  namespace spoova\windows\Routes\Home;
+  namespace teymzz\spoova\windows\Routes\Home;
 
   class User {
 

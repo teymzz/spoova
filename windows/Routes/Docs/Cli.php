@@ -1,8 +1,8 @@
 <?php
 
-namespace spoova\windows\Routes\Docs;
+namespace teymzz\spoova\windows\Routes\Docs;
 
-use spoova\windows\Frames\UserFrame;
+use teymzz\spoova\windows\Frames\UserFrame;
 
 class Cli extends UserFrame{
 

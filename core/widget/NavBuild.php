@@ -1,6 +1,6 @@
 <?php
 
-namespace spoova\core\widget;
+namespace teymzz\spoova\core\widget;
 
 /**
  * @abstract NavBuild

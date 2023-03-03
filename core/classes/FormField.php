@@ -1,8 +1,8 @@
 <?php
 
-namespace spoova\core\classes;
+namespace teymzz\spoova\core\classes;
 
-use spoova\core\classes\Model;
+use teymzz\spoova\core\classes\Model;
 
 class FormField {
 

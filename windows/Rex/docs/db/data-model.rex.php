@@ -56,7 +56,7 @@
                         <pre class="pre-code">
   &lt;?php
 
-    namespace spoova\core\class\Models;
+    namespace teymzz\spoova\core\class\Models;
     use Models;
 
     Posts extends Models {       
@@ -89,7 +89,7 @@
   &lt;?php
 
     Use Window
-    use spoova\windows\Models\Posts;
+    use teymzz\spoova\windows\Models\Posts;
 
     Home extends UserFrame {       
 
@@ -612,7 +612,7 @@ assume that the database table name is <code>post</code>  rather than <code>post
     <pre class="pre-code">
   &lt;?php 
 
-    use spoova\core\classes\Model;
+    use teymzz\spoova\core\classes\Model;
 
     Posts extends Model {
 
@@ -649,7 +649,7 @@ assume that the database table name is <code>post</code>  rather than <code>post
     <pre class="pre-code">
   &lt;?php 
 
-    use spoova\core\classes\Model;
+    use teymzz\spoova\core\classes\Model;
 
     Posts extends Model {
 
@@ -683,7 +683,7 @@ assume that the database table name is <code>post</code>  rather than <code>post
     <pre class="pre-code">
   &lt;?php 
 
-    use spoova\core\classes\Model;
+    use teymzz\spoova\core\classes\Model;
 
     Posts extends Model {
 
@@ -721,7 +721,7 @@ assume that the database table name is <code>post</code>  rather than <code>post
    <pre class="pre-code">
   &lt;?php 
 
-    use spoova\core\classes\Model;
+    use teymzz\spoova\core\classes\Model;
 
     Posts extends Model {
 

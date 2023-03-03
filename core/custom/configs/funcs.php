@@ -99,7 +99,7 @@ function appExists($class) : bool{
    
     $appSpace = rtrim(ltrim(scheme, '\\ '),'\\ ');
 
-    // class path in routes folder
+    // class path in windows folder
     $classSpace = str_replace('/', '\\', dirname($classDir));
     $classSpace = $classSpace == '.'? '' : $classSpace;
     $classSpace = $classSpace;

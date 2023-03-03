@@ -1,9 +1,9 @@
 <?php
 
-use spoova\core\classes\Base;
-use spoova\core\server\Serve;
-use spoova\core\classes\Spinner;
-use spoova\windows\Sessions\UserSession;
+use teymzz\spoova\core\classes\Base;
+use teymzz\spoova\core\server\Serve;
+use teymzz\spoova\core\classes\Spinner;
+use teymzz\spoova\windows\Sessions\UserSession;
 
 /**
  * This class contains window entry file. It should not be modified unless you have an idea 

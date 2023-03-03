@@ -1,12 +1,12 @@
 <?php  
 
-namespace spoova\core\classes\DB\DBSchema;
+namespace teymzz\spoova\core\classes\DB\DBSchema;
 
 use Closure;
 use DBStatus;
-use spoova\core\classes\DB;
-use spoova\core\classes\DB\DBHandler;
-use spoova\core\commands\Cli;
+use teymzz\spoova\core\classes\DB;
+use teymzz\spoova\core\classes\DB\DBHandler;
+use teymzz\spoova\core\commands\Cli;
 
 class DBSCHEMA {
 

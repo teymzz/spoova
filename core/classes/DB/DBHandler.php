@@ -1,10 +1,10 @@
 <?php
-namespace spoova\core\classes\DB;
+namespace teymzz\spoova\core\classes\DB;
 
 use DBStatus;
 use ReflectionClass;
-use spoova\core\classes\DB;
-use spoova\core\classes\UserAuth;
+use teymzz\spoova\core\classes\DB;
+use teymzz\spoova\core\classes\UserAuth;
 
 /**
  * Database handler for managing or modifying connections

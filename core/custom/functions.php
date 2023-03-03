@@ -2,8 +2,7 @@
 
 /* Custom stand-alone core functions. Do not Remove*/
 
-use spoova\core\classes\Dumper;
-use spoova\core\classes\UserDataObject;
+use teymzz\spoova\core\classes\Dumper;
 
 /**
  * prints a break tag or PHP_EOL to the page

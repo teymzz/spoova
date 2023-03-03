@@ -363,7 +363,7 @@
                                 <div class="font-menu mvt-10">
                                     In the code above, the <code>win:</code> directive tells the window class to load its value as a class.
                                     When a url, for example <code>http://domain/home</code> or <code>http://domain/home/any/path</code> is visited, 
-                                    the class <code>spoova\windows\Routes\Home</code> will be triggered. The <code>profile</code> also works in a similar way. 
+                                    the class <code>teymzz\spoova\windows\Routes\Home</code> will be triggered. The <code>profile</code> also works in a similar way. 
                                     However, when a page e.g <code>http://domain</code>, <code>http://domain/index</code> or <code>http://domain/index/any/path</code> 
                                     is visited, the <code>root()</code> method is triggered. Remember that if the index page is visited, then <code>window(':')</code> 
                                     will also return the name <span class="c-brown-ll">"index"</span>. This means that we can replace our first array key of <code>'index' => 'root'</code> 
@@ -387,7 +387,7 @@
                                 <div class="pre-area">
 <div class="pxv-10 bc-silver-d">pathcall method to load acceptable paths on entry points.</div> <br>
 <pre class="pre-code pxs-6">
-  namespace spoova\windows;
+  namespace teymzz\spoova\windows;
 
   use Window;
 
@@ -462,7 +462,7 @@
                                     <div class="pre-area mvt-10">
 <pre class="pre-code">
   &lt;?php
-    namespace spoova\windows;
+    namespace teymzz\spoova\windows;
 
     <span class="c-lime-dd">use Window;</span>
 
@@ -884,9 +884,9 @@
 
                                 <div class="font-menu mvt-6">
                                     In the code above, while the <code>home</code> url will call the <code>root()</code> 
-                                    method of the current window, the <code>home/user</code> will call the <code>spoova\Windows\Path\To\File</code> 
+                                    method of the current window, the <code>home/user</code> will call the <code>teymzz\spoova\Windows\Path\To\File</code> 
                                     class.
-                                    The <code>win:</code> directive specifies the <code>spoova\Windows</code> namespace. 
+                                    The <code>win:</code> directive specifies the <code>teymzz\spoova\Windows</code> namespace. 
                                     We can also pass an object as value rather than strings.  The variable <code>$var</code> 
                                     will also be passed down as an argument to the class, object or method defined.
                                 </div>
@@ -912,7 +912,7 @@
 
   <span class="comment no-select">...</span>
 
-  namespace spoova\windows\Routes;
+  namespace teymzz\spoova\windows\Routes;
 
   class Home {
 
@@ -950,7 +950,7 @@
 
   <span class="comment no-select">...</span>
 
-  namespace spoova\windows\Routes\Home;
+  namespace teymzz\spoova\windows\Routes\Home;
 
   class User {
 

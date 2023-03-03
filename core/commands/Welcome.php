@@ -1,8 +1,8 @@
 <?php 
 
-namespace spoova\core\commands;
+namespace teymzz\spoova\core\commands;
 
-use spoova\core\classes\FileManager;
+use teymzz\spoova\core\classes\FileManager;
 
 class Welcome {
 
@@ -46,7 +46,7 @@ class Welcome {
         $content = <<<CONTENT
         <?php
 
-        namespace spoova\windows\Routes;
+        namespace teymzz\spoova\windows\Routes;
         
         use Window;
         
@@ -153,7 +153,7 @@ class Welcome {
         $content = <<<CONTENT
         <?php
 
-        namespace spoova\windows\Routes;
+        namespace teymzz\spoova\windows\Routes;
 
         use Installer;
         use Window;

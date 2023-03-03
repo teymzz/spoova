@@ -512,9 +512,9 @@ window.onload = function() {
 <div class="pre-area">
     <pre class="pre-code">
 
-  namespace spoova\windows\Models;
+  namespace teymzz\spoova\windows\Models;
   
-  use spoova\core\classes\Model;
+  use teymzz\spoova\core\classes\Model;
   
   class LoginModel extends Model {
   
@@ -603,7 +603,7 @@ window.onload = function() {
     <pre class="pre-code">
   &lt;?php
     
-    use spoova\core\classes\Request;
+    use teymzz\spoova\core\classes\Request;
     use Form;
 
     $Request = new Request;
@@ -734,7 +734,7 @@ window.onload = function() {
     <pre class="pre-code">
 &lt;?php
     
-    use spoova\core\classes\Request;
+    use teymzz\spoova\core\classes\Request;
     use Form;
     use Csrf;
 

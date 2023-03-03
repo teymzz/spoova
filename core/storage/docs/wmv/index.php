@@ -477,7 +477,7 @@ window.onload = function() {
  <div class="pxv-10 bc-silver">windows/Routes/Index.php</div>
  <pre class="pre-code">
  
-  <span class="c-violet-dd">namespace spoova\windows\Routes;</span>
+  <span class="c-violet-dd">namespace teymzz\spoova\windows\Routes;</span>
   
   <span class="c-purple">use Window;</span>
 
@@ -563,7 +563,7 @@ window.onload = function() {
  <div class="pxv-10 bc-silver">windows/Routes/Index.php</div>
  <pre class="pre-code">
  
-  <span class="c-violet-dd">namespace spoova\windows\Routes;</span>
+  <span class="c-violet-dd">namespace teymzz\spoova\windows\Routes;</span>
   
   <span class="c-purple">use Window;</span>
 

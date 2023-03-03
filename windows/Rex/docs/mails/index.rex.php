@@ -138,7 +138,7 @@
     <pre class="pre-code">
   &#60;?php
 
-    <span class="c-purple">use spoova\core\classes\Mailer</span>
+    <span class="c-purple">use teymzz\spoova\core\classes\Mailer</span>
 
     $mail = new Mailer;  <span class="comment">// Mailer instantiation</span>
 

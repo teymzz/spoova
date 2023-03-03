@@ -1,9 +1,9 @@
 <?php
 
-namespace spoova\core\classes;
+namespace teymzz\spoova\core\classes;
 
 use Res;
-use spoova\core\classes\Resin;
+use teymzz\spoova\core\classes\Resin;
 
 /**
  * This class is created for 

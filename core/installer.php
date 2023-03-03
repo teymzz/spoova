@@ -1,8 +1,8 @@
 <?php
 
-use spoova\core\classes\DB;
+use teymzz\spoova\core\classes\DB;
 
-Use spoova\core\classes\Filemanager;
+use teymzz\spoova\core\classes\Filemanager;
 
 class Installer{
 
@@ -14,6 +14,10 @@ class Installer{
     private $intro;
     private $refreshBtn;
     private $content;
+    public $message;
+    public $db;
+    public $fatal_error;
+    public $create_file;
 
     private $userColumns = [
         'firstname'=> ['len'=> 30, 'type'=> 'varchar'],
@@ -246,7 +250,7 @@ class Installer{
 
           //test database connection
           if(!arrVoid($dbname, $dbuser,$dbpass,$dbserver,$dbport,$dbsocket) || isset($_POST['newdb'])){
-              $dbcon = new spoova\core\classes\DB;
+              $dbcon = new teymzz\spoova\core\classes\DB;
               $db = $dbcon->openDB('',$dbuser,$dbpass,$dbserver,$dbport,$dbsocket);
   
               if(!$db){
@@ -278,7 +282,7 @@ class Installer{
         
           //if no data is supplied, try to run the default connection
           if(!isset($connection_success)){
-              $dbcon = new spoova\core\classes\DB();
+              $dbcon = new teymzz\spoova\core\classes\DB();
               $db = $dbcon->openDB();
   
               if(!$db){

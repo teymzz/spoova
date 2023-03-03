@@ -1,6 +1,6 @@
 <?php
 
-namespace spoova\core\commands;
+namespace teymzz\spoova\core\commands;
 
 /**
  * This class contains basic information on avaialable cli commands

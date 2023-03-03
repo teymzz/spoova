@@ -1,9 +1,9 @@
 <?php
 
-namespace spoova\core\classes\DB;
+namespace teymzz\spoova\core\classes\DB;
 
 use DBStatus;
-use spoova\core\classes\DB;
+use teymzz\spoova\core\classes\DB;
 
 class DBPlugins {
 

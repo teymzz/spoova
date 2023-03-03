@@ -1,10 +1,10 @@
 <?php
 
-namespace spoova\core\commands;
+namespace teymzz\spoova\core\commands;
 
-use spoova\core\commands\InteractiveConsole;
-use spoova\core\commands\Cli;
-use spoova\core\classes\FileManager;
+use teymzz\spoova\core\commands\InteractiveConsole;
+use teymzz\spoova\core\commands\Cli;
+use teymzz\spoova\core\classes\FileManager;
 
 /**
  * This class contains all spoova direct commands except the Info class

@@ -114,7 +114,7 @@
                     <pre class="pre-code">
   &lt;?php
                     
-    <span class="comment no-select">1.</span> use spoova\windows;
+    <span class="comment no-select">1.</span> use teymzz\spoova\windows;
     <span class="comment no-select">2.</span> 
     <span class="comment no-select">3.</span> Res::load('index', [App::class, 'index']);
 
@@ -149,7 +149,7 @@
   &lt;?php
     
     <span class="comment no-select">1. include_once 'icore/filebase.php'; </span> 
-    <span class="comment no-select">2.</span> use spoova\windows;
+    <span class="comment no-select">2.</span> use teymzz\spoova\windows;
     <span class="comment no-select">3.</span> 
     <span class="comment no-select">4.</span> $compiled = Res::markup('index', [App::class, 'index']);
     <span class="comment no-select">5.</span> print $compiled;
@@ -177,7 +177,7 @@
                         <pre class="pre-code">
   &lt;?php
     
-    namespace spoova\window\Routes;
+    namespace teymzz\spoova\window\Routes;
 
     use Window;
 

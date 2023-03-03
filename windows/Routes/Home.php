@@ -1,13 +1,13 @@
 <?php
 
-namespace spoova\windows\Routes;
+namespace teymzz\spoova\windows\Routes;
 
 use DBStatus;
 use Form;
-use spoova\core\classes\Collection;
-use spoova\core\classes\Request;
-use spoova\windows\Frames\UserFrame;
-use spoova\windows\Models\Posts;
+use teymzz\spoova\core\classes\Collection;
+use teymzz\spoova\core\classes\Request;
+use teymzz\spoova\windows\Frames\UserFrame;
+use teymzz\spoova\windows\Models\Posts;
 use User;
 use Window;
 

@@ -33,7 +33,7 @@
     RewriteRule ^(\*\.!(php))($|//) - [L]
     
     # Secure specific core directories and its entire contents
-    RewriteRule ^((core|icore|windows)(//.*?)?) index.php [NC,L]
+    RewriteRule ^((core|icore|vendor|windows)(//.*?)?) index.php [NC,L]
 
     # Send all directories to the router file
     RewriteRule ^((//.*?)?([\/0-9a-zA-Z_-]*)?\.php) index.php [NC,L]   

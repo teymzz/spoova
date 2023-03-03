@@ -69,7 +69,7 @@
                     <pre class="pre-code">
   &lt;?php
 
-    namespace spoova\windows\Frames;
+    namespace teymzz\spoova\windows\Frames;
     use Window;
 
     class Userframe extends Window{
@@ -92,7 +92,7 @@
                     <pre class="pre-code">
   &lt;?php
 
-    use spoova\windows\Frames\UserFrame;
+    use teymzz\spoova\windows\Frames\UserFrame;
 
     class Home extend Userframe{
 
@@ -119,9 +119,9 @@
                     <pre class="pre-code">
   &lt;?php
 
-    namespace spoova\windows;
+    namespace teymzz\spoova\windows;
 
-    use spoova\windows\Frames\UserFrame;
+    use teymzz\spoova\windows\Frames\UserFrame;
 
 
     class Home extend Userframe{
@@ -182,9 +182,9 @@
     <pre class="pre-code">
   &lt;?php
   
-    namespace spoova\windows;
+    namespace teymzz\spoova\windows;
 
-    use spoova\windows\Frames\UserFrame;
+    use teymzz\spoova\windows\Frames\UserFrame;
 
 
     class Home extend Userframe{

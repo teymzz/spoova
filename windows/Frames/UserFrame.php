@@ -1,8 +1,8 @@
 <?php
 
-namespace spoova\windows\Frames;
+namespace teymzz\spoova\windows\Frames;
 
-use spoova\windows\Models\Access\AccessModel;
+use teymzz\spoova\windows\Models\Access\AccessModel;
 use User;
 
 class UserFrame extends AccessFrame {
