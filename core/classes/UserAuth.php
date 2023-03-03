@@ -19,7 +19,7 @@ class UserAuth extends SharedInfo{
   private $passField = 'password';
   private $password  = false;
   private string $fields  = '';
-  private string $values  = '';
+  private array $values  = [];
   private bool $primary;
 
   /**

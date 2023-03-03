@@ -15,6 +15,8 @@ class ImageClass extends FileUploader{
     private $imageheight  = null;
     private $imageQuality = null;
     private $imageOut     = null;
+    private $imageData;
+    private $validImage;
     
     /**
      * Sets an image for resizing

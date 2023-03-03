@@ -37,6 +37,8 @@ class FileUploader{
    */
   private $file;
 
+  public $newloc;
+
   /**
    * Stored Image properties
    */
