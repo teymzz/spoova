@@ -5,7 +5,6 @@ namespace spoova\core\classes\DB;
 use spoova\core\classes\FileManager;
 
 /**
- * @package spoova\core\classes\DBConfig
  * @author Akinola Saheed <github teymzz>
  * 
  * This class was specifically 

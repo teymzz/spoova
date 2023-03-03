@@ -400,15 +400,19 @@ window.onload = function() {
                        <div class="font-em-d85 pxv-10">
        
                            <ul class="list-square pxl-20">
-                               <li>Download the spoova frame project pack file online from here</li>
-                               <li>Place the project pack into your root web folder (offline or online)</li>
-                               <li>Open your cli from spoova project pack</li>
-                               <li>Run the cli command : <span class="fb-6 c-black-ll"> php mi project <span class="c-gold-dd">app</span></span> where "app" is your new project folder name </li>
-                               <li>Open your project on the browser and navigate to install (e.g http://localhost/app/install)</li>
-                               <li>From the installation page (i.e install), set up your database enviroment settings </li>
+                               <li>Download the spoova frame project pack file</li>
+                               <li>Place the project pack into your root web folder (offline)</li>
+                               <li>Open spoova project pack in the terminal</li>
+                               <li>Run the command : <span class="fb-6 c-black-ll"> php mi project <span class="c-gold-dd">app</span></span> where "app" is your new project folder name </li>
+                               <li>Follow the console directives to generate your project app</li>
+                               <li>Configuration of new project app can be done through web installer page (if allowed before generation) or through the command line</li>
+                               <li>Open the new project app in your editor's (e.g vscode) terminal for configuration</li>
+                               <li>Run the command <code>php mi config:all</code> to configure your new project app</li>
+                               <li>During configuration, database parameters must be within quotes (e.g <code>"dbname dbuser dbpass dbserver dbport dbsocket"</code>)</li> 
+                               <li>Database parameters should be filled with valid details while empty parameters should be set as dash (i.e -)</code></li>
                                <li>For spoova to run efficiently, database configuration along with other basic configurations should be updated with valid credentials. </li>
-                               <li>All database configurations are saved into the icore/dbconfig.php file for both offline and online environments </li>
-                               <li>When using the inbuilt web installation tool, you can choose the hard install (e.g http://localhost/app/install?refresh) option on the home page to reset previously defined configurations </li>
+                               <li>All database configurations are saved into the icore/dbconfig.php file for both offline and online environments.</li>
+                               <li>When using the inbuilt web installation tool, you can choose the hard install (e.g http://localhost/app/install?refresh) option on the home page to reset previously defined configurations. </li>
                            </ul>
                            <div class="bc-silver rad-3 flow-x flex font-em-d85 pvs-10 pxs-10"> 
                             <div class="box bc-red-dd bd-1 bd-red-dd pxv-4 c-white-d no-wrap"> <span class="bi-exclamation-triangle"></span> Note:</div> 
@@ -450,7 +454,8 @@ window.onload = function() {
 
             $Install = new Installer;
             $Install->install();
-            print $Install->content();
+
+            echo $Install->content();
         }
 
 
@@ -461,8 +466,10 @@ window.onload = function() {
 
                    </div>
 
-
-               </div> <br>
+                   
+                </div> 
+                <div class="foot-note font-em-d8 pvs-10">Note that the web installer page must be relative to the route logic used.</div>
+                <br>
 
                <div class="setup calibri bc-white-dd">
                    <div class="c-olive pxv-10 bc-silver">Setup config</div>

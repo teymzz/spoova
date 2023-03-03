@@ -4,9 +4,7 @@ namespace spoova\core\classes;
 
 use spoova\core\classes\DB\DBMigrator;
 
- /**
-  * @package spoova\core\classes
-  */
+
  class Application
  {
    

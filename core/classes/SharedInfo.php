@@ -70,7 +70,7 @@ abstract class SharedInfo{
 
       if( (self::getDefined('_core')) and ($icore = self::getDefined('_icore')) )
       {
-        if(@class_exists('spoova\core\classes\FileManager'))
+        if(@class_exists(scheme('core\classes\FileManager')))
         {
 
             //read file

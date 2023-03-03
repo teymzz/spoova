@@ -69,6 +69,8 @@ abstract class Directives{
         // Handle static files inclusion
         'domurl'      => '~@domurl\((\'(\s?(http(s)?://)?[A-Za-z0-9-_/.#?]+)?\'\s?)?\)~i',
 
+        'domlink'     => '~@domlink\((\'(\s?(http(s)?://)?[A-Za-z0-9-_/.#?]+)?\'\s?)?\)~i',
+
         'formurl'     => '~@formurl\((\'(\s?(http(s)?://)?[A-Za-z0-9-_/.#?]+)?\'\s?)?\)~i',
 
         //Include images from "res/assets/images" folder
@@ -726,6 +728,26 @@ abstract class Directives{
             $url = str_ireplace(["@domurl(",")", "'"], "", $match);           
             
             $replacement = "<?= DomUrl('{$url}') ?>";
+            $body = str_replace($match, $replacement, $body);
+            
+        }
+
+
+        return $body;
+    }    
+
+    protected static function directivesDomLink($body): string
+    { 
+  
+        //get pattern
+        self::getMatches('domlink', $body, $matches);
+
+        foreach($matches as $match){
+
+            //strip off the rule pattern
+            $url = str_ireplace(["@domlink(",")", "'"], "", $match);           
+            
+            $replacement = "<?= domLink('{$url}') ?>";
             $body = str_replace($match, $replacement, $body);
             
         }

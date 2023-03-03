@@ -2,14 +2,14 @@
 
 use spoova\core\classes\EInfo;
 use spoova\core\classes\Request;
+use spoova\core\classes\SharedInfo;
 
 /**
  * Manage and Control session
  * 
- * @package spoova\core\classes
- * @Author Akinola Saheed <teymss@gmail.com>
+ * @author Akinola Saheed <teymss@gmail.com>
  */
-class Session extends spoova\core\classes\SharedInfo {
+class Session extends SharedInfo {
   
   private $sessid;
   private $login = false;

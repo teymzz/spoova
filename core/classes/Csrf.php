@@ -10,8 +10,7 @@ use Window;
 /**
  * This class handles CSRF token generation and validations
  * 
- * @package spoova\core\classes
- * @Author Akinola Saheed <teymss@gmail.com>
+ * @author Akinola Saheed <teymss@gmail.com>
  */
 class Csrf {
 

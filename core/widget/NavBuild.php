@@ -4,7 +4,7 @@ namespace spoova\core\widget;
 
 /**
  * @abstract NavBuild
- * This class compiles the @package NavHandle and @package NavEngine
+ * This class compiles the NavHandle and NavEngine classes
  */
 abstract class NavBuild{
 

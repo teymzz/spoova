@@ -5,7 +5,6 @@ namespace spoova\core\classes;
 /**
  * Split a string into attributes and values
  * 
- * @package spoova\core\classes
  * @author Akinola Saheed <github teymzz>
  */
 class Attribs {
