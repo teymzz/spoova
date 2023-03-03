@@ -1,6 +1,6 @@
 <?php
 
-namespace spoova\windows\Routes;
+namespace teymzz\spoova\windows\Routes;
 use Window;
 
 class Docs extends Window {
@@ -93,7 +93,7 @@ class Docs extends Window {
         foreach($docs as $doc) {
             if( url( window('path') )->isLike($doc, false) ) {
 
-                $ddoc = "\\spoova\windows\Routes\Docs\\".$doc;
+                $ddoc = scheme("windows\Routes\Docs\\").$doc;
                 new $ddoc($pointer);
                 return;
             }

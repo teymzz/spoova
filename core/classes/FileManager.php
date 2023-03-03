@@ -1,9 +1,9 @@
 <?php
 
-namespace spoova\core\classes;
+namespace teymzz\spoova\core\classes;
 
 use ZipArchive;
-use spoova\core\classes\Enlist;
+use teymzz\spoova\core\classes\Enlist;
 use RecursiveIteratorIterator;
 use RecursiveDirectoryIterator;
 

@@ -1,9 +1,9 @@
 <?php
 
-namespace spoova\core\commands;
-use spoova\core\classes\DB;
-use spoova\core\classes\DB\DBConfig;
-use spoova\core\classes\FileManager;
+namespace teymzz\spoova\core\commands;
+use teymzz\spoova\core\classes\DB;
+use teymzz\spoova\core\classes\DB\DBConfig;
+use teymzz\spoova\core\classes\FileManager;
 
 class Config extends Entry{
 
@@ -392,8 +392,8 @@ class Config extends Entry{
 
         namespace $nameSpace;
 
-        use spoova\core\classes\DB\DBSchema\DBSCHEMA;
-        use spoova\core\classes\DB\DBSchema\DRAFT;
+        use teymzz\spoova\core\classes\DB\DBSchema\DBSCHEMA;
+        use teymzz\spoova\core\classes\DB\DBSchema\DRAFT;
 
         class $filename {
             

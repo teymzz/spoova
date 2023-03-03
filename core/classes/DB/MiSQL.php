@@ -1,5 +1,5 @@
 <?php
-namespace spoova\core\classes\DB;
+namespace teymzz\spoova\core\classes\DB;
 
 use mysqli;
 use mysqli_sql_exception;

@@ -1,6 +1,6 @@
 <?php
 
-namespace spoova\core\classes;
+namespace teymzz\spoova\core\classes;
 
 /**
  * This class contains interfaces implemeted by 

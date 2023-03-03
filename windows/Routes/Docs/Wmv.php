@@ -1,11 +1,10 @@
 <?php
 
-    namespace spoova\windows\Routes\Docs;
+namespace teymzz\spoova\windows\Routes\Docs;
 
-use spoova\core\classes\Ajax;
-use spoova\windows\Frames\UserFrame;
+use teymzz\spoova\windows\Frames\UserFrame;
 
-    class Wmv extends UserFrame{
+class Wmv extends UserFrame{
 
         function __construct($vars){
 

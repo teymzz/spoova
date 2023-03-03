@@ -1,6 +1,6 @@
 <?php
 
-namespace spoova\core\classes;
+namespace teymzz\spoova\core\classes;
 
 /**
  * This class manages the dybamic DomUrl Name and Key Value Pairs

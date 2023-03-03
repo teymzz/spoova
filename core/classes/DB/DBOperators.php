@@ -1,8 +1,8 @@
 <?php
 
-namespace spoova\core\classes\DB;
+namespace teymzz\spoova\core\classes\DB;
 
-use spoova\core\classes\Collectibles;
+use teymzz\spoova\core\classes\Collectibles;
 
 interface DBOperators {
 

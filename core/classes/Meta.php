@@ -1,7 +1,7 @@
 <?php
 
- namespace spoova\core\classes;
- use spoova\core\classes\Attribs;
+ namespace teymzz\spoova\core\classes;
+ use teymzz\spoova\core\classes\Attribs;
 
 /**
  * This class is a used for building and applying meta tags to the pages. When used, it automatical sets the charset as UTF-8. Other values are added manually

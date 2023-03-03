@@ -1,6 +1,6 @@
 <?php
 
-namespace spoova\windows\Routes\Docs;
+namespace teymzz\spoova\windows\Routes\Docs;
 
 use Window;
 

@@ -1,8 +1,8 @@
 <?php
 
-namespace spoova\windows\Routes\Docs\Features;
+namespace teymzz\spoova\windows\Routes\Docs\Features;
 
-use spoova\core\classes\Request;
+use teymzz\spoova\core\classes\Request;
 use Window;
 
 class Javascript extends Window {

@@ -1,13 +1,10 @@
 <?php
 
-namespace spoova\windows\Routes;
+namespace teymzz\spoova\windows\Routes;
 
-use DBStatus;
-use spoova\core\classes\DB;
-use spoova\windows\Frames\UserFrame;
-use spoova\windows\Models\Access\AccessModel;
+use teymzz\spoova\windows\Frames\UserFrame;
+use teymzz\spoova\windows\Models\Access\AccessModel;
 use User;
-use Window;
 
 class Signup extends UserFrame {
     

@@ -1,13 +1,13 @@
 <?php
 
 
-namespace spoova\core\commands\Make;
+namespace teymzz\spoova\core\commands\Make;
 
-use spoova\core\classes\DB\DBSchema\DBSCHEMA;
-use spoova\core\classes\DB\DBSchema\DRAFT;
-use spoova\core\classes\FileManager;
-use spoova\core\commands\Cli;
-use spoova\core\commands\Make\MkBase;
+use teymzz\spoova\core\classes\DB\DBSchema\DBSCHEMA;
+use teymzz\spoova\core\classes\DB\DBSchema\DRAFT;
+use teymzz\spoova\core\classes\FileManager;
+use teymzz\spoova\core\commands\Cli;
+use teymzz\spoova\core\commands\Make\MkBase;
 
 class MkMigrator extends MkBase{
 

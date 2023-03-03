@@ -1,8 +1,8 @@
 <?php
 
-namespace spoova\core\classes\DB;
+namespace teymzz\spoova\core\classes\DB;
 
-use spoova\core\classes\DB\DBCollection;
+use teymzz\spoova\core\classes\DB\DBCollection;
 
 /**
  * This class contains modifier relationships that can be applied on models 

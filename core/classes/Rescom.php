@@ -1,6 +1,6 @@
 <?php
 
-namespace spoova\core\classes;
+namespace teymzz\spoova\core\classes;
 
 /**
  * Contains Directive Commands for Res class
@@ -19,7 +19,7 @@ abstract class Rescom extends Rescon
    * @return string|false
    */
   static function mkFile(string $name, $args){
-    $class = 'spoova\core\commands\Make\Mk'.$name;
+    $class = scheme('core\commands\Make\Mk'.$name, false);
     if(class_exists($class)){
         $newclass = new $class($args);
         $build = $newclass->build();

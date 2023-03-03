@@ -1,9 +1,9 @@
 <?php
 
-namespace spoova\core\commands\Make;
+namespace teymzz\spoova\core\commands\Make;
 
-use spoova\core\commands\Cli;
-use spoova\core\classes\FileManager;
+use teymzz\spoova\core\commands\Cli;
+use teymzz\spoova\core\classes\FileManager;
 
 class MkFrame extends MkBase{
 
@@ -87,7 +87,7 @@ class MkFrame extends MkBase{
             $content = <<<Frame
             <?php
 
-            namespace spoova\\$classSpace;
+            namespace teymzz\spoova\\$classSpace;
             
             use Window;
             
@@ -110,7 +110,7 @@ class MkFrame extends MkBase{
 
                 sleep(1);
 
-                if(class_exists("\spoova\\$classSpace\\".$className)) {
+                if(class_exists(scheme("$classSpace\\".$className))) {
                     Cli::textView("Frame ".Cli::alert("\"$className\"")." added successfully ", 0, '');
                     Cli::textView("in $classSpace\\$className.php");
                     Cli::break(2);

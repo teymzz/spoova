@@ -1,6 +1,6 @@
 <?php
 
-namespace spoova\core\classes\constants;
+namespace teymzz\spoova\core\classes\constants;
 
 class CASTED {
 

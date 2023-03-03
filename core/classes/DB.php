@@ -1,10 +1,10 @@
 <?php
 
-namespace spoova\core\classes;
+namespace teymzz\spoova\core\classes;
 
-use spoova\core\classes\DB\DBBridge;
-use spoova\core\classes\DB\DBHandler;
-use spoova\core\classes\DB\DBHelpers;
+use teymzz\spoova\core\classes\DB\DBBridge;
+use teymzz\spoova\core\classes\DB\DBHandler;
+use teymzz\spoova\core\classes\DB\DBHelpers;
 
 class DB implements DBHelpers{
   

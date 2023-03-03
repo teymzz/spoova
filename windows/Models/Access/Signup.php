@@ -1,9 +1,9 @@
 <?php
 
-namespace spoova\windows\Models\Access;
+namespace teymzz\spoova\windows\Models\Access;
 
 use Form;
-use spoova\windows\Models\Access\AccessModel;
+use teymzz\spoova\windows\Models\Access\AccessModel;
 
 class Signup extends AccessModel {
 

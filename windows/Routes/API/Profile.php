@@ -1,8 +1,8 @@
 <?php
 
-namespace spoova\windows\Routes\API;
+namespace teymzz\spoova\windows\Routes\API;
 
-use spoova\core\classes\Ajax;
+use teymzz\spoova\core\classes\Ajax;
 
 class Profile {
 

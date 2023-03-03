@@ -1,10 +1,10 @@
 <?php
 
 
-namespace spoova\core\server;
+namespace teymzz\spoova\core\server;
 
 use Server;
-use spoova\core\classes\Ajax;
+use teymzz\spoova\core\classes\Ajax;
 use User;
 
 class Serve {

@@ -1,13 +1,13 @@
 <?php
 
-namespace spoova\core\classes\DB;
+namespace teymzz\spoova\core\classes\DB;
 
 use DBStatus;
-use spoova\core\classes\DB;
-use spoova\core\classes\DB\DBSchema\DBSCHEMA;
-use spoova\core\classes\DB\DBSchema\DRAFT;
-use spoova\core\classes\FileManager;
-use spoova\core\commands\Cli;
+use teymzz\spoova\core\classes\DB;
+use teymzz\spoova\core\classes\DB\DBSchema\DBSCHEMA;
+use teymzz\spoova\core\classes\DB\DBSchema\DRAFT;
+use teymzz\spoova\core\classes\FileManager;
+use teymzz\spoova\core\commands\Cli;
 use User;
 
 /**
@@ -43,7 +43,7 @@ class DBMigrator
             $appliedMigrations = $this->getAppliedMigrations();
 
             $migrationsFolder = docroot.'/core/migrations';
-            $migrationSpace   = "spoova\core\migrations\\";
+            $migrationSpace   = scheme("core\migrations\\", false);
 
             $Filemanager = new FileManager;
             $Filemanager->setUrl($migrationsFolder);
@@ -146,7 +146,7 @@ class DBMigrator
 
             $migrations = array_column($dbh->results(), 'migration');
             
-            $migrationSpace   = "spoova\core\migrations\\";
+            $migrationSpace   = scheme("core\migrations\\", false);
 
             if($error = $dbh->error()){
                 Cli::textView(Cli::error("{$error}"), 0, '|2');
@@ -307,7 +307,7 @@ class DBMigrator
         }
 
         $migrationsFolder = docroot.'/core/migrations';
-        $migrationSpace   = "spoova\core\migrations\\";
+        $migrationSpace   = scheme("core\migrations\\", false);
 
         $Filemanager = new FileManager;
         $Filemanager->setUrl($migrationsFolder);

@@ -1,5 +1,5 @@
 <?php
-namespace spoova\core\tools;
+namespace teymzz\spoova\core\tools;
 
 /**
  * This class is used to upload and resize images

@@ -1,9 +1,9 @@
 <?php
 
-namespace spoova\core\classes;
+namespace teymzz\spoova\core\classes;
 
-use spoova\core\classes\Rescom;
-use spoova\core\classes\FileManager;
+use teymzz\spoova\core\classes\Rescom;
+use teymzz\spoova\core\classes\FileManager;
 
 /**
  * Resource class was mainly built to properly link css and javascript urls.
@@ -55,7 +55,7 @@ class Resource Extends Rescom{
       
       if(!defined('_core') || !defined('_icore')) return false;
       if(!defined('online')) return false;  
-      if(!@class_exists('spoova\core\classes\FileManager')) return false;
+      if(!@class_exists(scheme('core\classes\FileManager', false))) return false;
       if(!method_exists($this,'watch')) return false;
       
       //read fileManager for resource watching

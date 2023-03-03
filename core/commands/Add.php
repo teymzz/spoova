@@ -7,9 +7,9 @@
  * Warning: The usage of this class will alter installation files. 
  * This may cause app to break or lead to other undesired errors.
  */
-namespace spoova\core\commands;
+namespace teymzz\spoova\core\commands;
 
-use spoova\core\commands\Cli;
+use teymzz\spoova\core\commands\Cli;
 
 class Add extends Entry{
 
@@ -27,8 +27,9 @@ class Add extends Entry{
 
         add Windows User windows
         */
-        if(class_exists('\spoova\core\commands\Make\Mk'.(ucfirst($args[0]??'')))){
-            new \spoova\core\commands\MkFile($args);
+        if(class_exists(scheme('core\commands\Make\Mk').(ucfirst($args[0]??'')))){
+            $class = scheme('core\commands\Make\MkFile');
+            new $class($args);
         } else {
             Cli::textView(Cli::danger(Cli::emo('point-list').' add:'.Cli::warn($args[0]).' ?'));
             Cli::break(2).

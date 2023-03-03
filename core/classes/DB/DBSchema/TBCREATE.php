@@ -1,8 +1,8 @@
 <?php 
 
-namespace spoova\core\classes\DB\DBSchema;
+namespace teymzz\spoova\core\classes\DB\DBSchema;
 
-use spoova\core\commands\Cli;
+use teymzz\spoova\core\commands\Cli;
 
 trait TBCREATE {
 
