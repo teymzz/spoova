@@ -88,32 +88,6 @@ abstract class MkBase{
 
         }
 
-        // if( !empty(trim($use)) ) {
-        //     $use = $use;
-        // }
-
-        // if( !empty(trim($use)) ) {
-        //     $className = 'class '.$className.' ';
-        // }
-
-        // if( !empty(trim($extends)) ) {
-        //     $extends = 'extends '.$extends.' ';
-        // }
-
-        // if( !empty(trim($implements)) ) {
-        //     $implements = 'implements '.$implements.' ';
-        // }
-
-        // if( !empty(trim($methods)) ){
-        //     $methods = $methods;
-        // }
-
-        // $replaced = str_replace(
-        //     ['{{namespace}}', '{{use}}', '{{className}}', '{{extends}}', '{{implements}}', '{{methods}}'],
-        //     [$namespace, $use, $className, $extends, $implements],
-        //     $classStructure
-        // );
-
         return <<<Format
         <?php
 

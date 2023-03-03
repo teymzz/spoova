@@ -1,7 +1,7 @@
 
 /**
  * @author Akinola Saheed <teymss@gmail.com>
- * @package switcher
+
  * 
  * This function is used to display or hide fields using sessionStorage 
  * class is used as group key and to make css styling easy

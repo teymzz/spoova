@@ -6,18 +6,13 @@
 /**
  * This class is a used for building and applying meta tags to the pages. When used, it automatical sets the charset as UTF-8. Other values are added manually
  * 
- * @package spoova\core\classes
- * @Author Akinola Saheed <teymss@gmail.com>
- *
+ * @author Akinola Saheed <teymss@gmail.com>
  */
  class Meta{
     
   	private $charset;
- 	private $viewport;
  	private $rcontents;
  	private $contents;
- 	private $properties;
- 	private $httpeqiv;
 	private $rendering;
 	private $meta_on = false;
 
@@ -257,6 +252,10 @@
 		$this->meta_on = true;
 		return $metas;
  	}
+
+	public function meta_on(){
+		return $this->meta_on;
+	}
 	
 	/**
 	 * prints sample meta to the page

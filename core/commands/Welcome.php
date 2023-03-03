@@ -106,7 +106,7 @@ class Welcome {
                     height: var(--em-2);
                 }
                 .ct-1{
-                    color-847b95
+                    color:847b95;
                 }
                 @media (min-width:1000px) {
                     body{

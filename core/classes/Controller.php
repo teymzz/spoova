@@ -5,7 +5,6 @@ namespace spoova\core\classes;
 use Session;
 
 /**
- * @package spoova\core\classes\Controller
  * @author Akinola Saheed <github teymzz>
  * 
  * This class contains core methods inherited by the Window class.

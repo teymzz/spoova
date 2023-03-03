@@ -9,8 +9,6 @@ namespace spoova\core\tools;
  * For proper validation of mail and phone you may need a more complex solution
  *
  * @author by Akinola Saheed <teymss@gmail.com>
- * 
- * @package spoova\core\tools
  */
 
 class Input{

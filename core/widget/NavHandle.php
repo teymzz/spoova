@@ -3,7 +3,6 @@
 namespace spoova\core\widget;
 
 /**
- * @package NavHandle
  * This class is used to build dynamic Navigation Bars
  */
 
@@ -133,7 +132,7 @@ class NavHandle{
 
 
 /**
- *  @package NavHandle (USAGE)
+ *  #NavHandle (USAGE)
  *        #----------------@-{} optional
  *        #----------------@-*  required
  *        #----------------@-[-]  not done/not working

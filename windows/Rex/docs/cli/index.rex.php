@@ -17,13 +17,10 @@
           <div class="resource-intro">
             <div class="fb-6">Introduction</div>
             <div class="">
-              The cli commands are spoova directives that can be used in the cli environment to modify or update
-              the developers' project app. The spoova cli commands can only be run from the core folder
-              <br><br>
-              
-              For the purpose of file structuring, it is believed that vendor folder should be part of the core 
-              framework. All core applications and classes are stored within the core folder which is the reason 
-              for placing vendor folder into core folder.
+              The spoova <code>mi</code> is an helpful terminal commands that can be used to modify or update
+              the developers' project app. All core applications and classes are stored within the core folder, hence, 
+              the composer vendor folder is placed into core folder. While this tutorial will focus more on spoova commands, 
+              you can learn more about how to shift vendor folder out of the core folder from the composer and plugin <a href="@domurl('docs/plugins')">documentation</a> 
             </div> 
           </div>
           
@@ -47,6 +44,7 @@
               <li><a href="#add-frame">add:frame</a></li>
               <li><a href="#add-route">add:route</a></li>
               <li><a href="#add-api">add:api</a></li>
+              <li><a href="#add-migrator">add:migrator</a></li>
               <li><a href="#add-rex">add:rex</a></li> 
               <li><a href="#backup-projet">backup project</a></li> 
               <li><a href="#backup-clear">backup :clear</a></li> 
@@ -63,6 +61,7 @@
               <li><a href="#features">features</a></li>
               <li><a href="#info">info</a></li>
               <li><a href="#install">install</a></li>
+              <li><a href="#migrate">migrate</a></li>
               <li><a href="#project">project &lt;project_name&gt;</a></li>
               <li><a href="#support">support</a></li>
               <li><a href="#version">version</a></li>
@@ -205,7 +204,7 @@
             
             <div>
               <div class="pvs-10">
-                This "api" command is used to create a routed api files into a "windows/API" directory which is a subdirectory of the windows folder (directory).
+                The "api" command is used to create a routed api files into a "windows/API" directory which is a subdirectory of the windows folder (directory).
               </div>
 
               <div class="pre-area shadow">
@@ -226,6 +225,36 @@
     Ex4: <span class="c-orange-dd">php mi add:api Info UserFrame -O</span> <span class="no-select">//add <span class="c-teal">windows/Routes/Info.php <span class="comment">extend to <span class="c-dodger-blue">Frames\UserFrame</span> overwrite any previous file.</span> </span> </span>
     Ex5: <span class="c-orange-dd">php mi add:api Info UserFrame \Loc -O</span> <span class="no-select">//add <span class="c-teal">windows/Routes/Info.php <span class="comment">extend to <span class="c-dodger-blue">Frames\UserFrame</span>, add <span class="c-teal">windows/Routes/Loc/InfoAPI.php</span>, overwrite any previous file.</span> </span> </span>
 
+  </span>
+                </pre>
+              </div>
+            </div>
+
+          </div> 
+
+          <div id="add-migrator"> 
+            <br>
+            <div class="font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
+              <div class="flex-full midv"> <span class="bi-file-text mxr-8 c-lime-dd"></span> add:migrator </div>
+
+            </div>
+            
+            <div>
+              <div class="pvs-10">
+                This command is used to add a migration file. Migratrion files are added based on specific naming syntaxes. Migration files that starts with 
+                the identifier name <code>"create_"</code>  are assumed to be for creating tables while those with starting <code>"alter_"</code> are assumed to be for altering tables. 
+                All migration files are generated and added directly to the <code>core/migrations</code> directory. The migration file name is also used as the class name. This means that 
+                only names accepted for naming classes should be used. 
+              </div>
+
+              <div class="pre-area shadow">
+                <div class="pxv-6 bc-silver">Syntax</div>
+                <pre class="pre-code">
+  php mi add:migrator name
+  <span class="comment">
+    where: 
+
+        name => name of migration file  
   </span>
                 </pre>
               </div>
@@ -780,6 +809,41 @@
   </span>
                 </pre>
 
+              </div>
+            </div> 
+          </div> <br>
+
+          <div id="migrate"> 
+            <br>
+            <div class="font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
+              <div class="flex-full midv"> <span class="bi-server mxr-8 c-lime-dd"></span> Migrate </div>
+            </div>
+            
+            <div>
+
+                <div class="pvs-10">
+                  The "migrate" command is used to step up, step down or get migration status.
+                </div>
+
+
+              <div class="pre-area shadow">
+                <div class="pxv-6 bc-silver">Syntax</div>
+                <pre class="pre-code">
+  php mi migrate [up|down|status]
+  <span class="comment">
+    where: 
+
+      up     => step up the migration files
+      down   => step down the migration files
+      status => fetches the migration status table.
+  </span>
+                </pre>
+
+              </div>
+              <div class="foot-note pvs-6">
+                Note that when running migrations down, the number of times to run migrations down can be specified. This is done by supplying the number of  
+                down migrations after the "migrate down" command. For example, <code>mi migrate down 4</code> will step down the migration files in four times. 
+                This means that only the last 4 recent migration files will be affected while others will be ignored.
               </div>
             </div> 
           </div> <br>

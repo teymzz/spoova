@@ -8,9 +8,7 @@ use \User;
 /**
  * This class handles user account authentications 
  * 
- * @package spoova\core\classes
- * @Author Akinola Saheed <teymss@gmail.com>
- * 
+ * @author Akinola Saheed <teymss@gmail.com>
  */
 class UserAuth extends SharedInfo{
 

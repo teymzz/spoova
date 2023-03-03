@@ -4,7 +4,6 @@ namespace spoova\core\classes;
 
 /**
  * @author Akinola Saheed <teymss@gmail.com>
- * @package \core\classes
  * 
  * This class enables a customized structure 
  * for building ajax responses. It is dependent on 

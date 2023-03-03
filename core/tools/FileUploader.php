@@ -3,9 +3,9 @@
 namespace spoova\core\tools;
 
 /**
- * @author Akinola Saheed <teymss@gmail.com>
- * @package spoova\core\tools
+ * This class was created for handling file uploads.
  * 
+ * @author Akinola Saheed <teymss@gmail.com>
  */
 class FileUploader{
 

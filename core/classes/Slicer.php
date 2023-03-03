@@ -7,8 +7,7 @@ use \User;
 /**
  * class Slicer
  * 
- * @package spoova\core\classes
- * @Author Akinola Saheed <teymss@gmail.com>
+ * @author Akinola Saheed <teymss@gmail.com>
  * @todo add more Isset methods, User calls
  * @todo sort urls
  */
@@ -81,6 +80,7 @@ class Slicer extends Directives{
       '@lay',
       '@flash',
       '@domurl', 
+      '@domlink', 
       '@formurl', 
       '@images',
       '@route',
@@ -460,13 +460,13 @@ class Slicer extends Directives{
      * @return void
      */
     private static function sort_directives(&$body){
-      
 
-      //iterate over declared directives in self::$directives
-      foreach(self::$directives as $directValue){
-        if(stripos($body, $directValue) !== false){
+      //iterate over declared directives in self::$directives      
+      array_map(function($directive) use(&$body) {
+
+        if(stripos($body, $directive) !== false){
           //handle other directives
-          $handle = "directives".ltrim( $directValue, '@');
+          $handle = "directives".ltrim( $directive, '@');
           $handle = str_replace('-','_', $handle);
           
           if(method_exists(get_class(new self), $handle)){
@@ -474,7 +474,9 @@ class Slicer extends Directives{
           }
 
         }
-      }
+
+      }, self::$directives);
+      
 
     }
 

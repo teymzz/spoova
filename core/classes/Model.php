@@ -7,12 +7,6 @@ use DBStatus;
 use spoova\core\classes\DB\DBModel;
 use spoova\core\tools\Input;
 
-/**
- * 
- * @package spoova\core\classes
- * @Author Akinola Saheed <teymss@gmail.com>
- * 
- */
  abstract class Model extends DBModel{
 
     public const RULE_REQUIRED = 'required';

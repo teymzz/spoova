@@ -3,10 +3,9 @@
 namespace spoova\core\classes;
 
 /**
- * Create and Validate JWSTokens
+ * This class is used for creating and validating JWSTokens
  * 
- * @package spoova\core\classes
- * @Author Akinola Saheed <teymss@gmail.com>
+ * @author Akinola Saheed <teymss@gmail.com>
  */
 class JwsToken{
 

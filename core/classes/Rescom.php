@@ -6,9 +6,7 @@ namespace spoova\core\classes;
  * Contains Directive Commands for Res class
  * 
  * @author Akinola Saheed <teymss@gmail.com>
- * @package spoova\core\classes
  */
-
 abstract class Rescom extends Rescon
 {
 

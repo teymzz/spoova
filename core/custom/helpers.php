@@ -62,6 +62,18 @@ if(!function_exists('scheme')){
   }
 }
 
+if(!function_exists('domlink')){
+
+  function domlink($link, bool $modified = true){
+
+     $link = str_replace(['/','\\','.'], '/', $link);
+
+     return domUrl($link, $modified);
+
+  }
+
+}
+
 if(!function_exists('monitor')){
   /**
    * Short function for setting on live server.

@@ -9,7 +9,6 @@ use spoova\core\classes\FileManager;
  * class Entry
  * 
  * @author Akinola Saheed <teymss@gmail.com>
- * @package core\commands
  * 
  * Entry point for all spoova commands
  */

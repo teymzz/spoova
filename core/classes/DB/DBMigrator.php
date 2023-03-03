@@ -14,10 +14,7 @@ use User;
  * DBMigrator for performing migrations
  * This class is still in its development phase. 
  * Migrations are part of feature that will be included soon.
- * 
- * @package spoova\core\classes
  */
-
 class DBMigrator
 {
     private ?DB $dbc = null;

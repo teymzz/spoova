@@ -2,9 +2,9 @@
 namespace spoova\core\tools;
 
 /**
- * This package is used to upload and resize images
+ * This class is used to upload and resize images
+ * 
  * @author Akinola Saheed <teymss@gmail.com>
- * @package spoova\core\tools 
 */
 class ImageClass extends FileUploader{
   

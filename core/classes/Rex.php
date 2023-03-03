@@ -9,8 +9,7 @@ use spoova\core\classes\Resin;
  * This class is created for 
  * handling Res Class Template methods
  * 
- * @package spoova\core\classes
- * @Author Akinola Saheed <teymss@gmail.com>
+ * @author Akinola Saheed <teymss@gmail.com>
  */
 final class Rex extends Resx implements Resin{
 

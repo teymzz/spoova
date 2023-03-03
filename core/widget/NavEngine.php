@@ -3,7 +3,6 @@
 namespace spoova\core\widget;
 
 /**
- * @package NavEngine
  * This class is used to build dynamic Navigation Bars
  */
 class NavEngine extends NavBuild{
@@ -866,6 +865,4 @@ class NavEngine extends NavBuild{
  
 }
 
-/**
- * Documentation in @package NavHandle
-*/
+/* Documentation in NavHandle class */

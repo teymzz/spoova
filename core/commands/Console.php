@@ -8,7 +8,6 @@ use spoova\core\commands\Cli;
    * class Console 
    * 
    * @author Akinola Saheed <teymss@gmail.com>
-   * @package core\commands
    * 
    * Spoova custom console class for logging console
    * 
