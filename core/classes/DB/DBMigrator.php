@@ -146,7 +146,7 @@ class DBMigrator
 
             $migrations = array_column($dbh->results(), 'migration');
             
-            $migrationSpace   = scheme("core\migrations\\", false);
+            $migrationSpace   = scheme("core\migrations", false)."\\";
 
             if($error = $dbh->error()){
                 Cli::textView(Cli::error("{$error}"), 0, '|2');
@@ -286,6 +286,7 @@ class DBMigrator
 
 
         if(!$dbh->table_exists('migrations')){
+            
             Cli::textView(Cli::error('migration table does not exist'), 0, "|2");
             Cli::textView('Trying to generate one', 0, "|2");
             Cli::wait(1);
@@ -303,11 +304,9 @@ class DBMigrator
                 Cli::textView(Cli::success('migration table added successfully', 1), 0, "|2");
             }
 
-            //yield from Cli::play(10, 0, 'Checking migration status', 1);
         }
 
         $migrationsFolder = docroot.'/core/migrations';
-        $migrationSpace   = scheme("core\migrations\\", false);
 
         $Filemanager = new FileManager;
         $Filemanager->setUrl($migrationsFolder);
@@ -321,20 +320,13 @@ class DBMigrator
         $allmigrations = count($dbh->results());
         $rows = array_unset($dbh->results($allmigrations - 1), '');
         $fields = $dbh->tables(User::config('DBNAME'),'migrations');
-        // $fields = array_unset($fields, 'removed');
-        // $fields = array_unset($fields, 'removed_at');
-        // $fields = array_unset($fields, 'id');
         $rows = array_replace($default, $rows);
 
-        //$resultCount = count($result)?: 1; - 15
         $lines = (count($fields) * (10)) + 14; 
         $table = "";
 
         $lim1 = 25;
         $lim2 = 34;
-        $lim3 = $lim2 - 3;
-
-
 
         $table .= "".str_repeat("-", $lines)."".br();
 
@@ -353,43 +345,6 @@ class DBMigrator
 
         }
 
-        //print $table;
-
-        $mod = ['migration'=> 'last migrated file', 'created_at'=> 'applied on'];
-        
-        // $count = 0;
-        // foreach($fields as $field => $value){
-        //     $value = $mod[$value] ?? $value;
-        //     $table .= "| ".strtoupper(limitChars($value, $lim)).Cli::dots($num, limitChars($value, $lim2), " ");
-        //     $count++;
-        // }
-        
-        // if($rows){
-        //     $table .= "|".Cli::br();
-        //     $table .= "".str_repeat("-", $lines)."".br();
-    
-        //     $count = 0;
-        //     foreach($rows as $row => $value){
-        //         $table .= "| ".limitChars($value, $lim).Cli::dots($num, limitChars($value, $lim2), " ");
-        //         $count++;
-        //     }
-        // }else{
-
-        //     $table .= "|".Cli::br();
-        //     $table .= "".str_repeat("-", $lines)."".br();
-        //     $count = 0;
-        //     foreach($fields as $field => $value){
-        //         $table .= "| ".limitChars(Cli::emo('crossmark', '|1').'Not available', $lim).Cli::dots($num + 2, limitChars(Cli::emo('crossmark', '|1').'Not available', $lim2), " ");
-        //         //$table .= "| ".limitChars($value, $lim).Cli::dots($num, limitChars($value, $lim2), " ");
-        //         $count++;
-        //     }
-        //     // $table .= "|".Cli::br();
-        //     // $table .= "".str_repeat("-", $lines)."".br();
-            
-        // }
-
-        // $table .= "|".Cli::br();
-        //        $table .= "".str_repeat("-", $lines)."".Cli::br();
         $totalNew = count($newMigrations);
         $text = strtoupper("pending migrations");
         $table .= "| ".limitChars($text, $lim1).Cli::dots($lim1, $text, " ");

@@ -5,7 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" type="image/png" href="http://localhost/spoova/res/main/images/icons/favicon.png">
-    <title>About</title>
+    <title>tutorial</title>
     <meta name="viewport" content="width=device-width, initial-scale=.9, maximum-scale=1.0, user-scalable=1" />
 <meta name="description" content="website_description" />
 <link rel="icon" href="http://localhost/spoova/res/main/images/icons/favicon.png" />
