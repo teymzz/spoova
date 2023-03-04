@@ -17,33 +17,13 @@ class Welcome {
     function window($fileName, $logic) : string {
 
 
-        $Logic1 = <<<LOGIC
-        self::call(\$this,
-            [
-                window('root') => 'root'
-            ]
-        ); 
-        LOGIC;
+        return ($logic === 'standard')? $this->standardLogic($fileName) : $this->basicLogic($fileName);
 
-        $Logic2 = <<<LOGIC
-        if(self::isIndex(\$this)){
-      
-            self::call(\$this, [
-       
-               window('root') => 'root',
-               
-            ]);
-   
-        } else {
+    }
 
-            if(!self::callRoute(window('root'))) self::close();
+    function standardLogic($fileName){
 
-        } 
-        LOGIC;
-
-        $Logic =  ($logic === 'standard')? $Logic1 : $Logic2;
-
-        $content = <<<CONTENT
+        return <<<CONTENT
         <?php
 
         namespace teymzz\spoova\windows\Routes;
@@ -54,7 +34,11 @@ class Welcome {
             
             public function __construct(){
         
-                $Logic
+                self::call(\$this,
+                    [
+                        window('root') => 'root'
+                    ]
+                );  
         
             }
         
@@ -71,7 +55,52 @@ class Welcome {
 
         CONTENT;
 
-        return $content;
+    }
+
+    function basicLogic($fileName){
+
+        return <<<CONTENT
+        <?php
+
+        namespace teymzz\spoova\windows\Routes;
+        
+        use Window;
+        
+        class $fileName extends Window {
+            
+            public function __construct(){
+        
+                if(self::isIndex(\$this)){
+        
+                    self::call(\$this, [
+            
+                        window('root') => 'root',
+                    
+                    ]);
+        
+                } else {
+    
+                    if(!self::callRoute(window('root'))) self::close();
+    
+                }
+        
+            }
+        
+            function root() {
+        
+                \$title = ['title' => 'Hello! Spoova'];
+        
+                self::load('index', fn() => compile(\$title) );
+                
+            }
+        
+        }
+                
+
+        CONTENT;
+    }
+
+    function logic3(){
 
     }
 
