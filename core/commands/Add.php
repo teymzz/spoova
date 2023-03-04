@@ -28,7 +28,7 @@ class Add extends Entry{
         add Windows User windows
         */
         if(class_exists(scheme('core\commands\Make\Mk').(ucfirst($args[0]??'')))){
-            $class = scheme('core\commands\Make\MkFile');
+            $class = scheme('core\commands\MkFile');
             new $class($args);
         } else {
             Cli::textView(Cli::danger(Cli::emo('point-list').' add:'.Cli::warn($args[0]).' ?'));
