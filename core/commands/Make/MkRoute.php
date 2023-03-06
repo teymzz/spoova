@@ -88,12 +88,13 @@ class MkRoute extends MkBase{
         $Filemanager = new FileManager;
 
         /* create class directory & class file */
-
         
 
         if(!is_file($filePath) || ($lastArg == '-O')){
             
             if($Filemanager->openFile(true, $filePath)) {
+
+                $rexName = strtolower($className);
     
                 $content = <<<CContent
                 
@@ -109,7 +110,7 @@ class MkRoute extends MkBase{
     
                     function root() {
     
-                        //self::load('index', fn() => compile() );
+                        //self::load('$rexName', fn() => compile() );
                         
                     }
     
