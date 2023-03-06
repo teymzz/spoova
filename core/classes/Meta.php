@@ -237,21 +237,22 @@
 	 * return or print saved data
 	 * This function should be used to add meta to page
 	 *
-	 * @param bool $type false prints stored meta
-	 * @param bool $type true returns $meta
+	 * @param bool $type 
+	 *   - true prints stored meta
+	 *   - false returns stored meta
 	 */
- 	public function dump(bool $type = false){
- 		$contents = $this->contents;
-		
-    	$metas = $contents? implode("\n", $contents) : '';
-		if($type == false){
-			print $metas;
-			return;
-		}
+	public function dump(bool $type = false){
+		$contents = $this->contents;
+	   
+	   $metas = $contents? implode("\n", $contents) : '';
+	   if($type == true){
+		   print $metas;
+		   return;
+	   }
 
-		$this->meta_on = true;
-		return $metas;
- 	}
+	   $this->meta_on = true;
+	   return $metas;
+	}
 
 	public function meta_on(){
 		return $this->meta_on;

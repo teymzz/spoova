@@ -1,3 +1,4 @@
+`
 
 @template('template.t-tut')
 
@@ -466,7 +467,8 @@
                             </div>
                         </div> <br>
                         <div class="">
-                            The <code>dump()</code> method removes all stored meta definitions from storage list.
+                            The <code>dump()</code> method returns all stored meta tags. However, when a boolean argument of <code>true</code> 
+                            is supplied, it prints out all stored meta tags.
                             <br><br>
                             
                             <div class="pre-area shadow">
@@ -475,7 +477,8 @@
                                     <pre class="pre-code">
   $meta->add('description', '150 words'); 
 
-  var_dump($meta->dump()); <span class="comment">// outputs predefined meta tags</span> 
+  var_dump($meta->dump()); <span class="comment">// return predefined meta tags</span> 
+  $meta->dump(true); <span class="comment">// prints predefined meta tags</span> 
                                     </pre>
                                 </div>
                             </div>

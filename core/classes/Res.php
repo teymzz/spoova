@@ -310,18 +310,37 @@ final class Res extends Resource implements Resin{
             //create rex file... 
             $Filemanager = new FileManager;
             if($Filemanager->openFile(true, $file)){
+
+              $fileName = basename($file);
                 
               if(is_string($addRex) && is_file(docroot.'/windows/Rex/'.to_frontslash($addRex, true).".rex.php") ) {          
                 
                   $template = <<<Template
-                    @template('$addRex')
+                  @template('$addRex')
     
-                    @template;
+
+
+                  @template;
                   Template;
   
               }  else {
 
-                $template = "@live";
+                  $template = <<<Template
+                  <!DOCTYPE html>
+                  <html lang="en">
+                  <head>
+                      @live
+                      <meta charset="UTF-8">
+                      <meta http-equiv="X-UA-Compatible" content="IE=edge">
+                      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                      <title>$fileName</title>
+                  </head>
+                  <body>
+                      
+                  </body>
+                  </html>
+                  @template;
+                  Template;
 
               }   
               

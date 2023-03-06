@@ -177,7 +177,7 @@ class Slicer extends Directives{
           self::sort_excludes($body);
           
           self::sort_placeholders($body);
-          
+
           //remove unauthorized sections off the grid
           self::sort_auth($body);
           

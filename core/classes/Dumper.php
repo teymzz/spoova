@@ -61,7 +61,7 @@ class Dumper{
                 file_put_contents(self::dumpFile, $contents);
     
                 ob_start();
-                include($file);
+                include(self::dumpFile);
                 $template = ob_get_clean(); //new replacement
                 $vfile = str_replace(['\\','/'], '\\\\', __FILE__).':[\d]+:';
                 $template = preg_replace("~(<small>)?$vfile(</small>)?\n?~", '', $template);
