@@ -278,7 +278,6 @@ abstract class Directives{
     protected static function directivesImport(&$body): string
     {
 
-        // <@import css/home.css />
         self::getMatches('import', $body, $matches);
         
         //convert and process pattern
@@ -852,7 +851,6 @@ abstract class Directives{
             
         }
 
-
         return $body;
 
     } 
@@ -1003,7 +1001,7 @@ abstract class Directives{
                             'title'=> 'Layout missing :',
                             'message' => ' ',
                             'path' => str_replace('/', ' . ',WIN_REX.$url).''
-                        ]);
+                        ], $body);
 
                     }
 
@@ -1022,15 +1020,11 @@ abstract class Directives{
                     $replacement = str_ireplace(["@layout:$id", "@layout;"], '', $contentMatched);
 
                 }
-                //vdump($replacement);    
+
                 //make replacement in the body
                 $newSlice =  Slicer::slice($replacement)->data();
                 self::sort_lay_comments($newSlice);
                 $data = preg_replace("~@lay\(\s?'{$value}'\s?\)~i",$newSlice, $body);
-                // ini_set('xdebug.var_display_max_depth', -1);
-                // ini_set('xdebug.var_display_max_children', -1);
-                // ini_set('xdebug.var_display_max_data', -1);
-                // var_dump($data);
 
                 $body = $data;
             }
@@ -1121,7 +1115,7 @@ abstract class Directives{
                             'title'=> 'Style missing :',
                             'message' => ' ',
                             'path' => str_replace('/', ' . ',WIN_REX.$url).''
-                        ]);
+                        ], $body);
 
                     }
 
@@ -1231,7 +1225,7 @@ abstract class Directives{
                             'title'=> 'Script missing :',
                             'message' => ' ',
                             'path' => str_replace('/', ' . ',WIN_REX.$url).''
-                        ]);
+                        ], $body);
 
                     }
                     
@@ -1321,7 +1315,7 @@ abstract class Directives{
                         'title'=> 'Script Error :',
                         'message' => ' ',
                         'path' => str_replace('/', ' . ',WIN_REX.$url).''
-                    ]);
+                    ], $body);
                 }else{
 
                     ob_start();
@@ -1391,63 +1385,69 @@ abstract class Directives{
         //get the template url openers
         $pattern = "~@template\(\s?'[-\w+\\\.]+(:off)?\'\s?\).*?@template;~is";
         preg_match($pattern, $body, $matches);
-
-        $callback = function($matches) use ($body) {
-            
-            //Get template
-            $match = $matches[0]; 
-           
-            //Fetch template opener
-            preg_match(self::$pattern['template'], $match, $matched);
-                        
-            $opener = $matched[0];
-            $closer = '@template;';
-           
-            //Fetch Url
-            $tempUrl = str_ireplace(['@template(','\'',')'] ,'', $opener);
-            $url = str_replace(['.','\\'], '/', $tempUrl);    
-            
-            //load template's supplied url
-            $off = (substr($url, -4) === ':off');
-            
-            $urx = explode(':off', $url);
-            $url =  docroot.DS.WIN_REX.ltrim($urx[0], '/');
-   
-            //get url extension
-            if (pathinfo($url, PATHINFO_EXTENSION) === '') {
-                $url .= self::defaultExtension;
-            }
-  
-            if (!is_file($url)) {
-                print self::directivesMapError([
-                    'title'=> 'Layout Error :',
-                    'message' => 'Layout does not exists',
-                    'path' => $url
-                ]);
-                return $body;
-            } else {
-                ob_start();
-                include($url);
-                $template = ob_get_clean(); //new replacement
-                
-                //filter out structure 
-                $content = str_replace([$opener, $closer], '', $match);
-  
-                //find yield in templateContent
-                $template = str_replace('@yield()', $content, $template);
-                if($off){
-                    $template = str_ireplace(['@live()','@live','@import(\'::watch\')', '@res::import(\'::watch\')'], '', $template);
-                }
-                
-                $template = Slicer::slice($template)->data();
-                //replace template directive with new template
-                return $body = self::directivesTitle(str_replace($match, $template, $body));
-            }         
-           
-           
-        };
         
-        return preg_replace_callback($pattern, $callback, $body);
+        //Get template
+        $match = $matches[0]; 
+       
+        //Fetch template opener
+        preg_match(self::$pattern['template'], $match, $matched);
+
+        $opener = $matched[0];
+        $closer = '@template;';
+   
+        //Fetch Url
+        $tempUrl = str_ireplace(['@template(','\'',')'] ,'', $opener);
+        $url = str_replace(['.','\\'], '/', $tempUrl);    
+        
+        //load template's supplied url
+        $off = (substr($url, -4) === ':off');
+        
+        $urx = explode(':off', $url);
+        $rex = WIN_REX.ltrim($urx[0], '/');
+        $url = docroot.DS.$rex;
+
+        //get url extension
+        if (pathinfo($url, PATHINFO_EXTENSION) === '') {
+            $url .= self::defaultExtension;
+            $rex .= self::defaultExtension;
+        }
+
+        if (!is_file($url)) {
+
+            print self::directivesMapError([
+                'title'=> 'Template Error :',
+                'message' => 'Template file does not exists',
+                'path' => $rex
+            ], $body);  
+
+            $needle1 = "@template('$tempUrl')";
+            $pos1 = strpos($body, $needle1);
+            $body = substr_replace($body, '', $pos1, strlen($needle1));
+
+            $needle2 = "@template;";
+            $pos2 = strrpos($body, $needle2);
+            $body = substr_replace($body, '', $pos2, strlen($needle2));
+
+            return $body;
+        } else { 
+            ob_start();
+            include($url);
+            $template = ob_get_clean(); //new replacement
+            
+            //filter out structure 
+            $content = str_replace([$opener, $closer], '', $match);
+
+            $template = str_replace('@yield()', $content, $template);
+            if($off){
+                $template = str_ireplace(['@live()','@live','@import(\'::watch\')', '@res::import(\'::watch\')'], '', $template);
+            }
+            
+            $template = Slicer::slice($template)->data();
+
+            $body = self::directivesTitle(str_replace($match, $template, $body));
+        }         
+
+        return $body;
 
     }
 
@@ -1527,7 +1527,7 @@ abstract class Directives{
                     'title'=> 'Layout Error :',
                     'message' => 'Layout does not exists',
                     'path' => $url
-                ]);
+                ], $body);
                 return $body;
             } else {
                 ob_start();
@@ -1569,9 +1569,15 @@ abstract class Directives{
       return $body;
     } 
 
-    private static function directivesMapError(array $array = []){
+    private static function directivesMapError(array $array = [], $body = ''){
         if(func_num_args() > 0){
           $arg = $array;
+
+          $resLink = '<link rel="stylesheet" type="text/css" href="'.domurl('res/main/css/res.css', false).'" x-debug="res-css">';
+          
+          if(strpos($body, $resLink) !== false){
+            $resLink = '';
+          }
     
           $title = $arg['title']?? '';
           $message =  $arg['message']?? '';
@@ -1580,7 +1586,7 @@ abstract class Directives{
           $filePath    = $arg['path']?? '';
           $message = '<span class="calibri fb-6 class="flex-full midv"><span class="'.$icon.'"></span> '.$title. ' <span> ' .$message.'</span> </span> <span class="c-grey font-em-d85">'.$filePath.' </span>';
           
-          return '
+          return $resLink.'
             <div class="spoova-route-error pxv-4 c-red-d">
               <div class="box-full pxv-10 bc-white-dd">'.$message.'</div>
             </div>

@@ -1,4 +1,4 @@
-
+`
 
 <!DOCTYPE html>
 <html lang="en">
@@ -8,9 +8,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" type="image/png" href="http://localhost/spoova/res/main/images/icons/favicon.png">
     <title></title>
-    <meta name="viewport" content="width=device-width, initial-scale=.9, maximum-scale=1.0, user-scalable=1" />
-<meta name="description" content="website_description" />
-<link rel="icon" href="http://localhost/spoova/res/main/images/icons/favicon.png" />
+    
     <link  rel="stylesheet" type="text/css" href="http://localhost/spoova/res/main/css/res.css" x-debug="res-css"><script src='http://localhost/spoova/res/main/js/jquery-3.6.0.js'></script><script src='http://localhost/spoova/res/main/css/bootstrap/js/bootstrap.min.js'></script><link  rel="stylesheet" type="text/css" href="http://localhost/spoova/res/main/css/mdb5/css/mdb.min.css"><script src='http://localhost/spoova/res/main/js/config.js'></script><script src='http://localhost/spoova/res/main/js/core.js'></script><script src='http://localhost/spoova/res/main/js/onLoaded.js'></script><script src='http://localhost/spoova/res/main/js/custom.js'></script><script src='http://localhost/spoova/res/main/js/device.js'></script><script src='http://localhost/spoova/res/main/js/loadImages.js'></script><script src='http://localhost/spoova/res/main/js/formValidator.js'></script><script src='http://localhost/spoova/res/main/js/jquery.mousewheel.js'></script><script src='http://localhost/spoova/res/main/js/anime.js'></script><script src='http://localhost/spoova/res/main/js/init.js'></script> 
     <style rel="build.css.tutorial"> 
 
@@ -178,6 +176,7 @@
 }
 
 body.--theme-dark{
+    color: rgb(125, 125, 125);
     background-color : rgba(21, 15, 39);
 }
  </style><style rel="build.css.navbars"> 
@@ -325,8 +324,6 @@ window.onload = function() {
         </div>
          
 
-    <!-- @lay('build.co.coords:header') -->
-
      
 
      
@@ -359,7 +356,7 @@ window.onload = function() {
                <li> <a href="<?= DomUrl('docs/database/migrations') ?>" class="<?= inPath('active') ?>"><span class="ico ico-spin"></span>Handling Migrations</a> </li>
                <li> <a href="<?= DomUrl('docs/classes') ?>" class="<?= inPath('active') ?>"><span class="ico ico-spin"></span>Helper Classes</a> </li>
                <li> <a href="<?= DomUrl('docs/functions') ?>" class="<?= inPath('active') ?>"><span class="ico ico-spin"></span>Helper Functions</a> </li>
-               <li> <a href="<?= DomUrl('docs/directives') ?>" class="<?= inPath('active') ?>"><span class="ico ico-spin"></span>Helper Directives</a> </li>
+               <li> <a href="<?= DomUrl('docs/template') ?>" class="<?= inPath('active') ?>"><span class="ico ico-spin"></span>Template Engine</a> </li>
                <li> <a href="<?= DomUrl('docs/setters') ?>" class="<?= inPath('active') ?>"><span class="ico ico-spin"></span>Global Setters</a> </li>
                <li> <a href="<?= DomUrl('docs/mails') ?>" class="<?= inPath('active') ?>"><span class="ico ico-spin"></span>Handling Mails</a> </li>
                <li> <a href="<?= DomUrl('docs/cli') ?>" class="<?= inPath('active') ?>"><span class="ico ico-spin"></span>Cli Commands</a> </li>         
@@ -802,17 +799,43 @@ window.onload = function() {
                     </div> <br>
                 </div>
 
-                <div id="dump" class="">
+                <div id="export" class="">
                     <div class="">
                         <div class="font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
                             <div class="flex-full midv"> 
                                 <span class=" mxr-8 c-lime-dd">
                                     <span class="numb-box">10.</span>
+                                </span> export
+                            </div>
+                        </div> <br>
+                        <div class="">
+                            The <code>export()</code> method displays all stored meta definitions from storage list on each line.
+                            <br><br>
+                            
+                            <div class="pre-area shadow">
+                                <div class="box-full">
+                                    <div class="pxv-6 bc-off-white"><code>Sample: display all stored meta tags</code></div>
+                                    <pre class="pre-code">
+    $meta->export(); <span class="comment">// displays each predefined meta tags in a listed order</span> 
+                                    </pre>
+                                </div>
+                            </div>
+                        </div>
+                    </div> <br>
+                </div>
+
+                <div id="dump" class="">
+                    <div class="">
+                        <div class="font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
+                            <div class="flex-full midv"> 
+                                <span class=" mxr-8 c-lime-dd">
+                                    <span class="numb-box">11.</span>
                                 </span> dump
                             </div>
                         </div> <br>
                         <div class="">
-                            The <code>dump()</code> method removes all stored meta definitions from storage list.
+                            The <code>dump()</code> method returns all stored meta tags. However, when a boolean argument of <code>true</code> 
+                            is supplied, it prints out all stored meta tags.
                             <br><br>
                             
                             <div class="pre-area shadow">
@@ -821,7 +844,8 @@ window.onload = function() {
                                     <pre class="pre-code">
   $meta->add('description', '150 words'); 
 
-  var_dump($meta->dump()); <span class="comment">// outputs predefined meta tags</span> 
+  var_dump($meta->dump()); <span class="comment">// return predefined meta tags</span> 
+  $meta->dump(true); <span class="comment">// prints predefined meta tags</span> 
                                     </pre>
                                 </div>
                             </div>
@@ -834,7 +858,7 @@ window.onload = function() {
                         <div class="font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
                             <div class="flex-full midv"> 
                                 <span class=" mxr-8 c-lime-dd">
-                                    <span class="numb-box">11.</span>
+                                    <span class="numb-box">12.</span>
                                 </span> sample
                             </div>
                         </div> <br>
