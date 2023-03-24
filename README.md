@@ -50,7 +50,7 @@ Reusable components, Static Resource Handler, ORM (beta) and FileManager tool.
         },    
         "scripts": {
             "post-autoload-dump": [
-                "php mi", "composer dump-autoload -o"
+                "php mi"
             ]
         },
         "minimum-stability": "alpha"
