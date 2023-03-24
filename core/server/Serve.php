@@ -1,10 +1,11 @@
 <?php
 
 
-namespace teymzz\spoova\core\server;
+namespace spoova\mi\core\server;
 
 use Server;
-use teymzz\spoova\core\classes\Ajax;
+use spoova\mi\core\classes\Ajax;
+use spoova\mi\core\classes\Router;
 use User;
 
 class Serve {
@@ -21,7 +22,11 @@ class Serve {
         //load window root as window from routes folder
         if(!Ajax::isAjax()){
 
-            if(!Server::callRoute(ucfirst(window('root')?:'index'))) Server::close();
+            $map = Router::map();
+
+            $root = $map[window('root')]?? window('root'); 
+
+            if(!Server::callRoute(ucfirst($root?:'index'))) Server::close();
 
         } else{
 
@@ -59,24 +64,6 @@ class Serve {
     static function indexlogic() {
 
         Server::callRoute('Index');
-        
-        /*  //initialize the index page
-            if(server::isIndex($this)){
-            
-                //load index page
-                server::call($this, [
-            
-                    window('root') => 'root',
-                    
-                ]);
-        
-            } else {
-        
-                //load window root as window from routes folder
-                if(!server::callRoute(window('root'))) server::close();
-        
-            } 
-        */
 
     }
 

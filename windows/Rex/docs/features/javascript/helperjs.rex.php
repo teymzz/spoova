@@ -6,7 +6,7 @@
 @lay('build.co.navbars:left-nav')
 
 <div class="box-full pxl-2 bc-white-dd pull-right">
-    <section class="pxv-20 tutorial database bc-white">
+    <section class="pxv-10 tutorial database bc-white">
         <div class="font-em-1d2">
 
             @lay('build.co.links:tutor_pointer')
@@ -22,17 +22,17 @@
                     <ul class="mvt-6 c-olive">
                         <li><a href="#initfunc" data-scroll-hash="initfunc">initFunc</a></li>
                         <li><a href="#loadfuncs" data-scroll-hash="loadfuncs">loadFuncs</a></li>
-                        <li><a href="#supercall" data-scroll-hash="supercall">superCall</a></li>
                         <li><a href="#callfunc" data-scroll-hash="callfunc">callFunc</a></li>
-                        <li><a href="#isjson" data-scroll-hash="isjson">isJSON</a></li>
-                        <li><a href="#urlenv" data-scroll-hash="urlenv">urlenv</a></li>
-                        <li><a href="#ajaxuri" data-scroll-hash="ajaxuri"><span class="c-red">*</span>ajaxUri</a></li>
-                        <li><a href="#getdate" data-scroll-hash="getdate">getDate</a></li>
-                        <li><a href="#ajaxresponder" data-scroll-hash="ajaxresponder"><span class="c-red">*</span>ajaxResponder</a></li>
-                        <li><a href="#rdpage" data-scroll-hash="rdpage">rdPage</a></li>
+                        <li><a href="#supercall" data-scroll-hash="supercall">superCall</a></li>
                         <li><a href="#inrange" data-scroll-hash="inrange">inRange</a></li>
-                        <li><a href="#hasattr" data-scroll-hash="hasattr"><span class="c-red">*</span>hasAttr</a></li>
-                        <li><a href="#hashrunner" data-scroll-hash="hashrunner"><span class="c-red">*</span>hashRunner</a></li>
+                        <li><a href="#isjson" data-scroll-hash="isjson">isJSON</a></li>
+                        <li><a href="#getdate" data-scroll-hash="getdate">getDate</a></li>
+                        <li><a href="#hashrunner" data-scroll-hash="hashrunner">hashRunner</a></li>
+                        <li><a href="#hasattr" data-scroll-hash="hasattr">hasAttr</a></li>
+                        <li><a href="#rdpage" data-scroll-hash="rdpage">rdPage</a></li>
+                        <li><a href="#urlenv" data-scroll-hash="urlenv">urlenv</a></li>
+                        <li><a href="#ajaxuri" data-scroll-hash="ajaxuri"><span class="c-red"></span>ajaxUri</a></li>
+                        <li><a href="#ajaxresponder" data-scroll-hash="ajaxresponder">ajaxResponder</a></li>
                         <li><a href="#datascroll" data-scroll-hash="datascroll"><span class="c-red">*</span>dataScroll</a></li>
                         <li><a href="#datascrollhash" data-scroll-hash="datascrollhash"><span class="c-red">*</span>dataScrollHash</a></li>
                     </ul>
@@ -41,8 +41,10 @@
                 <!-- init funcs -->
                 <div id="initfunc">
                     <div class="font-em-1 c-orange">initFunc</div>
-                    This is part of the core web application. It is used for instantiating an already defined function. If a supplied function name 
-                    does not exist, then the function will not be called.
+                    <div class="mvs-10">
+                      This is part of the core web application. It is used for instantiating an already defined function. If a supplied function name 
+                      does not exist, then the function will not be called.
+                    </div>
 <div class="pre-area">
     <div class="pxv-10 bc-silver">Syntax: initFunc</div>
     <pre class="pre-code">
@@ -60,7 +62,9 @@
                 <!-- load funcs -->
                 <div id="loadfuncs">
                     <div class="font-em-1 c-orange">loadFuncs</div>
-                    This is part of the core web application. It is used for instantiating already defined functions.
+                    <div class="mvs-10">
+                      This is part of the core web application. It is used for instantiating already defined functions.
+                    </div>
 <div class="pre-area">
     <div class="pxv-10 bc-silver">Syntax 1: loadFunc - loading multiple functions without argument</div>
     <pre class="pre-code">
@@ -91,7 +95,9 @@
                 <!-- callFunc -->
                 <div id="callfunc">
                     <div class="font-em-1 c-orange">callFunc</div>
-                    This is part of the core web application. It is used for instantiating already defined function with delay timeout before function is called
+                    <div class="mvs-10">
+                      This is part of the core web application. It is used for instantiating already defined function with delay timeout before function is called
+                    </div>
 <div class="pre-area">
     <div class="pxv-10 bc-silver">Syntax 1: callFunc</div>
     <pre class="pre-code">
@@ -131,8 +137,10 @@
                 <!-- supercall -->
                 <div id="supercall">
                     <div class="font-em-1 c-orange">superCall</div>
-                    This function performs a global scope event calling. 
-                    Works with dynamically generated elements
+                    <div class="mvs-10">
+                      This function performs a global scope event calling. 
+                      Works with dynamically generated elements
+                    </div>
 <div class="pre-area">
     <div class="pxv-10 bc-silver">Syntax 1: superCall</div>
     <pre class="pre-code">
@@ -167,11 +175,34 @@
 <!-- code ends -->
                 </div> <br>
 
+                <!-- inRange -->
+                <div id="inrange">
+                    <div class="font-em-1 c-orange">inRange</div>
+                    <div class="mvs-10">
+                      This function checks if a value is within the range of two values. It returns true if the test integer is within the 
+                      range.
+                    </div>
+<div class="pre-area">
+    <div class="pxv-10 bc-silver">Syntax 1: inRange</div>
+    <pre class="pre-code">
+    inRange(integer, min, max); 
+  <span class="comment">
+    where:
+      
+      integer : test integer 
+      min     : minimum range
+      max     : maxumim range
+  </span>
+    </pre>
+</div> 
+                </div> <br> 
                 
                 <!-- callFunc -->
                 <div id="isjson">
                     <div class="font-em-1 c-orange">isJSON</div>
-                    This function is used to check if a string is of json type. It returns a boolean of true if test string is of valid json format
+                    <div class="mvs-10">
+                      This function is used to check if a string is of json type. It returns a boolean of true if test string is of valid json format
+                    </div>
 <div class="pre-area">
     <div class="pxv-10 bc-silver">Syntax: isJSON</div>
     <pre class="pre-code">
@@ -184,43 +215,13 @@
     </pre>
 </div> 
                 </div> <br>
-                
-                <!-- urlenv -->
-                <div id="urlenv">
-                    <div class="font-em-1 c-orange">urlenv</div>
-                    This function is used by within ajaxUri() function to map urls. It helps to reformats url to strings 
-                    by removing extensions or mapping empty strings to current domain url. 
-                </div> <br>
-               
-                <!-- ajaxUri -->
-                <div id="ajaxuri">
-                    <div class="font-em-1 c-orange">ajaxUri</div>
-                    This function uses the <code>urlenv()</code> function to reformat an absolute url to an http protocol.
-<div class="pre-area">
-    <div class="pxv-10 bc-silver">Example: ajaxUri</div>
-    <pre class="pre-code">
-  <span class="c-olive">
-    $.ajax({
-
-        method: 'post',
-        url: ajaxUri('some/url/link'), <span class="comment">// http://current_domain/some/url/link </span>
-        contentType: 'json',
-        complete(): function() {
-
-            <span class="comment">// request completed!</span>
-
-        }
-
-    })
-  </span>
-    </pre>
-</div> 
-                </div> <br> 
                
                 <!-- getDate -->
                 <div id="getdate">
                     <div class="font-em-1 c-orange">getDate</div>
-                    This function is built upon the javascript <code>Date</code> object.
+                    <div class="mvs-10">
+                      This function is built upon the javascript <code>Date</code> object.
+                    </div>
 <div class="pre-area">
     <div class="pxv-10 bc-silver">Syntax 1: callFunc</div>
     <pre class="pre-code">
@@ -241,96 +242,14 @@
   </span>
     </pre>
 </div> 
-                </div> <br> 
-
-                <!-- ajaxResponder -->
-                <div id="ajaxresponder">
-                    <div class="font-em-1 c-orange">ajaxResponder</div>
-                    AjaxResponder was built to manage jquery completed requests. If the html response is a json format, it tries to parse the response text before 
-                    storing it in an object with key name "message" where it can be accessed. However, if the response text is not a json format, the response will 
-                    be stored as a text under the same key. This function suggests that every response should be of json format. If the response status is 200 and 
-                    response is of a json format, an object key of <code>type: 200</code> is added to the returned data. Hoewever, if the response is not of json format, 
-                    even if the response status is 200, the key <code>type:</code> will be set as <code>response</code> instead of 200. The data returned parsed or unparsed 
-                    can be obtained under the object key <code>"message"</code>. The ajaxResponder function should only be used within Jquery ajax <code>complete()</code> method.
-<div class="pre-area">
-    <div class="pxv-10 bc-silver">Syntax 1: ajaxResponder - Response Format</div>
-    <pre class="pre-code">
-    <span class="c-olive">
-    complete:function(response){
-
-        $data = ajaxResponder(response);
-
-    } 
-    </span>
-  <span class="comment">
-    Example format returned if is Json Format:
-      
-     <span class="c-orange-dd">{ "success": "true", "type": "200", "message":parsed_responseText}</span>
-
-
-    Example format returned if is NOT Json Format:
-      
-     <span class="c-orange-dd">{ "error": "parse error", "type": "response", "message":responseText}</span>
-  </span>
-    </pre>
-</div> 
-                </div> <br> 
-                
-
-                <!-- rdPage -->
-                <div id="rdpage">
-                    <div class="font-em-1 c-orange">rdPage</div>
-                    This function redirects a page to another page. It can be used within html "onClick" attribute
-<div class="pre-area">
-    <div class="pxv-10 bc-silver">Syntax 1: rdPage</div>
-    <pre class="pre-code">
-    rdPage(valid_url); 
-    </pre>
-</div> 
-                </div> <br> 
-
-                <!-- inRange -->
-                <div id="inrange">
-                    <div class="font-em-1 c-orange">inRange</div>
-                    This function checks if a value is within the range of two values. It returns true if the test integer is within the 
-                    range.
-<div class="pre-area">
-    <div class="pxv-10 bc-silver">Syntax 1: inRange</div>
-    <pre class="pre-code">
-    inRange(integer, min, max); 
-  <span class="comment">
-    where:
-      
-      integer : test integer 
-      min     : minimum range
-      max     : maxumim range
-  </span>
-    </pre>
-</div> 
-                </div> <br> 
-
-                <!-- hasAttr -->
-                <div id="hasattr">
-                    <div class="font-em-1 c-orange"><span class="c-red">*</span>hasAttr</div>
-                    This function checks if an element has an attribute.
-<div class="pre-area">
-    <div class="pxv-10 bc-silver">Syntax 1: hasAttr</div>
-    <pre class="pre-code">
-    hasAttr(elem, attr); 
-  <span class="comment">
-    where:
-      
-      elem : element selector
-      attr : name of attribute to be checked
-  </span>
-    </pre>
-</div> 
-                </div> <br> 
+                </div> <br>  
 
                 <!-- hashRunner -->
                 <div id="hashrunner">
-                    <div class="font-em-1 c-orange"><span class="c-red">*</span>hashRunner</div>
-                    This function works as a page url hash controller.
+                    <div class="font-em-1 c-orange">hashRunner</div>
+                    <div class="mvs-10">
+                      This function works as a page url hash controller.
+                    </div>
 <div class="pre-area">
     <div class="pxv-10 bc-silver">Syntax 1: hashRunner</div>
     <pre class="pre-code">
@@ -345,12 +264,153 @@
   </span>
     </pre>
 </div> 
+                </div> <br>    
+
+                <!-- hasAttr -->
+                <div id="hasattr">
+                    <div class="font-em-1 c-orange">hasAttr</div>
+                    <div class="mvs-10">
+                      This function checks if an element has an attribute.
+                    </div>
+<div class="pre-area">
+    <div class="pxv-10 bc-silver">Syntax 1: hasAttr</div>
+    <pre class="pre-code">
+    hasAttr(elem, attr); 
+  <span class="comment">
+    where:
+      
+      elem : element selector
+      attr : name of attribute to be checked
+  </span>
+    </pre>
+</div> 
                 </div> <br> 
+
+                <!-- rdPage -->
+                <div id="rdpage">
+                    <div class="font-em-1 c-orange">rdPage</div>
+                    <div class="mvs-10">
+                      This function redirects a page to another page. It can be used within html "onClick" attribute
+                    </div>
+<div class="pre-area">
+    <div class="pxv-10 bc-silver">Sample: rdPage</div>
+    <pre class="pre-code">
+    rdPage('some/url'); <span class="comment">// redirects page to "some/user"</span> 
+    </pre>
+</div> 
+                </div> <br>
+                <!-- urlenv -->
+                <div id="urlenv">
+                    <div class="font-em-1 c-orange">urlenv</div>
+                    <div class="mvs-10">
+                      This function is used  within ajaxUri() function to map urls. It helps to reformats url to strings 
+                      by removing extensions or mapping empty strings to current domain url. 
+                    </div>
+                    <div class="pre-area">
+                      <div class="pxv-10 bc-silver">Sample: urlenv</div>
+                      <pre class="pre-code">
+  console.log( urlenv('site/user') ); <span class="comment">//http://some_domain/site/user</span>
+                      </pre>
+                    </div>
+                </div> <br>
+                
+               
+                <!-- ajaxUri -->
+                <div id="ajaxuri">
+                    <div class="font-em-1 c-orange">ajaxUri</div>
+                    <div class="mvs-10">
+                      This function uses the <code>urlenv()</code> function to reformat an absolute url to an http protocol.
+                    </div>
+<div class="pre-area">
+    <div class="pxv-10 bc-silver">Example: ajaxUri</div>
+    <pre class="pre-code">
+  <span class="c-olive">
+    $.ajax({
+
+        method: 'post',
+        url: ajaxUri('some/url/link'), <span class="comment">// http://current_domain/some/url/link </span>
+        contentType: 'json',
+        complete(): function() {
+
+            <span class="comment">// request completed!</span>
+
+        }
+
+    })
+  </span>
+    </pre>
+</div> 
+                </div> <br> 
+
+                <!-- ajaxResponder -->
+                <div id="ajaxresponder">
+                    <div class="font-em-1 c-orange">ajaxResponder</div> 
+                    <div class="mvs-10">
+                      AjaxResponder was built to manage xmlHttpRequest response of an ajax request. If the html response is a json format, it tries to parse the response text before 
+                      storing it in an object with key name "message" where it can be accessed. However, if the response text is not a json format, the response will 
+                      be stored as a text under the same key. This function suggests that every response should be of json format. If the response status is 200 and 
+                      response is of a json format, an object key of <code>type: 200</code> is added to the returned data. Hoewever, if the response is not of json format, 
+                      even if the response status is 200, the key <code>type:</code> will be set as <code>response</code> instead of 200. The data returned parsed or unparsed 
+                      can be obtained under the object key <code>"message"</code>. The example below reveals how to use this function within a Jquery ajax <code>complete()</code> method.
+                    </div>
+                    
+                    <div class="pre-area">
+                      <div class="pxv-10 bc-silver">Sample 1a: ajaxResponder - Response Format</div>
+    <pre class="pre-code">
+    <span class="comment">
+    Example format returned if is Json Format:
+      
+     <span class="c-orange-dd">{ "success": "true", "type": "200", "message": parsed_responseText }</span>
+
+
+    Example format returned if is NOT Json Format:
+      
+     <span class="c-orange-dd">{ "error": "parse error", "type": "response", "message":responseText }</span>
+    </span>
+    </pre>
+                  </div> 
+                    
+                  <div class="pre-area">
+                      <div class="pxv-10 bc-silver">Syntax 1b: ajaxResponder - Usage Format</div>
+    <pre class="pre-code">
+      <span class="c-olive">
+    $.ajax({
+
+        method: 'post',
+        url: ajaxUri('some/url/link'), <span class="comment">// http://current_domain/some/url/link </span>
+        contentType: 'json',
+        complete(): function(response) {
+
+            response = ajaxResponder(response);
+
+            if(response.success) {
+
+              console.log(response.message); <span class="comment">// json parsed responseText</span>
+
+            } else if(response.error) {
+
+              console.log(response.message); <span class="comment">// unparsed responseText</span>              
+
+            }
+
+        }
+
+    })
+      </span>
+    </pre>
+                  </div> 
+
+
+                </div> <br>
+ 
+
 
                 <!-- dataScroll -->
                 <div id="datascroll">
                     <div class="font-em-1 c-orange"><span class="c-red">*</span>dataScroll</div>
-                    This function helps to scroll to a particular point on the web page using data-scroll attribute
+                    <div class="mvs-10">
+                      This function helps to scroll to a particular point on the web page using data-scroll attribute
+                    </div>
 <div class="pre-area">
     <div class="pxv-10 bc-silver">Syntax 1: callFunc</div>
     <pre class="pre-code">
@@ -371,7 +431,9 @@
                 <!-- dataScrollHash -->
                 <div id="datascrollhash">
                     <div class="font-em-1 c-orange"><span class="c-red">*</span>dataScrollHash</div>
-                    This function is used to scroll to the last url's hash. It also performs the function of <code>dataScroll()</code>
+                    <div class="mvs-10">
+                      This function is used to scroll to the last url's hash. It also performs the function of <code>dataScroll()</code>
+                    </div>
 <div class="pre-area">
     <div class="pxv-10 bc-silver">Syntax 1: dataScrollHash</div>
     <pre class="pre-code">

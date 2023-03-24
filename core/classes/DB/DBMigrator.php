@@ -1,13 +1,13 @@
 <?php
 
-namespace teymzz\spoova\core\classes\DB;
+namespace spoova\mi\core\classes\DB;
 
 use DBStatus;
-use teymzz\spoova\core\classes\DB;
-use teymzz\spoova\core\classes\DB\DBSchema\DBSCHEMA;
-use teymzz\spoova\core\classes\DB\DBSchema\DRAFT;
-use teymzz\spoova\core\classes\FileManager;
-use teymzz\spoova\core\commands\Cli;
+use spoova\mi\core\classes\DB;
+use spoova\mi\core\classes\DB\DBSchema\DBSCHEMA;
+use spoova\mi\core\classes\DB\DBSchema\DRAFT;
+use spoova\mi\core\classes\FileManager;
+use spoova\mi\core\commands\Cli;
 use User;
 
 /**
@@ -42,8 +42,8 @@ class DBMigrator
         if($this->createMigrationsTable()){
             $appliedMigrations = $this->getAppliedMigrations();
 
-            $migrationsFolder = docroot.'/core/migrations';
-            $migrationSpace   = scheme("core\migrations\\", false);
+            $migrationsFolder = docroot.'/migrations';
+            $migrationSpace   = scheme("migrations\\", false);
 
             $Filemanager = new FileManager;
             $Filemanager->setUrl($migrationsFolder);
@@ -146,7 +146,7 @@ class DBMigrator
 
             $migrations = array_column($dbh->results(), 'migration');
             
-            $migrationSpace   = scheme("core\migrations", false)."\\";
+            $migrationSpace   = scheme("migrations", false)."\\";
 
             if($error = $dbh->error()){
                 Cli::textView(Cli::error("{$error}"), 0, '|2');
@@ -174,7 +174,7 @@ class DBMigrator
                     }
 
                     //get migration file 
-                    $path = _core."migrations/".$migration.'.php';
+                    $path = docroot."/migrations/".$migration.'.php';
 
                     if(is_file($path) && class_exists($migrationSpace.$migration)){
 
@@ -306,7 +306,7 @@ class DBMigrator
 
         }
 
-        $migrationsFolder = docroot.'/core/migrations';
+        $migrationsFolder = docroot.'/migrations';
 
         $Filemanager = new FileManager;
         $Filemanager->setUrl($migrationsFolder);

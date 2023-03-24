@@ -1,6 +1,6 @@
 <?php
 
-namespace teymzz\spoova\windows\Routes;
+namespace spoova\mi\windows\Routes;
 
 use Window;
 
@@ -9,6 +9,7 @@ class Features extends Window {
 
     function __construct()
     {
+
         $pointer = self::mapurl('Home/Download', ' <span class="bi-chevron-right"></span> ');
 
         $vars = [

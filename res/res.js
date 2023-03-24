@@ -5,7 +5,7 @@ PHP has different ways of displaying errors, this means that error debugger may 
 There will not be any critical changes to the code structure, so developers may use in on live apps. Again, it is strongly advise to avoid this. 
 */
 
-if(typeof Res == 'undefined'){
+if(typeof Res === 'undefined'){
 
     class Res {
 
@@ -106,8 +106,8 @@ if(typeof Res == 'undefined'){
             this.defaults.assets = {
                 'root': './',
                 'base': 'res/main/',
-                'css' : 'css/base.css',
-                'js'  : 'js/debug.js'
+                'css' : 'css/core.css',
+                'js'  : 'js/local/debug/debug.js'
             }
 
         }

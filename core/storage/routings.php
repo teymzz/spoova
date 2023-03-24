@@ -1,5 +1,4 @@
 
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -8,9 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" type="image/png" href="http://localhost/spoova/res/main/images/icons/favicon.png">
     <title></title>
-    <meta name="viewport" content="width=device-width, initial-scale=.9, maximum-scale=1.0, user-scalable=1" />
-<meta name="description" content="website_description" />
-<link rel="icon" href="http://localhost/spoova/res/main/images/icons/favicon.png" />
+    
     <link  rel="stylesheet" type="text/css" href="http://localhost/spoova/res/main/css/res.css" x-debug="res-css"><script src='http://localhost/spoova/res/main/js/jquery-3.6.0.js'></script><script src='http://localhost/spoova/res/main/css/bootstrap/js/bootstrap.min.js'></script><link  rel="stylesheet" type="text/css" href="http://localhost/spoova/res/main/css/mdb5/css/mdb.min.css"><script src='http://localhost/spoova/res/main/js/config.js'></script><script src='http://localhost/spoova/res/main/js/core.js'></script><script src='http://localhost/spoova/res/main/js/onLoaded.js'></script><script src='http://localhost/spoova/res/main/js/custom.js'></script><script src='http://localhost/spoova/res/main/js/device.js'></script><script src='http://localhost/spoova/res/main/js/loadImages.js'></script><script src='http://localhost/spoova/res/main/js/formValidator.js'></script><script src='http://localhost/spoova/res/main/js/jquery.mousewheel.js'></script><script src='http://localhost/spoova/res/main/js/anime.js'></script><script src='http://localhost/spoova/res/main/js/init.js'></script> 
     <style rel="build.css.tutorial"> 
 
@@ -178,6 +175,7 @@
 }
 
 body.--theme-dark{
+    color: rgb(125, 125, 125);
     background-color : rgba(21, 15, 39);
 }
  </style><style rel="build.css.navbars"> 
@@ -360,7 +358,6 @@ window.onload = function() {
                <li> <a href="<?= DomUrl('docs/classes') ?>" class="<?= inPath('active') ?>"><span class="ico ico-spin"></span>Helper Classes</a> </li>
                <li> <a href="<?= DomUrl('docs/functions') ?>" class="<?= inPath('active') ?>"><span class="ico ico-spin"></span>Helper Functions</a> </li>
                <li> <a href="<?= DomUrl('docs/template') ?>" class="<?= inPath('active') ?>"><span class="ico ico-spin"></span>Template Engine</a> </li>
-               <li> <a href="<?= DomUrl('docs/template/directives') ?>" class="<?= inPath('active') ?>"><span class="ico ico-spin"></span>Template Directives</a> </li>
                <li> <a href="<?= DomUrl('docs/setters') ?>" class="<?= inPath('active') ?>"><span class="ico ico-spin"></span>Global Setters</a> </li>
                <li> <a href="<?= DomUrl('docs/mails') ?>" class="<?= inPath('active') ?>"><span class="ico ico-spin"></span>Handling Mails</a> </li>
                <li> <a href="<?= DomUrl('docs/cli') ?>" class="<?= inPath('active') ?>"><span class="ico ico-spin"></span>Cli Commands</a> </li>         
@@ -374,7 +371,7 @@ window.onload = function() {
 
 
     <div class="box-full pxl-2 bc-white pull-right">
-        <section class="pxv-20 tutorial database bc-white">
+        <section class="pxv-10 tutorial database bc-white">
             <div class="font-em-1d2">
 
                 
@@ -401,24 +398,27 @@ window.onload = function() {
                     <div class="routing-files">
                         <div class="fb-6">What is WMV ?</div> <br>
                         <div class="font-menu font-em-1">
-                            The <code>windows-model-view</code> is an architectural pattern built on mvc framework.
-                            It works in a similar manner to building a real house with its several windows. 
-                            <code>WMV</code> also has a window. Consider your application project as a house with its 
-                            different windows, window frames and entry points. A window cannot naturally exist unless it is given
-                            its own space. WMV does not depend on files but window files. Similarly to a house, a window enables us
-                            to have a view and what we see are the models or structures built outside that view which are objects visible to our sight.
-                            A view cannot occur if there is nothing to be seen. This means that an object must be able to reflect a light.
-                            Without a light, then there is no view at all. Hence, wmv is a pattern that follows a window format. A better example
-                            is our eyes. When the eyes is opened, a light must be reflected on objects to be seen, else there will be total darkness.
-                            The light itself is an object (model) that makes view possible. So, under wmv, the model comes first before view. <br>
-                            <br>
-                            Since model comes first, our model classes must be built first, then lastly rendered as a view. This is because
-                            a view will only show existing models rather than non-existing ones. The <code>WMV</code> architecture is divided into five categories
-                            which are <a href="<?= DomUrl('docs/wmv/routes') ?>"><code>Routes</code>, <a href="<?= DomUrl('docs/wmv/frames') ?>"><code>Frames</code></a> 
-                            <a href="<?= DomUrl('docs/wmv/apis') ?>"><code>APIs</code></a>, <a href="<?= DomUrl('docs/wmv/rex') ?>"><code>Rex</code></a> and <a href=""><code>Models</code></a> . 
-                            These will be discussed later under their headings.
+                            <p class="">
+                                The <code>windows-model-view</code> is an architectural pattern built on mvc framework.
+                                It works in a similar manner to building a real house with its several windows. 
+                                <code>WMV</code> also has a window. Consider your application project as a house with its 
+                                different windows, window frames and entry points. A window cannot naturally exist unless it is given
+                                its own space. WMV does not depend on files but window files. Similarly to a house, a window enables us
+                                to have a view and what we see are the models or structures built outside that view which are objects visible to our sight.
+                                A view cannot occur if there is nothing to be seen. This means that an object must be able to reflect a light.
+                                Without a light, then there is no view at all. Hence, wmv is a pattern that follows a window format. A better example
+                                is our eyes. When the eyes is opened, a light must be reflected on objects to be seen, else there will be total darkness.
+                                The light itself is an object (model) that makes view possible. So, under wmv, the model comes first before view. <br>
+                            </p>
+                            <p class="">
+                                Since model comes first, our model classes must be built first, then lastly rendered as a view. This is because
+                                a view will only show existing models rather than non-existing ones. The <code>WMV</code> architecture is divided into five categories
+                                which are <a href="<?= DomUrl('docs/wmv/routes') ?>"><code>Routes</code>, <a href="<?= DomUrl('docs/wmv/frames') ?>"><code>Frames</code></a> 
+                                <a href="<?= DomUrl('docs/wmv/apis') ?>"><code>APIs</code></a>, <a href="<?= DomUrl('docs/wmv/rex') ?>"><code>Rex</code></a> and <a href=""><code>Models</code></a> . 
+                                These will be discussed later under their headings.
+                            </p>
                         </div> 
-                    </div> <br>
+                    </div>
 
                     <div class="wmv-routing">
                         <div class="fb-6">Routing - Template Engines (mvc)</div>
@@ -484,7 +484,7 @@ window.onload = function() {
                     <pre class="pre-code">
   &lt;?php
                     
-    <span class="comment no-select">1.</span> use teymzz\spoova\windows;
+    <span class="comment no-select">1.</span> use spoova\mi\windows;
     <span class="comment no-select">2.</span> 
     <span class="comment no-select">3.</span> Res::load('index', [App::class, 'index']);
 
@@ -519,7 +519,7 @@ window.onload = function() {
   &lt;?php
     
     <span class="comment no-select">1. include_once 'icore/filebase.php'; </span> 
-    <span class="comment no-select">2.</span> use teymzz\spoova\windows;
+    <span class="comment no-select">2.</span> use spoova\mi\windows;
     <span class="comment no-select">3.</span> 
     <span class="comment no-select">4.</span> $compiled = Res::markup('index', [App::class, 'index']);
     <span class="comment no-select">5.</span> print $compiled;
@@ -547,7 +547,7 @@ window.onload = function() {
                         <pre class="pre-code">
   &lt;?php
     
-    namespace teymzz\spoova\window\Routes;
+    namespace spoova\mi\window\Routes;
 
     use Window;
 

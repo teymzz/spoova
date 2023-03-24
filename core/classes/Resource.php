@@ -1,9 +1,9 @@
 <?php
 
-namespace teymzz\spoova\core\classes;
+namespace spoova\mi\core\classes;
 
-use teymzz\spoova\core\classes\Rescom;
-use teymzz\spoova\core\classes\FileManager;
+use spoova\mi\core\classes\Rescom;
+use spoova\mi\core\classes\FileManager;
 
 /**
  * Resource class was mainly built to properly link css and javascript urls.

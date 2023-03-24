@@ -155,44 +155,6 @@ function callFunc(callback, timeout) {
 }
 
 /**
- * This function is used to reformat a url supplied
- * 
- * @param {*} $url url address
- */
- function ajaxUri($url) {
-
-    $online = (location.hostname != "localhost");
-    $proUrl = window.location.pathname
-    $proSplit = $proUrl.split('/');
-    $proBase = $proSplit[1];
-    $proBase2 = ($proSplit.length > 2) ? $proSplit[2] : '';
-    $proBase2 = ($proBase2 != '') ? '/' + $proBase2 : '';
-
-    $proBase += $proBase2;
-    $http = $online ? 'https://' : 'http://' + location.host + '/';
-
-
-    $url = $url || '';
-    if ($url != '') {
-        $url = urlenv($url);
-        let $newUrl = window.decodeURIComponent($url);
-        $newUrl = $newUrl.trim().replace(/\s/g, '');
-
-        if (/^(f|ht)tps?:\/\//i.test($newUrl)) {
-            return `${$newUrl}`;
-        } else {
-            if ($online) {
-                $newUrl = $newUrl.split('/')[1];
-            }
-            if ($newUrl.charAt(0) == "/") $newUrl = string.substr(1);
-            return $http + $proBase + `/${$newUrl}`;
-        }
-    }
-    return false;
-}
-
-
-/**
  * This function returns the date
  * 
  * @param {*} type string (types: year, month, day, hour, min, sec, milli, full)
@@ -236,6 +198,45 @@ function callFunc(callback, timeout) {
 
     return data;
 }
+
+
+/**
+ * This function is used to reformat a url supplied
+ * 
+ * @param {*} url The supplied url address
+ */
+function ajaxUri(url) {
+
+    let online = (location.hostname != "localhost");
+    let proUrl = window.location.pathname
+    let proSplit = proUrl.split('/');
+    let proBase = proSplit[1];
+    let proBase2 = (proSplit.length > 2) ? proSplit[2] : '';
+  
+    proBase2 = (proBase2 != '') ? '/' + proBase2 : '';
+    proBase += proBase2;
+  
+    let http = online ? 'https://' : 'http://' + location.host + '/';
+  
+    url = url || '';
+    if (url != '') {
+        url = urlenv(url);
+        let newUrl = window.decodeURIComponent(url);
+        newUrl = newUrl.trim().replace(/\s/g, '');
+  
+        if (/^(f|ht)tps?:\/\//i.test(newUrl)) {
+            return `${newUrl}`;
+        } else {
+            if (online) {
+                newUrl = newUrl.split('/')[1];
+            }
+            if (newUrl.charAt(0) == "/") newUrl = string.substring(1);
+            return http + proBase + `/${newUrl}`;
+        }
+    }
+    return false;
+  
+  }
 
 
 /**
@@ -286,11 +287,43 @@ function inRange($value, $min, $max){
  * @param {*} attr name of attribute to be checked
  */
 function hasAttr(elem, attr) {
-    var attrb = $(elem).attr(attr);
-    if (typeof attrb !== typeof undefined && attr != false) {
-        return true;
+    let selected = document.querySelector(elem);
+    
+    if(selected) {
+        let attrValue = selected.getAttribute(attr);
+        
+        if (typeof attrValue !== 'undefined' && attrValue !== false) {
+          return true;
+        } else {
+          return false;
+        }
+    }
+
+    return false;
+
+}
+
+
+/**
+ * Copy a text
+ */
+function copy(id, callback) {  
+    const field = document.getElementById(id);
+  
+    if (!navigator.clipboard) {
+      // fallback for browsers that don't support clipboard API
+      const range = document.createRange();
+      range.selectNode(field);
+      window.getSelection().removeAllRanges();
+      window.getSelection().addRange(range);
+      document.execCommand('copy');
+      window.getSelection().removeAllRanges();
     } else {
-        return false;
+      navigator.clipboard.writeText(field.value);
+    }
+    
+    if (typeof callback === 'function') {
+      callback(field);
     }
 }
 
@@ -309,10 +342,13 @@ function hashRunner($type) {
 
     if (window.location.hash) {
 
-        hashItem = window.location.hash.substring(1);
+        let $selector;
+        let hashItem = window.location.hash.substring(1);
 
         if ($type == ":get") {
+            
             return hashItem;
+            
         } else {
             if ($type == "class" || $type == "id") {
                 $selector = $type == "class" ? "." : "#";
@@ -320,92 +356,16 @@ function hashRunner($type) {
             } else {
                 $selector = '[' + $type + '="' + hashItem + '"]';
             }
-            setTimeout(() => {
-                $($selector).click();
+            setTimeout(() => { 
+
+                let selections = document.querySelectorAll($selector);
+
+                selections.forEach(selection => {
+                    selection.click();
+                })
+
             });
         }
     }
-
-}
-
-// scroll to a particular point on the web page using data-scroll attribute
-function dataScroll() {
-    
-    if ($('body').find('[data-scroll]').length < 1) { return false; }
-    
-    $("[data-scroll]").on('click', function(e) {
-        var point = $(this).attr("data-scroll");
-        var dataPlus = $(this).attr("data-plus");
-        var dataMinus = $(this).attr("data-minus");
-        var dataDelay = $(this).attr("data-delay") || 50;
-
-        e.preventDefault();
-        scrollIncrease = isNaN(parseFloat(dataPlus)) ? 0 : parseFloat(dataPlus);
-        scrollDecrease = isNaN(parseFloat(dataMinus)) ? 0 : parseFloat(dataMinus);
-        scrollOffset = 0;
-
-        if( $("#" + point).length > 0 ) {
-            scrollOffset = $("#" + point).offset().top;
-        }
-
-        newTarget = scrollOffset + scrollIncrease - scrollDecrease;
-
-        if (scrollOffset != 0) {
-            $([document.documentElement, document.body]).animate({
-                scrollTop: newTarget, 
-                easing: 'bounce'
-            }, dataDelay);
-        }
-
-    })
-}
-
-/**
- *  scroll to a url hash value on the web page
- * Note: Also performs dataScroll() functions
- */
- function dataScrollHash() {
-
-    if ($('body').find('[data-scroll-hash]').length < 1) { return false; }
-    $("[data-scroll-hash]").on('click', function(e) {
-        //point = $(this).attr("data-scroll-hash");
-        var dataPlus = $(this).attr("data-plus");
-        var dataMinus = $(this).attr("data-minus")
-        var scrollOffset = 0;
-
-        if ($(window).scrollTop() != 0) {
-            setTimeout(function() { window.scrollTo(0, 0); }, 1);
-        }
-
-        if($(this).attr("href")){
-            
-            if (window.location.hash.substring(1) == $(this).attr("href").substring(1)) {
-                e.preventDefault();
-            }
-            
-            var dataDelay = $(this).attr("data-delay") || 2000;
-            var point = $(this).attr("href").split("#")[1];
-
-        } else{        
-            e.preventDefault(); 
-            var dataDelay = $(this).attr("data-delay") || 50;
-            var point = $(this).attr("data-scroll-hash");
-        }
-
-        var scrollIncrease = isNaN(parseFloat(dataPlus)) ? 0 : parseFloat(dataPlus);
-        var scrollDecrease = isNaN(parseFloat(dataMinus)) ? 0 : parseFloat(dataMinus);
-
-        if( $("#" + point).length > 0 ) {
-            scrollOffset = $("#" + point).offset().top;
-        }
-
-        var newTarget = scrollOffset + scrollIncrease - scrollDecrease;
-
-        $([document.documentElement, document.body]).animate({
-            scrollTop: newTarget,
-            easing: 'bounce'
-        }, dataDelay);
-
-    })
 
 }

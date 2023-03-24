@@ -1,8 +1,8 @@
 <?php
 
-namespace teymzz\spoova\core\commands;
+namespace spoova\mi\core\commands;
 
-use teymzz\spoova\core\classes\FileManager;
+use spoova\mi\core\classes\FileManager;
 
 class Backup extends Entry{
 

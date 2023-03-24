@@ -1,7 +1,7 @@
 <?php
 
-use teymzz\spoova\core\classes\FileManager;
-use teymzz\spoova\core\commands\Cli;
+use spoova\mi\core\classes\FileManager;
+use spoova\mi\core\commands\Cli;
 
 class ErrorHandler extends Exception{
 
@@ -152,7 +152,7 @@ class ErrorHandler extends Exception{
         $errcolor = $errlower === 'warning'? '#d26d13' : 'rgb(217, 26, 26)';
 
         $res = '
-            <script x-debug="res-js" src="'.Domurl("res/main/js/debug.js").'"></script>      
+            <script x-debug="res-js" src="'.Domurl("res/main/js/local/debug/debug.js").'"></script>      
             <link x-debug="res-css" rel="stylesheet"  href="'.rtrim(Domurl("res/main/css/res.css")).'" />        
         ';
         if(self::$err_displayed == self::$err_displays) return;

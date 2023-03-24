@@ -3,21 +3,27 @@
 
     let switchBox = new Switcher;
 
-    $('.theme-btn').click(function() {
+    let themeBtn = document.querySelectorAll('.theme-btn');
+    let body = document.querySelector('body');
 
-        $('body').toggleClass('--theme-dark');
+    themeBtn.forEach(btn => {
 
-        if($('body').hasClass('--theme-dark')){                
-            switchBox.set('spoovaTheme', '--theme-dark')
-        }else{
-            switchBox.set('spoovaTheme', '')    
-        }
+        btn.addEventListener('click', () => {
+
+            body.classList.toggle('--theme-dark');
+    
+            if(body.classList.contains('--theme-dark')){
+                switchBox.set('spoovaTheme', '--theme-dark');
+            }else{
+                switchBox.set('spoovaTheme', '');
+            }
+
+        })
 
     })
 
-    switchBox.bind('spoovaTheme', function(value){
-        $('body').addClass(value)
+    switchBox.bind('spoovaTheme', function(value){ 
+       if(!value) body.classList.remove('--theme-dark')
     })
-
 
 #script;

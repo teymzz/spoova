@@ -5,14 +5,14 @@
 @lay('build.co.navbars:left-nav')
 
    <div class="box-full pxl-2 bc-white pull-right">
-       <section class="pxv-20 tutorial bc-white">
+       <section class="pxs-10 tutorial bc-white">
            <div class="font-em-1d2">
 
                @lay('build.co.links:tutor_pointer')
 
                <div class="start">
 
-                    <div class="pvs-20 pvs-10">
+                    <div class="pvs-20">
                         <div class=" c-orange font-em-2"> <span class="bi-stack"></span> About</div>
                     
                         <div class="font-em-d8">

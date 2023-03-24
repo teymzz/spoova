@@ -1,6 +1,6 @@
 <?php
 
-  namespace teymzz\spoova\core\classes;
+  namespace spoova\mi\core\classes;
   
   class Url{
     
@@ -10,7 +10,7 @@
     * Sets a path for testing
     *
     * @param string $url path to be tested
-    * @return \teymzz\spoova\core\classes\Url
+    * @return \spoova\mi\core\classes\Url
     */
     function path($url = '') {
       $this->url = $url;

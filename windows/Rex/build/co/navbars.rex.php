@@ -6,7 +6,7 @@
      <nav class="nav-left fixed">
 
           <div class="flex pxv-10">
-               <div class="flex-icon theme-btn box bd bd-silver rad-r anc-btn-link flow-hide bc-silver ripple relative" style="transition: none">
+               <div class="flex-icon theme-btn navtheme box bd bd-silver rad-r anc-btn-link flow-hide bc-silver ripple relative" style="transition: none">
                     <div class="px-40 b-cover ico-spin" data-src="@mapp('images/icons/favicon.png')" style="transition: none"></div>
                     <div class="font-em-1d5 px-40 flex mid overlay fb-9 calibri" style="top:-2px; left:.4px; z-index: 1; color:#202dd5;">
                          s 

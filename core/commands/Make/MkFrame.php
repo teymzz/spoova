@@ -1,9 +1,9 @@
 <?php
 
-namespace teymzz\spoova\core\commands\Make;
+namespace spoova\mi\core\commands\Make;
 
-use teymzz\spoova\core\commands\Cli;
-use teymzz\spoova\core\classes\FileManager;
+use spoova\mi\core\commands\Cli;
+use spoova\mi\core\classes\FileManager;
 
 class MkFrame extends MkBase{
 
@@ -87,7 +87,7 @@ class MkFrame extends MkBase{
             $content = <<<Frame
             <?php
 
-            namespace teymzz\spoova\\$classSpace;
+            namespace spoova\mi\\$classSpace;
             
             use Window;
             

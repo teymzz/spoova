@@ -60,7 +60,7 @@
                     <li><code>bd-b</code> - border bottom</li>
                     <li><code>bd-v</code> - border top and bottom</li>
                     <li><code>bd-x</code> - border left and right</li>
-                    <li><code>bd-none</code> - remove top radius</li>
+                    <li><code>bd-none</code> - remove all borders</li>
                     <li><code>bd-r-none</code> - remove right border</li>
                     <li><code>bd-l-none</code> - remove left border</li>
                     <li><code>bd-tp-none</code> - remove top border</li>

@@ -1,5 +1,5 @@
 <?php
-namespace teymzz\spoova\core\classes\DB;
+namespace spoova\mi\core\classes\DB;
 
 class MiPDO extends DBBridge{
   

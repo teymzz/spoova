@@ -1,13 +1,13 @@
 <?php
 
 
-namespace teymzz\spoova\core\commands\Make;
+namespace spoova\mi\core\commands\Make;
 
-use teymzz\spoova\core\classes\DB\DBSchema\DBSCHEMA;
-use teymzz\spoova\core\classes\DB\DBSchema\DRAFT;
-use teymzz\spoova\core\classes\FileManager;
-use teymzz\spoova\core\commands\Cli;
-use teymzz\spoova\core\commands\Make\MkBase;
+use spoova\mi\core\classes\DB\DBSchema\DBSCHEMA;
+use spoova\mi\core\classes\DB\DBSchema\DRAFT;
+use spoova\mi\core\classes\FileManager;
+use spoova\mi\core\commands\Cli;
+use spoova\mi\core\commands\Make\MkBase;
 
 class MkMigrator extends MkBase{
 
@@ -43,7 +43,7 @@ class MkMigrator extends MkBase{
 
         $filename = rtrim($filename,'.php').".php";      
 
-        $filepath = docroot."/core/migrations/{$filename}";        
+        $filepath = docroot."/migrations/{$filename}";        
 
         $prefix = 'M'.time().'_';
 
@@ -56,7 +56,7 @@ class MkMigrator extends MkBase{
         $classSpace = to_namespace($classDir); 
         
         /* class namespace starting from windows folder  */
-        $migrateSpace  = to_namespace('core\\migrations\\'.$classSpace);
+        $migrateSpace  = to_namespace('migrations\\'.$classSpace);
         
         /* class full folder namespace */
         $nameSpace = scheme($migrateSpace, false);    

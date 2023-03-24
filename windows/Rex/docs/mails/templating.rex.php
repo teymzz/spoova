@@ -3,7 +3,7 @@
     @lay('build.co.navbars:left-nav')
     
     <div class="box-full pxl-2 bc-white pull-right">
-      <div class="pxv-20 tutorial mails c-black-ll">
+      <div class="pxv-10 tutorial mails c-black-ll">
         
         @lay('build.co.links:tutor_pointer')
 
@@ -22,7 +22,7 @@
             <div class="">
 
               <div class="">
-                  Templating involves the use of template files to handle mails. These template 
+                  Mail Templating involves the use of template files to handle mails. These template 
                   files can contain series of placeholders that are used to obtain variables that 
                   are later expected to be injected or passed across to them. These template files can 
                   later be loaded, rendered and forwarded as mail using either the 
@@ -38,9 +38,9 @@
                       </li>
                       <li>
                           Variables can be injected as local or global variables. Local variables are injected using the 
-                            <code class="bg-primary c-white">
+                            <code class="bg-primary c-white bd-f">
                               <a href="@domurl('docs/mails/inject')" class="i c-white">
-                                  <span class="c-white">inject()</span>
+                                  <span class="c-white-d">inject()</span>
                               </a>
                             </code> method
                       </li>

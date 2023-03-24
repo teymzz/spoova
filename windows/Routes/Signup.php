@@ -1,9 +1,9 @@
 <?php
 
-namespace teymzz\spoova\windows\Routes;
+namespace spoova\mi\windows\Routes;
 
-use teymzz\spoova\windows\Frames\UserFrame;
-use teymzz\spoova\windows\Models\Access\AccessModel;
+use spoova\mi\windows\Frames\UserFrame;
+use spoova\mi\windows\Models\Access\AccessModel;
 use User;
 
 class Signup extends UserFrame {

@@ -1,9 +1,9 @@
 <?php
 
-namespace teymzz\spoova\core\classes;
+namespace spoova\mi\core\classes;
 
 use Closure;
-use teymzz\spoova\core\commands\Cli;
+use spoova\mi\core\commands\Cli;
 
 class Benchmark {
 

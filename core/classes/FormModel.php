@@ -1,8 +1,8 @@
 <?php
 
-namespace teymzz\spoova\core\classes;
+namespace spoova\mi\core\classes;
 
-use teymzz\spoova\core\classes\Model;
+use spoova\mi\core\classes\Model;
 
 class FormModel extends Model {
 

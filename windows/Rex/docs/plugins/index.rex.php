@@ -7,7 +7,7 @@
 
   <div class="box-full pxl-2 bc-white pull-right">
     
-    <section class="pxv-20 tutorial mails bc-white">
+    <section class="pxv-10 tutorial mails bc-white">
       <div class="font-em-1d2">
 
         @lay('build.co.links:tutor_pointer')
@@ -18,15 +18,14 @@
           
           <div class="resource-intro">
               <div class="">
-                  The spoova project application applies a specific structure in handling php composer dependency manager. 
-                  While most frameworks places the composer <code>vendor</code> folder in the root of their application, spoova 
-                  suggests that the vendor folder which is a core aspect of the application, should be placed in the <code>core/</code> 
-                  directory. This means that developers will have to navigate to the <code>core/</code> directory in order to run composer commands and also install composer packages. 
-                  <br><br>
-                  
-                  However, since spoova is a very flexible framework, developers are allowed to move the <code>vendor</code> folder outside of the <code>core/</code> into the root of the 
-                  application by following the process below:
-                  
+                  The spoova project packages are stored in the root <code>vendor/</code> folder. 
+                  Although the composer <code>vendor</code> folder is placed at the root of the project application, spoova 
+                  suggests that the vendor folder which is a core aspect of the application, should be placed in the <code>core/</code> directory.
+                  Since spoova is a very flexible framework, developers are allowed to move the <code>vendor</code> folder into the <code>core/</code>
+                  if needed. However, note that the <code>core/</code> directory is a strictly protected directory which means that no file will 
+                  become accessible if placed within this directory including static files. If static files will be imported to the vendor folder which 
+                  are required to be accessible, then it is better to leave the vendor folder out of this directory. The vendor folder can be moved to 
+                  core directory by following the processes below:
               </div> 
           </div>
           
@@ -37,38 +36,36 @@
               </div> <br>
 
               <div class="">
-                <div class="">The composer vendor folder can be moved by applying the following processes</div>
+                <div class="">The composer vendor folder can be moved to <code>core/</code> directory by applying the following processes</div>
                 <br>
 
                 <div class="">
 
                   <ul>
-                    <li>Move the <code>vendor</code> folder out of the <code>core</code> directory.</li>
-                    <li>Move the <code>composer.json</code> file out of the vendor folder</li>
-                    <li>Edit the json file <code>autoload</code> key such that it becomes as shown below 
+                    <li>Move the <code>vendor</code> folder into the <code>core</code> directory.</li>
+
+                    <li>Edit the json file <code>autoload</code> key such that it moves out of the <code>core/</code> directory as shown below 
 
                       <div class="pre-area">
                         <pre class="pre-code">
     "autoload": {
 
         "psr-4": {
-          "Teymzz\\spoova\\": "./",
-          "Teymzz\\Spoova\\": "./"
+          "spoova\\mi\\": "../",
         }
 
     },
                         </pre>
                       </div>
-                    </li>
+                    </li>                    
                     <li>
                       Run the <code>composer dump-autoload -o</code> command to update the application
                     </li>
                     <div class="">
                       Refresh your application to ensure that it runs perfectly fine
                     </div>
-                    <div class="">
-                      Once the application runs well, return <code>composer.json</code> back into the <code>vendor</code> folder.
-                    </div>
+                    <li>Once the application runs fine, move the <code>composer.json</code> file into the <code>icore/</code> directory for security purposes.</li>
+                    <li>Lastly, it is important to note that if the vendor folder is transferred to the <code>core/</code> directory, then composer commands must also be executed within that directory.</li>
                   </ul>
 
                 </div>
@@ -84,9 +81,7 @@
               
               <div>
                   Developers should avoid tampering with the core files in the core folder. If new classes will be created, custom folders may be used for classes. 
-                  If the <code>vendor</code> folder is shifted out of the <code>core\</code> directory, packages can be installed directly into the vendor folder using the 
-                  <code>composer.json</code> file.  The root app namespaces follow the pattern of <code>{{ rtrim(scheme('',false),'\\') }}</code>, hence, custom classes 
-                  defined in <code>core\</code> directory should use the predefined namespace. 
+                  The root namespace follow the pattern of <code>{{ rtrim(scheme('',false),'\\') }}</code>.  This means that custom classes should also apply this namespacing rule. 
               </div> <br>
         
           </div>  

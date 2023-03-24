@@ -1,5 +1,4 @@
 
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -8,9 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" type="image/png" href="http://localhost/spoova/res/main/images/icons/favicon.png">
     <title>Tutorial - About WMV</title>
-    <meta name="viewport" content="width=device-width, initial-scale=.9, maximum-scale=1.0, user-scalable=1" />
-<meta name="description" content="website_description" />
-<link rel="icon" href="http://localhost/spoova/res/main/images/icons/favicon.png" />
+    
     <link  rel="stylesheet" type="text/css" href="http://localhost/spoova/res/main/css/res.css" x-debug="res-css"><script src='http://localhost/spoova/res/main/js/jquery-3.6.0.js'></script><script src='http://localhost/spoova/res/main/css/bootstrap/js/bootstrap.min.js'></script><link  rel="stylesheet" type="text/css" href="http://localhost/spoova/res/main/css/mdb5/css/mdb.min.css"><script src='http://localhost/spoova/res/main/js/config.js'></script><script src='http://localhost/spoova/res/main/js/core.js'></script><script src='http://localhost/spoova/res/main/js/onLoaded.js'></script><script src='http://localhost/spoova/res/main/js/custom.js'></script><script src='http://localhost/spoova/res/main/js/device.js'></script><script src='http://localhost/spoova/res/main/js/loadImages.js'></script><script src='http://localhost/spoova/res/main/js/formValidator.js'></script><script src='http://localhost/spoova/res/main/js/jquery.mousewheel.js'></script><script src='http://localhost/spoova/res/main/js/anime.js'></script><script src='http://localhost/spoova/res/main/js/init.js'></script> 
     <style rel="build.css.tutorial"> 
 
@@ -178,6 +175,7 @@
 }
 
 body.--theme-dark{
+    color: rgb(125, 125, 125);
     background-color : rgba(21, 15, 39);
 }
  </style><style rel="build.css.navbars"> 
@@ -360,7 +358,6 @@ window.onload = function() {
                <li> <a href="<?= DomUrl('docs/classes') ?>" class="<?= inPath('active') ?>"><span class="ico ico-spin"></span>Helper Classes</a> </li>
                <li> <a href="<?= DomUrl('docs/functions') ?>" class="<?= inPath('active') ?>"><span class="ico ico-spin"></span>Helper Functions</a> </li>
                <li> <a href="<?= DomUrl('docs/template') ?>" class="<?= inPath('active') ?>"><span class="ico ico-spin"></span>Template Engine</a> </li>
-               <li> <a href="<?= DomUrl('docs/template/directives') ?>" class="<?= inPath('active') ?>"><span class="ico ico-spin"></span>Template Directives</a> </li>
                <li> <a href="<?= DomUrl('docs/setters') ?>" class="<?= inPath('active') ?>"><span class="ico ico-spin"></span>Global Setters</a> </li>
                <li> <a href="<?= DomUrl('docs/mails') ?>" class="<?= inPath('active') ?>"><span class="ico ico-spin"></span>Handling Mails</a> </li>
                <li> <a href="<?= DomUrl('docs/cli') ?>" class="<?= inPath('active') ?>"><span class="ico ico-spin"></span>Cli Commands</a> </li>         
@@ -375,7 +372,7 @@ window.onload = function() {
 
   <div class="box-full pxl-2 bc-white-dd pull-right">
     
-    <section class="pxv-20 tutorial mails bc-white">
+    <section class="pxv-10 tutorial mails bc-white">
       <div class="font-em-1d2">
 
         
@@ -389,14 +386,9 @@ window.onload = function() {
           <div class="resource-intro">
               <div class="">
                   The <span class="fb-6 calibri">WinViM</span> architecture (ie. WMV or WVM)</span>, though is a system built upon MVC architecture, it is a bit more advanced and technical.
-                  It was designed to be an extensible structure while taking into consideration, the future updates or upgrades 
-                  that may later be integrated into the system. 
-                  
-                  The pattern flow relates that every urls becomes handled as window urls or classes.
-                  <br>
-
-                  Windows are entry points to every url structure. In this tutorial, non-existing urls that are transferred to be handled with their entry points (windows) 
-                  will be referred to as window urls. The example below shows the entry points in any given url for either localhost or online environments.
+                  It was designed to be a flexible and extensible architecture that makes it possible to authenticate and validate urls based on specifically designed logics. The pattern flow 
+                  relates that every urls becomes handled as window urls or classes through entry points to every url structure. In this tutorial, non-existing urls that are transferred to be handled with their entry points (windows) 
+                  will be referred to as window urls. The example below shows the entry points in any given url for either production or live environments.
                   <br><br>
 
                   <div class="pre-area shadow">
@@ -432,7 +424,7 @@ window.onload = function() {
 
                   <p class="font-menu mvt-10">
                     According to the url samples above, a url's entry point is usually the immediate path name that comes after a localhost url 
-                    or a remote (or online) url.
+                    or a domain url.
                   </p>
      
                 </div> 
@@ -480,7 +472,6 @@ window.onload = function() {
                   The downside of WMV pattern are
                   <br><br>
                   <ul>
-                      <li>It depends on an apache server to work</li>
                       <li>It depends on <code>.htaccess</code> file to work.</li>
                       <li>Controlling urls might prove a bit technical and advanced depending on developers understanding of the concept</li>
                       <li>A great discretion is advised when opening urls as urls not properly managed can result in blank pages.</li>

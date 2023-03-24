@@ -1,6 +1,6 @@
 <?php
 
-use teymzz\spoova\core\classes\DB\DBBridge;
+use spoova\mi\core\classes\DB\DBBridge;
 
 class DBStatus extends DBBridge{
   

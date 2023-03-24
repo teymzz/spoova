@@ -1,8 +1,8 @@
 <?php
 
-namespace teymzz\spoova\windows\Models;
+namespace spoova\mi\windows\Models;
 
-use teymzz\spoova\core\classes\Model;
+use spoova\mi\core\classes\Model;
 
 class User extends Model{
 

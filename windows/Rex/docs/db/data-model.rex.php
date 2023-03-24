@@ -7,7 +7,7 @@
     @lay('build.co.navbars:left-nav')
 
     <div class="box-full pxl-2 bc-white-dd pull-right">
-        <section class="pxv-20 tutorial database bc-white">
+        <section class="pxv-10 tutorial database bc-white">
             <div class="font-em-1d2">
 
                 @lay('build.co.links:tutor_pointer')
@@ -18,24 +18,151 @@
 
                     <div class="pxs-6">
                         Models are structures built to have a direct relationship with database. Hence,
-                        they are capable of performing database queries. Spoova makes it easy to pull user data 
-                        from database by creating certain model structures that depends on a user account. Once a user 
-                        session is active and an id is obtained, the model is designed to perform advanced data pull from 
-                        database which are built upon the following methods.
+                        they are capable of performing database queries. Spoova handles database communications based 
+                        on standard relationships and user session id. Database relationships are handles based on 
+                        <span class="c-olive">one to one</span>, <span class="c-olive">one to many</span> or 
+                        <span class="c-olive">many to many</span> relationships. Spoova however, uses specifically designed basic methods 
+                        to communicate directly with database.
                         <br>
                         
                         <div class="font-em-d85">
-                            <br> <code>Model::ofUser()</code>
-                            <br> <code>Model::of()</code>
                             <br> <code>Model::where()</code>
                             <br> <code>Model::read()</code>
                             <br> <code>Model::update()</code>
                             <br> <code>Model::delete()</code>
+                            <br> <code>Model::ofUser()</code>
+                            <br> <code>Model::of()</code>
                         </div>
 
                     </div> <br>
 
                     <ul class="list-square pxs-6 list-free">
+
+                        <li>
+                            <div class="c-olive"><span class="flex midv"><span class="mxr-4">&#9635</span>where()</div>
+                            <div class="font-em-d9 mvt-10">
+                                This method is used to set a situation where a particular condition is met. It is usually called upon the model name itself. Any of the 
+                                <code>read()</code>, <code>update()</code> and <code>delete()</code> methods can be applied upon it. Assuming we have a model class <code>User</code> 
+                                as below:
+                            </div> <br>
+                            
+                            <div class="box-full font-menu  font-em-d85 bc-white-dd shadow">
+                                <div class="pxv-10 bc-silver"> 1a - User model</div>
+                        <pre class="pre-code">
+  &lt;?php 
+
+  namespace spoova/mi/windows/Models;
+
+  class User extends Model {
+
+    function __construct(){
+
+    }
+
+  } 
+                        </pre>
+                            </div>
+
+                            <div class="foot-note mvs-6">
+                                Since the class above is a model, we can access the <code>where()</code> method from a route as shown below:
+                            </div>
+
+                            <div class="box-full font-menu  font-em-d85 bc-white-dd shadow">
+                                <div class="pxv-10 bc-silver">Example 1b - Using where() method of a model</div>
+                        <pre class="pre-code">
+  &lt;?php 
+
+  namespace spoova/mi/windows/Routes;
+
+  use spoova/mi/windows/Models;
+
+  class SomeRoute{
+
+    function __construct() {
+
+        User::where('id = ?', [1])->read()->User; <span class="comment">// read user where id is one</span>
+        User::where('id = ?', [1])->delete(); <span class="comment">// delete user where id is 1</span>
+        User::where('id = ?', [1])->update(['firstname'=>'Felix']); <span class="comment">// update user where id is 1, set firstname as "Felix"</span>
+        
+    }
+
+  }
+                        </pre>
+                            </div>
+
+                            <div class="foot-note mvs-6">
+                                The examples above, are cases in which the <code>where()</code> condition can be applied. The first argument contains list of fields and placeholders 
+                                for binded parameters while the second argument contains a list of binded parameter values. The assumed table name will be "users". The table name can be 
+                                modified by re-defining a <code>tableName()</code> method on the model class which must return a string of the custom table name.
+                            </div><br>
+                        </li>
+
+
+                        <!-- Model::read() -->
+
+                        <li>
+                            <div class="c-olive"><span class="flex midv"><span class="mxr-4">&#9635</span>read()</div>
+                            <div class="font-em-d9 mvt-6">
+                                This method is used to retrieve data from database. It takes two arguments. The first argument (string or array) is the number of selected 
+                                columns to return while the second argument (array) defines the limit of data to be returned. Using <span class="c-olive">Example 1a and 1b </span> as reference,
+                                the Example 2 below describes how to use the <code>read()</code> method.
+                            </div> <br>
+                            
+                            <div class="box-full font-menu font-em-d85 bc-white-dd shadow">
+                                <div class="pxv-10 bc-silver">Example 2 - Using read() method</div>
+                        <pre class="pre-code">
+  User::read()->User; <span class="comment">// fetch all user data</span>
+
+  User::read(['username'])->User; <span class="comment">// fetch only the username of every user</span>
+
+  User::read(['firstname', 'lastname'], [10])->User; <span class="comment">// fetch firstname and lastname of 10 users</span>
+                        </pre>
+                            </div> <br><br>
+                        </li>
+
+                        <!-- Model::update() -->
+
+                        <li>
+                            <div class="c-olive">update()</div>
+                            <div class="font-em-d9 mvt-6">
+                                This <code>update()</code> method is used to update a selected record. 
+                                It takes a single array parameter. Which contains key(field name) and value(new) pairs. When a condition is not set upon it,
+                                all records will be updated: 
+                            </div> <br>
+                            
+                            <div class="box-full font-menu font-em-d85 bc-white-dd shadow">
+                                <div class="pxv-10 bc-silver">Example 3 - Using update() method</div>
+    <pre class="pre-code">
+  Posts::update(['date' => {{date('Y-m-d')}} ]) <span class="comment">//update all posts records, set all date rows as "{{date('Y-m-d')}}"</span>
+    </pre>
+                            </div> <br><br>
+
+                            <div class="font-em-d87">
+                               It is generally advised to turn off live server when performing operations that modifies the database records to prevent auto-execution of queries.
+                            </div>
+                            <br>
+                        </li>
+
+                        <!-- Model::delete() -->
+                        
+                        <li>
+                            <div class="c-olive">delete()</div> 
+                            <div class="font-em-d9 mvt-6">
+                                This <code>delete()</code> method takes a single parameter which can either be a bool of true or an integer limit of number of data to be deleted. The limit may not 
+                                be applicable on multiple table. Calling this method without a condition can be dangerous as all records 
+                                belonging to the relative database table may get deleted. The bool argument of "true" ensures that a developer 
+                                is aware of the changes they are about to make (i.e deleting all records) before making them. If no argument is supplied, and no condition is set on the delete method, 
+                                this method will not delete any data. It is also advised to to keep the live server off if this method will be applied. 
+                            </div> <br>
+                            
+                            <div class="box-full font-menu font-em-d85 bc-white-dd shadow">
+                                <div class="pxv-10 bc-silver">Example 4 - Using delete() method</div>
+    <pre class="pre-code">
+  Posts::delete(<span class="c-red-dd">true</span>); <span class="comment">//delete all posts</span>
+    </pre>
+                            </div>
+                        </li> <br>
+                        
                         <li class="mxs-2">
                             <div class="c-olive">  <span class="flex midv"><span class="mxr-4">&#9635</span>OfUser()</span></div> 
 
@@ -52,11 +179,11 @@
                             <br>
 
                             <div class="box-full font-menu font-em-d85 bc-white-dd shadow">
-                                <div class="pxv-10 bc-silver">Sample - PostModel.php</div>
+                                <div class="pxv-10 bc-silver">Example 5a - PostModel.php</div>
                         <pre class="pre-code">
   &lt;?php
 
-    namespace teymzz\spoova\core\class\Models;
+    namespace spoova\mi\core\class\Models;
     use Models;
 
     Posts extends Models {       
@@ -84,12 +211,15 @@
                                 
                             </div> <br>
                                 
-                            <div class="box-full font-menu  font-em-d85 bc-white-dd shadow"> 
+                            <div class="box-full font-menu  font-em-d85 bc-white-dd shadow">
+                                <div class="pxv-10 bc-silver">Example 5b - Home.php (route)</div> 
     <pre class="pre-code">
   &lt;?php
 
-    Use Window
-    use teymzz\spoova\windows\Models\Posts;
+    namespace spoova\mi\windows\Routes;
+
+    use Window
+    use spoova\mi\windows\Models\Posts;
 
     Home extends UserFrame {       
 
@@ -130,7 +260,7 @@
                                 to naturally connect the two fields. For example:
                             </div> <br>
                             <div class="box-full font-menu font-em-d85 bc-white-dd shadow">
-                                <div class="pxv-10 bc-silver">Example 2 - Child of Parent table </div>
+                                <div class="pxv-10 bc-silver">Example 6 - Child of Parent table </div>
                                 <pre class="pre-code">
   Posts::of('admin', 3)->read()->Posts;
                                 </pre>
@@ -140,11 +270,12 @@
                                 In the Example above, the posts database table will look for posts where admin_id is 3. It should be noted that 
                                 the "admin_id" foreign key is generated from the combination of the singular form of the owner table along with an 
                                 "id" local key by default. This means that for example, if the owner table was "admin" or "admins", then the default 
-                                generated foreign key will be "admin_id".
+                                generated foreign key will be "admin_id". This is done by stripping off the last "s" character of the field name. This means 
+                                that for a string with double "ss" last characters, one will be removed while the other will remain. 
                             </div> <br>
                             
                             <div class="box-full font-menu font-em-d85 bc-white-dd shadow">
-                                <div class="pxv-10 bc-silver">Example 3 - Child with custom foreign key of Parent table  </div>
+                                <div class="pxv-10 bc-silver">Example 7 - Child with custom foreign key of Parent table  </div>
                         <pre class="pre-code">
   Posts::of('admin', 3, 'user_id')->read()->Posts;
                         </pre>
@@ -154,8 +285,6 @@
                                 The example above is of a more complex relationship between database tables in which the foreign key is a custom <code>user_id</code> field. 
                                 It is assumed that the custom foreign key supplied in this case is related to the admin table's local key "id". 
                                 This means that the admin table must have an "id" primary key field.
-                                <!-- In this relationship, both the Posts and Admins table must have a 
-                                ForeignKey fieldname of "user_id". Posts will then select only Posts where user_id is 3 and the value(3) can also be found in the Admins "user_id" table. -->
                             </div>
                             <br>
 
@@ -193,9 +322,19 @@
                                 </div>
 
                                 <div class="">
-                                    In the structure above, while "A" is a child table to "C", the "C" is a child to binded table "B". 
-                                    The "C" table is the link table or bridge between "A" and "B". This connection assumes that if table "A" is a child table, 
-                                    then table "C" is a parent table while table "B" is a grand table. In order to set up this connection, the table "A" must have 
+                                    The description for the model structure above is listed below: <br> 
+                                    <br>
+                                    <ul class="foot-note font-em-1">
+                                        <li style="list-style: disc;">
+                                            "A" is a child table to "C" while "C" is a child to binded table "B". Hence,
+                                            "C" table is the link table or bridge between "A" and "B". 
+                                        </li>
+                                        <li style="list-style: disc;">
+                                            This connection assumes that if table "A" is a child table, 
+                                            then table "C" is a parent table while table "B" is a grand table.   
+                                        </li>
+                                    </ul> <br>
+                                    In order to set up this connection, the table "A" must have 
                                     a Foreign key field name "C_id" (modifiable) relative to its direct parent "C" and the table "C" must have a Foreign key name "B_id" (non-modifiable) relative to its 
                                     direct parent "B". Once the connection is successfully chained, we can proceed to obtain our data through the use of the current model's property which must be initialized 
                                     with a capital letter case. The code below is an example of this connection.
@@ -234,7 +373,7 @@
                                 The setup above assumes that, the <code>comments</code> table has a foreign key field of <code>post_id</code> while the 
                                 <code>posts</code> table has a foreign key field of <code>user_id</code>. From the sample above, the 
                                 comment table will look within itself for where post_id foreign key is equivalent to posts table local key "id" 3. 
-                                then the posts table will bind the parent "users" by using the parent foreign key field name "user_id". 
+                                then the posts table will bind to its own parent "users" through the parent foreign key field name "user_id". 
                                 This relationship can thus be defined as a complex relationship, one that is defined for a Child, Parent and GrandParent. 
                                 In the event that the foreign key of the post table on comments table above is not <code>post_id</code>, this can be modified by supplying a third
                                 argument of the foreign key field name on the <code>of()</code> method.
@@ -247,87 +386,6 @@
                             </div>
 
                         </li> <br>
-
-                        <li>
-                            <div class="c-olive">read()</div>
-                            <div class="font-em-d9 mvt-6">
-                                This <code>read()</code> method as explained earlier is used to retrieve data from database. It takes two arguments. The first argument (string or array) is the number of selected 
-                                columns to return while the second argument (array) defines the limit of data to be returned
-                            </div> <br>
-                            
-                            <div class="box-full font-menu font-em-d85 bc-white-dd shadow">
-                                <div class="pxv-10 bc-silver">Example 4 - read</div>
-                        <pre class="pre-code">
-  User::read()->User; <span class="comment">// fetch all user data</span>
-
-  User::read(['username'])->User; <span class="comment">// fetch only the username of every user</span>
-
-  User::read(['firstname', 'lastname'], [10])->User; <span class="comment">// fetch firstname and lastname of 10 users</span>
-                        </pre>
-                            </div> <br><br>
-                        </li>
-
-                        <li>
-                            <div class="c-olive">delete()</div> 
-                            <div class="font-em-d9 mvt-6">
-                                This <code>delete()</code> method takes a single parameter which can either be a bool of true or an integer limit of number of data to be deleted. The limit may not 
-                                be applicable on multiple table. Calling this method without a condition can be dangerous as all records 
-                                belonging to the relative database table may get deleted. The bool argument of "true" ensures that a developer 
-                                is aware of the changes they are about to make (i.e deleting all records) before making them. If no argument is supplied, and no condition is set on the delete method, 
-                                this method will not delete any data. It is also advised to to keep the live server off if this method will be applied. 
-                            </div> <br>
-                            
-                            <div class="box-full font-menu font-em-d85 bc-white-dd shadow">
-                                <div class="pxv-10 bc-silver">Example 5 - delete</div>
-    <pre class="pre-code">
-  Posts::delete(<span class="c-red-dd">true</span>); <span class="comment">//delete all posts</span>
-    </pre>
-                            </div>
-                        </li> <br>
-
-                        <li>
-                            <div class="c-olive">update()</div>
-                            <div class="font-em-d9 mvt-6">
-                                This <code>update()</code> method is used to update a selected record. 
-                                It takes a single array parameter. Which contains key(field name) and value(new) pairs. When a condition is not set upon it,
-                                all records will be updated: 
-                            </div> <br>
-                            
-                            <div class="box-full font-menu font-em-d85 bc-white-dd shadow">
-                                <div class="pxv-10 bc-silver">Example 6 - update</div>
-    <pre class="pre-code">
-  Posts::update(['date' => {{date('Y-m-d')}} ]) <span class="comment">//update all posts records, set all date rows as "{{date('Y-m-d')}}"</span>
-    </pre>
-                            </div> <br><br>
-
-                            <div class="font-em-d87">
-                               It is generally advised to turn off live server when performing operations that modifies the database records to prevent auto-execution of queries.
-                            </div>
-                            <br>
-                        </li>
-
-                        <li>
-                            <div class="c-olive">Where</div>
-                            <div class="font-em-d9 mvt-10">
-                                This method is used to set a situation where a particular condition is met. It is usually called upon the model name itself. Any of the 
-                                <code>read()</code>, <code>update()</code> and <code>delete()</code> methods can be applied upon it.
-                            </div> <br>
-                            
-                            <div class="box-full font-menu  font-em-d85 bc-white-dd shadow">
-                                <div class="pxv-10 bc-silver">Example 7 - where</div>
-                        <pre class="pre-code">
-  User::where('id = ?', [1])->read()->User; <span class="comment">// read user where id is one</span>
-  User::where('id = ?', [1])->delete(); <span class="comment">// delete user where id is 1</span>
-  User::where('id = ?', [1])->update(['firstname'=>'Felix']); <span class="comment">// update user where id is 1, set firstname as "Felix"</span>
-                        </pre>
-                            </div> <br><br>
-
-                            <div class="font-em-d87">
-                                The examples above, are cases in which the <code>where()</code> condition can be applied. The first argument contains list of fields and placeholders 
-                                for binded parameters while the second argument contains a list of binded parameter values.
-                            </div>
-                            <br>
-                        </li>
                     
                     </ul>
 
@@ -612,7 +670,7 @@ assume that the database table name is <code>post</code>  rather than <code>post
     <pre class="pre-code">
   &lt;?php 
 
-    use teymzz\spoova\core\classes\Model;
+    use spoova\mi\core\classes\Model;
 
     Posts extends Model {
 
@@ -649,7 +707,7 @@ assume that the database table name is <code>post</code>  rather than <code>post
     <pre class="pre-code">
   &lt;?php 
 
-    use teymzz\spoova\core\classes\Model;
+    use spoova\mi\core\classes\Model;
 
     Posts extends Model {
 
@@ -683,7 +741,7 @@ assume that the database table name is <code>post</code>  rather than <code>post
     <pre class="pre-code">
   &lt;?php 
 
-    use teymzz\spoova\core\classes\Model;
+    use spoova\mi\core\classes\Model;
 
     Posts extends Model {
 
@@ -721,7 +779,7 @@ assume that the database table name is <code>post</code>  rather than <code>post
    <pre class="pre-code">
   &lt;?php 
 
-    use teymzz\spoova\core\classes\Model;
+    use spoova\mi\core\classes\Model;
 
     Posts extends Model {
 

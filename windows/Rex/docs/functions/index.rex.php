@@ -6,7 +6,7 @@
   @lay('build.co.navbars:left-nav')
 
   <div class="box-full pxl-2 bc-white-dd pull-right">
-    <section class="pxv-20 tutorial database bc-white">
+    <section class="pxv-10 tutorial database bc-white">
       <div class="font-em-1d2">
 
         @lay('build.co.links:tutor_pointer')
@@ -51,7 +51,6 @@
                   <div class="font-menu font-em-d9 c-aqua-dd" style="color:rgb(12, 131, 131)">
                     <ul>
                       <li> <a href="@route('::core#webclass')"> webClass </a> </li>
-                      <li> <a href="@route('::core#webtool')"> webTool </a> </li>
                       <li> <a href="@route('::core#isguest')"> isGuest </a> </li>
                       <li> <a href="@route('::core#isuser')"> isUser </a> </li>
                       <li> <a href="@route('::core#ishttp')"> isHTTP </a> </li>

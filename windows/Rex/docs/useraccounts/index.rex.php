@@ -6,7 +6,7 @@
 @lay('build.co.navbars:left-nav')
 
 <div class="box-full pxl-2 bc-white pull-right">
-    <section class="pxv-20 tutorial database bc-white">
+    <section class="pxv-10 tutorial database bc-white">
         <div class="">
 
             @lay('build.co.links:tutor_pointer')
@@ -66,12 +66,12 @@
                                     <div class="">
                                         <div class=" pvs-10"> This method returns certain important user configuration data details such as:</div>
                                         <div class="mvt-6 font-em-d85">
-                                            <div class="mvs-6"><span class="c-orange-dd">USER_TABLE</span> =>  the user table name.</div>
                                             <div class="mvs-6"><span class="c-orange-dd">DBNAME</span> =>  current database name.</div>
+                                            <div class="mvs-6"><span class="c-orange-dd">USER_TABLE</span> =>  the user table name.</div>
                                             <div class="mvs-6"><span class="c-orange-dd">SESSION_NAME</span> => current session key name.</div>
                                             <div class="mvs-6"><span class="c-orange-dd">COOKIE_NAME</span> => current cookie name.</div>
                                             <div class="mvs-6"><span class="c-orange-dd">USER_ID_FIELD_NAME</span> => current user id field name in user database table (i.e USER_TABLE).</div>
-                                            <div class="mvs-6"><span class="c-orange-dd">COOKIE_FIELD_NAME</span> => current cookie field name in database.</div>
+                                            <div class="mvs-6"><span class="c-orange-dd">COOKIE_FIELD_NAME</span> => current cookie field name in database table (i.e USER_TABLE).</div>
                                         </div>
                                     </div>                                
                                 </div>
@@ -92,10 +92,10 @@
                                 to be returned, the following must have occurred: <br><br>                                  
                                 <ol class="pxl-14 font-em-d87">
                                     <li>
-                                        The <span class="c-orange-dd">USER_TABLE</span> must have been previously set in the cnfiguration
+                                        The <span class="c-orange-dd">USER_TABLE</span> must have been previously set in the configuration
                                     </li>
                                     <li>
-                                        The <span class="c-orange-dd">USER_ID_FIELD_NAME</span> must have been previously set in the cnfiguration
+                                        The <span class="c-orange-dd">USER_ID_FIELD_NAME</span> must have been previously set in the configuration
                                     </li>
                                     <li>
                                         A userid must be stored when logging in whose value exists in <span class="c-orange-dd">USER_ID_FIELD_NAME</span> 

@@ -3,16 +3,16 @@
 /* Custom Helper Functions: Mainly for classes */
 // NOTICE : These functions should not be modified
 
-use teymzz\spoova\core\classes\Collectibles;
-use teymzz\spoova\core\classes\Collection;
-use teymzz\spoova\core\classes\Url;
-use teymzz\spoova\core\classes\DomUrl;
-use teymzz\spoova\core\classes\EInfo;
-use teymzz\spoova\core\classes\FileManager;
-use teymzz\spoova\core\classes\ModelOptimizer;
-use teymzz\spoova\core\classes\SETTER;
-use teymzz\spoova\core\classes\Spoova;
-use teymzz\spoova\core\classes\UserDB;
+use spoova\mi\core\classes\Collectibles;
+use spoova\mi\core\classes\Collection;
+use spoova\mi\core\classes\Url;
+use spoova\mi\core\classes\DomUrl;
+use spoova\mi\core\classes\EInfo;
+use spoova\mi\core\classes\FileManager;
+use spoova\mi\core\classes\ModelOptimizer;
+use spoova\mi\core\classes\SETTER;
+use spoova\mi\core\classes\Spoova;
+use spoova\mi\core\classes\UserDB;
 
 if(!function_exists('env')){
   /**
@@ -138,25 +138,6 @@ if(!function_exists('webClass')){
   }
 }
 
-if(!function_exists('webTool')){
-  /**
-   * Load a class from the tools folder
-   * @throws error if class does not exist
-   *
-   * @param string $className
-   * @return object|void
-   */
-  function webTool(string $className, $args){
-    $args = func_get_args();
-    unset($args[0]);
-    $args = array_values($args);
-    $class = scheme('\core\tools\\'.$className);
-    if(class_exists($class)){
-      return new $class(...$args);
-    }
-  }
-}
-
 if(!function_exists('window')){
 
   /**
@@ -218,6 +199,11 @@ if(!function_exists('invoked')){
   function invoked(string $url): string {
     if($url === '/'){
       return in_array(window('base'), ['','index']);
+    }
+    if(substr($url, 0, 1) === '!') {
+      $url = strtolower(substr($url, 1, strlen($url)));
+      $base = strtolower(window('base'));
+      return $url === $base;
     }
     return window('base') === $url;
   }
@@ -368,7 +354,7 @@ if(!function_exists('url')){
    * Handle urls by using the Url class
    * 
    * @param string $url path to be tested
-   * @return \teymzz\spoova\core\classes\Url
+   * @return \spoova\mi\core\classes\Url
    */  
   function url($url){
     $Url = new Url;
@@ -392,8 +378,6 @@ if(!function_exists('inPath')){
 
     if($path === ':dom-path'){
       $path = GET(DomUrl::Name(), DomUrl::Hash());
-
-
     }
 
     $path = rtrim(ltrim(to_frontslash($path, true), '/'), '/');

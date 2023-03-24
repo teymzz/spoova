@@ -7,7 +7,7 @@
     @lay('build.co.navbars:left-nav') 
 
     <div class="box-full bc-white-dd">
-        <section class="pxv-20 tutorial bc-white">
+        <section class="pxv-10 tutorial bc-white">
             <div class="font-em-1d2">
 
                 <div class="c-black-ll">

@@ -6,7 +6,7 @@
 
     <div class="box-full pxl-2 bc-white-dd pull-right">
     
-        <section class="pxv-20 tutorial bc-white">
+        <section class="pxv-10 tutorial bc-white">
             <div class="font-em-1d2">
 
                 @lay('build.co.links:tutor_pointer')
@@ -65,6 +65,11 @@
                                             <div class="bc-silver rad-4 pxv-4">
                                                 <code>self</code>: Since the shutter methods belong to the window class, they can only be applied within window classes 
                                             </div>
+                                        </li> <br>                                        
+                                        <li>
+                                            <div class="bc-silver rad-4 pxv-4">
+                                                <code>call</code> There are basically four shutters (i.e rootcall, call, basecall and pathcall) and all four uses the same argument syntax shown earlier.
+                                            </div>
                                         </li> <br>
                                         <li>
                                             <div class="bc-silver rad-4 pxv-4">
@@ -72,11 +77,7 @@
                                                 This is because they need to point to the current window's instance itself.
                                             </div>
                                         </li> <br>
-                                        <li>
-                                            <div class="bc-silver rad-4 pxv-4">
-                                                <code>call</code> There are basically four shutters and all four uses the same argument syntax shown earlier.
-                                            </div>
-                                        </li> <br>
+
                                         <li>
                                             <div class="bc-silver rad-4 pxv-4">
                                                 <code>acceptableUrls</code> These are arrays of key and value pairs where the "key" is a url that is expected to be compared with the  
@@ -363,7 +364,7 @@
                                 <div class="font-menu mvt-10">
                                     In the code above, the <code>win:</code> directive tells the window class to load its value as a class.
                                     When a url, for example <code>http://domain/home</code> or <code>http://domain/home/any/path</code> is visited, 
-                                    the class <code>teymzz\spoova\windows\Routes\Home</code> will be triggered. The <code>profile</code> also works in a similar way. 
+                                    the class <code>spoova\mi\windows\Routes\Home</code> will be triggered. The <code>profile</code> also works in a similar way. 
                                     However, when a page e.g <code>http://domain</code>, <code>http://domain/index</code> or <code>http://domain/index/any/path</code> 
                                     is visited, the <code>root()</code> method is triggered. Remember that if the index page is visited, then <code>window(':')</code> 
                                     will also return the name <span class="c-brown-ll">"index"</span>. This means that we can replace our first array key of <code>'index' => 'root'</code> 
@@ -387,7 +388,7 @@
                                 <div class="pre-area">
 <div class="pxv-10 bc-silver-d">pathcall method to load acceptable paths on entry points.</div> <br>
 <pre class="pre-code pxs-6">
-  namespace teymzz\spoova\windows;
+  namespace spoova\mi\windows;
 
   use Window;
 
@@ -462,7 +463,7 @@
                                     <div class="pre-area mvt-10">
 <pre class="pre-code">
   &lt;?php
-    namespace teymzz\spoova\windows;
+    namespace spoova\mi\windows;
 
     <span class="c-lime-dd">use Window;</span>
 
@@ -884,9 +885,9 @@
 
                                 <div class="font-menu mvt-6">
                                     In the code above, while the <code>home</code> url will call the <code>root()</code> 
-                                    method of the current window, the <code>home/user</code> will call the <code>teymzz\spoova\Windows\Path\To\File</code> 
+                                    method of the current window, the <code>home/user</code> will call the <code>spoova\mi\Windows\Path\To\File</code> 
                                     class.
-                                    The <code>win:</code> directive specifies the <code>teymzz\spoova\Windows</code> namespace. 
+                                    The <code>win:</code> directive specifies the <code>spoova\mi\Windows</code> namespace. 
                                     We can also pass an object as value rather than strings.  The variable <code>$var</code> 
                                     will also be passed down as an argument to the class, object or method defined.
                                 </div>
@@ -912,7 +913,7 @@
 
   <span class="comment no-select">...</span>
 
-  namespace teymzz\spoova\windows\Routes;
+  namespace spoova\mi\windows\Routes;
 
   class Home {
 
@@ -950,7 +951,7 @@
 
   <span class="comment no-select">...</span>
 
-  namespace teymzz\spoova\windows\Routes\Home;
+  namespace spoova\mi\windows\Routes\Home;
 
   class User {
 

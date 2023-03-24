@@ -1,11 +1,11 @@
 <?php
 
-namespace teymzz\spoova\core\classes\DB;
+namespace spoova\mi\core\classes\DB;
 
-use teymzz\spoova\core\classes\Collectibles;
-use teymzz\spoova\core\classes\Collection;
-use teymzz\spoova\core\classes\DBConstruct;
-use teymzz\spoova\core\classes\Model;
+use spoova\mi\core\classes\Collectibles;
+use spoova\mi\core\classes\Collection;
+use spoova\mi\core\classes\DB\DBConstruct;
+use spoova\mi\core\classes\Model;
 use User;
 
 class DBCollectibles implements DBOperators {

@@ -1,9 +1,9 @@
 <?php
 
-namespace teymzz\spoova\core\commands;
-use teymzz\spoova\core\classes\DB;
-use teymzz\spoova\core\classes\DB\DBConfig;
-use teymzz\spoova\core\classes\FileManager;
+namespace spoova\mi\core\commands;
+use spoova\mi\core\classes\DB;
+use spoova\mi\core\classes\DB\DBConfig;
+use spoova\mi\core\classes\FileManager;
 use User;
 
 /**

@@ -1,9 +1,9 @@
 <?php
 
-namespace teymzz\spoova\core\classes;
+namespace spoova\mi\core\classes;
 
 use Res;
-use teymzz\spoova\core\classes\Resx;
+use spoova\mi\core\classes\Resx;
 
 /**
  * This class is used to handle javascript resource watch method class

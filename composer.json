@@ -1,5 +1,5 @@
 {
-    "name": "teymzz/spoova",
+    "name": "spoova/mi",
     "description": "PHP Framework",
     "type": "library",
     "license": "MIT",
@@ -12,7 +12,7 @@
     ],
     "autoload": {
         "psr-4": {
-            "teymzz\\spoova\\": "../"
+            "spoova\\mi\\": "./"
         }
     },
     "minimum-stability": "beta",

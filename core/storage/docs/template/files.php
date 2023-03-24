@@ -6,9 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" type="image/png" href="http://localhost/spoova/res/main/images/icons/favicon.png">
     <title></title>
-    <meta name="viewport" content="width=device-width, initial-scale=.9, maximum-scale=1.0, user-scalable=1" />
-<meta name="description" content="website_description" />
-<link rel="icon" href="http://localhost/spoova/res/main/images/icons/favicon.png" />
+    
     <link  rel="stylesheet" type="text/css" href="http://localhost/spoova/res/main/css/res.css" x-debug="res-css"><script src='http://localhost/spoova/res/main/js/jquery-3.6.0.js'></script><script src='http://localhost/spoova/res/main/css/bootstrap/js/bootstrap.min.js'></script><link  rel="stylesheet" type="text/css" href="http://localhost/spoova/res/main/css/mdb5/css/mdb.min.css"><script src='http://localhost/spoova/res/main/js/config.js'></script><script src='http://localhost/spoova/res/main/js/core.js'></script><script src='http://localhost/spoova/res/main/js/onLoaded.js'></script><script src='http://localhost/spoova/res/main/js/custom.js'></script><script src='http://localhost/spoova/res/main/js/device.js'></script><script src='http://localhost/spoova/res/main/js/loadImages.js'></script><script src='http://localhost/spoova/res/main/js/formValidator.js'></script><script src='http://localhost/spoova/res/main/js/jquery.mousewheel.js'></script><script src='http://localhost/spoova/res/main/js/anime.js'></script><script src='http://localhost/spoova/res/main/js/init.js'></script> 
     <style rel="build.css.tutorial"> 
 
@@ -176,6 +174,7 @@
 }
 
 body.--theme-dark{
+    color: rgb(125, 125, 125);
     background-color : rgba(21, 15, 39);
 }
  </style><style rel="build.css.navbars"> 
@@ -370,7 +369,7 @@ window.onload = function() {
 
     <div class="box-full pxl-2 bc-white-dd pull-right">
     
-        <section class="pxv-20 tutorial bc-white">
+        <section class="pxv-10 tutorial bc-white">
             <div class="font-em-1d2">
 
                 
@@ -424,6 +423,7 @@ window.onload = function() {
                                         the path of a php rex file within the <code>windows/Rex</code> directory. For example: <br> 
                                         <br>
     <div class="pre-area">
+        <div class="pxv-10 bc-silver">Sample 1 - PHP rex file compilation (index.rex.php)</div>
         <pre class="pre-code">
     namespace windows\Routes;
 
@@ -440,7 +440,7 @@ window.onload = function() {
     } 
         </pre>
     </div>
-                                        <div class="foot-note">
+                                        <div class="foot-note mvs-6">
                                             In the code above the <code>load()</code> method will look for the <code>index.rex.php</code> file within the 
                                             <code>windows/Rex</code> directory. If such file exists, then the compiler function <code>compile()</code> will 
                                             compile the rex template file.
@@ -462,13 +462,13 @@ window.onload = function() {
                                     <div class="desc mvt-10">
                                         
                                         The css rex files stylesheets that are directly loaded into the webpage as embedded stylesheets. 
-                                        In css rex files, styles are divided into sections with each section having its own unique name. 
+                                        In css rex files, stylesheets are divided into sections with each section having its own unique style name. 
                                         The path of a stylesheet along with its unique name makes it possible to import only specifically needed style within an 
                                         external css rex file. When compiling php rex file data, only the defined css styles will be extracted from a stylesheet file while other css will 
                                         be ignored. An example below shows how the format of a css rex file.
                                         <br><br>
     <div class="pre-area">
-        <div class="pxv-10 bc-silver">File path: Rex/css/index.rex.css</div>
+        <div class="pxv-10 bc-silver">Sample 2a: Css File (index.rex.css)</div>
         <pre class="pre-code">
     &#35;style:header
     <span class="c-orange-dd">
@@ -492,20 +492,21 @@ window.onload = function() {
     &#35;style;
         </pre>
     </div>
-                                        <div class="foot-note">
-                                            In the code above the css styles within the header can be imported in a php rex file by declaring the 
-                                            css path and then the name of style needed to be imported. For example to import the file above, 
-                                            then a php rex file will contain the following code:
+                                        <div class="foot-note mvs-6">
+                                            The code in sample 2 above is an example of sectionalizing of a rex css file. Each section above can be imported into a php rex file 
+                                            using the <code>&#64;style()</code> directive. Only the css style names declared within the directive will be pulled into the php rex file. 
+                                            . For example, assuming the css file above is located within the <code>windows/Rex/Css</code> directory, then to import the css file above, 
+                                            a php rex file will contain the following code:
                                         
                                         </div> <br>
     <div class="pre-area">
-        <div class="pxv-10 bc-silver">some.rex.php</div>
+        <div class="pxv-10 bc-silver">Sample 2b: PHP File (somefile.rex.php)</div>
         <pre class="pre-code">
   &#64;style('css.index:header');
         </pre>
     </div>       
                                         <div class="foot-note">
-                                        In the code above when the file <code>some.rex.php</code> is compiled, the compiler will extract css styles 
+                                        In the code above when the file <code>somefile.rex.php</code> is compiled, the compiler will extract css styles 
                                         from <code>windows/Rex/css/index.rex.css</code>. Only the styles within the header section will be extracted.
                                         The compiled data will resemble the code below:
                                         </div> <br>
@@ -530,10 +531,10 @@ window.onload = function() {
                                         <code>windows/Rex</code> directory. In certain situations we can import multiple styles from a single css file. This
                                         can be done by first defining the file path, then each style section is extracted by their unique names. The unique names 
                                         in this case will be separated by columns. For example, the code below is an example of multiple style extraction from a single css 
-                                        file. Both the <code>footer</code> and <code>header</code> styles will be imported to the compiled data.
+                                        file. Both the <code>footer</code> and <code>header</code> styles will be imported as the compiled data.
                                         </div> <br>
     <div class="pre-area">
-        <div class="pxv-10 bc-silver">compiled data</div>
+        <div class="pxv-10 bc-silver">somefile.rex.php</div>
         <pre class="pre-code">
   &#64;style('css.index:header:footer');    
         </pre>
@@ -553,12 +554,12 @@ window.onload = function() {
                                 <div class="">
                                     <div class="desc mvt-10">
                                         
-                                        The javascript rex files just like stylesheets, are directly loaded into the webpage as embedded scripts. 
-                                        In js rex files also, scripts are divided into sections with each section having its own unique name. 
+                                        The javascript rex files are external javascript files are compiled directly into the webpage as embedded scripts through the 
+                                        template directive <code>&#64;script()</code>. In js rex files, scripts are also divided into sections with each section having its own unique name. 
                                         An example below shows the format of a js rex file <br><br>
                                         
     <div class="pre-area">
-        <div class="pxv-10 bc-silver">File path: Rex/css/index.rex.js</div>
+        <div class="pxv-10 bc-silver">Sample 3: Js Rex File (index.rex.js)</div>
         <pre class="pre-code">
     &#35;script:header
 
@@ -573,9 +574,18 @@ window.onload = function() {
     </div>
                                         <br><br>
                                         <div class="foot-note">
-                                        Just like the css, the javascript rex file's scripts can be imported with their unique names. The code above will 
-                                        return as:
+                                            Assuming we have the rex file above to be within the <code class="">"windows/Rex/js/"</code> directory, then we can import the file as shown below:
                                         </div> <br>
+
+    <div class="pre-area">
+        <div class="pxv-10 bc-silver">Sample 3b: PHP File (some.rex.php) to file</div>
+        <pre class="pre-code">
+    &#64;script('js.index:header')
+        </pre>
+    </div>  <br><br>
+                                        <div class="foot-note">
+                                            The path supplied above is expected to be found at <code>windows/Rex/js/index.rex.php</code>. The data compiled from the file above will be as below:
+                                        </div> <br>                                        
     <div class="pre-area">
         <div class="pxv-10 bc-silver">compiled data</div>
         <pre class="pre-code">
@@ -590,6 +600,11 @@ window.onload = function() {
     &lt;script&gt;
         </pre>
     </div>  
+
+                                        <div class="foot-note mvs-6">
+                                            Note that when compiling the template directives, an error will displayed only if the source file of the expectant rex file is missing. If the file is 
+                                            not missing but the unique name supplied is not defined within the rex files (i.e css and js), no error will be displayed.  
+                                        </div>
                        
                                     </div>
                                 </div>

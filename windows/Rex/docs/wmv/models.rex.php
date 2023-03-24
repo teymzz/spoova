@@ -4,7 +4,7 @@
 
     <div class="box-full pxl-2 bc-white-dd pull-right">
     
-        <section class="pxv-20 tutorial bc-white">
+        <section class="pxv-10 tutorial bc-white">
             <div class="font-em-1d2">
 
                 @lay('build.co.links:tutor_pointer')
@@ -15,11 +15,11 @@
                     
                     <div class="resource-intro">
                         <div class="">
-                            Models are classes that help to communicate with database. The spoova <code>Model</code> class is however build 
-                            to perform two main functions which are data validation and data insertion. All other ORM functionalities 
-                            such as reading and deleting from database are currently under development and some of these features might not be 
-                            available for use at the moment. Currently, the <code>Model</code> class is used to validat and upload submitted request form data. 
-                            Since most of the Model class features are form related, you can learn more about forms from <a href="@domurl('docs/forms')">here</a>.
+                            Models are classes that help to communicate with database. The spoova <code>Model</code> enables the commnunication with database using 
+                            database relationships. All ORM functionalities of the database model 
+                            such as reading and deleting from database can be accessed from <a href="@domurl('docs/database/data-model')">database relationships</a>. 
+                            This page will focus more on validating and inserting submitted request form data and
+                            since most of the Model class features discussed here are form-related, you can learn more about forms from <a href="@domurl('docs/forms')">here</a>.
                             The following are some of the methods of <code>Model</code> class and their functions some of which are also integerated with the <a href="@domurl('docs/forms')">Form</a> class.
                         </div> 
                     </div>
@@ -35,7 +35,7 @@
 
                         <div class="">
                             <ul class="mvt-10">
-                                <li><a href=""><span class="c-orange-dd">loadData</span></a></li>
+                                <li><a href="#loadData"><span class="c-orange-dd">loadData</span></a></li>
                                 <li><a href=""><span class="c-orange-dd">loadedData</span></a></li>
                                 <li><a href=""><span class="c-orange-dd">rules</span></a></li>
                                 <li><a href=""><span class="c-orange-dd">validated</span></a></li>
@@ -65,7 +65,7 @@
  <div class="pxv-10 bc-silver">File - SampleModel.php</div>
  <pre class="pre-code">
 
-  namespace teymzz\spoova\window\Models;
+  namespace spoova\mi\window\Models;
 
   use Model;
 
@@ -84,8 +84,8 @@
  <pre class="pre-code">
   namespace windows\Routes;
 
-  use teymzz\spoova\windows\Models\SampleModel;
-  use teymzz\spoova\core\classes\Request;
+  use spoova\mi\windows\Models\SampleModel;
+  use spoova\mi\core\classes\Request;
 
   class Home extends Window {
 
@@ -162,8 +162,8 @@
  <pre class="pre-code">
  namespace windows\Routes;
 
- use teymzz\spoova\windows\Models\SampleModel;
- use teymzz\spoova\core\classes\Request;
+ use spoova\mi\windows\Models\SampleModel;
+ use spoova\mi\core\classes\Request;
  
  class Home extends Window {
  
@@ -236,8 +236,8 @@
  <pre class="pre-code">
  namespace windows\Routes;
 
- use teymzz\spoova\windows\Models\SampleModel;
- use teymzz\spoova\core\classes\Request;
+ use spoova\mi\windows\Models\SampleModel;
+ use spoova\mi\core\classes\Request;
  
  class Home extends Window {
  

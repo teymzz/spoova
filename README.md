@@ -4,45 +4,114 @@ is built upon MVC arcitecture. It uses a 3-Logic pattern to determine how routes
 are controlled or managed. Other features include inbuilt live server (beta), inbuilt template engine, 
 Reusable components, Static Resource Handler, ORM (beta) and FileManager tool.  
 
-##### INSTALLATION / DEPLOYMENT
+##### INSTALLATION
 
-1. Clone or download the spoova frame project package to your device web server root and rename extracted pack to `spoova`
-2. On desktop devices, open project in your terminal and run the command below to create a new separate project application.
+   ###### Direct Installation
+   If you are downloading spoova project pack dicrectly from the source pack, clone or download the spoova frame project package to your device web server root and rename extracted pack to `spoova`
 
-```
-php mi project <project_name>
-```
+   ###### Installation from composer #1
+   Run the following command in your local web server root to generate the project pack
 
-3. On mobile devices start your mobile local server, rename the spoova project pack to your desired project application name.
-4. Visit the new project application on the browser and navigate to <project_name>/install page to configure the essential parameters needed to get started.
-5. To restart or refresh configuration, select the refresh button "R" or navigate to "<project_name>/install?refresh" page.
-6. Database connection parameters for offline (or local) environments should be configured on local server while online database parameters may be manually configured later in production environment.
-7. Once the application is installed, the installation page can be removed.
-8. Once configuration has completed, page will be redirected back to the home page.
-9. Visit the offline project pack documentation to learn more on how to install the framework and other cli commands.
-10. Deploying your application online comes easy. This is because spoova provides special functions that help to localize the static resource files to their current environment. If these functions are used, then if the application is deployed into an online environment, all static resources will be mapped and the application will still run perfectly. This feature helps to simplify the migrations of files across online and offline environments. 
+     ```cmd 
+     composer create-project spoova/mi spoova
+     ```
+     
+   ###### Installation from composer #2
+   To use composer require 
+
+    > create a file named "mi" in a folder and add the following command 
+  
+    ```php
+    <?php
+
+    require_once "vendor/autoload.php";
+
+    spv\mi\core\Spv::init();
+    ```
+
+    > Add the _composer.json_ file with the following json sample syntax and using the spoova version required
+
+    ```json
+    {    
+        "description": "Spoova Framework",
+        "keywords": ["framework", "spoova"],
+        "type": "project",
+        "license": "MIT",
+        "require": {
+            "spv/mi": "^1.0",
+        },
+        "require-dev": {
+            "phpunit/phpunit": "^9.5"
+        },
+        "require-"
+        "autoload": {
+            "psr-4": {
+                "spv\\mi\\": "./"
+            }
+        },    
+        "scripts": {
+            "post-autoload-dump": [
+                "php mi"
+            ]
+        },
+        "minimum-stability": "dev"
+    }
+    ```
+
+    > Run the command
+    
+    ```sh
+    composer require spoova/mi
+    ``` 
+##### Creating First Project Application
+
+   > Once the project package installer is successfully installed on desktop devices, open the newly created pack in a code editor's terminal and run the command below to create a new separate project application.
+
+   ```
+   php mi project <project_name>
+   ```
+
+   > If web installer was added during project app creation, you can navigate to "<project_name>/install" page to configure the essential parameters needed to get started but it is advisable to use the terminal to ensure all required processes are duely configured.
+   - To restart or refresh configuration on web, select the refresh button "R" or navigate to "<project_name>/install?refresh" page.
+   - Once the application is installed, the installation page can be removed.
+   - Once configuration has completed, page will be redirected back to the home page.
+
+   > If you prefer to configure your application from the terminal, skip step 4 and run the command below to start an interactive installation process. Ensuring that all database parameters if supplied, are wrapped within quotes.
+
+    ```cmd
+    php mi config:all
+    ```
+   > To use spoova for development on mobile devices once the configuration is done, transfer your new project folder to the root of your local mobile web server (e.g KSWeb).
+
+   Visit the offline project pack documentation to learn more on how to install the framework and other cli commands.
+
+##### PROJECT DEPLOYMENT
+Deploying a production-ready application requires the use of specially designed functions that help to localize the static resource files such as image, css and javascript files to their current environment. 
+
+1. The `domurl()` function is required for loading static resources which makes it possible for spoova to keep track of static links. Once the application is deployed into an online environment, all static resources relatively loaded through this function are mapped to the current environment. This funtionality provides the ease of files migration of files across local and remote environments. However, if this function is not employed, developers will have to manually define how their static resources should be loaded and this may be difficult to maintain.
+2. When deploying applications, the project folder must be used as the domain root folder. The security of directories is maintained by the root _.htaccess_ file. Any uncensored alteration to this file may lead to broken application.
 
 ##### CONFIGURATION FILES
 
-1. The database configuration files can be manually configured at _icore/dbconfig.php_ file
+1. The database configuration files are automatically configured by the ```php mi config:all``` command but can be manually configured at _icore/dbconfig.php_ file. Database connection parameters are also loaded by default from this file. Remember to remove your connection paramaters when submitting project to a public environment by running ```php mi config:dboffline``` and also remove the online parameters if previously defined also by running the  ```php mi config:dbonline``` with the parameters set as dash (i.e - ). This can alsi be done manually from the configuration file itself.
 2. Other configuration files can be found within the same directory (i.e _icore/_).
+3. The _icore/init_ file is used to initialize the state of the application.
+4. The _.env_ file should also be added to the same directory, if needed. This will enable the _env()_ function to load the defined keys automatically if needed.
 
 
 ##### QUICK TIPS
 
 1. The root _.htaccess_ file should not be modified without proper knowledge of how to handle such files.
-2. Storing urls of unused static resources into Resource class (Res) should be avoided to reduce load time.
-3. Spoova uses the _res/_ directory to store static files. Hence, all global css and javascript files should be placed within the res directory.
+2. Storing of unused static resource urls into Resource class (Res) should be avoided to reduce load time.
+3. Spoova uses the _res/_ directory to store global static files. Hence, all global css and javascript files should be placed within the res directory.
 4. All domain and subdomains must have an icore folder within them as icore folder helps to localize and (or) update default configurations when necessary.
-5. All subdomain folders (if created), should have access to the res directory (this may require the use of symlink)
-6. Place all external php plugins inside the "core/" directory or subdirectories.
-7. Run all composer commands from the "core/" directory because the vendor folder is placed within it.
-8. Avoid placing classes directly in the the root of "core/" directory. A special subdirectory may be designated for classes.
-9. To use the live server, ensure to read the offline documentation provided on how to implement the feature.
-10. All spoova directories are protected except the "res/" and "src/" directory which are specially reserved directories for keeping static resources.
+5. All subdomain folders (if created), should have access to the global res directory (this may require the use of symlink).
+6. Avoid placing classes directly in the the root of _core/_ directory. A special subdirectory may be designated for classes.
+7. To use the live server feature, read the offline documentation provided on how to implement it.
+8. All directories and php files are protected while other file extensions are exempted. However, the core, icore and windows directories are strictly protected. Any file within these directories also inherit their protection. These can prove useful in helping to secure the _composer.json_ file.
 
 ##### NOTICE
 
-1. All API route urls should be free of special characters including underscore as this may lead to loss of data.
+1. All API route urls should be free of special characters including underscore to avoid loss of data.
 
-2. `Spoova` framework's vendor folder exist within a secured `core/` directory which contains all the core aspect of the application. Direct installation from packagist.org is not available at the moment. Download only by cloning the application directly from github or downloading directly as a zipped pack. This project pack however, should not be used directly to build real web applications unless it is being used on a mobile device. If your device is capable of running cli commands, then it is preferred to create a new separate application. The installation has been discussed under the [INSTALLATION / DEPLOYMENT](https://github.com/teymzz/spoova#installation--deployment).
+2. The spoova main project pack contains an offline documentation designed to guide developers on how to use the framework.

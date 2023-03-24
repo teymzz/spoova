@@ -2,7 +2,7 @@
 
 //current uri &  server name  & environment
 
-use teymzz\spoova\core\classes\DomUrl;
+use spoova\mi\core\classes\DomUrl;
 
 $_ENV['SERVER_URI']    = isset($_SERVER['REQUEST_URI'])? $_SERVER['REQUEST_URI'] : '';
 $_ENV['SERVER_NAME']   = isset($_SERVER['SERVER_NAME'])? $_SERVER['SERVER_NAME'] : '';

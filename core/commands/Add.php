@@ -7,9 +7,9 @@
  * Warning: The usage of this class will alter installation files. 
  * This may cause app to break or lead to other undesired errors.
  */
-namespace teymzz\spoova\core\commands;
+namespace spoova\mi\core\commands;
 
-use teymzz\spoova\core\commands\Cli;
+use spoova\mi\core\commands\Cli;
 
 class Add extends Entry{
 

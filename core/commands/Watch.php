@@ -1,7 +1,7 @@
 <?php
 
-namespace teymzz\spoova\core\commands;
-use teymzz\spoova\core\classes\FileManager;
+namespace spoova\mi\core\commands;
+use spoova\mi\core\classes\FileManager;
 
 class Watch extends Entry{
 

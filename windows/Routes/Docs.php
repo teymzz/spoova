@@ -1,6 +1,6 @@
 <?php
 
-namespace teymzz\spoova\windows\Routes;
+namespace spoova\mi\windows\Routes;
 use Window;
 
 class Docs extends Window {

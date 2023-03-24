@@ -1,10 +1,10 @@
 <?php 
 
-namespace teymzz\spoova\core\classes\DB\DBSchema;
+namespace spoova\mi\core\classes\DB\DBSchema;
 
 use Closure;
-use teymzz\spoova\core\classes\DB\DBPlugins;
-use teymzz\spoova\core\commands\Cli;
+use spoova\mi\core\classes\DB\DBPlugins;
+use spoova\mi\core\commands\Cli;
 
 trait TBPARTITION {
 

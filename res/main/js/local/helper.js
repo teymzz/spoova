@@ -1,28 +1,3 @@
-
-/**
- * This file contains custom helper functions
- * which are mostly jquery dependent. 
- */
-
-//reduces autocomplete of forms
-function hardFormFill(){
-  setTimeout(() => {
-    var inputs = $('form[autocomplete="off"]').find(':input:not(:button)')
-      inputs.on('input copy paste', function(e){
-          e.preventDefault(); 
-          return false;
-      })
-      
-    //   inputs.attr({'readonly':'readonly'});
-      $('.flex-ico, div.i-flex-full').click(function(){
-        let parent = $(this).closest('.i-flex-full')
-        parent.find(':input:not([data-read="false"])').removeAttr('readonly').focusout(function(){
-        //   $(this).attr({'readonly':'readonly'});
-        })
-      })    
-  })
-}
-
 /**
  * converts plain css format to an object format
  * adds style to selector element
@@ -62,10 +37,28 @@ function cssFormat(arg1, arg2){
 //@param bool 'false': close element
 //@param bool 'true': show element 
 function popbox(element, bool, callBack) {
-    if (bool == true || bool == "true") {
-        $(element).fadeIn(500, function() { callFunc(callBack); });
+    if (bool === true || bool === "true") {
+      element.style.display = "block";
+      var opacity = 0;
+      var interval = setInterval(function() {
+        opacity += 0.1;
+        element.style.opacity = opacity;
+        if (opacity >= 1) {
+          clearInterval(interval);
+          callFunc(callBack);
+        }
+      }, 50);
     } else {
-        $(element).fadeOut(500, function() { callFunc(callBack); });
+      var opacity = 1;
+      var interval = setInterval(function() {
+        opacity -= 0.1;
+        element.style.opacity = opacity;
+        if (opacity <= 0) {
+          element.style.display = "none";
+          clearInterval(interval);
+          callFunc(callBack);
+        }
+      }, 50);
     }
 }
 
@@ -79,25 +72,26 @@ function popbox(element, bool, callBack) {
  * @param {*} callBack a callback function executed with callFunc() which must be an array e.g ['function','param','param',...]
  */
 function toggleAttr(elem, value, attr, callBack) {
-    $(elem).on('click', function() {
-        if (attr == null) { attr = 'class'; }
 
+    elem.addEventListener('click', function() {
+        if (attr == null) { attr = 'class'; }
+    
         if (attr == 'class') {
-            var active = $(elem).hasClass(value);
+            var active = elem.classList.contains(value);
             if (active == true) {
-                $(elem).removeClass(value);
+                elem.classList.remove(value);
             } else if (active == false) {
-                $(elem).addClass(value)
+                elem.classList.add(value)
             }
         } else {
-            var active = $(elem).attr(attr);
+            var active = elem.getAttribute(attr);
             if (active == value) {
-                $(elem).attr({ attr: '' });
+                elem.removeAttribute(attr);
             } else if (active == false) {
-                $(elem).attr({ attr: value })
+                elem.setAttribute(attr, value)
             }
         }
-
+    
         if (Array.isArray(callBack)) {
             const allparams = [...callBack];
             var func = allparams.splice(0, 1);
@@ -105,12 +99,11 @@ function toggleAttr(elem, value, attr, callBack) {
             var isActive = (active) ? false : true;
             var actv = [isActive];
             var params = [...actv, ...allparams];
-
+    
             var newCallBack = [func, params];
             callFunc(newCallBack);
         }
-
-    })
+    });
 
 }
 
@@ -198,16 +191,6 @@ function typeWrite(selector,settings){
 }
 
 
-//This function works along with any element having the attribute of id="page".
-//It prevents the visibility of a page until it is successfully loaded 
-function showPage() {
-    (function() {
-        setTimeout(function() { $(".web-hide").css({ "visibility": "visible" }); }, 100);
-        setTimeout(function() { $(".onload-visible").css({ "visibility": "visible" }); }, 200);
-    })();
-}
-
-
 /**
  * Show device width or height in console on browser resize
  * @param {*} type (options: all | width | height)
@@ -216,65 +199,99 @@ function devMedia(type) {
     type = type || 'width'
 
     $(window).on('resize', function() {
-        type == "all" ? console.log("width: " + $(window).width(), "height: " + $(window).height()) : '';
-        type == "width" ? console.log("width: " + $(window).width()) : '';
-        type == "height" ? console.log("height: " + $(window).height()) : '';
+        switch (type) {
+            case "all":
+              console.log(`width: ${window.innerWidth}px, height: ${window.innerHeight}px`);
+              break;
+            case "width":
+              console.log(`width: ${window.innerWidth}px`);
+              break;
+            case "height":
+              console.log(`height: ${window.innerHeight}px`);
+              break;
+            default:
+              console.error("Invalid type");
+          }
+          
     })
 }
 
 /**
- * JQuery Dependent: Works with attribute ('[data-view="morelink"]'). Helps to contract or expand texts
+ * Works with attribute ('[data-view="morelink"]'). Helps to contract or expand texts
  * The attribute disp-text declares the number of text visible at once e.g disp-text="200";
  * This class is used directly with the text's immediate parent element
  */
 function readmore() {
-
-    var ellipsestext = "...";
-    var moretext = "more";
-    var lesstext = "less";
-
-    $('.hide-more').each(function() {
-        var content = $(this).html();
-        var showChar = $(this).attr("disp-text");
+    let ellipsestext = "...";
+    let moretext = "more";
+    let lesstext = "less";
+    let hiderBtn = document.querySelectorAll('.hide-more');
+    let moreLink = document.querySelectorAll('[data-view="morelink"]');
+    
+    hiderBtn.forEach(function(el) {
+        var content = el.innerHTML;
+        var showChar = el.getAttribute("disp-text");
         if (content.length > showChar) {
-            var c = content.substr(0, showChar);
-            var h = content.substr(showChar, content.length - showChar);
+            var c = content.substring(0, showChar);
+            var h = content.substring(showChar, content.length - showChar);
             var html = c + '<span class="moreellipses">' + ellipsestext + '&nbsp;</span><span class="morecontent"><span>' + h + '</span>&nbsp;&nbsp;<a href="" class="morelink">' + moretext + '</a></span>';
-            $(this).html(html);
+            el.innerHTML = html;
         }
     });
-
-    $('[data-view="morelink"]').click(function() {
-        if ($(this).hasClass("less")) {
-            $(this).removeClass("less");
-            $(this).html(moretext);
-        } else {
-            $(this).addClass("less");
-            $(this).html(lesstext);
-        }
-        $(this).parent().prev().toggle();
-        $(this).prev().toggle();
-        return false;
+    
+    moreLink.querySelectorAll('[data-view="morelink"]').forEach(function(el) {
+        el.addEventListener('click', function(e) {
+            e.preventDefault();
+            if (el.classList.contains("less")) {
+                el.classList.remove("less");
+                el.innerHTML = moretext;
+            } else {
+                el.classList.add("less");
+                el.innerHTML = lesstext;
+            }
+            el.parentNode.previousElementSibling.style.display = 'block';
+            el.previousElementSibling.style.display = 'none';
+        });
     });
+    
 }
 
-
 /**
- * Copy a text
+ * VANILLA JS: loops an array of texts supplied into a target element
+ * @param {*} element target element selector
+ * @param {*} texts array of texts
+ * @param {*} interval loop interval
+ * @param {*} callBack callback when loop finishes
  */
-function copy(id, callback) {  
-  /* Get the text field */
-  var field = document.getElementById(id);
+function animeText(element, texts, interval, callBack) {
+    var counter = 0;
+    var texts = (texts == undefined) ? [] : texts;
+    
 
-  /* Select the text field */
-  field.select();
-  field.setSelectionRange(0, 99999); /* For mobile devices */
+    if (element.length != false) {
+        
+        element = document.querySelector(element);
+        if(element.length > 0){
+            animeTextWord = setInterval(function() {
+                
+                element.html(texts[counter]);
+                console.log(texts[counter]);
+                counter++;
+                if (counter === (texts.length)) {
+                    clearInterval(animeTextWord);
 
-   /* Copy the text inside the text field */
-  navigator.clipboard.writeText(field.value);
-  document.execCommand('copy')
-  
-  window[callback](field) 
-  /* Alert the copied text */
+                    setTimeout(() => {
+                        callFunc(callBack);
+                    }, interval)
+
+                }
+            }, interval);
+        }else{
+            console.log("no element found for selector: " + element);
+        }
+
+    } else {
+        clearInterval(animeTextWord);
+    }
 
 }

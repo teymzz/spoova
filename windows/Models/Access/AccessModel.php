@@ -1,10 +1,10 @@
 <?php
 
-namespace teymzz\spoova\windows\Models\Access;
+namespace spoova\mi\windows\Models\Access;
 
 use Form;
-use teymzz\spoova\core\classes\Model;
-use teymzz\spoova\core\classes\Request;
+use spoova\mi\core\classes\Model;
+use spoova\mi\core\classes\Request;
 use User;
 
 class AccessModel extends Model {

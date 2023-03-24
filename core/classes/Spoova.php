@@ -1,8 +1,8 @@
 <?php
 
-namespace teymzz\spoova\core\classes;
+namespace spoova\mi\core\classes;
 
-use teymzz\spoova\core\classes\FileManager;
+use spoova\mi\core\classes\FileManager;
 
 class Spoova{
 

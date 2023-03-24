@@ -4,7 +4,7 @@
     @lay('build.co.navbars:left-nav')
 
     <div class="box-full pxl-2 bc-white-dd pull-right">
-        <section class="pxv-20 tutorial database bc-white">
+        <section class="pxv-10 tutorial database bc-white">
             <div class="font-em-1d2">
 
                 @lay('build.co.links:tutor_pointer')
@@ -59,17 +59,14 @@
                         <div class="updating-libraries bc-white-dd pxv-10 shadow-2-strong rad-4">
                             <div class="fb-6 c-sea-blue-d mvb-6"><span class="ico-thick-update c-sea-blue-d"></span> Updating Libraries</div>
 
-                            <p>
-                                Core composer php plugins can be updated from the <code>core</code> directory because the vendor folder stays within this environment. It is however important to 
-                                remember to update the emogrifer plugin <code>__construct()</code> function to public if it was set to private.
-                            </p>
-
                             <p> 
-                                Other libraries such as <code>bootstrap</code> and javascript files can be found at the <code>res/main/css/</code> 
-                                and <code>res/main/js/</code> directories respectively. If any of these libraries is needed to be upgraded, the local libraries should be 
+                                Static file libraries such as <code>bootstrap</code> and javascript files can be found at the <code>res/main/css/</code> 
+                                and <code>res/main/js/</code> directories respectively. The global static resources folder is the <code>res/main</code> directory. 
+                                If any of the default libraries needs to be upgraded, that library should be 
                                 replaced with newly downloaded files and the correct path must match the path set in the <code>res/res.php</code> file. If new 
                                 path name is different, the old file path in <code>res/res.php</code> file should also be updated correctly. 
-                                Also, as an alternative to using local library file path, cdn link of such libraries may be used instead.
+                                However, as an alternative to using local library file path, cdn link of such libraries may be used instead which can be added or updated in the
+                                <code>res/res.php</code> file. 
                             </p>
                         </div> <br>
 
