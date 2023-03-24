@@ -53,7 +53,7 @@ Reusable components, Static Resource Handler, ORM (beta) and FileManager tool.
                 "php mi"
             ]
         },
-        "minimum-stability": "alpha"
+        "minimum-stability": "dev"
    }
    ```
 
