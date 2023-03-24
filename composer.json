@@ -1,7 +1,7 @@
 {
-    "name": "spv/mi",
+    "name": "spoova/mi",
     "description": "PHP Framework",
-    "type": "project",
+    "type": "library",
     "license": "MIT",
     "authors": [
         {
@@ -10,19 +10,10 @@
             "role": "Web Developer"
         }
     ],
-    "scripts": {
-        "post-autoload-dump": [
-            "php mi", "composer dump-autoload -o"
-        ]
-    },
     "autoload": {
         "psr-4": {
-            "spv\\mi\\": "./"
+            "spoova\\mi\\": "./"
         }
-    },
-    "require-dev": {
-        "phpunit/phpunit": "^9.5"
     },
     "minimum-stability": "alpha"
 }
-
