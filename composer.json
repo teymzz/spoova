@@ -15,7 +15,7 @@
             "spoova\\mi\\": "./"
         }
     },
-    "minimum-stability": "beta",
+    "minimum-stability": "alpha",
     "require": {
         "pelago/emogrifier": "^6.0",
         "phpmailer/phpmailer": "^6.6"
