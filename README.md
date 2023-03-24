@@ -12,27 +12,27 @@ Reusable components, Static Resource Handler, ORM (beta) and FileManager tool.
    ###### Installation from composer #1
    Run the following command in your local web server root to generate the project pack
 
-     ```cmd 
-     composer create-project spoova/mi spoova
-     ```
+   ```cmd 
+   composer create-project spoova/mi spoova
+   ```
      
    ###### Installation from composer #2
    To use composer require 
 
-    > create a file named "mi" in a folder and add the following command 
+   > create a file named "mi" in a folder and add the following command 
   
-    ```php
-    <?php
+   ```php
+   <?php
 
     require_once "vendor/autoload.php";
 
     spv\mi\core\Spv::init();
-    ```
+   ```
 
-    > Add the _composer.json_ file with the following json sample syntax and using the spoova version required
+   > Add the _composer.json_ file with the following json sample syntax and using the spoova version required
 
-    ```json
-    {    
+   ```json
+   {    
         "description": "Spoova Framework",
         "keywords": ["framework", "spoova"],
         "type": "project",
@@ -55,14 +55,14 @@ Reusable components, Static Resource Handler, ORM (beta) and FileManager tool.
             ]
         },
         "minimum-stability": "dev"
-    }
-    ```
+   }
+   ```
 
-    > Run the command
+   > Run the command
     
-    ```sh
-    composer require spoova/mi
-    ``` 
+   ```sh
+   composer require spoova/mi
+   ``` 
 ##### Creating First Project Application
 
    > Once the project package installer is successfully installed on desktop devices, open the newly created pack in a code editor's terminal and run the command below to create a new separate project application.
@@ -78,9 +78,9 @@ Reusable components, Static Resource Handler, ORM (beta) and FileManager tool.
 
    > If you prefer to configure your application from the terminal, skip step 4 and run the command below to start an interactive installation process. Ensuring that all database parameters if supplied, are wrapped within quotes.
 
-    ```cmd
-    php mi config:all
-    ```
+   ```cmd
+   php mi config:all
+   ```
    > To use spoova for development on mobile devices once the configuration is done, transfer your new project folder to the root of your local mobile web server (e.g KSWeb).
 
    Visit the offline project pack documentation to learn more on how to install the framework and other cli commands.
