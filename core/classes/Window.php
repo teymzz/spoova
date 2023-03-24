@@ -1,12 +1,13 @@
 <?php
 
-use teymzz\spoova\core\classes\Ajax;
-use teymzz\spoova\core\classes\constants\CASTED;
-use teymzz\spoova\core\classes\Controller;
-use teymzz\spoova\core\classes\EInfo;
-use teymzz\spoova\core\classes\Request;
-use teymzz\spoova\core\classes\UrlMapper;
-use teymzz\spoova\windows\Routes\Docs\Wmv;
+use spoova\mi\core\classes\Ajax;
+use spoova\mi\core\classes\constants\CASTED;
+use spoova\mi\core\classes\Controller;
+use spoova\mi\core\classes\EInfo;
+use spoova\mi\core\classes\Request;
+use spoova\mi\core\classes\Router;
+use spoova\mi\core\classes\UrlMapper;
+use spoova\mi\windows\Routes\Docs\Wmv;
 
 /**
  * Controls view from windows frame
@@ -727,7 +728,7 @@ use teymzz\spoova\windows\Routes\Docs\Wmv;
       foreach($windows as $window => $method) {
 
         if(method_exists($class, $method)){
-                        
+
             $onCall = self::wvm('onCall');
 
             if(array_key_exists($base, $onCall[CASTED::BASE])){
@@ -805,7 +806,8 @@ use teymzz\spoova\windows\Routes\Docs\Wmv;
       
             $class = substr($method, 4, strlen($method));
 
-            $win   = scheme.WIN.$class;            
+            $win = scheme.WIN.$class;         
+
             if(windowExists($class)){
               response(200, 'status ok');
               $instance->resolved(true);
@@ -1368,5 +1370,6 @@ use teymzz\spoova\windows\Routes\Docs\Wmv;
       unset($windows[SELF::ARG], $windows[SELF::ONCALL], $windows[SELF::STRICT]);
 
     }
+
 
   }

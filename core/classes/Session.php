@@ -1,8 +1,8 @@
 <?php
 
-use teymzz\spoova\core\classes\EInfo;
-use teymzz\spoova\core\classes\Request;
-use teymzz\spoova\core\classes\SharedInfo;
+use spoova\mi\core\classes\EInfo;
+use spoova\mi\core\classes\Request;
+use spoova\mi\core\classes\SharedInfo;
 
 /**
  * Manage and Control session

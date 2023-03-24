@@ -9,9 +9,11 @@
     --black: 0, 0, 0;
     --black-l: 41, 41, 41;
     --black-ll: 79, 79, 79;
+
     --white: 255, 255, 255;
     --white-d: 250, 250, 250;
     --white-dd: 240, 240, 240;
+
     --off-white: 235, 235, 235;
     --off-white-d: 228, 228, 228;
     --off-white-dd: 218, 218, 218;
@@ -20,9 +22,11 @@
     --blue: 0, 0, 255;
     --blue-d: 0, 0, 220;
     --blue-dd: 0, 0, 197;
+
     --red: 255, 0, 0;
     --red-d: 240, 1, 1;
     --red-dd: 211, 0, 0;
+
     --yellow: 255, 255, 0;
     --yellow-d: 235, 235, 0;
     --yellow-dd: 204, 204, 0;
@@ -31,9 +35,11 @@
     --green: 0, 128, 0;
     --green-l: 1, 181, 1;
     --green-ll: 0, 223, 0;
+
     --orange: 255, 165, 0;
     --orange-d: 228, 149, 2;
     --orange-dd: 206, 134, 1;
+
     --purple: 128, 0, 128;
     --purple-d: 120, 0, 120;
     --purple-dd: 110, 0, 110;
@@ -42,21 +48,27 @@
     --violet: 238, 130, 238;
     --violet-d: 228, 119, 228;
     --violet-dd: 194, 88, 194;
+
     --magenta: 255, 0, 255;
     --magenta-d: 231, 5, 231;
     --magenta-dd: 204, 7, 204;
+
     --teal: 0, 128, 128;
     --teal-d: 3, 109, 109;
     --teal-dd: 2, 87, 87;
+
     --lime: 0, 255, 0;
     --lime-d: 7, 228, 7;
     --lime-dd: 4, 190, 4;
+
     --indigo: 105, 0, 181;
     --indigo-d: 92, 2, 157;
     --indigo-dd: 75, 0, 130;
+
     --pink: 255, 182, 193;
     --pink-d: 240, 158, 172;
     --pink-dd: 230, 134, 150;
+
     --aqua: 0, 255, 255;
     --aqua-d: 8, 235, 235;
     --aqua-dd: 12, 206, 206;
@@ -65,9 +77,11 @@
     --bronze: 205, 127, 50;
     --bronze-d: 194, 120, 46;
     --bronze-dd: 165, 102, 39;
+
     --silver: 230, 230, 230;
     --silver-d: 220, 220, 220;
     --silver-dd: 200, 200, 200;
+    
     --gold: 255, 215, 0;
     --gold-d: 238, 203, 2;
     --gold-dd: 216, 184, 1;
@@ -83,27 +97,35 @@
     --crimson: 157, 34, 53;
     --crimson-d: 197, 18, 54;
     --crimson-dd: 165, 21, 50;
+
     --grey: 128, 128, 128;
     --grey-d: 114, 114, 114;
     --grey-dd: 87, 87, 87;
+
     --ivory: 255, 255, 240;
     --ivory-d: 240, 240, 228;
     --ivory-dd: 221, 221, 207;
+
     --maroon: 128, 0, 0;
     --maroon-d: 123, 0, 0;
     --maroon-dd: 104, 1, 1;
+
     --olive: 128, 128, 0;
     --olive-d: 112, 112, 0;
     --olive-dd: 102, 102, 3;
+
     --sea-green: 46, 139, 87;
     --sea-green-d: 40, 121, 75;
     --sea-green-dd: 32, 94, 58;
+
     --sea-blue: 0, 105, 148;
     --sea-blue-d: 1, 100, 139;
     --sea-blue-dd: 2, 83, 116;
+
     --sky-blue: 135, 206, 235;
     --sky-blue-d: 64, 137, 164;
     --sky-blue-dd: 54, 123, 148;
+
     --tan: 210, 180, 140;
     --tan-d: 184, 157, 123;
     --tan-dd: 156, 134, 106;
@@ -3268,7 +3290,7 @@
 }
 
 .bdh-t:hover {
-    border-color: rgba(var(--transparent), var(--bdo-opacity));
+    border-color: var(--transparent);
 }
 
 /*borders safe control (transparency) ......................................................................*/
@@ -3298,13 +3320,13 @@
 }
 
 .bd-xs{
-    border-left-color: transparent;
-    border-right-color: transparent;
+    border-top-color: transparent;
+    border-bottom-color: transparent;
 }
 
 .bd-vs{
-    border-top-color: transparent;
-    border-bottom-color: transparent;
+    border-left-color: transparent;
+    border-right-color: transparent;
 }
 
 
@@ -3320,7 +3342,7 @@
 }
 
 .oc-3 {
-    outline: solid 13x;
+    outline: solid 3px;
 }
 
 .oc-4 {
@@ -3359,6 +3381,11 @@
     outline: solid 12px;
 }
 
+/* hide outline */
+.oc-f {
+    outline: none;
+}
+
 /* outlines and width (hover) */
 
 .oh-1:hover {
@@ -3370,7 +3397,7 @@
 }
 
 .oh-3:hover {
-    outline: solid 13x;
+    outline: solid 3px;
 }
 
 .oh-4:hover {

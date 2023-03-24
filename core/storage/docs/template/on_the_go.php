@@ -371,7 +371,7 @@ window.onload = function() {
 
         <div class="box-full pxl-2 bc-white-dd pull-right">
         
-            <section class="pxv-20 tutorial bc-white">
+            <section class="pxv-10 tutorial bc-white">
                 <div class="font-em-1d2">
 
                     
@@ -427,7 +427,7 @@ window.onload = function() {
                                           <pre class="pre-code">
     &lt;?php 
 
-    namespace teymzz\spoova\windows\Routes;
+    namespace spoova\mi\windows\Routes;
 
     use Window;
 
@@ -484,7 +484,7 @@ window.onload = function() {
                                           <pre class="pre-code">
     &lt;?php 
 
-    namespace teymzz\spoova\windows\Routes;
+    namespace spoova\mi\windows\Routes;
 
     use Window;
 

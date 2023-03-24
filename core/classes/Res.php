@@ -1,14 +1,14 @@
 <?php
 
-use teymzz\spoova\core\classes\EInfo;
-use teymzz\spoova\core\classes\Resin;
-use teymzz\spoova\core\classes\Notice;
-use teymzz\spoova\core\classes\Router;
-use teymzz\spoova\core\classes\Slicer;
-use teymzz\spoova\core\classes\Request;
-use teymzz\spoova\core\classes\Resource;
-use teymzz\spoova\core\classes\Application;
-use teymzz\spoova\core\classes\FileManager;
+use spoova\mi\core\classes\EInfo;
+use spoova\mi\core\classes\Resin;
+use spoova\mi\core\classes\Notice;
+use spoova\mi\core\classes\Router;
+use spoova\mi\core\classes\Slicer;
+use spoova\mi\core\classes\Request;
+use spoova\mi\core\classes\Resource;
+use spoova\mi\core\classes\Application;
+use spoova\mi\core\classes\FileManager;
 
 /**
  * This class is an extension of Resource class

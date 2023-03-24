@@ -1,6 +1,6 @@
 <?php
 
-namespace teymzz\spoova\windows\Routes;
+namespace spoova\mi\windows\Routes;
 
 use Window;
 
@@ -12,6 +12,7 @@ class Index extends Window{
     self::call($this, [
 
       window(':') => 'root',
+      window(':wmv.calls') => 'root',
       
     ]); 
 

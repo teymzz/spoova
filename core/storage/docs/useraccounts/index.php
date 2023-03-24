@@ -1,5 +1,4 @@
 
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -8,9 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" type="image/png" href="http://localhost/spoova/res/main/images/icons/favicon.png">
     <title></title>
-    <meta name="viewport" content="width=device-width, initial-scale=.9, maximum-scale=1.0, user-scalable=1" />
-<meta name="description" content="website_description" />
-<link rel="icon" href="http://localhost/spoova/res/main/images/icons/favicon.png" />
+    
     <link  rel="stylesheet" type="text/css" href="http://localhost/spoova/res/main/css/res.css" x-debug="res-css"><script src='http://localhost/spoova/res/main/js/jquery-3.6.0.js'></script><script src='http://localhost/spoova/res/main/css/bootstrap/js/bootstrap.min.js'></script><link  rel="stylesheet" type="text/css" href="http://localhost/spoova/res/main/css/mdb5/css/mdb.min.css"><script src='http://localhost/spoova/res/main/js/config.js'></script><script src='http://localhost/spoova/res/main/js/core.js'></script><script src='http://localhost/spoova/res/main/js/onLoaded.js'></script><script src='http://localhost/spoova/res/main/js/custom.js'></script><script src='http://localhost/spoova/res/main/js/device.js'></script><script src='http://localhost/spoova/res/main/js/loadImages.js'></script><script src='http://localhost/spoova/res/main/js/formValidator.js'></script><script src='http://localhost/spoova/res/main/js/jquery.mousewheel.js'></script><script src='http://localhost/spoova/res/main/js/anime.js'></script><script src='http://localhost/spoova/res/main/js/init.js'></script> 
     <style rel="build.css.tutorial"> 
 
@@ -374,7 +371,7 @@ window.onload = function() {
 
 
 <div class="box-full pxl-2 bc-white pull-right">
-    <section class="pxv-20 tutorial database bc-white">
+    <section class="pxv-10 tutorial database bc-white">
         <div class="">
 
             
@@ -436,12 +433,12 @@ window.onload = function() {
                                     <div class="">
                                         <div class=" pvs-10"> This method returns certain important user configuration data details such as:</div>
                                         <div class="mvt-6 font-em-d85">
-                                            <div class="mvs-6"><span class="c-orange-dd">USER_TABLE</span> =>  the user table name.</div>
                                             <div class="mvs-6"><span class="c-orange-dd">DBNAME</span> =>  current database name.</div>
+                                            <div class="mvs-6"><span class="c-orange-dd">USER_TABLE</span> =>  the user table name.</div>
                                             <div class="mvs-6"><span class="c-orange-dd">SESSION_NAME</span> => current session key name.</div>
                                             <div class="mvs-6"><span class="c-orange-dd">COOKIE_NAME</span> => current cookie name.</div>
                                             <div class="mvs-6"><span class="c-orange-dd">USER_ID_FIELD_NAME</span> => current user id field name in user database table (i.e USER_TABLE).</div>
-                                            <div class="mvs-6"><span class="c-orange-dd">COOKIE_FIELD_NAME</span> => current cookie field name in database.</div>
+                                            <div class="mvs-6"><span class="c-orange-dd">COOKIE_FIELD_NAME</span> => current cookie field name in database table (i.e USER_TABLE).</div>
                                         </div>
                                     </div>                                
                                 </div>
@@ -462,10 +459,10 @@ window.onload = function() {
                                 to be returned, the following must have occurred: <br><br>                                  
                                 <ol class="pxl-14 font-em-d87">
                                     <li>
-                                        The <span class="c-orange-dd">USER_TABLE</span> must have been previously set in the cnfiguration
+                                        The <span class="c-orange-dd">USER_TABLE</span> must have been previously set in the configuration
                                     </li>
                                     <li>
-                                        The <span class="c-orange-dd">USER_ID_FIELD_NAME</span> must have been previously set in the cnfiguration
+                                        The <span class="c-orange-dd">USER_ID_FIELD_NAME</span> must have been previously set in the configuration
                                     </li>
                                     <li>
                                         A userid must be stored when logging in whose value exists in <span class="c-orange-dd">USER_ID_FIELD_NAME</span> 

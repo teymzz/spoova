@@ -1,5 +1,4 @@
 
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -7,10 +6,8 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" type="image/png" href="http://localhost/spoova/res/main/images/icons/favicon.png">
-    <title></title>
-    <meta name="viewport" content="width=device-width, initial-scale=.9, maximum-scale=1.0, user-scalable=1" />
-<meta name="description" content="website_description" />
-<link rel="icon" href="http://localhost/spoova/res/main/images/icons/favicon.png" />
+    <title>Rex template</title>
+    
     <link  rel="stylesheet" type="text/css" href="http://localhost/spoova/res/main/css/res.css" x-debug="res-css"><script src='http://localhost/spoova/res/main/js/jquery-3.6.0.js'></script><script src='http://localhost/spoova/res/main/css/bootstrap/js/bootstrap.min.js'></script><link  rel="stylesheet" type="text/css" href="http://localhost/spoova/res/main/css/mdb5/css/mdb.min.css"><script src='http://localhost/spoova/res/main/js/config.js'></script><script src='http://localhost/spoova/res/main/js/core.js'></script><script src='http://localhost/spoova/res/main/js/onLoaded.js'></script><script src='http://localhost/spoova/res/main/js/custom.js'></script><script src='http://localhost/spoova/res/main/js/device.js'></script><script src='http://localhost/spoova/res/main/js/loadImages.js'></script><script src='http://localhost/spoova/res/main/js/formValidator.js'></script><script src='http://localhost/spoova/res/main/js/jquery.mousewheel.js'></script><script src='http://localhost/spoova/res/main/js/anime.js'></script><script src='http://localhost/spoova/res/main/js/init.js'></script> 
     <style rel="build.css.tutorial"> 
 
@@ -326,6 +323,8 @@ window.onload = function() {
         </div>
          
 
+  
+
    
 
      
@@ -377,10 +376,32 @@ window.onload = function() {
       background-color: #47b13e;
       border:none;
     }
+
+    .template-area {
+      display: grid;
+      grid-template-areas: "one" "two" "three";
+      gap: 1em;
+    }
+
+    @media (min-width: 1000px) {
+
+      .template-area {
+        grid-template-areas: "one two" "three three";
+      }  
+
+    }
+
+    @media (min-width: 1200px) {
+
+      .template-area {
+        grid-template-areas: "one two three";
+      }  
+
+    }
   </style>
 
   <div class="box-full pxl-2 bc-white-dd pull-right">
-    <section class="pxv-20 tutorial database bc-white">
+    <section class="pxv-10 tutorial database bc-white">
       <div class="font-em-1d2">
 
         
@@ -396,21 +417,101 @@ window.onload = function() {
               <div class="">
                   Rex template engine is an inbuilt spoova engine for compiling and rendering template files which uses special 
                   predefined template directives to make it easier to build web pages. The <code>rex</code> files are mostly identified 
-                  with the <code>.rex</code> extension name which comes before the real file extension name. Aside from the main php template files
-                  identified with <code>.rex.php</code> extension, spoova uses template directives to other rex files which include css and javascript files only. 
+                  with the <code>.rex</code> extension name which usually comes before the code file extension name. Aside from the main php template files
+                  identified with <code>.rex.php</code> extension, spoova also uses template directives for css and javascript files. 
                   The extension of these files are identified with <code>.rex.css</code> and <code>.rex.js</code> respectively. There are several couple of 
                   template directives designed for the spoova template engine, some of which makes is possible to create reusable template components. 
                   The template engine is also built to be responsive with compiler functions and methods that performs the entire process of compiling the rex
                   template files and also rendering the rex template after compilation. In most cases, the compiler functions
                   <code>compile()</code> and <code>view()</code> are used along with a rendering method <code>Res::load()</code>. 
-                  The combination of these method and its respective child functions both makes the template engine become a reality. In 
-                  order to provide a much better clarity on how rex template engine works, this section will be divided under the following 
-                  subheadings. 
+                  The combination of this method and its relatively designed compiler functions both creates the template engine system. In 
+                  order to provide a much better clarity on how rex template engine works, this section will be divided into different parts. 
                   <br><br>  
               </div>
           </div>  
           
-          <div class="c-teal-d">
+          <div class="c-teal-d flex template-area">
+
+
+            <div class="">
+
+                <div class="shadow-2-strong rad-5 flow-hide" style="height: 300px">
+                  <div class="pxv-10 bc-silver-d"><span class="bi bi-stack"></span> Template Compilers</div>
+                  <div class="pre-area">
+                    <pre class="pre-code vh-full">
+  &lt;?php 
+
+    class Home {
+
+
+      function __construct() {
+
+          self::load('home' => compile());
+
+      }
+
+
+    }
+                    </pre>
+                  </div>
+                </div>
+
+            </div>
+
+            <div class="">
+
+                <div class="shadow-2-strong rad-5 flow-hide" style="height: 300px">
+                  <div class="pxv-10 bc-silver-d"><span class="bi-at"></span> Template Directives</div>
+                  <div class="pre-area">
+                    <pre class="pre-code vh-full">
+  &#64;template(rex-path)
+
+   Lorem, ipsum dolor sit amet consectetur adipisicing elit. 
+   Cum tempora sunt accusamus tenetur nobis. Itaque, iure 
+   neque. Accusantium debitis amet fugiat dicta totam quidem 
+   quod magni ratione repellendus doloribus. Corrupti debitis 
+   provident atque laboriosam, dicta consectetur amet eius 
+   voluptatum. Quos quod natus inventore culpa deserunt 
+   laudantium aliquid quae magni laborum ab nostrum, 
+   ipsa aliquam repudiandae quam, dignissimos neque 
+   tempora necessitatibus nihil! Magni iste minima quo 
+   enim deleniti tempora optio ipsam?...
+
+  &#64;template;
+                    </pre>
+                  </div>
+                </div>
+
+            </div>
+
+            <div class="">
+
+                <div class="shadow-2-strong rad-5 flow-hide" style="height: 300px">
+                  <div class="pxv-10 bc-silver-d"><span class="bi-arrow-clockwise"></span> Template on the go</div>
+                  <div class="pre-area">
+                    <pre class="pre-code vh-full">
+    &lt;?php 
+
+    class Home {
+
+
+      function __construct() {
+
+          self::addRex();
+          self::load('home' => compile());
+          ...
+
+      }
+
+
+    }
+                    </pre>
+                  </div>
+                </div>
+
+            </div>
+
+            
             <ul>
                 <li><a href="<?= route('::compilers'); ?>">Template compilers</a></li>
                 <li><a href="<?= route('::files'); ?>">Template files</a></li>
@@ -418,6 +519,8 @@ window.onload = function() {
                 <li><a href="<?= route('::window'); ?>">Templating on window</a></li>
                 <li><a href="<?= route('::on_the_go'); ?>">Template on the go</a></li>
             </ul>
+
+
           </div>
         
         </div>  

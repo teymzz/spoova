@@ -1,6 +1,6 @@
 <?php 
 
-namespace teymzz\spoova\core\tools;
+namespace spoova\mi\core\tools;
 
 /**
  * This class was created for handling file uploads.

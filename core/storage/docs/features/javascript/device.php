@@ -373,7 +373,7 @@ window.onload = function() {
 
 
 <div class="box-full pxl-2 bc-white-dd pull-right">
-    <section class="pxv-20 tutorial database bc-white">
+    <section class="pxv-10 tutorial database bc-white">
         <div class="font-em-1d2">
 
             

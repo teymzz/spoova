@@ -1,8 +1,8 @@
 <?php
 
-namespace teymzz\spoova\windows\Routes\Docs;
+namespace spoova\mi\windows\Routes\Docs;
 
-use teymzz\spoova\windows\Frames\UserFrame;
+use spoova\mi\windows\Frames\UserFrame;
 
 class Functions extends UserFrame {
 

@@ -1,6 +1,6 @@
 <?php
 
-namespace teymzz\spoova\core\commands;
+namespace spoova\mi\core\commands;
 
 /**
  * This class contains basic information on avaialable cli commands
@@ -64,10 +64,10 @@ class Info extends Entry{
             
 
             #---------------------            
-            'add:migrator'   => 'Adds a migration file (class) into \'core/migrations\' directory.
+            'add:migrator'   => 'Adds a migration file (class) into \'migrations\' directory.
 
  Syntax :'.self::mi('add:migrator','','','').Cli::warn('<name>', 1).Cli::br(2)
- .Cli::textIndent(Cli::warn('name').' ..... name of migration file to be added in \'core/migrations\' directory ', 1).Cli::br(2)
+ .Cli::textIndent(Cli::warn('name').' ..... name of migration file to be added in \'migrations\' directory ', 1).Cli::br(2)
  .Cli::textIndent(Cli::alert('Notice: ').'a name with prefix "'.Cli::warn('create_').'" will try to use a creation code syntax', 1).Cli::br(2)
  .Cli::textIndent(Cli::alert('Notice: ').'a name with prefix "'.Cli::warn('alter_').'" will try to use an alter code syntax', 1).Cli::br(2)
  .Cli::textIndent(Cli::alert('Notice: ').'supplied name will have an auto generated prefix', 1)

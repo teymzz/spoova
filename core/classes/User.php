@@ -1,10 +1,10 @@
 <?php
 
-use teymzz\spoova\core\classes\DB;
-use teymzz\spoova\core\classes\DB\DBHandler;
-use teymzz\spoova\core\classes\UserAuth;
-use teymzz\spoova\core\classes\UserDB;
-use teymzz\spoova\core\classes\UserIdResolver;
+use spoova\mi\core\classes\DB;
+use spoova\mi\core\classes\DB\DBHandler;
+use spoova\mi\core\classes\UserAuth;
+use spoova\mi\core\classes\UserDB;
+use spoova\mi\core\classes\UserIdResolver;
 
 class User extends Session{
 

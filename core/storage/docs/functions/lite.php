@@ -1,5 +1,4 @@
 
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -8,9 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" type="image/png" href="http://localhost/spoova/res/main/images/icons/favicon.png">
     <title>Tutorial - Functions</title>
-    <meta name="viewport" content="width=device-width, initial-scale=.9, maximum-scale=1.0, user-scalable=1" />
-<meta name="description" content="website_description" />
-<link rel="icon" href="http://localhost/spoova/res/main/images/icons/favicon.png" />
+    
     <link  rel="stylesheet" type="text/css" href="http://localhost/spoova/res/main/css/res.css" x-debug="res-css"><script src='http://localhost/spoova/res/main/js/jquery-3.6.0.js'></script><script src='http://localhost/spoova/res/main/css/bootstrap/js/bootstrap.min.js'></script><link  rel="stylesheet" type="text/css" href="http://localhost/spoova/res/main/css/mdb5/css/mdb.min.css"><script src='http://localhost/spoova/res/main/js/config.js'></script><script src='http://localhost/spoova/res/main/js/core.js'></script><script src='http://localhost/spoova/res/main/js/onLoaded.js'></script><script src='http://localhost/spoova/res/main/js/custom.js'></script><script src='http://localhost/spoova/res/main/js/device.js'></script><script src='http://localhost/spoova/res/main/js/loadImages.js'></script><script src='http://localhost/spoova/res/main/js/formValidator.js'></script><script src='http://localhost/spoova/res/main/js/jquery.mousewheel.js'></script><script src='http://localhost/spoova/res/main/js/anime.js'></script><script src='http://localhost/spoova/res/main/js/init.js'></script> 
     <style rel="build.css.tutorial"> 
 
@@ -178,6 +175,7 @@
 }
 
 body.--theme-dark{
+    color: rgb(125, 125, 125);
     background-color : rgba(21, 15, 39);
 }
  </style><style rel="build.css.navbars"> 
@@ -244,7 +242,7 @@ body.--theme-dark{
     <script src='http://localhost/spoova/res/main/js/switcher.js'></script>
     
 </head>
-<body>
+<body class="--theme-dark">
 
     <script>
         $(document).ready(function(){
@@ -347,6 +345,7 @@ window.onload = function() {
 
           <ul class="list-square">
                <li> <a href="<?= DomUrl('docs/installation') ?>" class="<?= inPath('active') ?>"><span class="ico ico-spin"></span>Installation</a> </li>
+               <li> <a href="<?= DomUrl('docs/wmv') ?>" class="<?= inPath('active') ?>" ><span class="ico ico-spin"></span><span class="fb-6 pointer" title="Windows Models View">WMV</span> PATTERN</a></li>
                <li> <a href="<?= DomUrl('docs/live-server') ?>" class="<?= inPath('active') ?>"><span class="ico ico-spin"></span>Live Server</a></li>
                <li> <a href="<?= DomUrl('docs/database') ?>" class="<?= inPath('active') ?>"><span class="ico ico-spin"></span>Database</a> </li>
                <li> <a href="<?= DomUrl('docs/resource') ?>" class="<?= inPath('active') ?>"><span class="ico ico-spin"></span>Resource class</a> </li>
@@ -358,12 +357,11 @@ window.onload = function() {
                <li> <a href="<?= DomUrl('docs/database/migrations') ?>" class="<?= inPath('active') ?>"><span class="ico ico-spin"></span>Handling Migrations</a> </li>
                <li> <a href="<?= DomUrl('docs/classes') ?>" class="<?= inPath('active') ?>"><span class="ico ico-spin"></span>Helper Classes</a> </li>
                <li> <a href="<?= DomUrl('docs/functions') ?>" class="<?= inPath('active') ?>"><span class="ico ico-spin"></span>Helper Functions</a> </li>
-               <li> <a href="<?= DomUrl('docs/directives') ?>" class="<?= inPath('active') ?>"><span class="ico ico-spin"></span>Helper Directives</a> </li>
+               <li> <a href="<?= DomUrl('docs/template') ?>" class="<?= inPath('active') ?>"><span class="ico ico-spin"></span>Template Engine</a> </li>
                <li> <a href="<?= DomUrl('docs/setters') ?>" class="<?= inPath('active') ?>"><span class="ico ico-spin"></span>Global Setters</a> </li>
                <li> <a href="<?= DomUrl('docs/mails') ?>" class="<?= inPath('active') ?>"><span class="ico ico-spin"></span>Handling Mails</a> </li>
                <li> <a href="<?= DomUrl('docs/cli') ?>" class="<?= inPath('active') ?>"><span class="ico ico-spin"></span>Cli Commands</a> </li>         
                <li> <a href="<?= DomUrl('docs/plugins') ?>" class="<?= inPath('active') ?>"><span class="ico ico-spin"></span>Composer and Plugins</a></li>
-               <li> <a href="<?= DomUrl('docs/wmv') ?>" class="<?= inPath('active') ?>" ><span class="ico ico-spin"></span>The <span class="fb-6 pointer" title="Windows Models View">WMV</span> PATTERN</a></li>
                <li> <a href="<?= DomUrl('docs/libraries') ?>" class="<?= inPath('active') ?>"><span class="ico ico-spin"></span>Third-Party Libraries</a> </li>
                <li> <a href="<?= DomUrl('docs/other-features') ?>" class="<?= inPath('active') ?>"><span class="ico ico-spin"></span>Other Features</a> </li>
           </ul>
@@ -373,7 +371,7 @@ window.onload = function() {
 
 
   <div class="box-full pxl-2 bc-white-dd pull-right">
-    <section class="pxv-20 tutorial database bc-white">
+    <section class="pxv-10 tutorial database bc-white">
       <div class="font-em-1d2">
 
         
@@ -386,13 +384,13 @@ window.onload = function() {
           <div class="font-em-1d5 c-orange">Functions - Lite</div> <br>  
           
           <div class="resource-intro">
-            <div class="fb-6">Introduction</div>
+            <div class="fb-6 hide">Introduction</div>
             <div class="">
 
                 Lite helper functions are predefined spoova functions that eases building 
                 web applications. These functions are mostly applied to strings or arrays
-                while other remaining parts are just custom functions of already existing php 
-                internal functions 
+                while other functions under this group are just custom redefined functions of already existing 
+                inbuilt php functions.
                 
             </div> 
           </div>
@@ -444,7 +442,7 @@ window.onload = function() {
             </div> <br>
             
             <div>
-              This converts a std object or string to array format by default.
+              This converts a json std object or string to array format by default.
             </div>
           </div>         
 
@@ -536,8 +534,8 @@ window.onload = function() {
             </div> <br>
             
             <div>
-              Inflect is a more powerful function that either adds or removes the last "s" character of a string based on the count 
-              of value supplied to it. The format is shown below:
+              Inflect is a simple function that either adds or removes the last "s" character of a string based on the count 
+              of value supplied to it as second argument. The format is shown below:
             </div> <br>
 
             <!-- code line started -->
@@ -561,15 +559,15 @@ window.onload = function() {
               </div>
 
               <pre class="pre-code">
-    inflect("Boy", 1); <span class="comment no-select"> <span class="co-6 c-sky-blue-d">.............</span> //Boy  (add "s" if count is greater than 1)</span>
+    inflect("Boy", 1); <span class="comment no-select"> <span class="co-6 c-sky-blue-d">.............</span> //Boy  (adds "s" if $count is greater than 1)</span>
 
-    inflect("Boy", 2); <span class="comment no-select"> <span class="co-6 c-sky-blue-d">.............</span> //Boys (add "s" if count is greater than 1)</span>
+    inflect("Boy", 2); <span class="comment no-select"> <span class="co-6 c-sky-blue-d">.............</span> //Boys (adds "s" if $count is greater than 1)</span>
 
-    inflect("Boy", 2, true); <span class="comment no-select"> <span class="co-6 c-sky-blue-d">.......</span> //Boys (add "s" if count is greater than 1 and last character is not "s")</span>
+    inflect("Boy", 2, true); <span class="comment no-select"> <span class="co-6 c-sky-blue-d">.......</span> //Boys (adds "s" if $count is greater than 1 and last character is not "s")</span>
 
-    inflect("Boys", 2, true); <span class="comment no-select"> <span class="co-6 c-sky-blue-d">......</span> //Boys (add "s" if count is greater than 1 and last character is not "s")</span>
+    inflect("Boys", 2, true); <span class="comment no-select"> <span class="co-6 c-sky-blue-d">......</span> //Boys (adds "s" if $count is greater than 1 and last character is not "s")</span>
 
-    inflect("Boys", 1, true); <span class="comment no-select"> <span class="co-6 c-sky-blue-d">......</span> //Boy  (remove "s" if count is less than 1 and last character is "s")</span>
+    inflect("Boys", 1, true); <span class="comment no-select"> <span class="co-6 c-sky-blue-d">......</span> //Boy  (removes "s" if $count is less than 1 and last character is "s")</span>
               </pre>
 
               <div class="foot-note font-em-d9 pxs-14">
@@ -578,7 +576,7 @@ window.onload = function() {
 
 
               <pre class="pre-code">
-    inflect(["Boy","Book"], 2); <span class="comment no-select"> <span class="co-6 c-sky-blue-d">.............</span> //[Boys, Books]  (add "s" if count is greater than 1)</span>
+    inflect(["Boy","Book"], 2); <span class="comment no-select"> <span class="co-6 c-sky-blue-d">.............</span> //[Boys, Books]  (adds "s" if $count is greater than 1)</span>
               </pre>
 
             </div>
@@ -602,7 +600,7 @@ window.onload = function() {
 
               <pre class="pre-code">
               
-  to_lgts('< code >')<span class="comment">// returns: <?= ( htmlentities('&lt;') )?? "" ?> code <?= ( htmlentities('&gt;') )?? "" ?> </span>
+  to_lgts('< code >');<span class="comment"> // returns: <?= ( htmlentities('&lt;') )?? "" ?> code <?= ( htmlentities('&gt;') )?? "" ?> </span>
 
               </pre>
 
@@ -627,7 +625,7 @@ window.onload = function() {
               <pre class="pre-code">
   $text = href('url : http://www.site.com');
   
-  var_dump($text);<span class="comment"> // url : &lt;a href="http://www.site.com"&gt http://www.site.com &lt;/a&gt;</span>
+  echo($text);<span class="comment"> // url : &lt;a href="http://www.site.com"&gt http://www.site.com &lt;/a&gt;</span>
               </pre>
 
             </div>
@@ -640,7 +638,7 @@ window.onload = function() {
               <pre class="pre-code">
   $text = href('url : http://www.site.com', 'span class="some_class"');
   
-  var_dump($text);<span class="comment"> 
+  echo($text);<span class="comment"> 
   
   <span class="c-teal no-select">// returns :</span>
 

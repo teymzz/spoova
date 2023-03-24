@@ -1,6 +1,6 @@
 <?php
 
-namespace teymzz\spoova\core\commands;
+namespace spoova\mi\core\commands;
 
 /**
  * This class contains all spoova cli syntaxes

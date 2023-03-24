@@ -375,7 +375,7 @@ window.onload = function() {
 
 
 <div class="box-full pxl-2 bc-white-dd pull-right">
-    <section class="pxv-20 tutorial database bc-white">
+    <section class="pxv-10 tutorial database bc-white">
         <div class="font-em-1d2">
 
             
@@ -984,7 +984,7 @@ window.onload = function() {
                         </div>
 
                         <div class="foot-note">
-                            Once this code is executed, all migration files within the <code>core/migrations</code> directory 
+                            Once this code is executed, all migration files within the <code>migrations/</code> directory 
                             will implement their <code>up()</code> method. Asssuming our code structure is like above, then 
                             from the code format, a table will be generated in the currently selected database. The connection used 
                             will depend on user default connection which must have been set in the <code>icore/dbconfig.php</code> 

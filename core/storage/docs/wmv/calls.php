@@ -6,9 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" type="image/png" href="http://localhost/spoova/res/main/images/icons/favicon.png">
     <title>Tutorial - WMV Calls</title>
-    <meta name="viewport" content="width=device-width, initial-scale=.9, maximum-scale=1.0, user-scalable=1" />
-<meta name="description" content="website_description" />
-<link rel="icon" href="http://localhost/spoova/res/main/images/icons/favicon.png" />
+    
     <link  rel="stylesheet" type="text/css" href="http://localhost/spoova/res/main/css/res.css" x-debug="res-css"><script src='http://localhost/spoova/res/main/js/jquery-3.6.0.js'></script><script src='http://localhost/spoova/res/main/css/bootstrap/js/bootstrap.min.js'></script><link  rel="stylesheet" type="text/css" href="http://localhost/spoova/res/main/css/mdb5/css/mdb.min.css"><script src='http://localhost/spoova/res/main/js/config.js'></script><script src='http://localhost/spoova/res/main/js/core.js'></script><script src='http://localhost/spoova/res/main/js/onLoaded.js'></script><script src='http://localhost/spoova/res/main/js/custom.js'></script><script src='http://localhost/spoova/res/main/js/device.js'></script><script src='http://localhost/spoova/res/main/js/loadImages.js'></script><script src='http://localhost/spoova/res/main/js/formValidator.js'></script><script src='http://localhost/spoova/res/main/js/jquery.mousewheel.js'></script><script src='http://localhost/spoova/res/main/js/anime.js'></script><script src='http://localhost/spoova/res/main/js/init.js'></script> 
     <style rel="build.css.tutorial"> 
 
@@ -176,6 +174,7 @@
 }
 
 body.--theme-dark{
+    color: rgb(125, 125, 125);
     background-color : rgba(21, 15, 39);
 }
  </style><style rel="build.css.navbars"> 
@@ -358,7 +357,6 @@ window.onload = function() {
                <li> <a href="<?= DomUrl('docs/classes') ?>" class="<?= inPath('active') ?>"><span class="ico ico-spin"></span>Helper Classes</a> </li>
                <li> <a href="<?= DomUrl('docs/functions') ?>" class="<?= inPath('active') ?>"><span class="ico ico-spin"></span>Helper Functions</a> </li>
                <li> <a href="<?= DomUrl('docs/template') ?>" class="<?= inPath('active') ?>"><span class="ico ico-spin"></span>Template Engine</a> </li>
-               <li> <a href="<?= DomUrl('docs/template/directives') ?>" class="<?= inPath('active') ?>"><span class="ico ico-spin"></span>Template Directives</a> </li>
                <li> <a href="<?= DomUrl('docs/setters') ?>" class="<?= inPath('active') ?>"><span class="ico ico-spin"></span>Global Setters</a> </li>
                <li> <a href="<?= DomUrl('docs/mails') ?>" class="<?= inPath('active') ?>"><span class="ico ico-spin"></span>Handling Mails</a> </li>
                <li> <a href="<?= DomUrl('docs/cli') ?>" class="<?= inPath('active') ?>"><span class="ico ico-spin"></span>Cli Commands</a> </li>         
@@ -373,7 +371,7 @@ window.onload = function() {
 
     <div class="box-full pxl-2 bc-white-dd pull-right">
     
-        <section class="pxv-20 tutorial bc-white">
+        <section class="pxv-10 tutorial bc-white">
             <div class="font-em-1d2">
 
                 
@@ -434,6 +432,11 @@ window.onload = function() {
                                             <div class="bc-silver rad-4 pxv-4">
                                                 <code>self</code>: Since the shutter methods belong to the window class, they can only be applied within window classes 
                                             </div>
+                                        </li> <br>                                        
+                                        <li>
+                                            <div class="bc-silver rad-4 pxv-4">
+                                                <code>call</code> There are basically four shutters (i.e rootcall, call, basecall and pathcall) and all four uses the same argument syntax shown earlier.
+                                            </div>
                                         </li> <br>
                                         <li>
                                             <div class="bc-silver rad-4 pxv-4">
@@ -441,11 +444,7 @@ window.onload = function() {
                                                 This is because they need to point to the current window's instance itself.
                                             </div>
                                         </li> <br>
-                                        <li>
-                                            <div class="bc-silver rad-4 pxv-4">
-                                                <code>call</code> There are basically four shutters and all four uses the same argument syntax shown earlier.
-                                            </div>
-                                        </li> <br>
+
                                         <li>
                                             <div class="bc-silver rad-4 pxv-4">
                                                 <code>acceptableUrls</code> These are arrays of key and value pairs where the "key" is a url that is expected to be compared with the  
@@ -732,7 +731,7 @@ window.onload = function() {
                                 <div class="font-menu mvt-10">
                                     In the code above, the <code>win:</code> directive tells the window class to load its value as a class.
                                     When a url, for example <code>http://domain/home</code> or <code>http://domain/home/any/path</code> is visited, 
-                                    the class <code>spoova\windows\Routes\Home</code> will be triggered. The <code>profile</code> also works in a similar way. 
+                                    the class <code>spoova\mi\windows\Routes\Home</code> will be triggered. The <code>profile</code> also works in a similar way. 
                                     However, when a page e.g <code>http://domain</code>, <code>http://domain/index</code> or <code>http://domain/index/any/path</code> 
                                     is visited, the <code>root()</code> method is triggered. Remember that if the index page is visited, then <code>window(':')</code> 
                                     will also return the name <span class="c-brown-ll">"index"</span>. This means that we can replace our first array key of <code>'index' => 'root'</code> 
@@ -756,7 +755,7 @@ window.onload = function() {
                                 <div class="pre-area">
 <div class="pxv-10 bc-silver-d">pathcall method to load acceptable paths on entry points.</div> <br>
 <pre class="pre-code pxs-6">
-  namespace teymzz\spoova\windows;
+  namespace spoova\mi\windows;
 
   use Window;
 
@@ -831,7 +830,7 @@ window.onload = function() {
                                     <div class="pre-area mvt-10">
 <pre class="pre-code">
   &lt;?php
-    namespace teymzz\spoova\windows;
+    namespace spoova\mi\windows;
 
     <span class="c-lime-dd">use Window;</span>
 
@@ -1253,9 +1252,9 @@ window.onload = function() {
 
                                 <div class="font-menu mvt-6">
                                     In the code above, while the <code>home</code> url will call the <code>root()</code> 
-                                    method of the current window, the <code>home/user</code> will call the <code>spoova\Windows\Path\To\File</code> 
+                                    method of the current window, the <code>home/user</code> will call the <code>spoova\mi\Windows\Path\To\File</code> 
                                     class.
-                                    The <code>win:</code> directive specifies the <code>spoova\Windows</code> namespace. 
+                                    The <code>win:</code> directive specifies the <code>spoova\mi\Windows</code> namespace. 
                                     We can also pass an object as value rather than strings.  The variable <code>$var</code> 
                                     will also be passed down as an argument to the class, object or method defined.
                                 </div>
@@ -1281,7 +1280,7 @@ window.onload = function() {
 
   <span class="comment no-select">...</span>
 
-  namespace teymzz\spoova\windows\Routes;
+  namespace spoova\mi\windows\Routes;
 
   class Home {
 
@@ -1319,7 +1318,7 @@ window.onload = function() {
 
   <span class="comment no-select">...</span>
 
-  namespace teymzz\spoova\windows\Routes\Home;
+  namespace spoova\mi\windows\Routes\Home;
 
   class User {
 

@@ -1,6 +1,6 @@
 <?php
 
-    use teymzz\spoova\core\classes\Slicer;
+    use spoova\mi\core\classes\Slicer;
 
     
     /**

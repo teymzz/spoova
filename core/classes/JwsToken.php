@@ -1,6 +1,6 @@
 <?php
 
-namespace teymzz\spoova\core\classes;
+namespace spoova\mi\core\classes;
 
 /**
  * This class is used for creating and validating JWSTokens

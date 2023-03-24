@@ -1,9 +1,9 @@
 <?php
 
-namespace teymzz\spoova\core\classes;
+namespace spoova\mi\core\classes;
 
 use ZipArchive;
-use teymzz\spoova\core\classes\Enlist;
+use spoova\mi\core\classes\Enlist;
 use RecursiveIteratorIterator;
 use RecursiveDirectoryIterator;
 
@@ -47,7 +47,9 @@ class FileManager extends Enlist{
         $url .="/";
       }
 
-      $all   = glob($url."*");
+      $all   = glob($url."*")?: [];
+      $hidden = glob($url.".*")?: [];
+      $all = array_merge($all, $hidden);
       $dirs  = array_filter($all, 'is_dir'); //only directories
 
       if(!$fullPath){
@@ -57,6 +59,44 @@ class FileManager extends Enlist{
       }
 
       return $dirs;
+    }
+
+    /**
+     * Get the folder and file contents of a directory
+     *
+     * @param boolean $fullPath 
+     *  - false returns only the content names
+     * @return array
+    */
+    public function getContents(bool $fullPath = true){
+      if($this->url == null){ return $this->response('invalid url supplied'); }
+
+      $url = rtrim($this->url, '/');
+      if(strpos(strlen($url), '/') === false){
+        $url .="/";
+      }
+
+      $files  = glob($url."*")?: [];
+      $hidden = glob($url.".*")?: [];
+      $hiddenItems = [];
+      
+      array_map(function($file) use(&$hiddenItems){
+        $ffile = basename($file);
+        if(($ffile !== '.') && ($ffile !== '..')){
+          $hiddenItems[] = $file;
+        }
+      },$hidden);
+
+      $files = array_filter($files, 'file_exists'); //only files
+      $contents = array_merge($files, $hiddenItems);
+
+      if(!$fullPath){
+        $contents = array_map(function($item) {
+          return pathinfo($item, PATHINFO_BASENAME);
+        }, $contents);
+      }
+
+      return $contents;
     }
 
     /**
@@ -77,6 +117,8 @@ class FileManager extends Enlist{
       }
       
       $all   = glob($url."*");
+      $hidden = glob($url.".*")?: [];
+      $all = array_merge($all, $hidden);
       $files = array_filter($all, 'is_file');
 
       if(!$fullPath){
@@ -290,9 +332,10 @@ class FileManager extends Enlist{
      *
      * @Note: This will create directories if it does not exist
      * @param array|string[] $urls list of paths to be created
+     * @param array|void $files contains referenced list of paths created
      * @return bool
      */
-    public function openFiles(array|string $urls) : bool {
+    public function openFiles(array|string $urls, &$files = []) : bool {
 
       if(func_num_args() > 1){
         $urls = func_get_args();
@@ -306,7 +349,9 @@ class FileManager extends Enlist{
 
           if(trim($url)) {
 
-              if(!$this->openFile(true, $url)) {
+              if($this->openFile(true, $url)) {
+                $files = $url;
+              }else{
                 return false;
               }
 
@@ -816,7 +861,7 @@ class FileManager extends Enlist{
       }
 
       if(!is_dir($path)){
-        mkdir($path,0777,true);
+       return mkdir($path,0777,true);
       }
       
       return is_dir($path)? true : false;
@@ -1018,7 +1063,7 @@ class FileManager extends Enlist{
 
       //modify error status on strict code execution if has previous error
       if($this->error && $strict) $this->error = false;     
-      
+
       if(!file_exists($this->lastDir)) {
         $this->error = ('invalid source path "'.$this->lastDir.'" ');
         return $this;
@@ -1038,7 +1083,7 @@ class FileManager extends Enlist{
         return $this;
       }
 
-      if(!file_exists($newDir)){
+      if(!is_file($newDir) && (strtolower($this->lastDir) !== strtolower($newDir))){
         rename($this->lastDir, $newDir);
       }else{
         $this->error = ('destination path "'.$newDir.'" already exists');
@@ -1049,18 +1094,53 @@ class FileManager extends Enlist{
     }
 
     /**
+     * move last declared file or folder to another location
+     *
+     * @param string $newdir new directory
+     * @param array $ignore list of contents to be excluded from being moved.
+     *  - Only file or folder names should be supplied. This will use the default url set as base url
+     * @param array|void $moved contains list of moved items
+     * @return bool true only if all contents are moved.
+     */
+    public function moveContentsTo(string $newdir, array $ignore = [], &$moved = []) : bool {
+      $contents = $this->getContents(false);
+      $valids = [];
+
+      array_map(function($content) use(&$valids, $ignore) {
+
+        if(!in_array($content, $ignore)) $valids[] = $content;
+
+      }, $contents);
+
+      $contents = $valids;
+
+      $moved = [];
+
+      foreach($contents as $content){
+
+        if(!in_array($content, $ignore) && $this->move($content, $newdir)) {
+          $moved[] = $content;
+        }
+
+      }
+
+      return (count($contents) === count($moved));
+    }
+
+    /**
      * Moves a folder or file to a new location function
      *
      * @param string $param1 first location as source or destination
+     *  - If only $param1 is defined, then $param1 must be a full path of destination. 
+     *  - If $param2 is defined, then $param1 must be a subpath of url defined in Filemanager::setUrl(). 
      * @param string $param2 second (optional) location as destination
-     * 
+     *  - If $param2 is defined, then it must be the destination of $param1
      * @return boolean true if $path is moved successfully.
      */
-    public function move($param1 = '', $param2 = '') : bool{
+    public function move(string $param1 = '', string $param2 = '') : bool{
 
-      $selection = $this->url;
+      $selection = rtrim($this->url,"/");
 
-      
       if(!file_exists($selection)){ return false; }
 
       if(func_num_args() === 1){
@@ -1073,8 +1153,13 @@ class FileManager extends Enlist{
 
       if(func_num_args() === 2){
         //move $param1 in selection to $param2
-        if(!file_exists($param2)){ return false; }
-        if(file_exists($selection.'/'.$param1)){
+        if(!file_exists($param2)){ 
+          $this->error = ('invalid destination path "'.$this->lastDir.'" supplied as argument(#2) on Filemanager::move() ');
+          return false; 
+        }
+
+      
+        if(file_exists($selection.'/'.$param1)){    
           rename($selection.'/'.$param1, $param2.'/'.$param1);
           return file_exists($param2.'/'.$param1);
         }

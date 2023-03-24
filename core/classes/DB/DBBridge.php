@@ -1,5 +1,5 @@
 <?php
-namespace teymzz\spoova\core\classes\DB;
+namespace spoova\mi\core\classes\DB;
 
 /**
  * This class is exepected to bridge the gap between

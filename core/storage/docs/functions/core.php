@@ -1,5 +1,4 @@
 
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -8,9 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" type="image/png" href="http://localhost/spoova/res/main/images/icons/favicon.png">
     <title>Tutorial - Functions</title>
-    <meta name="viewport" content="width=device-width, initial-scale=.9, maximum-scale=1.0, user-scalable=1" />
-<meta name="description" content="website_description" />
-<link rel="icon" href="http://localhost/spoova/res/main/images/icons/favicon.png" />
+    
     <link  rel="stylesheet" type="text/css" href="http://localhost/spoova/res/main/css/res.css" x-debug="res-css"><script src='http://localhost/spoova/res/main/js/jquery-3.6.0.js'></script><script src='http://localhost/spoova/res/main/css/bootstrap/js/bootstrap.min.js'></script><link  rel="stylesheet" type="text/css" href="http://localhost/spoova/res/main/css/mdb5/css/mdb.min.css"><script src='http://localhost/spoova/res/main/js/config.js'></script><script src='http://localhost/spoova/res/main/js/core.js'></script><script src='http://localhost/spoova/res/main/js/onLoaded.js'></script><script src='http://localhost/spoova/res/main/js/custom.js'></script><script src='http://localhost/spoova/res/main/js/device.js'></script><script src='http://localhost/spoova/res/main/js/loadImages.js'></script><script src='http://localhost/spoova/res/main/js/formValidator.js'></script><script src='http://localhost/spoova/res/main/js/jquery.mousewheel.js'></script><script src='http://localhost/spoova/res/main/js/anime.js'></script><script src='http://localhost/spoova/res/main/js/init.js'></script> 
     <style rel="build.css.tutorial"> 
 
@@ -374,7 +371,7 @@ window.onload = function() {
 
 
   <div class="box-full pxl-2 bc-white-dd pull-right">
-    <section class="pxv-20 tutorial database bc-white">
+    <section class="pxv-10 tutorial database bc-white">
       <div class="font-em-1d2">
 
         
@@ -401,46 +398,23 @@ window.onload = function() {
             </div>
             
             <div class="mvt-10">
-              The framework's core classes are located in the <code>core/classes</code> 
-              folder while the tools are located in the <code>core/tool</code> folder. The <code>webClass()</code> 
-              and <code>webTool()</code> methods loads classes from their respective folders. 
-              In the line below, both line 1 & 2 resolves to the same class folder while line 3 & 4 loads from the 
-              tools folder.
+              The framework's core classes are located in the <code>core/classes</code>. The <code>webClass()</code> 
+              methods loads classes from <code>spoova/mi/core/classes</code> namespace. 
+              In the line below, both line 1 & 2 resolves to the same class.
             </div> <br>
 
             <div class="pre-area shadow">
               <pre class="pre-code">
-  <span class="comment">1.</span>$myclass = spoova\core\classes\myclass;
+  <span class="comment">1.</span>$myclass = spoova\mi\core\classes\myclass;
 
   <span class="comment">2.</span>$myclass = webClass('myclass');
               </pre>    
             </div>
           </div>
 
-          <div id="webtool" class="webtool"><br>
-            <div class="lacier font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8">
-                2. webTool
-            </div>
-            
-            <div class="mvt-10">
-              Just like the <a href="<?= DomUrl('docs/functions/core#webclass') ?>">webClass</a>, the webTool loads its 
-              classes from the <code>core/tools</code> folder.
-            </div> <br>
-
-            <!-- code line started -->
-              <div class="pre-area shadow">
-                <pre class="pre-code">
-  <span class="comment">1.</span>$mytool = spoova\core\tools\myclass;
-
-  <span class="comment">2.</span>$mytool = webTool('myclass');
-                </pre>
-              </div>
-            <!-- code line ended -->
-          </div>
-
           <div id="isguest" class="isguest"> <br>
             <div class="lacier font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8">
-                3. isGuest
+                2. isGuest
             </div>
             
             <div class="mvt-10">
@@ -450,7 +424,7 @@ window.onload = function() {
 
           <div id="isuser" class="isuser"> <br>
             <div class="lacier font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8">
-                4. isUser
+                3. isUser
             </div>
             
             <div class="mvt-10">
@@ -460,7 +434,7 @@ window.onload = function() {
 
           <div id="ishttp" class="ishttp"> <br>
             <div class="lacier font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8">
-                5. isHTTP
+                4. isHTTP
             </div>
             
             <div class="mvt-10">
@@ -475,7 +449,7 @@ window.onload = function() {
 
           <div id="ishttps" class="ishttps"> <br>
             <div class="lacier font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8">
-                6. isHTTPS
+                5. isHTTPS
             </div>
             
             <div class="mvt-10">
@@ -485,7 +459,7 @@ window.onload = function() {
 
           <div id="isabsolutepath" class="isabsolutepath"> <br>
             <div class="lacier font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8">
-                7. isAbsolutePath
+                6. isAbsolutePath
             </div>
             
             <div class="mvt-10">
@@ -502,25 +476,38 @@ window.onload = function() {
 
           <div id="invoked" class="invoked"> <br> 
             <div class="lacier font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8">
-                8. invoked
+                7. invoked
             </div>
             
             <div class="mvt-10">
-            The <code>invoked</code> is a case-sensitive function that is used to check if the current url matches the  
-            supplied url within a windows url. Only absolute path from the window entry point 
-            should be supplied. Since index pages can either be empty (i.e "") or "index", a frontslash ("/") can be used to denote 
-            an index page.
+              The <code>invoked</code> is a case-sensitive function that is used to check if the current url matches the  
+              supplied url within a windows url. Only absolute path from the window entry point 
+              should be supplied. Since index pages can either be empty (i.e "") or "index", a frontslash ("/") can be used to denote 
+              an index page.
             </div> <br>      
             <!-- code line started -->
             <div class="pre-area shadow">
                 <pre class="pre-code">
   if( invoked('some/url') ){
 
-     <span class="comment">// currently in url some url</span>
+     <span class="comment">// currently in url "some/url"</span>
 
   }
                 </pre>
-              </div>
+            </div>
+            <div class="mvt-10">
+              In order to declare <code>invoke()</code> as case-insenstive, the not sign <code>"!"</code> must be applied at the start of url declaration. 
+              
+            </div> <br>  
+            <div class="pre-area shadow">
+                <pre class="pre-code">
+  if( invoked('!some/url') ){
+
+    <span class="comment">// currently in case-insensitive url "some/url"</span>
+
+  }
+                </pre>
+            </div>                      
             <!-- code line ended -->
           </div>
 

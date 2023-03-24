@@ -1,7 +1,7 @@
 <?php
 
-namespace teymzz\spoova\windows\Routes\Docs;
-use teymzz\spoova\windows\Frames\UserFrame;
+namespace spoova\mi\windows\Routes\Docs;
+use spoova\mi\windows\Frames\UserFrame;
 use Res;
 
 class Resource extends UserFrame{

@@ -1,6 +1,6 @@
 <?php
 
-namespace teymzz\spoova\windows\Frames;
+namespace spoova\mi\windows\Frames;
 
 use Session;
 use Window;

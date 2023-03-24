@@ -1,9 +1,9 @@
 <?php
 
-namespace teymzz\spoova\core\commands;
-use teymzz\spoova\core\classes\DB;
-use teymzz\spoova\core\classes\DB\DBConfig;
-use teymzz\spoova\core\classes\FileManager;
+namespace spoova\mi\core\commands;
+use spoova\mi\core\classes\DB;
+use spoova\mi\core\classes\DB\DBConfig;
+use spoova\mi\core\classes\FileManager;
 
 class Config extends Entry{
 
@@ -385,15 +385,15 @@ class Config extends Entry{
         $prefix = 'M'.time().'_'; //generate migration file name
 
         $filename = $prefix.'create_'.$table;
-        $nameSpace = scheme('core\migrations', false);
+        $nameSpace = scheme('migrations', false);
 
         $format = <<<MIGRATION
         <?php
 
         namespace $nameSpace;
 
-        use teymzz\spoova\core\classes\DB\DBSchema\DBSCHEMA;
-        use teymzz\spoova\core\classes\DB\DBSchema\DRAFT;
+        use spoova\mi\core\classes\DB\DBSchema\DBSCHEMA;
+        use spoova\mi\core\classes\DB\DBSchema\DRAFT;
 
         class $filename {
             
@@ -419,7 +419,7 @@ class Config extends Entry{
 
         MIGRATION;
 
-        $fileDir = "core/migrations";
+        $fileDir = "migrations";
         $filepath = docroot."/{$fileDir}/".$filename.".php";
         $Filemanager = new FileManager;
         $classSpace = $nameSpace."\\".$filename;

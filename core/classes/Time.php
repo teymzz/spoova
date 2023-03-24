@@ -1,6 +1,6 @@
 <?php
 
-namespace teymzz\spoova\core\classes;
+namespace spoova\mi\core\classes;
 
 /**
  * Time class is used to subtract two time period. It allows for use

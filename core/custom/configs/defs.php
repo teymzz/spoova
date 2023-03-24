@@ -17,7 +17,7 @@ if( !defined('fol') ) define('fol', '');
 
 //app namespace
 if( !defined('scheme') )
-    define('scheme', '\teymzz\spoova\\');
+    define('scheme', '\spoova\mi\\');
 
 //app Routes Directory
 if( !defined('WIN') )

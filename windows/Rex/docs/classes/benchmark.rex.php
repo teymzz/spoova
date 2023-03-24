@@ -4,7 +4,7 @@
 
     <div class="box-full pxl-2 bc-white-dd pull-right">
     
-        <section class="pxv-20 tutorial bc-white">
+        <section class="pxv-10 tutorial bc-white">
             <div class="font-em-1d2">
 
                 @lay('build.co.links:tutor_pointer')
@@ -44,17 +44,17 @@
                                     <div class="box-full">
                                         <div class="pxv-6 bc-off-white"><code>Sample code: Benchmark</code></div>
                                         <pre class="pre-code">
-    \teymzz\spoova\core\classes\Benchmark::fn([
+    \spoova\mi\core\classes\Benchmark::fn([
 
         'querie' => function(){
-            $Hasher = new \teymzz\spoova\core\classes\Hasher;
+            $Hasher = new \spoova\mi\core\classes\Hasher;
             $Hasher->setHash(['loomars'], '1234');
             $hash = $Hasher->hashify();
         },
 
         'querier' => function(){
             for($i = 0; $i <= 99999; $i++){
-                $Hasher = new \teymzz\spoova\core\classes\Hasher;
+                $Hasher = new \spoova\mi\core\classes\Hasher;
                 $Hasher->setHash(['loomars'], '1234');
                 $hash = $Hasher->hashify();
             }

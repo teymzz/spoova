@@ -1,8 +1,8 @@
 <?php
 
 
-namespace teymzz\spoova\core\commands;
-use teymzz\spoova\core\commands\Cli;
+namespace spoova\mi\core\commands;
+use spoova\mi\core\commands\Cli;
  
   /**
    * class Console 

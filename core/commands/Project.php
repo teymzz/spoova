@@ -7,9 +7,9 @@
  * Warning: The usage of this class will alter installation files. 
  *  This may cause app to break or lead to other undesired errors.
  */
-namespace teymzz\spoova\core\commands;
+namespace spoova\mi\core\commands;
 
-use teymzz\spoova\core\classes\FileManager;
+use spoova\mi\core\classes\FileManager;
 
 class Project extends Entry{
 
@@ -336,13 +336,16 @@ class Project extends Entry{
 
         file_put_contents($LOGIC_FILE, $LOGIC);
 
+        if($logic === ''){
+            /* add map file */
+            touch(docroot.'/'.'windows/Routes/.map');
+        }
 
         //finalize 
         $final = new Welcome(dirname(docroot).DS.$project_name);
 
         $final->build(['installer' => $addInstaller, 'entry_file' => $entryFile, 'logic' => $baseLogic ]);
 
-        // Cli::textView(br(), 1);
         Cli::textView(Cli::warn(Cli::emo('diamond', '|1').$project_name).Cli::emo('bullet-arrow', [1, 1]).'http://localhost/'.$project_name, 4, [1, 1], [2, 1]);
     }
 

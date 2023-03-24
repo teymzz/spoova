@@ -1,11 +1,11 @@
 <?php
 
-namespace teymzz\spoova\core\classes;
+namespace spoova\mi\core\classes;
 
 use User;
 use DBStatus;
-use teymzz\spoova\core\classes\DB\DBModel;
-use teymzz\spoova\core\tools\Input;
+use spoova\mi\core\classes\DB\DBModel;
+use spoova\mi\core\tools\Input;
 
  abstract class Model extends DBModel{
 

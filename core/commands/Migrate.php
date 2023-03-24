@@ -1,8 +1,8 @@
 <?php 
 
-namespace teymzz\spoova\core\commands;
+namespace spoova\mi\core\commands;
 
-use teymzz\spoova\core\classes\DB\DBMigrate;
+use spoova\mi\core\classes\DB\DBMigrate;
 
 class Migrate extends Entry{
 
