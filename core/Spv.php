@@ -8,6 +8,7 @@ class Spv {
     static function init(){
 
         $dir = './vendor/spoova';
+        
         if(is_dir($dir)){
             $FileManager = new FileManager;
     
