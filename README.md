@@ -26,7 +26,7 @@ Reusable components, Static Resource Handler, ORM (beta) and FileManager tool.
 
     require_once "vendor/autoload.php";
 
-    spv\mi\core\Spv::init();
+    spoova\mi\core\Spv::init();
    ```
 
    > Add the _composer.json_ file with the following json sample syntax and using the spoova version required
@@ -38,7 +38,7 @@ Reusable components, Static Resource Handler, ORM (beta) and FileManager tool.
         "type": "project",
         "license": "MIT",
         "require": {
-            "spv/mi": "^1.0",
+            "spoova/mi": "^1.0",
         },
         "require-dev": {
             "phpunit/phpunit": "^9.5"
@@ -46,7 +46,7 @@ Reusable components, Static Resource Handler, ORM (beta) and FileManager tool.
         "require-"
         "autoload": {
             "psr-4": {
-                "spv\\mi\\": "./"
+                "spoova\\mi\\": "./"
             }
         },    
         "scripts": {

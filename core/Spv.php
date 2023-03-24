@@ -7,7 +7,7 @@ class Spv {
 
     static function init(){
 
-        $dir = './vendor/spv';
+        $dir = './vendor/spoova';
         if(is_dir($dir)){
             $FileManager = new FileManager;
     
@@ -15,7 +15,7 @@ class Spv {
     
             if($FileManager->moveContentsTo('./', ['vendor', 'mi', 'composer.json'])){
     
-                $FileManager->deleteFile($dir);
+                //$FileManager->deleteFile($dir);
     
             }
 
