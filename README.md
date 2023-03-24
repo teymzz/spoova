@@ -38,12 +38,11 @@ Reusable components, Static Resource Handler, ORM (beta) and FileManager tool.
         "type": "project",
         "license": "MIT",
         "require": {
-            "spoova/mi": "^1.0",
+            "spoova/mi": "^0.0.1@alpha"
         },
         "require-dev": {
             "phpunit/phpunit": "^9.5"
         },
-        "require-"
         "autoload": {
             "psr-4": {
                 "spoova\\mi\\": "./"
@@ -54,7 +53,7 @@ Reusable components, Static Resource Handler, ORM (beta) and FileManager tool.
                 "php mi"
             ]
         },
-        "minimum-stability": "dev"
+        "minimum-stability": "alpha"
    }
    ```
 
