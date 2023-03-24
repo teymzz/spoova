@@ -6,7 +6,7 @@
 
     <div class="box-full pxl-2 bc-white-dd pull-right">
     
-        <section class="pxv-20 tutorial bc-white">
+        <section class="pxv-10 tutorial bc-white">
             <div class="font-em-1d2">
 
                 @lay('build.co.links:tutor_pointer')
@@ -18,9 +18,11 @@
                     <div class="shutters-intro">
                         
                         <div class="font-em-d87">
-                           Middlewares are operations that must run before a class or method is called. 
+                           Middlewares are operations that either runs before or after a class or method is called. 
                            They are mostly executed through class methods. Their activity can affect the performace of 
-                           window files. While middlewares can be applied to shutters from the <code>super()</code> method of
+                           window files. In WMV, middlewares are only applied to shutters once the url is resolved but before it is 
+                           rendered. Once a url is rendered, shutter middlewares will run before a corresponding method or class is called. 
+                           While middlewares can be applied to shutters from the <code>super()</code> method of
                            <a href="@domurl('docs/wmv/frames')" class="hyperlink">Frame</a> files, it is mostly preferred 
                            to use them in other class method in which a shutter method is applied. Their flexible structure makes 
                            it possible for methods or windows to inherit them. While shutters have been discussed earlier, here, we 
@@ -136,7 +138,7 @@
                             <div class="pre-area shadow">
                                     <div class="">
                                         <div class="no-select bc-silver-d pxv-10">SELF::ONCALL()</div>
-        <pre class="pre-code" style="color: rgb(var(--sea-blue-dd));">
+        <pre class="pre-code">
       class {
 
         function __construct() {
@@ -265,8 +267,8 @@
                                 understandable than when we applied the <code>SELF::ONCALL()</code> method. The only difference is that here, 
                                 our function is more localized and will not extend to a subsequent call method. For example, if the <code>SELF::CALL()</code> 
                                 method above was pended, then another <code>SELF::CALL()</code> or any shutter method below it will not inherit the <code>SELF::ONCALL</code> constant. 
-                                The <code>invoked()</code> function is a case sensitive function that helps to match the current page url with the supplied url. Hence, this 
-                                makes it easier to determine and test the url called at a particular time.
+                                The <code>invoked()</code> function is a case sensitive function that helps to match the current page url with the supplied url. To declare function as insensitive, 
+                                the url supplied must be initialized with an exclamation mark <code>"!"</code>.
                             </div>
 
 

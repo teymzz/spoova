@@ -375,7 +375,7 @@ window.onload = function() {
 
 
     <div class="box-full pxl-2 bc-white-dd pull-right">
-        <section class="pxv-20 tutorial database bc-white">
+        <section class="pxv-10 tutorial database bc-white">
             <div class="font-em-1d2">
 
                 
@@ -439,7 +439,7 @@ window.onload = function() {
                     <pre class="pre-code">
   &lt;?php
 
-    namespace teymzz\spoova\windows\Frames;
+    namespace spoova\mi\windows\Frames;
     use Window;
 
     class Userframe extends Window{
@@ -462,7 +462,7 @@ window.onload = function() {
                     <pre class="pre-code">
   &lt;?php
 
-    use teymzz\spoova\windows\Frames\UserFrame;
+    use spoova\mi\windows\Frames\UserFrame;
 
     class Home extend Userframe{
 
@@ -489,9 +489,9 @@ window.onload = function() {
                     <pre class="pre-code">
   &lt;?php
 
-    namespace teymzz\spoova\windows;
+    namespace spoova\mi\windows;
 
-    use teymzz\spoova\windows\Frames\UserFrame;
+    use spoova\mi\windows\Frames\UserFrame;
 
 
     class Home extend Userframe{
@@ -552,9 +552,9 @@ window.onload = function() {
     <pre class="pre-code">
   &lt;?php
   
-    namespace teymzz\spoova\windows;
+    namespace spoova\mi\windows;
 
-    use teymzz\spoova\windows\Frames\UserFrame;
+    use spoova\mi\windows\Frames\UserFrame;
 
 
     class Home extend Userframe{

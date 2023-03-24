@@ -306,10 +306,9 @@ window.onload = function() {
 
     })
 
-    switchBox.bind('spoovaTheme', function(value){
-        $('body').addClass(value)
+    switchBox.bind('spoovaTheme', function(value){ 
+        if(!value) $('body').removeClass('--theme-dark')
     })
-
 
  
 }
@@ -332,7 +331,7 @@ window.onload = function() {
      <nav class="nav-left fixed">
 
           <div class="flex pxv-10">
-               <div class="flex-icon theme-btn box bd bd-silver rad-r anc-btn-link flow-hide bc-silver ripple relative" style="transition: none">
+               <div class="flex-icon theme-btn navtheme box bd bd-silver rad-r anc-btn-link flow-hide bc-silver ripple relative" style="transition: none">
                     <div class="px-40 b-cover ico-spin" data-src="http://localhost/spoova/res/main/images/icons/favicon.png" style="transition: none"></div>
                     <div class="font-em-1d5 px-40 flex mid overlay fb-9 calibri" style="top:-2px; left:.4px; z-index: 1; color:#202dd5;">
                          s 
@@ -371,7 +370,7 @@ window.onload = function() {
 
 
     <div class="box-full pxl-2 bc-white-dd pull-right">
-        <section class="pxv-20 tutorial database bc-white">
+        <section class="pxv-10 tutorial database bc-white">
             <div class="font-em-1d2">
 
                 

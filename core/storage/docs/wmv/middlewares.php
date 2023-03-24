@@ -6,9 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" type="image/png" href="http://localhost/spoova/res/main/images/icons/favicon.png">
     <title>Tutorial - WMV Middlewares</title>
-    <meta name="viewport" content="width=device-width, initial-scale=.9, maximum-scale=1.0, user-scalable=1" />
-<meta name="description" content="website_description" />
-<link rel="icon" href="http://localhost/spoova/res/main/images/icons/favicon.png" />
+    
     <link  rel="stylesheet" type="text/css" href="http://localhost/spoova/res/main/css/res.css" x-debug="res-css"><script src='http://localhost/spoova/res/main/js/jquery-3.6.0.js'></script><script src='http://localhost/spoova/res/main/css/bootstrap/js/bootstrap.min.js'></script><link  rel="stylesheet" type="text/css" href="http://localhost/spoova/res/main/css/mdb5/css/mdb.min.css"><script src='http://localhost/spoova/res/main/js/config.js'></script><script src='http://localhost/spoova/res/main/js/core.js'></script><script src='http://localhost/spoova/res/main/js/onLoaded.js'></script><script src='http://localhost/spoova/res/main/js/custom.js'></script><script src='http://localhost/spoova/res/main/js/device.js'></script><script src='http://localhost/spoova/res/main/js/loadImages.js'></script><script src='http://localhost/spoova/res/main/js/formValidator.js'></script><script src='http://localhost/spoova/res/main/js/jquery.mousewheel.js'></script><script src='http://localhost/spoova/res/main/js/anime.js'></script><script src='http://localhost/spoova/res/main/js/init.js'></script> 
     <style rel="build.css.tutorial"> 
 
@@ -176,6 +174,7 @@
 }
 
 body.--theme-dark{
+    color: rgb(125, 125, 125);
     background-color : rgba(21, 15, 39);
 }
  </style><style rel="build.css.navbars"> 
@@ -358,7 +357,6 @@ window.onload = function() {
                <li> <a href="<?= DomUrl('docs/classes') ?>" class="<?= inPath('active') ?>"><span class="ico ico-spin"></span>Helper Classes</a> </li>
                <li> <a href="<?= DomUrl('docs/functions') ?>" class="<?= inPath('active') ?>"><span class="ico ico-spin"></span>Helper Functions</a> </li>
                <li> <a href="<?= DomUrl('docs/template') ?>" class="<?= inPath('active') ?>"><span class="ico ico-spin"></span>Template Engine</a> </li>
-               <li> <a href="<?= DomUrl('docs/template/directives') ?>" class="<?= inPath('active') ?>"><span class="ico ico-spin"></span>Template Directives</a> </li>
                <li> <a href="<?= DomUrl('docs/setters') ?>" class="<?= inPath('active') ?>"><span class="ico ico-spin"></span>Global Setters</a> </li>
                <li> <a href="<?= DomUrl('docs/mails') ?>" class="<?= inPath('active') ?>"><span class="ico ico-spin"></span>Handling Mails</a> </li>
                <li> <a href="<?= DomUrl('docs/cli') ?>" class="<?= inPath('active') ?>"><span class="ico ico-spin"></span>Cli Commands</a> </li>         
@@ -373,7 +371,7 @@ window.onload = function() {
 
     <div class="box-full pxl-2 bc-white-dd pull-right">
     
-        <section class="pxv-20 tutorial bc-white">
+        <section class="pxv-10 tutorial bc-white">
             <div class="font-em-1d2">
 
                 
@@ -387,9 +385,11 @@ window.onload = function() {
                     <div class="shutters-intro">
                         
                         <div class="font-em-d87">
-                           Middlewares are operations that must run before a class or method is called. 
+                           Middlewares are operations that either runs before or after a class or method is called. 
                            They are mostly executed through class methods. Their activity can affect the performace of 
-                           window files. While middlewares can be applied to shutters from the <code>super()</code> method of
+                           window files. In WMV, middlewares are only applied to shutters once the url is resolved but before it is 
+                           rendered. Once a url is rendered, shutter middlewares will run before a corresponding method or class is called. 
+                           While middlewares can be applied to shutters from the <code>super()</code> method of
                            <a href="<?= DomUrl('docs/wmv/frames') ?>" class="hyperlink">Frame</a> files, it is mostly preferred 
                            to use them in other class method in which a shutter method is applied. Their flexible structure makes 
                            it possible for methods or windows to inherit them. While shutters have been discussed earlier, here, we 
@@ -505,7 +505,7 @@ window.onload = function() {
                             <div class="pre-area shadow">
                                     <div class="">
                                         <div class="no-select bc-silver-d pxv-10">SELF::ONCALL()</div>
-        <pre class="pre-code" style="color: rgb(var(--sea-blue-dd));">
+        <pre class="pre-code">
       class {
 
         function __construct() {
@@ -634,8 +634,8 @@ window.onload = function() {
                                 understandable than when we applied the <code>SELF::ONCALL()</code> method. The only difference is that here, 
                                 our function is more localized and will not extend to a subsequent call method. For example, if the <code>SELF::CALL()</code> 
                                 method above was pended, then another <code>SELF::CALL()</code> or any shutter method below it will not inherit the <code>SELF::ONCALL</code> constant. 
-                                The <code>invoked()</code> function is a case sensitive function that helps to match the current page url with the supplied url. Hence, this 
-                                makes it easier to determine and test the url called at a particular time.
+                                The <code>invoked()</code> function is a case sensitive function that helps to match the current page url with the supplied url. To declare function as insensitive, 
+                                the url supplied must be initialized with an exclamation mark <code>"!"</code>.
                             </div>
 
 

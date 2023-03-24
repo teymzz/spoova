@@ -7,7 +7,7 @@
 
   <div class="box-full pxl-2 bc-white-dd pull-right">
     
-    <section class="pxv-20 tutorial mails bc-white">
+    <section class="pxv-10 tutorial mails bc-white">
       <div class="font-em-1d2">
 
         @lay('build.co.links:tutor_pointer')
@@ -19,14 +19,9 @@
           <div class="resource-intro">
               <div class="">
                   The <span class="fb-6 calibri">WinViM</span> architecture (ie. WMV or WVM)</span>, though is a system built upon MVC architecture, it is a bit more advanced and technical.
-                  It was designed to be an extensible structure while taking into consideration, the future updates or upgrades 
-                  that may later be integrated into the system. 
-                  
-                  The pattern flow relates that every urls becomes handled as window urls or classes.
-                  <br>
-
-                  Windows are entry points to every url structure. In this tutorial, non-existing urls that are transferred to be handled with their entry points (windows) 
-                  will be referred to as window urls. The example below shows the entry points in any given url for either localhost or online environments.
+                  It was designed to be a flexible and extensible architecture that makes it possible to authenticate and validate urls based on specifically designed logics. The pattern flow 
+                  relates that every urls becomes handled as window urls or classes through entry points to every url structure. In this tutorial, non-existing urls that are transferred to be handled with their entry points (windows) 
+                  will be referred to as window urls. The example below shows the entry points in any given url for either production or live environments.
                   <br><br>
 
                   <div class="pre-area shadow">
@@ -62,7 +57,7 @@
 
                   <p class="font-menu mvt-10">
                     According to the url samples above, a url's entry point is usually the immediate path name that comes after a localhost url 
-                    or a remote (or online) url.
+                    or a domain url.
                   </p>
      
                 </div> 
@@ -110,7 +105,6 @@
                   The downside of WMV pattern are
                   <br><br>
                   <ul>
-                      <li>It depends on an apache server to work</li>
                       <li>It depends on <code>.htaccess</code> file to work.</li>
                       <li>Controlling urls might prove a bit technical and advanced depending on developers understanding of the concept</li>
                       <li>A great discretion is advised when opening urls as urls not properly managed can result in blank pages.</li>

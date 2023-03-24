@@ -1,12 +1,12 @@
 <?php
 
-namespace teymzz\spoova\core\classes\DB;
+namespace spoova\mi\core\classes\DB;
 
 use User;
 use DBStatus;
-use teymzz\spoova\core\classes\Collectibles;
-use teymzz\spoova\core\classes\DB\DBCollectibles;
-use teymzz\spoova\core\classes\Model;
+use spoova\mi\core\classes\Collectibles;
+use spoova\mi\core\classes\DB\DBCollectibles;
+use spoova\mi\core\classes\Model;
 
 abstract class DBCollection implements DBOperators {
 

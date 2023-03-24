@@ -1,10 +1,10 @@
 <?php
 
-namespace teymzz\spoova\core\classes;
+namespace spoova\mi\core\classes;
 
 use Form;
 use Res;
-use teymzz\spoova\core\classes\Hasher;
+use spoova\mi\core\classes\Hasher;
 use Window;
 
 /**

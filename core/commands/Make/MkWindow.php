@@ -1,10 +1,10 @@
 <?php
 
-namespace teymzz\spoova\core\commands\Make;
+namespace spoova\mi\core\commands\Make;
 
 use ErrorHandler;
-use teymzz\spoova\core\commands\Cli;
-use teymzz\spoova\core\classes\FileManager;
+use spoova\mi\core\commands\Cli;
+use spoova\mi\core\classes\FileManager;
 
 class MkWindow extends MkBase{
 

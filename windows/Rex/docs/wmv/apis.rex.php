@@ -6,7 +6,7 @@
 @lay('build.co.navbars:left-nav')
 
     <div class="box-full pxl-2 bc-white-dd pull-right">
-        <section class="pxv-20 tutorial database bc-white">
+        <section class="pxv-10 tutorial database bc-white">
             <div class="font-em-1d2">
 
                 @lay('build.co.links:tutor_pointer')
@@ -19,15 +19,16 @@
                     <div class="setters-intro">
                         <div class="fb-6 mvb-6">Introduction</div>
                         <div class="">
-                           API in spoova are windows that are declared as api channel. Since spoova handle pages using 
-                           windows and frames, APIs are also extensions of windows or frame files. This means that they can inherit 
-                           all the properties of a window page or url as the case may be. One of the advantages of using 
-                           route <a href="@domurl('docs/wmv/calls')">shutter</a> methods is that they have capacity 
-                           to naturally determine the response of any window url or web page. Shutter methods, that is 
+                           In spoova, APIs are window routes that are declared as api channel. Since web urls are resolved using 
+                           window route classes, APIs are routes specifically declared as API through a top level API integration. This means that they 
+                           can inherit all the properties and functionalities of a normal route. A route can be declared as API by either calling the  
+                           <code>integrateAPI()</code> method or by declaring the <code>$winAPI</code> static property using specifically designed options. 
+                           When a route is declared as API, the effect is usually being felt by the 
+                           route <a href="@domurl('docs/wmv/calls')">shutter</a> methods which have the internal capacity 
+                           to naturally determine the response of any window url or web page. Shutter methods which are
                            <code>call()</code>, <code>rootcall()</code>, <code>basecall()</code> and <code>pathcall()</code> 
-                           methods are designed to detect the type of a window, if it is a normal webpage or an <code>API</code> 
-                           route. It is very easy to determine the type of any window by declaring within the window the type of window 
-                           it is using the <code>integerateAPI()</code> method.
+                           methods are designed to detect the response of a route whether it is a normal webpage or an <code>API</code> 
+                           route. 
                             <p>
                                 <div class="c-orange mvb-6">API Integeration</div>
                                 The figure below explains how to integerate an API with any window page <br>
@@ -69,8 +70,8 @@
                                     </pre>
                                 </div>
                                 <div class="foot-note pvs-10">
-                                    The example above defined how to set up an api window url by using the <code>self::integerateAPI()</code> method.
-                                    There are 
+                                    The example above is a format of how to set up an api window url by using the <code>self::integerateAPI()</code> method.
+                                    This method must be called prior to the use of shutter methods. There are 
                                     three different response types which are <code>ajax</code>, 
                                     <code>json</code> and <code>ajax:json</code> or <code>json:ajax</code>.  The behavioral pattern 
                                     or how these types respond to shutter methods are further explained below under their own subheadings.
@@ -109,7 +110,7 @@
 
                             <p>
                                 <div class="c-orange">JSON Respose Type</div>
-                                    The <code>json</code> type is used to declare that the content of a page should be of json format. This 
+                                    When <code>integrateAPI()</code> is set as <code>json</code>, this will declare that the content of a page should be of json format. This 
                                     follows a strict content-type for any window api. If the content-type is not of a valid <code>json</code> content type, 
                                     the response returned will be json SyntaxError notifying that the content cannot be parsed as revealed in the figure below: 
 <!-- figure begins -->
@@ -180,10 +181,8 @@
                                 <p>
                                     Whenever a page 
                                     returns 404, the <code>integerateAPI</code> will always return a response shown in <a href="#figure1"><span class="c-brown-ll bold hyperlink">Figure 1</span></a> earlier
-                                    . However, there are other means to set up api routes which involve the use of <code>Ajax</code> class. Although there is no way for 
-                                    shutter methods to detect if a window is an <code>API</code> window, the <code>response()</code> function, <code>Ajax</code> class 
-                                    and the <code>integerateAPI()</code> method can help the  <code>shutters</code> to create custom APIs whose responses are entirely under the control of developers.
-                                    The example below best explains this concept.
+                                    . There are other means to set up api routes without using shutter. This process involves the use of <code>Ajax</code> class and <code>response()</code> function to validate route responses. 
+                                    The example below best explains this process.
                                 </p>
 <!-- code begins -->
                                 <div class="pre-area shadow mvt-6">
@@ -197,21 +196,21 @@
 
         Ajax::accept('post'); <span class="comment">// accept only post requests </span>
         
-        Ajax::accept('post')->referred(); <span class="comment">// accept only posts requests and it must referred </span>
+        Ajax::accept('post')->referred(); <span class="comment">// accept only posts requests and it must be referred</span>
         
-        Ajax::with('json')->referred(); <span class="comment">// accept only posts requests and it must referred </span>
+        Ajax::with('json')->referred(); <span class="comment">// accept only posts requests and it must referred with response returned in json format </span>
         
         Ajax::accept(['post','get'])->with('json')->referred(); <span class="comment">// accept only posts and get requests and it must referred and returned value must be of json format</span>
         
         if(Ajax::isAjax()){
 
-            <span class="comment">If this request is an Ajax request, run this block code</span>
+            <span class="comment">//If this request is an Ajax request, run this block code</span>
 
             return response(404, 'message here');
 
         } else {
 
-            <span class="comment">If this request is not an Ajax, run this block code</span>
+            <span class="comment">//If this request is not an Ajax, run this block code</span>
 
             return response(404, 'message here');         
 
@@ -246,9 +245,10 @@
                 window(':user.apiOne') => 'apiOne',    
                 window(':user.apiTwo') => 'apiTwo',    
             ]
-        )
+        );
 
     }
+
 
     fuction root() {
 
@@ -257,20 +257,22 @@
 
     }
 
+
     <span class="comment">/**
      * This is home/user/apiOne
      */</span>
     fuction apiOne() {
         
-        self::integrateAPI('ajax'); <span class="comment">//error response should be json format for shutters</span>
+        self::integrateAPI('ajax'); <span class="comment">//response should be json format for shutters</span>
 
         self::call([
         
             window('base:') => 'win:Routes\API\APIHandler';
             
-        ])
+        ]);
 
     }
+
 
     <span class="comment">/**
      * This is home/user/apiTwo
@@ -316,9 +318,9 @@
                                 </div>
 <!-- code ends -->
 <!-- code description -->
-                                <div class="font-em-d8 mvt-6">
+                                <div class="foot-note mvt-6">
                                     <p>
-                                        In the when the <code>home</code> url is visited, then the method <code>root()</code>
+                                        If the <code>home</code> url is visited, then the method <code>root()</code>
                                         is called. When the <code>home/user</code> is visited, the <code>user()</code> method is called.
                                         When the <code>home/user/apiOne</code> is visited, the method <code>apiOne()</code> is called. 
                                         Each url visited calls their corresponding methods on the Home class. This means that, according to the 
@@ -374,7 +376,7 @@
 
                             <div class="flex-in midv rad-4 bc-silver"> 
                                 <div class="bc-red-orange-dd pxv-4" style="color:#efefef">Warning:</div>
-                                <div class="font-em-d8 pxs-4">
+                                <div class="font-em-d8 pxs-4 flow-auto">
                                     Ajax urls should not contain any 
                                     special character including underscore ('_') 
                                     as this can lead to loss of data if data is forwarded. However, 

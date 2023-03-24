@@ -1,8 +1,8 @@
 <?php
 
-namespace teymzz\spoova\core\classes\DB;
+namespace spoova\mi\core\classes\DB;
 
-use teymzz\spoova\core\classes\FileManager;
+use spoova\mi\core\classes\FileManager;
 
 /**
  * @author Akinola Saheed <github teymzz>

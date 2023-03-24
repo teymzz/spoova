@@ -1,10 +1,10 @@
 <?php
 
-namespace teymzz\spoova\core\commands;
+namespace spoova\mi\core\commands;
 
 use Res;
 
-use teymzz\spoova\core\commands\Entry;
+use spoova\mi\core\commands\Entry;
 
 class MkFile extends Entry{
 

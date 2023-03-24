@@ -1,8 +1,8 @@
 <?php
 
-namespace teymzz\spoova\core\classes;
+namespace spoova\mi\core\classes;
 
-use teymzz\spoova\core\classes\Collection;
+use spoova\mi\core\classes\Collection;
 
 class ModelOptimizer{
 

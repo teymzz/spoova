@@ -1,5 +1,4 @@
 
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -8,9 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" type="image/png" href="http://localhost/spoova/res/main/images/icons/favicon.png">
     <title>Tutorial - Mails</title>
-    <meta name="viewport" content="width=device-width, initial-scale=.9, maximum-scale=1.0, user-scalable=1" />
-<meta name="description" content="website_description" />
-<link rel="icon" href="http://localhost/spoova/res/main/images/icons/favicon.png" />
+    
     <link  rel="stylesheet" type="text/css" href="http://localhost/spoova/res/main/css/res.css" x-debug="res-css"><script src='http://localhost/spoova/res/main/js/jquery-3.6.0.js'></script><script src='http://localhost/spoova/res/main/css/bootstrap/js/bootstrap.min.js'></script><link  rel="stylesheet" type="text/css" href="http://localhost/spoova/res/main/css/mdb5/css/mdb.min.css"><script src='http://localhost/spoova/res/main/js/config.js'></script><script src='http://localhost/spoova/res/main/js/core.js'></script><script src='http://localhost/spoova/res/main/js/onLoaded.js'></script><script src='http://localhost/spoova/res/main/js/custom.js'></script><script src='http://localhost/spoova/res/main/js/device.js'></script><script src='http://localhost/spoova/res/main/js/loadImages.js'></script><script src='http://localhost/spoova/res/main/js/formValidator.js'></script><script src='http://localhost/spoova/res/main/js/jquery.mousewheel.js'></script><script src='http://localhost/spoova/res/main/js/anime.js'></script><script src='http://localhost/spoova/res/main/js/init.js'></script> 
     <style rel="build.css.tutorial"> 
 
@@ -309,10 +306,9 @@ window.onload = function() {
 
     })
 
-    switchBox.bind('spoovaTheme', function(value){
-        $('body').addClass(value)
+    switchBox.bind('spoovaTheme', function(value){ 
+        if(!value) $('body').removeClass('--theme-dark')
     })
-
 
  
 }
@@ -335,7 +331,7 @@ window.onload = function() {
      <nav class="nav-left fixed">
 
           <div class="flex pxv-10">
-               <div class="flex-icon theme-btn box bd bd-silver rad-r anc-btn-link flow-hide bc-silver ripple relative" style="transition: none">
+               <div class="flex-icon theme-btn navtheme box bd bd-silver rad-r anc-btn-link flow-hide bc-silver ripple relative" style="transition: none">
                     <div class="px-40 b-cover ico-spin" data-src="http://localhost/spoova/res/main/images/icons/favicon.png" style="transition: none"></div>
                     <div class="font-em-1d5 px-40 flex mid overlay fb-9 calibri" style="top:-2px; left:.4px; z-index: 1; color:#202dd5;">
                          s 
@@ -374,7 +370,7 @@ window.onload = function() {
 
 
   <div class="box-full pxl-2 bc-white pull-right">
-    <section class="pxv-20 tutorial mails bc-white">
+    <section class="pxv-10 tutorial mails bc-white">
       <div class="font-em-1d2">
 
         
@@ -390,17 +386,37 @@ window.onload = function() {
               <div class="">
 
                 <div class="">
-                  By default, spoova uses a Mailer system that depends on 
-                  Third-party plugins such as PhpMailer and CssInliner. The CssInliner 
-                  plugin has to be remodified in order for it to be successfully
-                  integrated with our mailer helper tool. CssInliner has its <code>__construct</code>
-                  function as a private method. This has to be a accessible as a public method 
-                  in order for it to work. Developers should also take note to update this method 
-                  to public after downloading or updating the plugin. 
+                  Sending mails in spoova is done through the <code>Mailer</code> class. 
+                  The functionality of this class is made possible through the combination of third party 
+                  plugins which are PhpMailer and CssInliner. The <code>Mailer</code> class ensures that mails 
+                  can be generated from template files and forwarded as mail. It also enables functionalities such as 
+                  performing dummy tests for mails and also viewing lasting effect of mails.
                 </div> <br>
 
-
-                  Setting up mail system involves several processes which are classified into two 
+                <div class="">
+                  <div class="fb-6 c-orange-d">Installation</div>
+                  <div class="">
+                    In order to use the Mailer class, the PHPMailer and CssInliner libraries must be installed as dependencies. The composer.json file 
+                    should contain a similar code syntax below 
+                    can be used to install the supported version of these classes.
+                  </div>
+                  <div class="pre-area">
+                    <pre class="pre-code">
+  {
+    require: {
+      'phpmailer/phpmailer' : '^6.0',
+      'pelago/emogrifier' : '^6.6'
+    }
+  }
+                    </pre>
+                  </div>
+                  <div class="">
+                    Once the dependencies are installed through the <code>composer dump-autoload -o</code>, then we need to modify the <code>CssInliner</code> 
+                    class <code>__construct()</code> method in order for <code>Mailer</code> class to work. This method should be set as public rather than private. 
+                    Once this is done, we can proceed to set up the configuration files. 
+                  </div>
+                </div>
+                  Before the <code>Mailer</code> class can be used, there is need to set up the mailer system. Setting up mail system can be addressed in two categories 
                   <br><br>
                   <ul>
                     <li>mail configuration setup</li>
@@ -508,7 +524,7 @@ window.onload = function() {
     <pre class="pre-code">
   &#60;?php
 
-    <span class="c-purple">use teymzz\spoova\core\classes\Mailer</span>
+    <span class="c-purple">use spoova\mi\core\classes\Mailer</span>
 
     $mail = new Mailer;  <span class="comment">// Mailer instantiation</span>
 
@@ -545,8 +561,8 @@ window.onload = function() {
               sending as a means of testing. Setting it as false will prevent the 
               <code>$mailer->sendmail()</code> method from sending out mails when used. 
               This helps to suppress errors especially when working in offline environment. 
-              Spoovas <code>online</code> constant can then come into play as <code>online</code>
-              returns true only in an online environment. This can then be rewritten to send mails only in online 
+              Spoova's <code>online</code> constant can then come into play as <code>online</code>
+              returns true in live or online environment. This can then be rewritten to send mails only in online 
               environment as <code>$mail->authorize(online)</code>. For example: <br>
 
               <div class="authorize">
@@ -595,16 +611,15 @@ window.onload = function() {
                   <div class="box-full">
     <div class="pxv-6 bc-off-white"><code>Sample: template content loading </code></div>
     <pre class="pre-code">
+  &#60;?php
 
-    &#60;?php
-
-      <span class="c-sky-blue-dd">...</span>
+    <span class="c-sky-blue-dd">...</span>
       
-      if($mail->authorized()){
+    if($mail->authorized()){
 
-        $mailer->sendmail( Res::markup('mail-temp.feedback', fn() => compile()) );
+      $mailer->sendmail( Res::markup('mail-temp.feedback', fn() => compile()) );
 
-      } 
+    } 
     </pre>
                   </div>
             </div> <br><br>  

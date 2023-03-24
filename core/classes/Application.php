@@ -1,8 +1,8 @@
 <?php
   
-namespace teymzz\spoova\core\classes;
+namespace spoova\mi\core\classes;
 
-use teymzz\spoova\core\classes\DB\DBMigrator;
+use spoova\mi\core\classes\DB\DBMigrator;
 
 class Application{
    

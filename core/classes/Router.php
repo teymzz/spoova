@@ -1,6 +1,6 @@
 <?php
 
-namespace teymzz\spoova\core\classes;
+namespace spoova\mi\core\classes;
 
 use Window;
 
@@ -228,6 +228,26 @@ class Router extends Slicer{
           </div>
         ';
       }
+    }
+
+
+    public static function map(&$map = []) : array {
+      
+      //get map 
+      $mapper = to_frontslash(WIN_ROUTES).'.map';
+
+      if(is_file($mapper)){
+
+        $contents = file_get_contents($mapper);
+        
+        $map = json_decode($contents, true);
+        
+        return is_array($map)? $map : [];
+
+      }
+
+      return $map = [];
+
     }
 
 }

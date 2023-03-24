@@ -1,8 +1,8 @@
 <?php
 
-namespace teymzz\spoova\windows\Routes\Docs\Features;
+namespace spoova\mi\windows\Routes\Docs\Features;
 
-use teymzz\spoova\core\classes\Request;
+use spoova\mi\core\classes\Request;
 use Window;
 
 class Javascript extends Window {
@@ -12,12 +12,11 @@ class Javascript extends Window {
         self::call($this, 
             [
                 lastCall() => 'root',
-                lastCall('/core-functions') => 'coreJs',
+                lastCall('/helper-functions') => 'helperJs',
                 lastCall('/loadFile.js') => 'loadFileJs',
-                lastCall('/core-functions') => 'coreJs',
                 lastCall('/switcher.js') => 'switcherJs',
                 lastCall('/device.js') => 'deviceJs',
-                lastCall('/switcher') => 'coreJs',
+                lastCall('/intersect.js') => 'intersectJs',
 
                 /* ajax api url */
                 window(':features/javascript/formvalidator') => 'ajax',
@@ -125,9 +124,9 @@ class Javascript extends Window {
     }
 
     
-    function coreJs() {
+    function helperJs() {
 
-        self::load('docs.features.javascript.core', fn() => compile() );
+        self::load('docs.features.javascript.helperjs', fn() => compile() );
         
     }
 

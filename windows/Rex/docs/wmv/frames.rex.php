@@ -6,7 +6,7 @@
 
     <div class="box-full pxl-2 bc-white-dd pull-right">
     
-        <section class="pxv-20 tutorial bc-white">
+        <section class="pxv-10 tutorial bc-white">
             <div class="font-em-1d2">
 
                 @lay('build.co.links:tutor_pointer')
@@ -18,8 +18,8 @@
                   <div class="frames-description">
                     <div class="">
                         <p>
-                            In Windows architectural pattern, Frames are an extension of the Window class which means that frames are also windows. 
-                            The main importance of frames is that they act as bridges between a window and another window, more like a root window and its subwindows. 
+                            In Windows architectural pattern, Frames are extensions of the Window class which means that frames are also windows. 
+                            Frames are binding structures that act as bridges between a parent window and another child window, more like a root window and its subwindows. 
                             They can be referred to as data house as they provide a medium for which data can be localized and channeled across different window files. 
                         </p>
 
@@ -85,10 +85,9 @@
 
                         <div class="foot-note">
                             <span class="head">Footnote:</span>
-                            A frame file can also be extended to another frame file depending on developer's desire. However, if this is done then, it may be 
+                            A frame file can also be extended to another frame file. However, if this is done then, it may be 
                             safer NOT to declare the <code>super()</code> as a final method. In this case, the child class may need to call the <code>parent::super()</code> 
-                            within its own <code>super()</code> method.  Whenever the <code>super()</code> method is automatically called, the <code>parent::super()</code> 
-                            within it will call the the parent's method too. This behavioral pattern is relative to object's inheritance.
+                            within its own <code>super()</code> method.
                         </div>
                         
 

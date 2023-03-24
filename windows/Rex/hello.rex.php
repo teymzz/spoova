@@ -39,7 +39,7 @@
            <div class="in-flex midv">
                 <div class="">
                     <span class="c-orange">Hello!</span> 
-                    <span class="{{ spoovaLoaded('c-sea-blue','c-blue') ">From</span> 
+                    <span class="{{ spoovaLoaded('c-sea-blue','c-blue') }}">From</span> 
                 </div>
                 <div class="animate__animated animate__rubberBand flex-icon mxs-10 mid pxv-10 theme-btn box bd bd-silver rad-r anc-btn-link flow-hide bc-deeper bc-deeper-blue ripple relative">
                         <div class="flex px-80 bc-deeper-blue-dd rad-r">

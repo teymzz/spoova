@@ -1,8 +1,8 @@
 <?php
 
-use teymzz\spoova\core\classes\DB;
+use spoova\mi\core\classes\DB;
 
-use teymzz\spoova\core\classes\Filemanager;
+use spoova\mi\core\classes\Filemanager;
 
 class Installer{
 
@@ -250,7 +250,7 @@ class Installer{
 
           //test database connection
           if(!arrVoid($dbname, $dbuser,$dbpass,$dbserver,$dbport,$dbsocket) || isset($_POST['newdb'])){
-              $dbcon = new teymzz\spoova\core\classes\DB;
+              $dbcon = new spoova\mi\core\classes\DB;
               $db = $dbcon->openDB('',$dbuser,$dbpass,$dbserver,$dbport,$dbsocket);
   
               if(!$db){
@@ -282,7 +282,7 @@ class Installer{
         
           //if no data is supplied, try to run the default connection
           if(!isset($connection_success)){
-              $dbcon = new teymzz\spoova\core\classes\DB();
+              $dbcon = new spoova\mi\core\classes\DB();
               $db = $dbcon->openDB();
   
               if(!$db){

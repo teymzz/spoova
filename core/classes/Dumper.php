@@ -1,6 +1,6 @@
 <?php
 
-namespace teymzz\spoova\core\classes;
+namespace spoova\mi\core\classes;
 
 use ReflectionClass;
 use ReflectionMethod;
@@ -48,7 +48,7 @@ class Dumper{
             $contents = <<<'CONTENTS'
             <?php 
             
-            use teymzz\spoova\core\classes\Dumper;
+            use spoova\mi\core\classes\Dumper;
 
             Dumper::dump($arg);
 

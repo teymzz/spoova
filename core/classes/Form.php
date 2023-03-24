@@ -1,11 +1,11 @@
 <?php
 
-use teymzz\spoova\core\classes\Csrf;
-use teymzz\spoova\core\classes\EInfo;
-use teymzz\spoova\core\classes\Model;
-use teymzz\spoova\core\classes\FormModel;
-use teymzz\spoova\core\classes\FormField;
-use teymzz\spoova\core\classes\Request;
+use spoova\mi\core\classes\Csrf;
+use spoova\mi\core\classes\EInfo;
+use spoova\mi\core\classes\Model;
+use spoova\mi\core\classes\FormModel;
+use spoova\mi\core\classes\FormField;
+use spoova\mi\core\classes\Request;
 
 /**
  * This Form class is used to build form inputs

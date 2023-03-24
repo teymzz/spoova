@@ -6,9 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" type="image/png" href="http://localhost/spoova/res/main/images/icons/favicon.png">
     <title>Tutorial - Window Models</title>
-    <meta name="viewport" content="width=device-width, initial-scale=.9, maximum-scale=1.0, user-scalable=1" />
-<meta name="description" content="website_description" />
-<link rel="icon" href="http://localhost/spoova/res/main/images/icons/favicon.png" />
+    
     <link  rel="stylesheet" type="text/css" href="http://localhost/spoova/res/main/css/res.css" x-debug="res-css"><script src='http://localhost/spoova/res/main/js/jquery-3.6.0.js'></script><script src='http://localhost/spoova/res/main/css/bootstrap/js/bootstrap.min.js'></script><link  rel="stylesheet" type="text/css" href="http://localhost/spoova/res/main/css/mdb5/css/mdb.min.css"><script src='http://localhost/spoova/res/main/js/config.js'></script><script src='http://localhost/spoova/res/main/js/core.js'></script><script src='http://localhost/spoova/res/main/js/onLoaded.js'></script><script src='http://localhost/spoova/res/main/js/custom.js'></script><script src='http://localhost/spoova/res/main/js/device.js'></script><script src='http://localhost/spoova/res/main/js/loadImages.js'></script><script src='http://localhost/spoova/res/main/js/formValidator.js'></script><script src='http://localhost/spoova/res/main/js/jquery.mousewheel.js'></script><script src='http://localhost/spoova/res/main/js/anime.js'></script><script src='http://localhost/spoova/res/main/js/init.js'></script> 
     <style rel="build.css.tutorial"> 
 
@@ -176,6 +174,7 @@
 }
 
 body.--theme-dark{
+    color: rgb(125, 125, 125);
     background-color : rgba(21, 15, 39);
 }
  </style><style rel="build.css.navbars"> 
@@ -242,7 +241,7 @@ body.--theme-dark{
     <script src='http://localhost/spoova/res/main/js/switcher.js'></script>
     
 </head>
-<body>
+<body class="--theme-dark">
 
     <script>
         $(document).ready(function(){
@@ -343,6 +342,7 @@ window.onload = function() {
 
           <ul class="list-square">
                <li> <a href="<?= DomUrl('docs/installation') ?>" class="<?= inPath('active') ?>"><span class="ico ico-spin"></span>Installation</a> </li>
+               <li> <a href="<?= DomUrl('docs/wmv') ?>" class="<?= inPath('active') ?>" ><span class="ico ico-spin"></span><span class="fb-6 pointer" title="Windows Models View">WMV</span> PATTERN</a></li>
                <li> <a href="<?= DomUrl('docs/live-server') ?>" class="<?= inPath('active') ?>"><span class="ico ico-spin"></span>Live Server</a></li>
                <li> <a href="<?= DomUrl('docs/database') ?>" class="<?= inPath('active') ?>"><span class="ico ico-spin"></span>Database</a> </li>
                <li> <a href="<?= DomUrl('docs/resource') ?>" class="<?= inPath('active') ?>"><span class="ico ico-spin"></span>Resource class</a> </li>
@@ -351,14 +351,14 @@ window.onload = function() {
                <li> <a href="<?= DomUrl('docs/forms') ?>" class="<?= inPath('active') ?>"><span class="ico ico-spin"></span>Handling Forms</a> </li>
                <li> <a href="<?= DomUrl('docs/useraccounts') ?>" class="<?= inPath('active') ?>"><span class="ico ico-spin"></span>Handling Users</a> </li>
                <li> <a href="<?= DomUrl('docs/database/data-model') ?>" class="<?= inPath('active') ?>"><span class="ico ico-spin"></span>Handling DBModels</a> </li>
+               <li> <a href="<?= DomUrl('docs/database/migrations') ?>" class="<?= inPath('active') ?>"><span class="ico ico-spin"></span>Handling Migrations</a> </li>
                <li> <a href="<?= DomUrl('docs/classes') ?>" class="<?= inPath('active') ?>"><span class="ico ico-spin"></span>Helper Classes</a> </li>
                <li> <a href="<?= DomUrl('docs/functions') ?>" class="<?= inPath('active') ?>"><span class="ico ico-spin"></span>Helper Functions</a> </li>
-               <li> <a href="<?= DomUrl('docs/directives') ?>" class="<?= inPath('active') ?>"><span class="ico ico-spin"></span>Helper Directives</a> </li>
+               <li> <a href="<?= DomUrl('docs/template') ?>" class="<?= inPath('active') ?>"><span class="ico ico-spin"></span>Template Engine</a> </li>
                <li> <a href="<?= DomUrl('docs/setters') ?>" class="<?= inPath('active') ?>"><span class="ico ico-spin"></span>Global Setters</a> </li>
                <li> <a href="<?= DomUrl('docs/mails') ?>" class="<?= inPath('active') ?>"><span class="ico ico-spin"></span>Handling Mails</a> </li>
                <li> <a href="<?= DomUrl('docs/cli') ?>" class="<?= inPath('active') ?>"><span class="ico ico-spin"></span>Cli Commands</a> </li>         
                <li> <a href="<?= DomUrl('docs/plugins') ?>" class="<?= inPath('active') ?>"><span class="ico ico-spin"></span>Composer and Plugins</a></li>
-               <li> <a href="<?= DomUrl('docs/wmv') ?>" class="<?= inPath('active') ?>" ><span class="ico ico-spin"></span>The <span class="fb-6 pointer" title="Windows Models View">WMV</span> PATTERN</a></li>
                <li> <a href="<?= DomUrl('docs/libraries') ?>" class="<?= inPath('active') ?>"><span class="ico ico-spin"></span>Third-Party Libraries</a> </li>
                <li> <a href="<?= DomUrl('docs/other-features') ?>" class="<?= inPath('active') ?>"><span class="ico ico-spin"></span>Other Features</a> </li>
           </ul>
@@ -369,7 +369,7 @@ window.onload = function() {
 
     <div class="box-full pxl-2 bc-white-dd pull-right">
     
-        <section class="pxv-20 tutorial bc-white">
+        <section class="pxv-10 tutorial bc-white">
             <div class="font-em-1d2">
 
                 
@@ -382,11 +382,11 @@ window.onload = function() {
                     
                     <div class="resource-intro">
                         <div class="">
-                            Models are classes that help to communicate with database. The spoova <code>Model</code> class is however build 
-                            to perform two main functions which are data validation and data insertion. All other ORM functionalities 
-                            such as reading and deleting from database are currently under development and some of these features might not be 
-                            available for use at the moment. Currently, the <code>Model</code> class is used to validat and upload submitted request form data. 
-                            Since most of the Model class features are form related, you can learn more about forms from <a href="<?= DomUrl('docs/forms') ?>">here</a>.
+                            Models are classes that help to communicate with database. The spoova <code>Model</code> enables the commnunication with database using 
+                            database relationships. All ORM functionalities of the database model 
+                            such as reading and deleting from database can be accessed from <a href="<?= DomUrl('docs/database/data-model') ?>">database relationships</a>. 
+                            This page will focus more on validating and inserting submitted request form data and
+                            since most of the Model class features discussed here are form-related, you can learn more about forms from <a href="<?= DomUrl('docs/forms') ?>">here</a>.
                             The following are some of the methods of <code>Model</code> class and their functions some of which are also integerated with the <a href="<?= DomUrl('docs/forms') ?>">Form</a> class.
                         </div> 
                     </div>
@@ -402,7 +402,7 @@ window.onload = function() {
 
                         <div class="">
                             <ul class="mvt-10">
-                                <li><a href=""><span class="c-orange-dd">loadData</span></a></li>
+                                <li><a href="#loadData"><span class="c-orange-dd">loadData</span></a></li>
                                 <li><a href=""><span class="c-orange-dd">loadedData</span></a></li>
                                 <li><a href=""><span class="c-orange-dd">rules</span></a></li>
                                 <li><a href=""><span class="c-orange-dd">validated</span></a></li>
@@ -432,7 +432,7 @@ window.onload = function() {
  <div class="pxv-10 bc-silver">File - SampleModel.php</div>
  <pre class="pre-code">
 
-  namespace teymzz\spoova\window\Models;
+  namespace spoova\mi\window\Models;
 
   use Model;
 
@@ -451,8 +451,8 @@ window.onload = function() {
  <pre class="pre-code">
   namespace windows\Routes;
 
-  use teymzz\spoova\windows\Models\SampleModel;
-  use teymzz\spoova\core\classes\Request;
+  use spoova\mi\windows\Models\SampleModel;
+  use spoova\mi\core\classes\Request;
 
   class Home extends Window {
 
@@ -529,8 +529,8 @@ window.onload = function() {
  <pre class="pre-code">
  namespace windows\Routes;
 
- use teymzz\spoova\windows\Models\SampleModel;
- use teymzz\spoova\core\classes\Request;
+ use spoova\mi\windows\Models\SampleModel;
+ use spoova\mi\core\classes\Request;
  
  class Home extends Window {
  
@@ -603,8 +603,8 @@ window.onload = function() {
  <pre class="pre-code">
  namespace windows\Routes;
 
- use teymzz\spoova\windows\Models\SampleModel;
- use teymzz\spoova\core\classes\Request;
+ use spoova\mi\windows\Models\SampleModel;
+ use spoova\mi\core\classes\Request;
  
  class Home extends Window {
  

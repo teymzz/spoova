@@ -1,6 +1,6 @@
 <?php
 
-namespace teymzz\spoova\core\classes;
+namespace spoova\mi\core\classes;
 
 use Res;
 
@@ -1201,7 +1201,8 @@ abstract class Directives{
 
                 $url = $urx = array_shift($explode);
 
-                $urx = str_replace('/', '.', url($urx)->ignore(1));
+                //$urx = str_replace('/', '.', url($urx)->ignore(1));
+                $urx = str_replace('/', '.', $urx);
 
                 //get url extension
                 if(pathinfo($url, PATHINFO_EXTENSION) !== 'js'){
@@ -1255,7 +1256,7 @@ abstract class Directives{
 
                     if(trim($replacement)){ 
                         $replacement = <<<SCRIPT
-                        <script> 
+                        <script rel="$urx"> 
                             $replacement 
                         </script>
                         SCRIPT;
@@ -1300,7 +1301,8 @@ abstract class Directives{
 
                 $url = $urx = array_shift($explode);
 
-                $urx = str_replace('/', '.', url($urx)->ignore(1));
+                //$urx = str_replace('/', '.', url($urx)->ignore(1));
+                $urx = str_replace('/', '.', $urx);
 
                 //get url extension
                 if(pathinfo($url, PATHINFO_EXTENSION) !== 'css'){
@@ -1339,7 +1341,7 @@ abstract class Directives{
 
                     if(trim($replacement)){
                         $replacement = <<<SCRIPT
-                        <script> 
+                        <script rel="$urx"> 
                         window.onload = function() {
                             $replacement 
                         }
@@ -1387,65 +1389,70 @@ abstract class Directives{
         preg_match($pattern, $body, $matches);
         
         //Get template
-        $match = $matches[0]; 
-       
-        //Fetch template opener
-        preg_match(self::$pattern['template'], $match, $matched);
+        $match = $matches[0] ?? ''; 
 
-        $opener = $matched[0];
-        $closer = '@template;';
-   
-        //Fetch Url
-        $tempUrl = str_ireplace(['@template(','\'',')'] ,'', $opener);
-        $url = str_replace(['.','\\'], '/', $tempUrl);    
-        
-        //load template's supplied url
-        $off = (substr($url, -4) === ':off');
-        
-        $urx = explode(':off', $url);
-        $rex = WIN_REX.ltrim($urx[0], '/');
-        $url = docroot.DS.$rex;
+        if($match){
 
-        //get url extension
-        if (pathinfo($url, PATHINFO_EXTENSION) === '') {
-            $url .= self::defaultExtension;
-            $rex .= self::defaultExtension;
-        }
+            //Fetch template opener
+            preg_match(self::$pattern['template'], $match, $matched);
 
-        if (!is_file($url)) {
-
-            print self::directivesMapError([
-                'title'=> 'Template Error :',
-                'message' => 'Template file does not exists',
-                'path' => $rex
-            ], $body);  
-
-            $needle1 = "@template('$tempUrl')";
-            $pos1 = strpos($body, $needle1);
-            $body = substr_replace($body, '', $pos1, strlen($needle1));
-
-            $needle2 = "@template;";
-            $pos2 = strrpos($body, $needle2);
-            $body = substr_replace($body, '', $pos2, strlen($needle2));
-
-            return $body;
-        } else { 
-            ob_start();
-            include($url);
-            $template = ob_get_clean(); //new replacement
+            $opener = $matched[0];
+            $closer = '@template;';
+    
+            //Fetch Url
+            $tempUrl = str_ireplace(['@template(','\'',')'] ,'', $opener);
+            $url = str_replace(['.','\\'], '/', $tempUrl);    
             
-            //filter out structure 
-            $content = str_replace([$opener, $closer], '', $match);
+            //load template's supplied url
+            $off = (substr($url, -4) === ':off');
+            
+            $urx = explode(':off', $url);
+            $rex = WIN_REX.ltrim($urx[0], '/');
+            $url = docroot.DS.$rex;
 
-            $template = str_replace('@yield()', $content, $template);
-            if($off){
-                $template = str_ireplace(['@live()','@live','@import(\'::watch\')', '@res::import(\'::watch\')'], '', $template);
+            //get url extension
+            if (pathinfo($url, PATHINFO_EXTENSION) === '') {
+                $url .= self::defaultExtension;
+                $rex .= self::defaultExtension;
             }
-            
-            $template = Slicer::slice($template)->data();
 
-            $body = self::directivesTitle(str_replace($match, $template, $body));
-        }         
+            if (!is_file($url)) {
+
+                print self::directivesMapError([
+                    'title'=> 'Template Error :',
+                    'message' => 'Template file does not exists',
+                    'path' => $rex
+                ], $body);  
+
+                $needle1 = "@template('$tempUrl')";
+                $pos1 = strpos($body, $needle1);
+                $body = substr_replace($body, '', $pos1, strlen($needle1));
+
+                $needle2 = "@template;";
+                $pos2 = strrpos($body, $needle2);
+                $body = substr_replace($body, '', $pos2, strlen($needle2));
+
+                return $body;
+            } else { 
+                ob_start();
+                include($url);
+                $template = ob_get_clean(); //new replacement
+                
+                //filter out structure 
+                $content = str_replace([$opener, $closer], '', $match);
+
+                $template = str_replace('@yield()', $content, $template);
+                if($off){
+                    $template = str_ireplace(['@live()','@live','@import(\'::watch\')', '@res::import(\'::watch\')'], '', $template);
+                }
+                
+                $template = Slicer::slice($template)->data();
+
+                $body = self::directivesTitle(str_replace($match, $template, $body));
+            }    
+
+        }
+        
 
         return $body;
 

@@ -1,5 +1,4 @@
 
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -8,9 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" type="image/png" href="http://localhost/spoova/res/main/images/icons/favicon.png">
     <title></title>
-    <meta name="viewport" content="width=device-width, initial-scale=.9, maximum-scale=1.0, user-scalable=1" />
-<meta name="description" content="website_description" />
-<link rel="icon" href="http://localhost/spoova/res/main/images/icons/favicon.png" />
+    
     <link  rel="stylesheet" type="text/css" href="http://localhost/spoova/res/main/css/res.css" x-debug="res-css"><script src='http://localhost/spoova/res/main/js/jquery-3.6.0.js'></script><script src='http://localhost/spoova/res/main/css/bootstrap/js/bootstrap.min.js'></script><link  rel="stylesheet" type="text/css" href="http://localhost/spoova/res/main/css/mdb5/css/mdb.min.css"><script src='http://localhost/spoova/res/main/js/config.js'></script><script src='http://localhost/spoova/res/main/js/core.js'></script><script src='http://localhost/spoova/res/main/js/onLoaded.js'></script><script src='http://localhost/spoova/res/main/js/custom.js'></script><script src='http://localhost/spoova/res/main/js/device.js'></script><script src='http://localhost/spoova/res/main/js/loadImages.js'></script><script src='http://localhost/spoova/res/main/js/formValidator.js'></script><script src='http://localhost/spoova/res/main/js/jquery.mousewheel.js'></script><script src='http://localhost/spoova/res/main/js/anime.js'></script><script src='http://localhost/spoova/res/main/js/init.js'></script> 
     <style rel="build.css.tutorial"> 
 
@@ -309,10 +306,9 @@ window.onload = function() {
 
     })
 
-    switchBox.bind('spoovaTheme', function(value){
-        $('body').addClass(value)
+    switchBox.bind('spoovaTheme', function(value){ 
+        if(!value) $('body').removeClass('--theme-dark')
     })
-
 
  
 }
@@ -333,7 +329,7 @@ window.onload = function() {
      <nav class="nav-left fixed">
 
           <div class="flex pxv-10">
-               <div class="flex-icon theme-btn box bd bd-silver rad-r anc-btn-link flow-hide bc-silver ripple relative" style="transition: none">
+               <div class="flex-icon theme-btn navtheme box bd bd-silver rad-r anc-btn-link flow-hide bc-silver ripple relative" style="transition: none">
                     <div class="px-40 b-cover ico-spin" data-src="http://localhost/spoova/res/main/images/icons/favicon.png" style="transition: none"></div>
                     <div class="font-em-1d5 px-40 flex mid overlay fb-9 calibri" style="top:-2px; left:.4px; z-index: 1; color:#202dd5;">
                          s 
@@ -372,7 +368,7 @@ window.onload = function() {
 
 
     <div class="box-full pxl-2 bc-white-dd pull-right">
-        <section class="pxv-20 tutorial database bc-white">
+        <section class="pxv-10 tutorial database bc-white">
             <div class="font-em-1d2">
 
                 
@@ -429,17 +425,14 @@ window.onload = function() {
                         <div class="updating-libraries bc-white-dd pxv-10 shadow-2-strong rad-4">
                             <div class="fb-6 c-sea-blue-d mvb-6"><span class="ico-thick-update c-sea-blue-d"></span> Updating Libraries</div>
 
-                            <p>
-                                Core composer php plugins can be updated from the <code>core</code> directory because the vendor folder stays within this environment. It is however important to 
-                                remember to update the emogrifer plugin <code>__construct()</code> function to public if it was set to private.
-                            </p>
-
                             <p> 
-                                Other libraries such as <code>bootstrap</code> and javascript files can be found at the <code>res/main/css/</code> 
-                                and <code>res/main/js/</code> directories respectively. If any of these libraries is needed to be upgraded, the local libraries should be 
+                                Static file libraries such as <code>bootstrap</code> and javascript files can be found at the <code>res/main/css/</code> 
+                                and <code>res/main/js/</code> directories respectively. The global static resources folder is the <code>res/main</code> directory. 
+                                If any of the default libraries needs to be upgraded, that library should be 
                                 replaced with newly downloaded files and the correct path must match the path set in the <code>res/res.php</code> file. If new 
                                 path name is different, the old file path in <code>res/res.php</code> file should also be updated correctly. 
-                                Also, as an alternative to using local library file path, cdn link of such libraries may be used instead.
+                                However, as an alternative to using local library file path, cdn link of such libraries may be used instead which can be added or updated in the
+                                <code>res/res.php</code> file. 
                             </p>
                         </div> <br>
 

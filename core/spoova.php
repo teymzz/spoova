@@ -6,11 +6,11 @@ if(!is_file('icore/filebase')) header('location:../');
 //include core framework
 include_once 'icore/filebase.php';
 
-use teymzz\spoova\core\commands\Root;
-use teymzz\spoova\core\commands\Entry;
-use teymzz\spoova\core\commands\Syntax;
-use teymzz\spoova\core\classes\FileManager;
-use teymzz\spoova\core\commands\Cli;
+use spoova\mi\core\commands\Root;
+use spoova\mi\core\commands\Entry;
+use spoova\mi\core\commands\Syntax;
+use spoova\mi\core\classes\FileManager;
+use spoova\mi\core\commands\Cli;
 
 class spoova extends Entry{
 
