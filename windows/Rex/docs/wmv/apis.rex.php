@@ -367,22 +367,12 @@
 <!-- code description -->
                                 <div class="font-em-d8 mvt-6">
                                     <p>
-                                        In the code above, the <code>call()</code> method will respond as if the <code>integrateAPI()</code> was called 
+                                        In the code above, the <code>call()</code> method will respond as if the <code>integrateAPI('json:ajax')</code> was called 
                                         on it.
                                     </p>
                                 </div>
 <!-- code description ends -->                            
                             </p>
-
-                            <div class="flex-in midv rad-4 bc-silver"> 
-                                <div class="bc-red-orange-dd pxv-4" style="color:#efefef">Warning:</div>
-                                <div class="font-em-d8 pxs-4 flow-auto">
-                                    Ajax urls should not contain any 
-                                    special character including underscore ('_') 
-                                    as this can lead to loss of data if data is forwarded. However, 
-                                    urls can contain digits.
-                                </div>
-                            </div>
                         </div>
                     </div>
 

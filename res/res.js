@@ -106,7 +106,7 @@ if(typeof Res === 'undefined'){
             this.defaults.assets = {
                 'root': './',
                 'base': 'res/main/',
-                'css' : 'css/core.css',
+                'css' : 'css/local/core.css',
                 'js'  : 'js/local/debug/debug.js'
             }
 
@@ -131,8 +131,8 @@ if(typeof Res === 'undefined'){
             urx = urx.trim().replace(/\/$/,"")
 
             uri.base = urx; 
-            //if no address is found use ~index~ (note:use current page(not index) as address) or current address
-            //uri.addr = (loc.trim() == '') ? "index" : this.urlenv(location);
+
+            //if no address is found use current address
             uri.addr = (loc.trim() == '') ? urx : this.urlenv(location);
 
             return uri;
@@ -309,11 +309,7 @@ if(typeof Res === 'undefined'){
                     }
                 }, mobi.interval);
 
-               
-
             });
-
-
 
         }
 
@@ -352,8 +348,6 @@ if(typeof Res === 'undefined'){
 
                 //display a starting message
                 if(mobi.counter == 1 && content != undefined){
-                    //rex.console(mobi.watchword);
-                    //delete mobi.watchword;
                     rex.cleanDebugs();
                 }
 
@@ -372,8 +366,6 @@ if(typeof Res === 'undefined'){
                         return ;
                     }                    
                 }
-
-                //if(mobi.loading) rex.console('loading ...');
 
                 //send unamibiguous request
                 if(!mobi.loading){
@@ -414,13 +406,8 @@ if(typeof Res === 'undefined'){
                                             </div>
                                         </div>
                                     `;
-                                    let notice = `
-                                        <span style="margin-right: .25em;">&#9432</span> 
-                                        <span style="width:100%"> notice : please fix your code or server</span>`;
-                                    let cssText = rex.cssTexts('server');
-                                    //Note: replace notice with detected parse errors if any is found & watch for ...
-                                    //... parse error updates too.
-                                    rex.pop(rex.makeDiv(widget, cssText, 'spoova-notice-err e-widget'));
+                                    //fix code or server error notice was replaced with roller widget
+                                    rex.pop(rex.makeDiv(widget, 'spoova-notice-err e-widget'));
                                 }
                                 if(mobi.serverError == 0){
                                     if(console) console.clear();
@@ -431,12 +418,6 @@ if(typeof Res === 'undefined'){
                                 mobi.serverError = 1; mobi.loading = false; //interval mode
                                 mobi.interval = 3000;
 
-                                /* Handling Server Error's Parse Errors  (Window Rex files - eval functions)
-                                Note: when server error occurs, this may occur in windows file or template engines
-                                To fix parse errors within server error, parse errors should be detected from content received
-                                from requests and handled within it (i.e within this code block). Handling this in success will 
-                                cause an unwanted error. 
-                                */
                             }
 
                             //* Handle successful requests (200)
@@ -668,9 +649,8 @@ if(typeof Res === 'undefined'){
                                             
                                             if(offline){
                                                 if(allowPop){
-                                                    let cssText = rex.cssTexts('error');
                                                     let notice = `${error} <span class="fb-6"><span class="bi-file-code"></span> ${(mobi.currentUrl)}</span> <br> fixed <span class="bi-check-circle"></span>`;
-                                                    rex.pop(rex.makeDiv(notice, cssText, 'spoova-notice-fix'));
+                                                    rex.pop(rex.makeDiv(notice, 'spoova-notice-fix'));
                                                 }
                                                 rex.console('>> fixed', offline, 'clear')
                                             }
@@ -755,7 +735,8 @@ if(typeof Res === 'undefined'){
 
                                         }
                                         
-                                        if(mobi.errlog != 1){ //if no console error is previously displayed
+                                        if(mobi.errlog != 1){ 
+                                            //if no console error is previously displayed
                                             rex.console(rex.unstack(mobi.newError), offline, 'clear');
                                             mobi.errlog = 1;
                                         }
@@ -765,9 +746,7 @@ if(typeof Res === 'undefined'){
                                                 if(allowPop){
                                                     if(oldNotice) oldNotice.remove();
                                                     
-                                                    let cssText = rex.cssTexts('notice');
-                                                    
-                                                    rex.pop(rex.makeDiv(`${mobi.newTable || mobi.newError}`, cssText, 'spoova-notice'));
+                                                    rex.pop(rex.makeDiv(`${mobi.newTable || mobi.newError}`, 'spoova-notice'));
 
                                                     callScripts(document.body);                                         
                                                 }
@@ -797,7 +776,7 @@ if(typeof Res === 'undefined'){
                                     if(allowPop){
 
                                         let cssText = "position:fixed; top:.25em; right:.25em; display:inline-block; border:solid 2px; color:red; background:white; z-index:100000; padding: .25em; border-radius:.25em; font-size: .95em";
-                                        rex.pop(rex.makeDiv('...', cssText, 'res-notice'));
+                                        rex.pop(rex.makeDiv('...', 'res-notice'));
 
                                     }
                                     rex.console("server error: unknown request error occured, please check your server.", offline);
@@ -810,8 +789,6 @@ if(typeof Res === 'undefined'){
 
                     }
                     
-
-
                     //send http request
                     if(!mobi.loading){
                         xhttp.open("GET", url + params, true);
@@ -935,8 +912,8 @@ if(typeof Res === 'undefined'){
             document.body.appendChild(message);
         }
 
-        makeDiv(content, cssText, eclass){
-            let html, div, message;
+        makeDiv(content, eclass){
+            let html, div, message, fatal, style; 
 
             html = document.body.innerHTML;
             div = document.createElement("div");
@@ -946,17 +923,34 @@ if(typeof Res === 'undefined'){
 
             message = new DOMParser().parseFromString(content, "text/html");
             message = message.querySelector('script[x-debug]')
+            fatal = document.querySelector('[class="xdebug-error xe-fatal-error"]')
+           // if (fatal) fatal.remove();
+
+            style = document.createElement('link');
+            if(!document.querySelector('link[x-debug="spoova"]')){
+                style.setAttribute('href', this.defaults.appUrl+'res/main/css/res.css');
+                style.setAttribute('x-debug', 'spoova');                
+                style.setAttribute('rel', 'stylesheet');                
+                style.setAttribute('type', 'text/css');                
+                if(content) document.getElementsByTagName("head")[0].appendChild(style);
+            }
+
             if(message){
                 console.log(message);
                 message = message.parentElement;
                 message = message.innerHTML;
-                //if(html.indexOf(content)) div.setAttribute('data-resview','none');
                 if((html).indexOf(message) > -1) return;                
             }
 
-            // div.cssText = cssText;
             div.innerHTML = content || '';
-            //console.log('...', content, '\n<<...>>\n', html);
+
+            let errBox = div.querySelectorAll('div, table').length;
+
+            if(errBox === 0){
+                div.classList.add('lite');
+            }else{
+                div.classList.remove('lite');
+            }
             
             return div;
         }
@@ -993,43 +987,6 @@ if(typeof Res === 'undefined'){
                 iDebug.remove();
             }            
         }
-
-
-        cssTexts(name = ''){
-
-            let baseCss = `
-                position: fixed;                 
-                top: 0.25em; 
-                right: 0.25em; 
-                font-size: 1.1em;
-                font-family: calibri;
-                z-index: 100000;
-                padding: 0.5em; 
-                box-shadow: rgb(223, 223, 223) 0px 0px 1px 1px;
-                color: #aa0c5e;  
-                display: inline-flex;
-                border-radius: 0.25em;
-                border: 4px solid rgb(255, 255, 255);
-            `;
-            
-            let serverCss = baseCss;
-
-            let errorCss = `
-                ${baseCss}
-                color: rgb(71, 196, 90);
-                background: rgb(255, 255, 255) none repeat scroll 0% 0%; 
-                min-width: 10em;`;
-
-            let noticeCss = `
-                ${baseCss}
-                max-height: 95vh; overflow: hidden hidden; `;
-
-            if(name == 'server') return serverCss;
-            if(name == 'error') return errorCss;
-            if(name == 'notice') return noticeCss;
-        }
-
-        
 
     }
 

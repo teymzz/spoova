@@ -26,7 +26,7 @@ final class Rex extends Resx implements Resin{
 
     /**
      * Renders the res templates files using the get method (wvm)
-     *
+     * @deprecated 1.5.0 Routes will no longer be handled using request methods but through server logics.
      * @param string $url rex template url
      * @param array|\Closure $callback callback function
      * @return string
@@ -37,7 +37,7 @@ final class Rex extends Resx implements Resin{
       
     /**
      * Renders the res templates files using the post method (wvm)
-     *
+     * @deprecated 1.5.0 Routes will no longer be handled using request methods but through server logics.
      * @param string $url rex template url
      * @param array|\Closure $callback => callback function
      * @return string
@@ -48,7 +48,7 @@ final class Rex extends Resx implements Resin{
   
     /**
      * Router get method
-     * 
+     * @deprecated 1.5.0 Routes will no longer be handled using request methods but through server logics.
      * @param string $url rex template url
      * @param array|\Closure $callback callback function
      * @return string
@@ -59,7 +59,7 @@ final class Rex extends Resx implements Resin{
   
     /**
      * Router post method
-     * 
+     * @deprecated 1.5.0 Routes will no longer be handled using request methods but through server logics.
      * @param string $url rex template url
      * @param array|\Closure $callback callback function
      * @return string

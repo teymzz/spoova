@@ -129,7 +129,7 @@ use spoova\mi\core\tools\Input;
 
         foreach($this->rules() as $attribute => $rules){
 
-            $value = $this->{$attribute} ;
+            $value = (string) $this->{$attribute} ;
 
             //rules (above) as set of rules supplied on a specific attribute
 

@@ -111,6 +111,4 @@ Deploying a production-ready application requires the use of specially designed 
 
 ##### NOTICE
 
-1. All API route urls should be free of special characters including underscore to avoid loss of data.
-
-2. The spoova main project pack contains an offline documentation designed to guide developers on how to use the framework.
+1. The spoova main project pack contains an offline documentation designed to guide developers on how to use the framework.

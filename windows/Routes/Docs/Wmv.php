@@ -146,6 +146,18 @@ class Wmv extends UserFrame{
 
         }
 
+        static function sessions($array = []) {
+            $pointer = self::mapurl('Docs/Wmv/Sessions', ' <span class="bi-chevron-right"></span> ');
+
+            $vars = [
+                'title' => 'Tutorial - Window Rex',
+                'pointer' => $pointer,
+            ];
+            
+            self::load('docs.wmv.sessions', fn() =>compile($vars));
+
+        }
+
         static function inverse($array = []) {
             $pointer = self::mapurl('Docs/Wmv/Inverse', ' <span class="bi-chevron-right"></span> ');
 
@@ -180,6 +192,7 @@ class Wmv extends UserFrame{
                 '.models' => DomUrl('docs/wmv/models'),
                 '.rex'    => DomUrl('docs/wmv/rex'),
                 '.methods' => DomUrl('docs/wmv/methods'),
+                '.sessions' => DomUrl('docs/wmv/sessions'),
                 '.middlewares' => DomUrl('docs/wmv/middlewares'),
                 '.errors' => DomUrl('docs/wmv/errors'),
                 '.inverse' => DomUrl('docs/wmv/inverse'),

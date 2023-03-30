@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -6,7 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" type="image/png" href="http://localhost/spoova/res/main/images/icons/favicon.png">
-    <title>Live-server</title>
+    <title>WMV - Errors</title>
     
     <link  rel="stylesheet" type="text/css" href="http://localhost/spoova/res/main/css/res.css" x-debug="res-css"><script src='http://localhost/spoova/res/main/js/jquery/jquery-3.6.0.js'></script><script src='http://localhost/spoova/res/main/js/jquery/jquery.mousewheel.js'></script><script src='http://localhost/spoova/res/main/css/bootstrap/js/bootstrap.min.js'></script><link  rel="stylesheet" type="text/css" href="http://localhost/spoova/res/main/css/mdb5/css/mdb.min.css"><script src='http://localhost/spoova/res/main/js/local/core.js'></script><script src='http://localhost/spoova/res/main/js/local/onLoaded.js'></script><script src='http://localhost/spoova/res/main/js/local/jqmodex.js'></script><script src='http://localhost/spoova/res/main/js/local/device.js'></script><script src='http://localhost/spoova/res/main/js/local/loadImages.js'></script><script src='http://localhost/spoova/res/main/js/local/formValidator.js'></script><script src='http://localhost/spoova/res/main/js/local/helper.js'></script><script src='http://localhost/spoova/res/main/js/local/init.js'></script> 
     <style rel="build.css.tutorial"> 
@@ -331,8 +330,6 @@ window.onload = function() {
 
     
 
-    <!-- @lay('build.co.coords:header') -->
-
      
 
      
@@ -372,106 +369,171 @@ window.onload = function() {
                <li> <a href="<?= DomUrl('docs/plugins') ?>" class="<?= inPath('active') ?>"><span class="ico ico-spin"></span>Composer and Plugins</a></li>
                <li> <a href="<?= DomUrl('docs/libraries') ?>" class="<?= inPath('active') ?>"><span class="ico ico-spin"></span>Third-Party Libraries</a> </li>
                <li> <a href="<?= DomUrl('docs/other-features') ?>" class="<?= inPath('active') ?>"><span class="ico ico-spin"></span>Other Features</a> </li>
+               <li> <a href="<?= DomUrl('updates') ?>" class="<?= inPath('active') ?>"><span class="ico ico-spin"></span><span class="bi-arrow-down-circle c-dry-blue"></span> New Updates</a> </li>
           </ul>
       
      </nav>
 
 
+
+    <div class="box-full pxl-2 bc-white-dd pull-right">
     
-    <div class="box pxl-2 bc-white-dd pull-right">
         <section class="pxv-10 tutorial bc-white">
-           <div class="font-em-1d2">
+            <div class="font-em-1d2">
 
-               
- <div class="font-menu pvs-4"> <a href="http://localhost/spoova/docs">Docs</a> <span class="bi-chevron-right"></span> <a href="http://localhost/spoova/docs/live-server">Live-server</a>  </div>
-
-            <div class="c-black-ll">
-                <div class="font-em-1d2 c-orange">Live server implementation</div>         
                 
-                <div class="calibri font-em-d8">
-                    <ul class="list-free pxs-1">
-                        <li> 
-                            <p>
-                                Live server is an inbuilt server that runs on javascript language and helps to enable
-                                live php development. In order to keep live server efficient, the live server runs at the top 
-                                of the application before any content is rendered. Helper classes or functions
-                                have been restructured and integerated into this framework to support live development. 
-                                An error notification system was attached to php error handlers to convert php errors into an error pop-up 
-                                notification message to reduce what is known as a "KILL EFFECT" which occurs when live server terminates and may not be able to 
-                                continue unless the page is refreshed or reloaded. 
-                            </p>
-                            
-                            <p>
-                                Certain PHP errors prevents the live server from running because they shut down the entire application. In order to reduce the 
-                                effect of these errors, the liveserver will continue to run with a relative error pop-up notification message until the page is manually 
-                                refreshed. Once the page is refreshed while such errors are active, the live server will not be able to restart until such errors are fixed 
-                                and the page is refreshed to reboot the liveserver. In the cases where soft errors (e.g warning and notice errors) occurs, the liveserver will 
-                                still try to reboot to keep the application on a live state and any error detected will be converted to a pop-up notification message.
-                            </p>
+ <div class="font-menu pvs-4"> <a href="http://localhost/spoova/docs">Docs</a> <span class="bi-chevron-right"></span> <a href="http://localhost/spoova/docs/wmv">Wmv</a> <span class="bi-chevron-right"></span> <a href="http://localhost/spoova/docs/wmv/sessions">Sessions</a>  </div>
 
-                            <p>
-                                Although, the live server may prove helpful, due to the comprehensive structure which php uses to handle its errors, 
-                                spoova debug system is still known to have major issues. Hence it is still in a beta phase. It is also important 
-                                to empasize that using the live server involves sending muliple requests which is cpu intensive. To reduce this effect 
-                                live server pauses its watch mode when a particular web page is not in view and resumes its monitoring when the page resumes.
-                                Although, the Live server was built to support majorly offline development, it is disabled by default and can be initialized 
-                                or turned off through different ways which are further explained below:
-                            </p>
 
-                        </li>
-                        <li>
-                            
-                            <div class="c-olive fb-6">1. Resource importing systems.</div>
-                            <div class="mvt-6">
-                                This is done through a default setup configuration file 
-                                by setting "RESOURCE_WATCH" to a default value of "1" or "2" which stands for 
-                                offline and online respectively. These tell the resource file handler class to automatically include the live server when
-                                importing or downloading resource urls in the desired environment. Setting as 2 (i.e online) enables it for both offline and online 
-                                environments while a default of zero(0) disables the live server. This configuration can be set in the <code>icore\init</code> file. <br><br>
-                            </div>
+                <div class="start font-em-d8">
+
+                    <div class="font-em-1d5 c-orange">Window Sessions</div> <br>  
+                    
+                    <div class="resource-intro">
+                        <div class="">
+                            Window session files are files which contain session naming pattern which are stored within the <code>window/Sessions</code> 
+                            directory. These files are used to define 
+                            session key names and the name is later imported into frame files which can be shared to routes. In most cases, 
+                            one session file is needed within the application. However, when certain situation arises for the need of a different session file, then the 
+                            session files comes into play. For example, a session file can help to separate an admin data from a user data if the admin data is stored 
+                            under a different session key. Consider the example below where we have three files: 
+
+                                <div class="pre-area mvt-10">
+                                    <div class="pxv-10 bc-silver">1a. window/Sessions/UserSession.php</div>
+<pre class="pre-code c-olive">
+  &lt;?php 
+  
+  new Session('user', 'usercookie');
+
+</pre>
+                                </div> <br>
+
+                                <div class="pre-area mvt-10">
+                                    <div class="pxv-10 bc-silver">2a. window/Sessions/AdminSession.php</div>
+<pre class="pre-code c-olive">
+  &lt;?php 
+  
+  new Session('admin', 'admincookie');
+
+</pre>
+                                </div> <br>
+
+                                <div class="pre-area mvt-10">
+                                    <div class="pxv-10 bc-silver">1b. window/Frames/UserFrame.php</div>
+<pre class="pre-code c-olive">
+  &lt;?php 
+
+  namespace spoova/mi/windows/Frames;
+
+  use Window;
+  use User;
+
+  session('usersession')
+
+  class UserFrame extends Window {
     
-                            <span class="c-olive fb-6">2.</span> By including the directive <code class="font-em-d8">&lt;?= Res::import("::watch") ?&gt;</code>
-                            in your project file. <br><br>
+    function __construct() {
+
+        vdump( User::config('SESSION_NAME') ); <span class="comment">//session</span>
+
+    }
     
-                            <span class="c-olive fb-6">3.</span> By including the <code class="font-em-d8">&lt;?= Res::live() ?&gt;</code> which is a shorthand for 2 above <br><br>
+  }
+
+</pre>
+                                </div>
+
+                                <div class="pre-area mvt-10">
+                                    <div class="pxv-10 bc-silver">2b. window/Frames/AdminFrame.php</div>
+<pre class="pre-code c-olive">
+  &lt;?php 
+
+  namespace spoova/mi/windows/Frames;
+
+  use Window;
+  use User;
+
+  session('adminsession')
+
+  class AdminFrame extends Window {
     
-                            <span class="c-olive fb-6">4.</span> By including the <code class="font-em-d8">&#64;live()</code> or <code class="font-em-d8">&#64;live</code> directive in template engines <br><br>
-                            
-                            <span class="c-olive fb-6">5.</span> By including the <code class="font-em-d8">&#64;Res('::watch')</code> directive in template engines <br><br>
-                            
-                            <span class="c-olive fb-6">6.</span> By the use of helper function <code class="font-em-d8">monitor()</code> in window route files.<br><br>
-                            
-                            <span class="c-olive fb-6">7.</span> The template importing directive "&#64;template(file:off)" can also turn off a template inherited live server. 
-                        </li> <br>
+    function __construct() {
+
+        vdump( User::config("SESSION_NAME") ); <span class="comment">//admin</span>
+
+    }
     
-                        <li> 
-                            <span class="c-olive fb-6">8.</span> Live server can also be switched off or on with <code class="font-em-d8">&lt;?= Res::watch() ?&gt;</code> and <code class="font-em-d8">&lt;?= Res::off() ?&gt;</code> respectively.
-                            <br><br>
+  }
+
+</pre>
+                                </div>
+
+                                <div class="foot-note mvt-6">
+                                    In the example above, we have two session within the <code>window/Sessions/</code> 
+                                    directory. Within each session file in <code>"1a"</code> and <code>"2a"</code> above, we 
+                                    defined two different session keys "user" and "admin" in which relative session data are expected 
+                                    to be stored. Once the key is stored, we can then import the session files into any frame file 
+                                    using the <code>session()</code> function which was built to load session files into window files by 
+                                    calling the session file name. In the example above, the <code>Userframe</code> class will connect to the 
+                                    <code>UserSession</code> file while the class <code>AdminFrame</code> will connect to the 
+                                    <code>AdminSession</code> file. By defining the <code>session()</code> at the top of the class, it ensures that when we 
+                                    call the session is always added and not overridden from any method. However, if we are sure that the <code>super()</code> 
+                                    of window or in this case "frame" files will not be overridden, then we can declare the session within a the <code>super()</code> method which is usually being called at the 
+                                    start of any route. An example is shown below:
+                                </div>
+
+                                <div class="pre-area mvt-10">
+                                    <div class="pxv-10 bc-silver">2b. window/Frames/AdminFrame.php</div>
+<pre class="pre-code c-olive">
+  &lt;?php 
+
+  namespace spoova/mi/windows/Frames;
+
+  use Window;
+  use User;
+
+  class AdminFrame extends Window {
     
-                            <span class="font-em-d85 box c-brown-ll bc-white-d shadow rad-5 pxv-10">
-                                <div class="font-em-1d2 fb-9"><span class="bi-exclamation-triangle"></span> Warning</div> 
-                               
-                                <ul class="pxl-14 font-em-1d1">
-                                    <li style="list-style:square">
-                                        Turning off the live server can only be done before a previous setting is made to turn it on. This means that turning off can be done either 
-                                        before the page loads or before resource importation is done. Also, whenever the live server is turned off either by a KILL EFFECT 
-                                        or through code, when turned back on, the page must be reloaded for the changes to take effect.
-                                    </li>
-                                    <li style="list-style:square">
-                                        When working with database operations, operations that could change the state of another item permanently (for example, file update or delete) 
-                                        or operations that changes state frequently, it is advised to turn off the liveserver to prevent pre-execution of codes and recurrent page reload.
-                                    </li>
-                                </ul>
-                            </span>
-                        </li>   
-                    </ul>
+    function __construct() {
+
+       vdump( User::config('SESSION_NAME') ); <span class="comment">//admin</span>
+
+    }
+
+    static function super() {
+        
+        session('adminsession');
+
+    }
+    
+  }
+
+</pre>
+                                </div>
+                        </div> 
+                    </div>
+                    
+                    <div class="foot-note mvt-10">
+                        in the example above, the <code>AdminFrame</code> file calls the <code>AdminSession</code> 
+                        file using the global <code>super()</code> method. Once we declare the session keys, we can then 
+                        extends the session frame files to routes. The children route of the relative session frames will 
+                        only have access to their respective parent session keys. This makes it easier to deal with session 
+                        data and helps to distinguish between one session from another.
+                    </div>
+                    
+                    <br>
+
+                    
+ <div class="font-menu pvs-4"> <a href="http://localhost/spoova/docs">Docs</a> <span class="bi-chevron-right"></span> <a href="http://localhost/spoova/docs/wmv">Wmv</a> <span class="bi-chevron-right"></span> <a href="http://localhost/spoova/docs/wmv/sessions">Sessions</a>  </div>
+
+
                 </div>
-
             </div>
-           </div>
         </section>
-   </div>
-
+    </div>
+    
+    
+    
 
          <div class="blurry page-overlay ov-d5 hide"></div>
     </section>

@@ -2,8 +2,6 @@
 
 @template('template.t-tut')
 
-    <!-- @lay('build.co.coords:header') -->
-
     @lay('build.co.navbars:left-nav')
 
    <div class="box-full pxl-2 bc-white pull-right">
@@ -220,7 +218,6 @@
                        
                    </div>
                </div>
-               <div class="pxv-20 bc-red setup"></div>
            </div>
        </section>
    </div>

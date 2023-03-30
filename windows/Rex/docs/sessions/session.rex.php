@@ -44,13 +44,13 @@
 
                                 <div class="">
                                     <div class="flex mvs-6">
-                                        <div class="clip-120"><code>USER_TABLE:</code> <span>This table is expected to be the user table where user data is stored.</span></div>                                     
+                                        <div><code class="clip-130">USER_TABLE:</code> <span>This table is expected to be the user table where user data is stored.</span></div>                                     
                                     </div>
                                     <div class="flex mvs-6">
-                                        <div class="clip-120"><code>COOKIE_FIELDNAME:</code> <span>A database column in USER_TABLE where cookie hash is stored</span></div>
+                                        <div><code class="clip-130">COOKIE_FIELDNAME:</code> <span>A database column in USER_TABLE where cookie hash is stored</span></div>
                                     </div>
                                     <div class="flex mvs-6">
-                                        <div class="clip-120"><code>USER_ID_FIELDNAME:</code> <span>A database column in USER_TABLE that contains the user unique id</span></div>
+                                        <div><code class="clip-130">USER_ID_FIELDNAME:</code> <span>A database column in USER_TABLE that contains the user unique id</span></div>
                                     </div>
                                 </div>
 

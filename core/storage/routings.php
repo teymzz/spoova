@@ -8,7 +8,7 @@
     <link rel="icon" type="image/png" href="http://localhost/spoova/res/main/images/icons/favicon.png">
     <title></title>
     
-    <link  rel="stylesheet" type="text/css" href="http://localhost/spoova/res/main/css/res.css" x-debug="res-css"><script src='http://localhost/spoova/res/main/js/jquery-3.6.0.js'></script><script src='http://localhost/spoova/res/main/css/bootstrap/js/bootstrap.min.js'></script><link  rel="stylesheet" type="text/css" href="http://localhost/spoova/res/main/css/mdb5/css/mdb.min.css"><script src='http://localhost/spoova/res/main/js/config.js'></script><script src='http://localhost/spoova/res/main/js/core.js'></script><script src='http://localhost/spoova/res/main/js/onLoaded.js'></script><script src='http://localhost/spoova/res/main/js/custom.js'></script><script src='http://localhost/spoova/res/main/js/device.js'></script><script src='http://localhost/spoova/res/main/js/loadImages.js'></script><script src='http://localhost/spoova/res/main/js/formValidator.js'></script><script src='http://localhost/spoova/res/main/js/jquery.mousewheel.js'></script><script src='http://localhost/spoova/res/main/js/anime.js'></script><script src='http://localhost/spoova/res/main/js/init.js'></script> 
+    <link  rel="stylesheet" type="text/css" href="http://localhost/spoova/res/main/css/res.css" x-debug="res-css"><script src='http://localhost/spoova/res/main/js/jquery/jquery-3.6.0.js'></script><script src='http://localhost/spoova/res/main/js/jquery/jquery.mousewheel.js'></script><script src='http://localhost/spoova/res/main/css/bootstrap/js/bootstrap.min.js'></script><link  rel="stylesheet" type="text/css" href="http://localhost/spoova/res/main/css/mdb5/css/mdb.min.css"><script src='http://localhost/spoova/res/main/js/local/core.js'></script><script src='http://localhost/spoova/res/main/js/local/onLoaded.js'></script><script src='http://localhost/spoova/res/main/js/local/jqmodex.js'></script><script src='http://localhost/spoova/res/main/js/local/device.js'></script><script src='http://localhost/spoova/res/main/js/local/loadImages.js'></script><script src='http://localhost/spoova/res/main/js/local/formValidator.js'></script><script src='http://localhost/spoova/res/main/js/local/helper.js'></script><script src='http://localhost/spoova/res/main/js/local/init.js'></script> 
     <style rel="build.css.tutorial"> 
 
      body{
@@ -288,28 +288,34 @@ body.--theme-dark{
         })
     </script>
     
-    <script> 
+    <script rel="build.js.theme"> 
 window.onload = function() {
     
 
     let switchBox = new Switcher;
 
-    $('.theme-btn').click(function() {
+    let themeBtn = document.querySelectorAll('.theme-btn');
+    let body = document.querySelector('body');
 
-        $('body').toggleClass('--theme-dark');
+    themeBtn.forEach(btn => {
 
-        if($('body').hasClass('--theme-dark')){                
-            switchBox.set('spoovaTheme', '--theme-dark')
-        }else{
-            switchBox.set('spoovaTheme', '')    
-        }
+        btn.addEventListener('click', () => {
+
+            body.classList.toggle('--theme-dark');
+    
+            if(body.classList.contains('--theme-dark')){
+                switchBox.set('spoovaTheme', '--theme-dark');
+            }else{
+                switchBox.set('spoovaTheme', '');
+            }
+
+        })
 
     })
 
-    switchBox.bind('spoovaTheme', function(value){
-        $('body').addClass(value)
+    switchBox.bind('spoovaTheme', function(value){ 
+       if(!value) body.classList.remove('--theme-dark')
     })
-
 
  
 }
@@ -332,7 +338,7 @@ window.onload = function() {
      <nav class="nav-left fixed">
 
           <div class="flex pxv-10">
-               <div class="flex-icon theme-btn box bd bd-silver rad-r anc-btn-link flow-hide bc-silver ripple relative" style="transition: none">
+               <div class="flex-icon theme-btn navtheme box bd bd-silver rad-r anc-btn-link flow-hide bc-silver ripple relative" style="transition: none">
                     <div class="px-40 b-cover ico-spin" data-src="http://localhost/spoova/res/main/images/icons/favicon.png" style="transition: none"></div>
                     <div class="font-em-1d5 px-40 flex mid overlay fb-9 calibri" style="top:-2px; left:.4px; z-index: 1; color:#202dd5;">
                          s 
@@ -385,13 +391,14 @@ window.onload = function() {
                     <div class="routing-files">
                         <div class="fb-6">Routing files</div> <br>
                         <div class="">
-                            Routes are registered through multiple ways using either MVC or WMV approach.
-                            The <code>model-view-controller</code> is a common approach for routing files using ports.
-                            However, WMV <code>model-view-windows</code> or <code>windows-model-view</code> approach was introduced as 
-                            an architecture built upon the MVC. Both MVC and WMV is supported by this framework. According to this framework, 
-                            web apps initialized through php local server ports (8080) are referred to as MVC while those that uses web servers
-                            are referred to as wmv. Whether the application is started through cli initialized ports or use of web servers, spoova 
-                            has been configured to respond in the same way with little to no differences.
+                            Routes are registered through multiple ways using either ports or htaccess files.
+                            The <code>model-view-controller</code> is a common pattern in framework development.
+                            However, WMV <code>windows-view-model</code> or (windows-model-view) approach was introduced as 
+                            an approach built upon the MVC architecture. Both port routing (8080) using php inbuilt server or third-party server is supported by this framework. 
+                            In order to be more specific, web apps initialized through php local server ports (8080) will be referred to as "MVC Port" while those that uses web servers
+                            will be termed as WMV, although, both systems are still under the MVC architecture. The configuration of spoova frame has created a great connection between 
+                            the MVC Port and WMV systems which makes it possible to interact with either of this system in the same manner. For example, url addresses are configured to 
+                            give out the same response under any of this systems.
                         </div> 
                     </div> <br>
 
@@ -399,22 +406,25 @@ window.onload = function() {
                         <div class="fb-6">What is WMV ?</div> <br>
                         <div class="font-menu font-em-1">
                             <p class="">
-                                The <code>windows-model-view</code> is an architectural pattern built on mvc framework.
+                                The <code>windows-model-view</code> is an architectural pattern built on MVC pattern. 
+                                It uses a 3 logic pattern to handle url routes which makes it a more flexible system to deal with.
                                 It works in a similar manner to building a real house with its several windows. 
-                                <code>WMV</code> also has a window. Consider your application project as a house with its 
+                                <code>WMV</code> also has a window. In order to understand how this system works, we need to consider a project application as house with its 
                                 different windows, window frames and entry points. A window cannot naturally exist unless it is given
-                                its own space. WMV does not depend on files but window files. Similarly to a house, a window enables us
+                                its own space. WMV does not depend on files but window files which in turn serves as entry points. Similarly to a house, a window enables us
                                 to have a view and what we see are the models or structures built outside that view which are objects visible to our sight.
                                 A view cannot occur if there is nothing to be seen. This means that an object must be able to reflect a light.
                                 Without a light, then there is no view at all. Hence, wmv is a pattern that follows a window format. A better example
                                 is our eyes. When the eyes is opened, a light must be reflected on objects to be seen, else there will be total darkness.
-                                The light itself is an object (model) that makes view possible. So, under wmv, the model comes first before view. <br>
-                            </p>
-                            <p class="">
-                                Since model comes first, our model classes must be built first, then lastly rendered as a view. This is because
-                                a view will only show existing models rather than non-existing ones. The <code>WMV</code> architecture is divided into five categories
-                                which are <a href="<?= DomUrl('docs/wmv/routes') ?>"><code>Routes</code>, <a href="<?= DomUrl('docs/wmv/frames') ?>"><code>Frames</code></a> 
-                                <a href="<?= DomUrl('docs/wmv/apis') ?>"><code>APIs</code></a>, <a href="<?= DomUrl('docs/wmv/rex') ?>"><code>Rex</code></a> and <a href=""><code>Models</code></a> . 
+                                The light itself is an object (model) that makes view possible. So, under wmv, the model comes first before view.
+                                The <code>WMV</code> architecture is divided into six categories
+                                which are 
+                                <a href="<?= DomUrl('docs/wmv/routes') ?>"><code>Routes</code>, 
+                                <a href="<?= DomUrl('docs/wmv/frames') ?>"><code>Frames</code></a> 
+                                <a href="<?= DomUrl('docs/wmv/apis') ?>"><code>APIs</code></a>, 
+                                <a href="<?= DomUrl('docs/wmv/sessions') ?>"><code>Sessions</code></a>, 
+                                <a href="<?= DomUrl('docs/wmv/rex') ?>"><code>Rex</code></a> and 
+                                <a href=""><code>Models</code></a> . 
                                 These will be discussed later under their headings.
                             </p>
                         </div> 

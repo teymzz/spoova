@@ -1,5 +1,4 @@
 
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -8,10 +7,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" type="image/png" href="http://localhost/spoova/res/main/images/icons/favicon.png">
     <title>Tutorial - Routing MVC</title>
-    <meta name="viewport" content="width=device-width, initial-scale=.9, maximum-scale=1.0, user-scalable=1" />
-<meta name="description" content="website_description" />
-<link rel="icon" href="http://localhost/spoova/res/main/images/icons/favicon.png" />
-    <link  rel="stylesheet" type="text/css" href="http://localhost/spoova/res/main/css/res.css" x-debug="res-css"><script src='http://localhost/spoova/res/main/js/jquery-3.6.0.js'></script><script src='http://localhost/spoova/res/main/css/bootstrap/js/bootstrap.min.js'></script><link  rel="stylesheet" type="text/css" href="http://localhost/spoova/res/main/css/mdb5/css/mdb.min.css"><script src='http://localhost/spoova/res/main/js/config.js'></script><script src='http://localhost/spoova/res/main/js/core.js'></script><script src='http://localhost/spoova/res/main/js/onLoaded.js'></script><script src='http://localhost/spoova/res/main/js/custom.js'></script><script src='http://localhost/spoova/res/main/js/device.js'></script><script src='http://localhost/spoova/res/main/js/loadImages.js'></script><script src='http://localhost/spoova/res/main/js/formValidator.js'></script><script src='http://localhost/spoova/res/main/js/jquery.mousewheel.js'></script><script src='http://localhost/spoova/res/main/js/anime.js'></script><script src='http://localhost/spoova/res/main/js/init.js'></script> 
+    
+    <link  rel="stylesheet" type="text/css" href="http://localhost/spoova/res/main/css/res.css" x-debug="res-css"><script src='http://localhost/spoova/res/main/js/jquery/jquery-3.6.0.js'></script><script src='http://localhost/spoova/res/main/js/jquery/jquery.mousewheel.js'></script><script src='http://localhost/spoova/res/main/css/bootstrap/js/bootstrap.min.js'></script><link  rel="stylesheet" type="text/css" href="http://localhost/spoova/res/main/css/mdb5/css/mdb.min.css"><script src='http://localhost/spoova/res/main/js/local/core.js'></script><script src='http://localhost/spoova/res/main/js/local/onLoaded.js'></script><script src='http://localhost/spoova/res/main/js/local/jqmodex.js'></script><script src='http://localhost/spoova/res/main/js/local/device.js'></script><script src='http://localhost/spoova/res/main/js/local/loadImages.js'></script><script src='http://localhost/spoova/res/main/js/local/formValidator.js'></script><script src='http://localhost/spoova/res/main/js/local/helper.js'></script><script src='http://localhost/spoova/res/main/js/local/init.js'></script> 
     <style rel="build.css.tutorial"> 
 
      body{
@@ -178,6 +175,7 @@
 }
 
 body.--theme-dark{
+    color: rgb(125, 125, 125);
     background-color : rgba(21, 15, 39);
 }
  </style><style rel="build.css.navbars"> 
@@ -244,7 +242,7 @@ body.--theme-dark{
     <script src='http://localhost/spoova/res/main/js/switcher.js'></script>
     
 </head>
-<body>
+<body class="--theme-dark">
 
     <script>
         $(document).ready(function(){
@@ -290,28 +288,34 @@ body.--theme-dark{
         })
     </script>
     
-    <script> 
+    <script rel="build.js.theme"> 
 window.onload = function() {
     
 
     let switchBox = new Switcher;
 
-    $('.theme-btn').click(function() {
+    let themeBtn = document.querySelectorAll('.theme-btn');
+    let body = document.querySelector('body');
 
-        $('body').toggleClass('--theme-dark');
+    themeBtn.forEach(btn => {
 
-        if($('body').hasClass('--theme-dark')){                
-            switchBox.set('spoovaTheme', '--theme-dark')
-        }else{
-            switchBox.set('spoovaTheme', '')    
-        }
+        btn.addEventListener('click', () => {
+
+            body.classList.toggle('--theme-dark');
+    
+            if(body.classList.contains('--theme-dark')){
+                switchBox.set('spoovaTheme', '--theme-dark');
+            }else{
+                switchBox.set('spoovaTheme', '');
+            }
+
+        })
 
     })
 
-    switchBox.bind('spoovaTheme', function(value){
-        $('body').addClass(value)
+    switchBox.bind('spoovaTheme', function(value){ 
+       if(!value) body.classList.remove('--theme-dark')
     })
-
 
  
 }
@@ -334,7 +338,7 @@ window.onload = function() {
      <nav class="nav-left fixed">
 
           <div class="flex pxv-10">
-               <div class="flex-icon theme-btn box bd bd-silver rad-r anc-btn-link flow-hide bc-silver ripple relative" style="transition: none">
+               <div class="flex-icon theme-btn navtheme box bd bd-silver rad-r anc-btn-link flow-hide bc-silver ripple relative" style="transition: none">
                     <div class="px-40 b-cover ico-spin" data-src="http://localhost/spoova/res/main/images/icons/favicon.png" style="transition: none"></div>
                     <div class="font-em-1d5 px-40 flex mid overlay fb-9 calibri" style="top:-2px; left:.4px; z-index: 1; color:#202dd5;">
                          s 
@@ -359,13 +363,14 @@ window.onload = function() {
                <li> <a href="<?= DomUrl('docs/database/migrations') ?>" class="<?= inPath('active') ?>"><span class="ico ico-spin"></span>Handling Migrations</a> </li>
                <li> <a href="<?= DomUrl('docs/classes') ?>" class="<?= inPath('active') ?>"><span class="ico ico-spin"></span>Helper Classes</a> </li>
                <li> <a href="<?= DomUrl('docs/functions') ?>" class="<?= inPath('active') ?>"><span class="ico ico-spin"></span>Helper Functions</a> </li>
-               <li> <a href="<?= DomUrl('docs/directives') ?>" class="<?= inPath('active') ?>"><span class="ico ico-spin"></span>Helper Directives</a> </li>
+               <li> <a href="<?= DomUrl('docs/template') ?>" class="<?= inPath('active') ?>"><span class="ico ico-spin"></span>Template Engine</a> </li>
                <li> <a href="<?= DomUrl('docs/setters') ?>" class="<?= inPath('active') ?>"><span class="ico ico-spin"></span>Global Setters</a> </li>
                <li> <a href="<?= DomUrl('docs/mails') ?>" class="<?= inPath('active') ?>"><span class="ico ico-spin"></span>Handling Mails</a> </li>
                <li> <a href="<?= DomUrl('docs/cli') ?>" class="<?= inPath('active') ?>"><span class="ico ico-spin"></span>Cli Commands</a> </li>         
                <li> <a href="<?= DomUrl('docs/plugins') ?>" class="<?= inPath('active') ?>"><span class="ico ico-spin"></span>Composer and Plugins</a></li>
                <li> <a href="<?= DomUrl('docs/libraries') ?>" class="<?= inPath('active') ?>"><span class="ico ico-spin"></span>Third-Party Libraries</a> </li>
                <li> <a href="<?= DomUrl('docs/other-features') ?>" class="<?= inPath('active') ?>"><span class="ico ico-spin"></span>Other Features</a> </li>
+               <li> <a href="<?= DomUrl('updates') ?>" class="<?= inPath('active') ?>"><span class="ico ico-spin"></span><span class="bi-arrow-down-circle c-lime-dd"></span> New Updates</a> </li>
           </ul>
       
      </nav>
@@ -382,61 +387,47 @@ window.onload = function() {
 
                 <div class="start font-em-d8">
 
-                    <div class="font-em-1d5 c-orange">Routing MVC</div> <br>
+                    <div class="font-em-1d5 c-orange">MVC Port Routing</div> <br>
                     
                     <div class="db-connection">
-                        <div class="fb-6">Introduction</div>
                         <div class="">
-                            Just like any other framework, the routing is done by using the 
+                            In some mvc frameworks, routing is done by using the 
                             <code>post()</code> and <code>get()</code> 
                             methods. However, spoova is wired differently. The the post and get methods are better handled
                             using the <code>Res::load()</code> method instead as there are lots of code flexilities attached to it.
-                            Developers are best left to handle their requests in the manner in which they desire. The term "MVC" within 
+                            Developers are best left to handle their requests in the manner in which they desire. The term "MVC Port" within 
                             this application refers to port routing, even though in real terms, MVC is a wide term 
                             that refers to all architectures that employs the <code>model-view-controller</code> structure.
 
-                            <br><br> Generally, routing can however be applied in two different ways.
-                            
-                            <br><br> 1. loading urls through page files and folder structures using known web servers.
-                            <br><br> 2. loading urls through index file using port.
+                            <br><br> Generally, port routing is done by the use of php inbuilt server to route urls. However, even when the method 
+                            is applicable within the framework and has also been integrated with the (wvm or wmv) structure to ensure that all routes 
+                            respond in closely similar manner, the process can be slow and sometimes may prevent some files such as external library icons 
+                            from responding well. It is however advisable to employ the use of local (e.g wamp, xampp) or remote servers in order to render 
+                            the application well.
 
                             
                         </div> 
                     </div> <br>
 
                     <div>
-                        <div class="font-menu fb-6 bc-white-dd box-full rad-4 pxv-8">
-                            1. Loading classes through page files.
-                        </div> <br>
-
-
-                        <div class="db-operations mvt-6">
-                            <div class="font-menu font-em-1">
-                            This method involves the use of page files to load classes into their respective pages. 
-                            The php files will only exist to run another main controller file by using the <code>Res::load()</code> method
-                            in each file. This process is highly discouraged as it creates multiple handler files that only performs the 
-                            function of loading controller files. This in fact is the reason it has been disabled and this tutorial will not be 
-                            focusing on this type of development as it is much advisable to use routes.
-                            </div> <br>
-                        </div>        
+                        <div class="font-menu fb-6 bc-white-dd box-full rad-4 pxv-8 fb-9">
+                         Using Ports
+                        </div>    
                     </div>
 
                     <div>
-                        <div class="font-menu fb-6 bc-white-dd box-full rad-4 pxv-8">
-                            2. Loading classes through index file using port.
-                        </div> <br>
 
 
                         <div class="port-routing mvt-6">
                             <div class="font-menu font-em-1">
-                            This method involves the accessing of a server file (index.php) through port to load classes based on requested urls. 
-                            The urls are first  registered and when the address is visited on browser, they are called into activation. In this method, 
-                            all registered urls are loaded and processed from the index file. <br><br>
-                            </div> 
+                            This method involves the accessing of a server file (index.php) through port (8080) to load classes based on requested urls. 
+                            Once the server is started, the index server file will route urls using any of the 3 logics supported by framework for loading 
+                            routes.
+                            </div> <br>
                             
                             
                             <div class="bc-white-dd font-menu">
-  <div class="pxv-10 bc-silver">Example - Inside the index file, the following is placed </div>
+  <div class="pxv-10 bc-silver">server file - index.php</div>
                             
                     <pre class="pre-code">
   &lt;?php
@@ -453,17 +444,16 @@ window.onload = function() {
                     
                     <div class="mvt-10">
                         <div class="font-em-d87">
-                        The example above reveals that urls are loaded through the server file <code>index.php</code>. In this way, all php urls and files are protected 
-                        unless allowed. Since this method is favored, developer can either start a server on port <code>8080</code> by calling the command
-                        <code>php mi start</code> which starts the server using cli or developers can use their preferred web server. Spoova has been configured to 
-                        respond in a similar way.
+                        The code above is a sample format of the <code>index.php</code> server file. Urls are routed through the server file <code>index.php</code>. In this way, all php urls and files are protected 
+                        unless allowed. Server can be started on port <code>8080</code> by running the command
+                        <code>php mi start</code> on the terminal which starts the built-in php server. If this method is slow or unresponsive, as a better alternative, developers can use their preferred local or remote server. Spoova has been configured to 
+                        respond in a better way.
                         </div> <br>  
 
                         <div class="font-em-d87">
                             <p>
-                                Once the server is started, spoova begins to search for its route files within the <code>Window</code> and <code>Window/Routes</code> folder. It is 
-                                important to keep the <code>windows/Index.php</code> file available in order to successfully load web pages if a basic logic which supports customized 
-                                Window entry file (or class) name is not used. <br> 
+                                Once the server is started, spoova begins to search for its route files within the <code>windows/Routes</code> directory. It is 
+                                important to keep the <code>windows/Routes/Index.php</code>. For more information on WVM approach visit <a href="<?= DomUrl('docs/routings/wmv') ?>">here</a>   <br> 
                             </p>
                         
                             <p class="c-orange-d">
