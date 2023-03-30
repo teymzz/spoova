@@ -1,8 +1,7 @@
 ### SPOOVA FRAME
 Spoova is a PHP Framework that uses a Window-View-Model (WVM) pattern that 
 is built upon MVC arcitecture. It uses a 3-Logic pattern to determine how routes 
-are controlled or managed. Other features include inbuilt live server (beta), inbuilt template engine, 
-Reusable components, Static Resource Handler, ORM (beta) and FileManager tool.  
+are controlled or managed. Other features include inbuilt live server, inbuilt template engine, Reusable components, Static Resource Handler, ORM (beta) and FileManager tool.  
 
 ##### INSTALLATION
 
@@ -92,7 +91,7 @@ Deploying a production-ready application requires the use of specially designed 
 
 ##### CONFIGURATION FILES
 
-1. The database configuration files are automatically configured by the ```php mi config:all``` command but can be manually configured at _icore/dbconfig.php_ file. Database connection parameters are also loaded by default from this file. Remember to remove your connection paramaters when submitting project to a public environment by running ```php mi config:dboffline``` and also remove the online parameters if previously defined also by running the  ```php mi config:dbonline``` with the parameters set as dash (i.e - ). This can alsi be done manually from the configuration file itself.
+1. The database configuration files are automatically configured by the ```php mi config:all``` command but can be manually configured at _icore/dbconfig.php_ file. Database connection parameters are also loaded by default from this file. Remember to remove your connection paramaters when submitting project to a public environment by running ```php mi config:dboffline``` and also remove the online parameters if previously defined also by running the  ```php mi config:dbonline``` with the parameters set as dash (i.e - ). This can also be done manually from the configuration file itself.
 2. Other configuration files can be found within the same directory (i.e _icore/_).
 3. The _icore/init_ file is used to initialize the state of the application.
 4. The _.env_ file should also be added to the same directory, if needed. This will enable the _env()_ function to load the defined keys automatically if needed.
@@ -104,10 +103,10 @@ Deploying a production-ready application requires the use of specially designed 
 2. Storing of unused static resource urls into Resource class (Res) should be avoided to reduce load time.
 3. Spoova uses the _res/_ directory to store global static files. Hence, all global css and javascript files should be placed within the res directory.
 4. All domain and subdomains must have an icore folder within them as icore folder helps to localize and (or) update default configurations when necessary.
-5. All subdomain folders (if created), should have access to the global res directory (this may require the use of symlink).
-6. Avoid placing classes directly in the the root of _core/_ directory. A special subdirectory may be designated for classes.
+5. All subdomain folders (if created), should have access to the global _res/_ directory (this may require the use of symlink).
+6. Avoid placing classes directly in the the root of _core/_ directory. Custom classes may be added to a custom separate folder within the root of your application 
 7. To use the live server feature, read the offline documentation provided on how to implement it.
-8. All directories and php files are protected while other file extensions are exempted. However, the core, icore and windows directories are strictly protected. Any file within these directories also inherit their protection. These can prove useful in helping to secure the _composer.json_ file.
+8. All directories and php files are protected while other file extensions are excluded. However, the core, icore and windows directories are strictly protected. Any file within these directories also inherit their protection. These can prove useful in helping to secure the _composer.json_ file.
 
 ##### NOTICE
 
