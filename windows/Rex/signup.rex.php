@@ -19,10 +19,10 @@
                             </div>
                             <div class="flex-full f-col">
                                 <div>
-                                    <span class="c-orange box-full pvs-8" @onHide('error', ':csrf', 'title') > @error(':csrf','title') </span>
-                                    <span class="c-orange box-full pvs-8" @onHide('error', ':mod')> @error(':mod') </span>
-                                    <span class="c-orange box-full pvs-8" @onHide('error', ':dbi')> @error(':dbi') </span>
-                                    <span class="c-orange box-full pvs-8" @onHide('error', 'firstname')> @error('firstname') </span>
+                                    <span class="c-red-dd box-full pvs-8 font-em-d9" @onShow('error', ':csrf', 'title') > @error(':csrf','title') </span>
+                                    <span class="c-red-dd box-full pvs-8 font-em-d9" @onShow('error', ':mod')> @error(':mod') </span>
+                                    <span class="c-red-dd box-full pvs-8 font-em-d9" @onShow('error', ':dbi')> @error(':dbi') </span>
+                                    <span class="c-red-dd box-full pvs-8 font-em-d9" @onShow('error', 'firstname')> @error('firstname') </span>
                                 </div>
                                 <div class="i-flex-full-in rad-4">
                                     <input type="text" class="flex-full pxv-4" name="firstname" placeholder="firstname" value="@old.firstname">
@@ -31,7 +31,7 @@
 
                             <div class="flex-full f-col">
                                 <div>
-                                    <span class="c-orange box-full pvs-8" @onHide('error', 'lastname')> @error('lastname') </span>
+                                    <span class="c-red-dd box-full pvs-8 font-em-d9" @onShow('error', 'lastname')> @error('lastname') </span>
                                 </div>
                                 <div class="i-flex-full-in rad-4">
                                     <input type="text" class="flex-full pxv-4" name="lastname" placeholder="lastname" value="@old.lastname">
@@ -40,7 +40,7 @@
 
                             <div class="flex-full f-col">
                                 <div>
-                                    <span class="c-orange box-full pvs-8" @onHide('error', 'user')> @error('user') </span>
+                                    <span class="c-red-dd box-full pvs-8 font-em-d9" @onShow('error', 'user')> @error('user') </span>
                                 </div>
                                 <div class="i-flex-full-in rad-4">
                                     <input type="text" class="flex-full pxv-4" name="user" placeholder="username" value="@old.user">
@@ -49,7 +49,7 @@
 
                             <div class="flex-full f-col">
                                 <div>
-                                    <span class="c-orange box-full pvs-8" @onHide('error', 'email')> @error('email') </span>
+                                    <span class="c-red-dd box-full pvs-8 font-em-d9" @onShow('error', 'email')> @error('email') </span>
                                 </div>
                                 <div class="i-flex-full-in rad-4">
                                     <input type="text" class="flex-full pxv-4" name="email" placeholder="email" value="@old.email">
@@ -58,7 +58,7 @@
                             
                             <div class="flex-full f-col">
                                 <div>
-                                    <span class="c-orange box-full pvs-8" @onHide('error', 'pass')> @error('pass') </span>
+                                    <span class="c-red-dd box-full pvs-8 font-em-d9" @onShow('error', 'pass')> @error('pass') </span>
                                 </div>
                                 <div class="i-flex-full-in rad-4">
                                     <input type="password" class="flex-full pxv-4" name="pass" placeholder="password" value="@old.pass">
@@ -73,7 +73,7 @@
                                     <div class="flex">forgot password?</div>
                                     <div class="flex pxs-10">
                                        <span class="mxr-6">or</span> 
-                                       <span class="i"><a href="@domurl('signup')">log in</a></span> 
+                                       <span class="i"><a href="@domurl('login')">log in</a></span> 
                                     </div>
                                 </div>
                             </div>

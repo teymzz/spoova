@@ -2,8 +2,6 @@
 
 @template('template.t-tut')
 
-    <!-- @lay('build.co.coords:header') -->
-
     @lay('build.co.navbars:left-nav') 
 
     <div class="box-full bc-white-dd">

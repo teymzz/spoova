@@ -3,7 +3,6 @@
 use spoova\mi\core\classes\Base;
 use spoova\mi\core\server\Serve;
 use spoova\mi\core\classes\Spinner;
-use spoova\mi\windows\Sessions\UserSession;
 
 /**
  * This class contains window entry file. It should not be modified unless you have an idea 
@@ -20,11 +19,11 @@ class Server extends Base{
   final function __construct($type = '')
   {
       static::htcaliber($this);
-
       /* preload data */
       static::loadRoutes(); 
       static::bindFormData();
       static::loadBase(uri);
+      response(200, 'found', true);
       static::start($type);
   }
     
@@ -51,6 +50,9 @@ class Server extends Base{
     } else {
       Serve::baselogic(ucfirst($type));
     }
+
+    //Authenticate all sessions
+    User::auth()->id()->main();
 
   }
 

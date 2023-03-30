@@ -18,13 +18,14 @@
                     <div class="routing-files">
                         <div class="fb-6">Routing files</div> <br>
                         <div class="">
-                            Routes are registered through multiple ways using either MVC or WMV approach.
-                            The <code>model-view-controller</code> is a common approach for routing files using ports.
-                            However, WMV <code>model-view-windows</code> or <code>windows-model-view</code> approach was introduced as 
-                            an architecture built upon the MVC. Both MVC and WMV is supported by this framework. According to this framework, 
-                            web apps initialized through php local server ports (8080) are referred to as MVC while those that uses web servers
-                            are referred to as wmv. Whether the application is started through cli initialized ports or use of web servers, spoova 
-                            has been configured to respond in the same way with little to no differences.
+                            Routes are registered through multiple ways using either ports or htaccess files.
+                            The <code>model-view-controller</code> is a common pattern in framework development.
+                            However, WMV <code>windows-view-model</code> or (windows-model-view) approach was introduced as 
+                            an approach built upon the MVC architecture. Both port routing (8080) using php inbuilt server or third-party server is supported by this framework. 
+                            In order to be more specific, web apps initialized through php local server ports (8080) will be referred to as "MVC Port" while those that uses web servers
+                            will be termed as WMV, although, both systems are still under the MVC architecture. The configuration of spoova frame has created a great connection between 
+                            the MVC Port and WMV systems which makes it possible to interact with either of this system in the same manner. For example, url addresses are configured to 
+                            give out the same response under any of this systems.
                         </div> 
                     </div> <br>
 
@@ -32,22 +33,25 @@
                         <div class="fb-6">What is WMV ?</div> <br>
                         <div class="font-menu font-em-1">
                             <p class="">
-                                The <code>windows-model-view</code> is an architectural pattern built on mvc framework.
+                                The <code>windows-model-view</code> is an architectural pattern built on MVC pattern. 
+                                It uses a 3 logic pattern to handle url routes which makes it a more flexible system to deal with.
                                 It works in a similar manner to building a real house with its several windows. 
-                                <code>WMV</code> also has a window. Consider your application project as a house with its 
+                                <code>WMV</code> also has a window. In order to understand how this system works, we need to consider a project application as house with its 
                                 different windows, window frames and entry points. A window cannot naturally exist unless it is given
-                                its own space. WMV does not depend on files but window files. Similarly to a house, a window enables us
+                                its own space. WMV does not depend on files but window files which in turn serves as entry points. Similarly to a house, a window enables us
                                 to have a view and what we see are the models or structures built outside that view which are objects visible to our sight.
                                 A view cannot occur if there is nothing to be seen. This means that an object must be able to reflect a light.
                                 Without a light, then there is no view at all. Hence, wmv is a pattern that follows a window format. A better example
                                 is our eyes. When the eyes is opened, a light must be reflected on objects to be seen, else there will be total darkness.
-                                The light itself is an object (model) that makes view possible. So, under wmv, the model comes first before view. <br>
-                            </p>
-                            <p class="">
-                                Since model comes first, our model classes must be built first, then lastly rendered as a view. This is because
-                                a view will only show existing models rather than non-existing ones. The <code>WMV</code> architecture is divided into five categories
-                                which are <a href="@domurl('docs/wmv/routes')"><code>Routes</code>, <a href="@domurl('docs/wmv/frames')"><code>Frames</code></a> 
-                                <a href="@domurl('docs/wmv/apis')"><code>APIs</code></a>, <a href="@domurl('docs/wmv/rex')"><code>Rex</code></a> and <a href=""><code>Models</code></a> . 
+                                The light itself is an object (model) that makes view possible. So, under wmv, the model comes first before view.
+                                The <code>WMV</code> architecture is divided into six categories
+                                which are 
+                                <a href="@domurl('docs/wmv/routes')"><code>Routes</code>, 
+                                <a href="@domurl('docs/wmv/frames')"><code>Frames</code></a> 
+                                <a href="@domurl('docs/wmv/apis')"><code>APIs</code></a>, 
+                                <a href="@domurl('docs/wmv/sessions')"><code>Sessions</code></a>, 
+                                <a href="@domurl('docs/wmv/rex')"><code>Rex</code></a> and 
+                                <a href=""><code>Models</code></a> . 
                                 These will be discussed later under their headings.
                             </p>
                         </div> 

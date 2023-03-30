@@ -242,11 +242,35 @@ class Router extends Slicer{
         
         $map = json_decode($contents, true);
         
-        return is_array($map)? $map : [];
+        $map = is_array($map)? $map : []; 
+
+        // if(array_key_exists("*", $map) && (count($map) > 1)) {
+
+        //   trigger_error('map file cannot use all "*" directive with other entries');
+        //   return [];
+
+        // }
+
+        return $map;
 
       }
 
       return $map = [];
+
+    }
+
+    /**
+     * Map a url to map file
+     *
+     * @param string $url url to be mapped
+     * @param array $map if supplied, will be used as map
+     * @return void
+     */
+    static function relate(string $url, array $map = []){
+
+      $url = ($map['*'] ?? '').$url;
+
+      return ucfirst($url);
 
     }
 

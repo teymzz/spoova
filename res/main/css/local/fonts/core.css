@@ -1,19 +1,13 @@
 /* spoova res control */
 .spoova-notice {
-    width: 40em;
+    width: 0px;
     animation: spoove .1s forwards;
     white-space: nowrap;
-    overflow: hidden auto;
+    overflow: hidden;
     position: absolute;
     top: .2em;
     right: .2em;
     position: fixed;
-    max-height: 100vh;
-}
-
-.spoova-notice.lite{
-    display:none;
-    background-color: #1d1264;
 }
 
 .spoova-notice > [data-err="x-debug"] {
@@ -108,9 +102,8 @@
 
 /* spoova x-debug pane */
 .xdebug-error .err-wrapper {
-    background-color: #301c79;
+    background-color: #2c5880;
     color: rgb(255, 255, 255);
-    box-shadow: 0 0 35px 12px #1d1264 inset;
 }
 
 .xdebug-error .err-btns {
@@ -121,24 +114,22 @@
 .xdebug-error .error-desc {
     color: #d20e0e;
 }
-
 .xdebug-error .err-stack-btn {
-    border: solid 2px #231068;
-    box-shadow: 0 0 0 2px #1c0b5e inset;
-    background-color: rgb(48, 28, 121);
+    border: solid 2px #1a4e6c;
+    box-shadow: 0 0 0 2px #20415e inset;
+    background-color: rgb(44, 88, 128);
     color: white;
 }
 
 .xdebug-error .err-stack-line {
-    border: solid 2px #1a0a54;
+    border: solid 2px #1a4e6c;
     background-color: rgb(255, 255, 255);
-    color: #1a0a55;
+    color: #21425f;
 }
 
 .xdebug-error .err-stack-division {
-    background-color: rgb(27, 11, 86);
-    color: #e4e8f3;
-    box-shadow: 0px 0px 13px 10px inset #1c0b4c;
+    background-color: rgb(33, 66, 95);
+    color: white;
 }
 
 /* spoova x-debug pane: theme-brown */
@@ -175,50 +166,50 @@
 }
 
 /* spoova x-debug pane: theme-blue */
-.xdebug-error_blue .err-wrapper {
-    background-color: #2c5880;
+.xdebug-error._blue .err-wrapper {
+    background-color: #301c79;
     color: rgb(255, 255, 255);
+    box-shadow: 0 0 35px 12px #1d1264 inset;
 }
 
-.xdebug-error_blue .err-btns {
+.xdebug-error._blue .err-btns {
     background-color: rgb(252, 252, 252);
     color: #d20e0e;
 }
 
-.xdebug-error_blue .error-desc {
-    color: #d20e0e;
-}
-.xdebug-error_blue .err-stack-btn {
-    border: solid 2px #1a4e6c;
-    box-shadow: 0 0 0 2px #20415e inset;
-    background-color: rgb(44, 88, 128);
+.xdebug-error._blue .err-stack-btn {
+    border: solid 2px #231068;
+    box-shadow: 0 0 0 2px #1c0b5e inset;
+    background-color: rgb(48, 28, 121);
     color: white;
 }
 
-.xdebug-error_blue .err-stack-line {
-    border: solid 2px #1a4e6c;
+.xdebug-error._blue .err-stack-line {
+    border: solid 2px #1a0a54;
     background-color: rgb(255, 255, 255);
-    color: #21425f;
+    color: #1a0a55;
 }
 
-.xdebug-error_blue .err-stack-division {
-    background-color: rgb(33, 66, 95);
-    color: white;
+.xdebug-error._blue .err-stack-division {
+    background-color: rgb(27, 11, 86);
+    color: #e4e8f3;
+    box-shadow: 0px 0px 13px 10px inset #1c0b4c;
 }
 
 /* fatal */
 table.xdebug-error{
-    overflow: auto;
-    padding: 10px;
+    /* padding: 10px; */
     border:none;
     border-radius: 10px;
-    margin: 2%;
+    /* margin: 2%; */
     border-collapse:separate;
     border-spacing: 10px;
 }
-table.xdebug-error *{
+/* table.xdebug-error *{
     border:none;
     text-align: left;
+}
+table.xdebug-error *{
     font-family: calibri;
 }
 table.xdebug-error tr {
@@ -262,7 +253,7 @@ table.xdebug-error tr :is(td, th){
     background-color: #5762a2 !important;
     padding: 8px !important;
     border-radius: 8px;
-} 
+}  */
 
 
 @keyframes spoove{

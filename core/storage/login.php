@@ -9,7 +9,7 @@
     <link rel="icon" type="image/png" href="http://localhost/spoova/res/main/images/icons/favicon.png">
     <title></title>
     
-    <link  rel="stylesheet" type="text/css" href="http://localhost/spoova/res/main/css/res.css" x-debug="res-css"><script src='http://localhost/spoova/res/main/js/jquery-3.6.0.js'></script><script src='http://localhost/spoova/res/main/css/bootstrap/js/bootstrap.min.js'></script><link  rel="stylesheet" type="text/css" href="http://localhost/spoova/res/main/css/mdb5/css/mdb.min.css"><script src='http://localhost/spoova/res/main/js/config.js'></script><script src='http://localhost/spoova/res/main/js/core.js'></script><script src='http://localhost/spoova/res/main/js/onLoaded.js'></script><script src='http://localhost/spoova/res/main/js/custom.js'></script><script src='http://localhost/spoova/res/main/js/device.js'></script><script src='http://localhost/spoova/res/main/js/loadImages.js'></script><script src='http://localhost/spoova/res/main/js/formValidator.js'></script><script src='http://localhost/spoova/res/main/js/jquery.mousewheel.js'></script><script src='http://localhost/spoova/res/main/js/anime.js'></script><script src='http://localhost/spoova/res/main/js/init.js'></script>
+    <link  rel="stylesheet" type="text/css" href="http://localhost/spoova/res/main/css/res.css" x-debug="res-css"><script src='http://localhost/spoova/res/main/js/jquery/jquery-3.6.0.js'></script><script src='http://localhost/spoova/res/main/js/jquery/jquery.mousewheel.js'></script><script src='http://localhost/spoova/res/main/css/bootstrap/js/bootstrap.min.js'></script><link  rel="stylesheet" type="text/css" href="http://localhost/spoova/res/main/css/mdb5/css/mdb.min.css"><script src='http://localhost/spoova/res/main/js/local/core.js'></script><script src='http://localhost/spoova/res/main/js/local/onLoaded.js'></script><script src='http://localhost/spoova/res/main/js/local/jqmodex.js'></script><script src='http://localhost/spoova/res/main/js/local/device.js'></script><script src='http://localhost/spoova/res/main/js/local/loadImages.js'></script><script src='http://localhost/spoova/res/main/js/local/formValidator.js'></script><script src='http://localhost/spoova/res/main/js/local/helper.js'></script><script src='http://localhost/spoova/res/main/js/local/init.js'></script>
 </head>
 <body>
 
@@ -41,10 +41,6 @@
     color: #737b86;
   }
  </style>
-        <!-- @live() -->
-        
-        <!-- script -->
-        <!-- @script('build.js.inc:index') -->
 
 
         <section>
@@ -52,7 +48,7 @@
             <div class="maincover centre">      
 
                 <form method="post" class="form-field" style="width: 350px">
-                    <input type="hidden" value="M6yJmkORoCecp5kBN238" name="CSRF_TOKEN">
+                    <input type="hidden" value="v8GPT3cgKrSeE5CW1Rqb" name="CSRF_TOKEN">
                     <div class="fm-d5 sp-1 wid-full">
                         <div class="flex-full f-col">
                             <div>
@@ -60,7 +56,7 @@
                                 <span class="c-orange box-full pvs-8" <?= onShow('error',':mod')?>> <?= error(':mod') ?> </span>
                                 <span class="c-orange box-full pvs-8" <?= onShow('error',':dbi')?>> <?= error(':dbi') ?> </span>
                                 <span class="c-orange box-full pvs-8" <?= onShow('error','user')?>> <?= error('user') ?> </span>
-                                <span class="c-orange box-full pvs-8"><?= ( Res::Flash('mod', 'no errors') )?? "" ?> Hey</span>
+                                <span class="c-orange box-full pvs-8"><?= ( Res::Flash('mod', 'no errors') )?? "" ?></span>
                             </div>
                             <div class="i-flex-full-in rad-4">
                                 <input type="text" class="flex-full pxv-4" name="user" placeholder="username" value="<?= reqValue('$_POST', ['user']) ?>">
@@ -80,14 +76,14 @@
                             <div class="flex-btn">
                                 <button class="flex-btn bg-primary rad-4 c-white pxv-10" name="login" value="login" >Submit</button>
                             </div>
-                            <div class="">
-                                <input type="checkbox" name="remember"> RememberMe
+                            <div class="c-white">
+                                <input type="checkbox" name="remember"> remember me
                             </div>
                             <div class="flex">
                                 <div class="flex mid c-white font-menu font-em-1">
                                     <div class="flex">forgot password?</div>
-                                    <div class="flex pxs-10 mxs-10">
-                                       <span class="mxr-6">or</span> 
+                                    <div class="flex">
+                                       <span class="mxs-6">or</span> 
                                        <span class="i"><a href="<?= DomUrl('signup') ?>">sign up</a></span> 
                                     </div>
                                 </div>

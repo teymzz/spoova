@@ -2,6 +2,7 @@
 
 namespace spoova\mi\core\classes;
 
+use spoova\mi\core\classes\Ress;
 use spoova\mi\core\classes\Rescom;
 use spoova\mi\core\classes\FileManager;
 
@@ -46,7 +47,7 @@ class Resource Extends Rescom{
     private static $prepend;
     private static $meta_on = true;
     private static $ignore;
-    private static $called_static;
+    private static $called_static = null;
 
     /**
      * instantiate resource watch if configured
@@ -171,7 +172,7 @@ class Resource Extends Rescom{
               $url = DomUrl($url);
             }
         }
-             
+         
         $asterisk = "*";
         
 
@@ -244,13 +245,13 @@ class Resource Extends Rescom{
      */
     private static function is_protocol($url) : bool{
        $url = (string) $url;
-    	 return ((substr($url, 0,4) == 'http') || (substr($url, 0,3) == 'www'))? true : false;
+    	 return ((substr($url, 0,4) == 'http') || (substr($url, 0,4) == 'www.'))? true : false;
     }
 
     /**
      * checks if url is a relative path
      *
-     * @param [type] $url
+     * @param string $url
      * @return boolean
      */
     private static function is_absolute($url){
@@ -501,8 +502,10 @@ class Resource Extends Rescom{
      * stores and returns a url stored similarly as callFile() method ...
      * ...but employs a chainable structure
      * chainable only with name() method chains: url(), urlOpen() and urlClose() methods !!!
+     * 
+     * @return Resource
      */
-    public function url(){
+    public function url() : Resource{
       $args = func_get_args();
       self::callFile(...$args);
       return $this;
@@ -558,11 +561,16 @@ class Resource Extends Rescom{
     
     
 
-   /**
-    * Note :: This will create a new instance of Resource class if it does not exists 
-    * @return \core\classes\Ress
-    */
-    public static function new($dir = ''){
+    /**
+     * This method:
+     *   - Adds a new parent path if argument is supplied
+     *   - This will create a new instance of Resource class if it does not exist.
+     *
+     * @param string $new a new parent path if supplied.
+     * 
+     * @return Rosource|Ress
+     */
+    public static function new(string $dir = '') : Resource|Ress {
 
       
       if(!self::$called_static){
@@ -579,9 +587,9 @@ class Resource Extends Rescom{
     * Note :: This will create a new instance of Resource class if it does not exists 
 
     * @param string $name
-    * @return Resource
+    * @return Resource|null
     */
-    public static function name($name=null){
+    public static function name($name=null) : Resource | null{
       self::$resourceName = $name; 
       if(!isset(self::$resources[$name])){
         self::$resources[$name] = [];

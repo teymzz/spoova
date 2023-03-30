@@ -4,10 +4,10 @@ namespace spoova\mi\windows\Routes;
 
 use Window;
 
-class Posts extends Window {
-    
-    public function __construct(){
+class Updates extends Window {
 
+    public function __construct(){
+        self::addRex();
         self::call($this,
             [
                 window('root') => 'root'
@@ -18,7 +18,7 @@ class Posts extends Window {
 
     function root() {
 
-        //self::load('index', fn() => compile() );
+        self::load('updates', fn() => compile() );
         
     }
 

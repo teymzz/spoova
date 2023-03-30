@@ -38,6 +38,7 @@
                <li> <a href="@DomUrl('docs/plugins')" class="@inPath('active')"><span class="ico ico-spin"></span>Composer and Plugins</a></li>
                <li> <a href="@DomUrl('docs/libraries')" class="@inPath('active')"><span class="ico ico-spin"></span>Third-Party Libraries</a> </li>
                <li> <a href="@DomUrl('docs/other-features')" class="@inPath('active')"><span class="ico ico-spin"></span>Other Features</a> </li>
+               <li> <a href="@DomUrl('updates')" class="@inPath('active')"><span class="ico ico-spin"></span><span class="bi-arrow-down-circle c-dry-blue"></span> New Updates</a> </li>
           </ul>
       
      </nav>
