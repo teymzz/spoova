@@ -9,7 +9,7 @@
     <link rel="icon" type="image/png" href="http://localhost/spoova/res/main/images/icons/favicon.png">
     <title></title>
     
-    <link  rel="stylesheet" type="text/css" href="http://localhost/spoova/res/main/css/res.css" x-debug="res-css"><script src='http://localhost/spoova/res/main/js/jquery-3.6.0.js'></script><script src='http://localhost/spoova/res/main/css/bootstrap/js/bootstrap.min.js'></script><link  rel="stylesheet" type="text/css" href="http://localhost/spoova/res/main/css/mdb5/css/mdb.min.css"><script src='http://localhost/spoova/res/main/js/config.js'></script><script src='http://localhost/spoova/res/main/js/core.js'></script><script src='http://localhost/spoova/res/main/js/onLoaded.js'></script><script src='http://localhost/spoova/res/main/js/custom.js'></script><script src='http://localhost/spoova/res/main/js/device.js'></script><script src='http://localhost/spoova/res/main/js/loadImages.js'></script><script src='http://localhost/spoova/res/main/js/formValidator.js'></script><script src='http://localhost/spoova/res/main/js/jquery.mousewheel.js'></script><script src='http://localhost/spoova/res/main/js/anime.js'></script><script src='http://localhost/spoova/res/main/js/init.js'></script>
+    <link  rel="stylesheet" type="text/css" href="http://localhost/spoova/res/main/css/res.css" x-debug="res-css"><script src='http://localhost/spoova/res/main/js/jquery/jquery-3.6.0.js'></script><script src='http://localhost/spoova/res/main/js/jquery/jquery.mousewheel.js'></script><script src='http://localhost/spoova/res/main/css/bootstrap/js/bootstrap.min.js'></script><link  rel="stylesheet" type="text/css" href="http://localhost/spoova/res/main/css/mdb5/css/mdb.min.css"><script src='http://localhost/spoova/res/main/js/local/core.js'></script><script src='http://localhost/spoova/res/main/js/local/onLoaded.js'></script><script src='http://localhost/spoova/res/main/js/local/jqmodex.js'></script><script src='http://localhost/spoova/res/main/js/local/device.js'></script><script src='http://localhost/spoova/res/main/js/local/loadImages.js'></script><script src='http://localhost/spoova/res/main/js/local/formValidator.js'></script><script src='http://localhost/spoova/res/main/js/local/helper.js'></script><script src='http://localhost/spoova/res/main/js/local/init.js'></script>
 </head>
 <body>
 
@@ -47,17 +47,17 @@
                 <div class="maincover centre">      
     
                     <form method="post" class="form-field" style="width: 350px">
-                        <input type="hidden" value="JeUx3XwVBVKd8QjJgM25" name="CSRF_TOKEN">
+                        <input type="hidden" value="SsOrmPlhSszP9mRTruJl" name="CSRF_TOKEN">
                         <div class="fm-d5 sp-1 wid-full bc-silver pxv-14 rad-4">
                             <div class="flex-full c-blue">
                                 Signup
                             </div>
                             <div class="flex-full f-col">
                                 <div>
-                                    <span class="c-orange box-full pvs-8" <?= onHide('error',':csrf','title')?> > <?= error(':csrf','title') ?> </span>
-                                    <span class="c-orange box-full pvs-8" <?= onHide('error',':mod')?>> <?= error(':mod') ?> </span>
-                                    <span class="c-orange box-full pvs-8" <?= onHide('error',':dbi')?>> <?= error(':dbi') ?> </span>
-                                    <span class="c-orange box-full pvs-8" <?= onHide('error','firstname')?>> <?= error('firstname') ?> </span>
+                                    <span class="c-red-dd box-full pvs-8 font-em-d9" <?= onShow('error',':csrf','title')?> > <?= error(':csrf','title') ?> </span>
+                                    <span class="c-red-dd box-full pvs-8 font-em-d9" <?= onShow('error',':mod')?>> <?= error(':mod') ?> </span>
+                                    <span class="c-red-dd box-full pvs-8 font-em-d9" <?= onShow('error',':dbi')?>> <?= error(':dbi') ?> </span>
+                                    <span class="c-red-dd box-full pvs-8 font-em-d9" <?= onShow('error','firstname')?>> <?= error('firstname') ?> </span>
                                 </div>
                                 <div class="i-flex-full-in rad-4">
                                     <input type="text" class="flex-full pxv-4" name="firstname" placeholder="firstname" value="<?=reqValue('$_POST', ['firstname'])?>">
@@ -66,7 +66,7 @@
 
                             <div class="flex-full f-col">
                                 <div>
-                                    <span class="c-orange box-full pvs-8" <?= onHide('error','lastname')?>> <?= error('lastname') ?> </span>
+                                    <span class="c-red-dd box-full pvs-8 font-em-d9" <?= onShow('error','lastname')?>> <?= error('lastname') ?> </span>
                                 </div>
                                 <div class="i-flex-full-in rad-4">
                                     <input type="text" class="flex-full pxv-4" name="lastname" placeholder="lastname" value="<?=reqValue('$_POST', ['lastname'])?>">
@@ -75,7 +75,7 @@
 
                             <div class="flex-full f-col">
                                 <div>
-                                    <span class="c-orange box-full pvs-8" <?= onHide('error','user')?>> <?= error('user') ?> </span>
+                                    <span class="c-red-dd box-full pvs-8 font-em-d9" <?= onShow('error','user')?>> <?= error('user') ?> </span>
                                 </div>
                                 <div class="i-flex-full-in rad-4">
                                     <input type="text" class="flex-full pxv-4" name="user" placeholder="username" value="<?=reqValue('$_POST', ['user'])?>">
@@ -84,7 +84,7 @@
 
                             <div class="flex-full f-col">
                                 <div>
-                                    <span class="c-orange box-full pvs-8" <?= onHide('error','email')?>> <?= error('email') ?> </span>
+                                    <span class="c-red-dd box-full pvs-8 font-em-d9" <?= onShow('error','email')?>> <?= error('email') ?> </span>
                                 </div>
                                 <div class="i-flex-full-in rad-4">
                                     <input type="text" class="flex-full pxv-4" name="email" placeholder="email" value="<?=reqValue('$_POST', ['email'])?>">
@@ -93,7 +93,7 @@
                             
                             <div class="flex-full f-col">
                                 <div>
-                                    <span class="c-orange box-full pvs-8" <?= onHide('error','pass')?>> <?= error('pass') ?> </span>
+                                    <span class="c-red-dd box-full pvs-8 font-em-d9" <?= onShow('error','pass')?>> <?= error('pass') ?> </span>
                                 </div>
                                 <div class="i-flex-full-in rad-4">
                                     <input type="password" class="flex-full pxv-4" name="pass" placeholder="password" value="<?=reqValue('$_POST', ['pass'])?>">
@@ -108,7 +108,7 @@
                                     <div class="flex">forgot password?</div>
                                     <div class="flex pxs-10">
                                        <span class="mxr-6">or</span> 
-                                       <span class="i"><a href="<?= DomUrl('signup') ?>">log in</a></span> 
+                                       <span class="i"><a href="<?= DomUrl('login') ?>">log in</a></span> 
                                     </div>
                                 </div>
                             </div>

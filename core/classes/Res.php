@@ -124,7 +124,7 @@ final class Res extends Resource implements Resin{
 
     /**
      * Renders the res templates files using the get method
-     *
+     * @deprecated 1.5.0
      * @param string $url rex template url
      * @param array|string|\Closure $callback template handler function
      * @return string
@@ -137,7 +137,7 @@ final class Res extends Resource implements Resin{
     
     /**
      * Renders the res templates files using the post method
-     *
+     * @deprecated 1.5.0
      * @param string $url rex template url
      * @param array|string|\Closure $callback template handler function
      * @return void
@@ -150,7 +150,7 @@ final class Res extends Resource implements Resin{
 
     /**
      * Router get method
-     * 
+     * @deprecated 1.5.0
      * @param string $url rex template url
      * @param array|string|\Closure $callback template handler function
      *  -If string is supplied, it must be a valid rex file that will be rendered into request url
@@ -167,7 +167,7 @@ final class Res extends Resource implements Resin{
 
     /**
      * Router post method
-     * 
+     * @deprecated 1.5.0
      * @param string $url rex template url
      * @param array|string|\Closure $callback template handler function
      * @return void     
@@ -311,7 +311,8 @@ final class Res extends Resource implements Resin{
             $Filemanager = new FileManager;
             if($Filemanager->openFile(true, $file)){
 
-              $fileName = basename($file);
+              $fileName = pathinfo($file, PATHINFO_FILENAME);
+              $fileName = substr($fileName, 0, strlen($fileName) - 4);
                 
               if(is_string($addRex) && is_file(docroot.'/windows/Rex/'.to_frontslash($addRex, true).".rex.php") ) {          
                 
@@ -339,7 +340,6 @@ final class Res extends Resource implements Resin{
                       
                   </body>
                   </html>
-                  @template;
                   Template;
 
               }   
@@ -523,6 +523,8 @@ final class Res extends Resource implements Resin{
      *
      * @param string|array $arg1 body or arguments
      * @param array|string $arg2 arguments or body
+     *  - array as arguments parsed as variables 
+     *  - string as b
      * @return string|false
      */
     static function compile($arg1 = '', $arg2 = ''){      
@@ -535,7 +537,7 @@ final class Res extends Resource implements Resin{
       if(is_string($arg1)){ 
         $body = $arg1;        
         if(func_num_args() > 1 and !is_array($arg2)){
-           trigger_error("Both arguments of compile cannot be null or array. One must be a string, while the other an array.");
+           trigger_error("Compile argument(#2) must be an array if supplied when argument(#1) is a string");
            return '';
         }
         $locals = (array) $arg2;
@@ -546,7 +548,7 @@ final class Res extends Resource implements Resin{
            return '';          
         }
         if(!is_array($arg1)){
-           trigger_error("Both arguments of compile cannot be null or array. One must be a string, while the other an array.");
+           trigger_error("Compile argument(#1) must be a string or an array");
            return '';
         }
         $locals = (array) $arg1;

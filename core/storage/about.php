@@ -7,7 +7,7 @@
     <link rel="icon" type="image/png" href="http://localhost/spoova/res/main/images/icons/favicon.png">
     <title>tutorial</title>
     
-    <link  rel="stylesheet" type="text/css" href="http://localhost/spoova/res/main/css/res.css" x-debug="res-css"><script src='http://localhost/spoova/res/main/js/jquery/jquery-3.6.0.js'></script><script src='http://localhost/spoova/res/main/js/jquery/jquery.mousewheel.js'></script><script src='http://localhost/spoova/res/main/css/bootstrap/js/bootstrap.min.js'></script><link  rel="stylesheet" type="text/css" href="http://localhost/spoova/res/main/css/mdb5/css/mdb.min.css"><script src='http://localhost/spoova/res/main/js/local/config.js'></script><script src='http://localhost/spoova/res/main/js/local/core.js'></script><script src='http://localhost/spoova/res/main/js/local/onLoaded.js'></script><script src='http://localhost/spoova/res/main/js/local/jqmodex.js'></script><script src='http://localhost/spoova/res/main/js/local/device.js'></script><script src='http://localhost/spoova/res/main/js/local/loadImages.js'></script><script src='http://localhost/spoova/res/main/js/local/formValidator.js'></script><script src='http://localhost/spoova/res/main/js/local/helper.js'></script><script src='http://localhost/spoova/res/main/js/local/init.js'></script> 
+    <link  rel="stylesheet" type="text/css" href="http://localhost/spoova/res/main/css/res.css" x-debug="res-css"><script src='http://localhost/spoova/res/main/js/jquery/jquery-3.6.0.js'></script><script src='http://localhost/spoova/res/main/js/jquery/jquery.mousewheel.js'></script><script src='http://localhost/spoova/res/main/css/bootstrap/js/bootstrap.min.js'></script><link  rel="stylesheet" type="text/css" href="http://localhost/spoova/res/main/css/mdb5/css/mdb.min.css"><script src='http://localhost/spoova/res/main/js/local/core.js'></script><script src='http://localhost/spoova/res/main/js/local/onLoaded.js'></script><script src='http://localhost/spoova/res/main/js/local/jqmodex.js'></script><script src='http://localhost/spoova/res/main/js/local/device.js'></script><script src='http://localhost/spoova/res/main/js/local/loadImages.js'></script><script src='http://localhost/spoova/res/main/js/local/formValidator.js'></script><script src='http://localhost/spoova/res/main/js/local/helper.js'></script><script src='http://localhost/spoova/res/main/js/local/init.js'></script> 
     <style rel="build.css.tutorial"> 
 
      body{
@@ -287,26 +287,33 @@ body.--theme-dark{
         })
     </script>
     
-    <script> 
+    <script rel="build.js.theme"> 
 window.onload = function() {
     
 
     let switchBox = new Switcher;
 
-    $('.theme-btn').click(function() {
+    let themeBtn = document.querySelectorAll('.theme-btn');
+    let body = document.querySelector('body');
 
-        $('body').toggleClass('--theme-dark');
+    themeBtn.forEach(btn => {
 
-        if($('body').hasClass('--theme-dark')){                
-            switchBox.set('spoovaTheme', '--theme-dark')
-        }else{
-            switchBox.set('spoovaTheme', '')    
-        }
+        btn.addEventListener('click', () => {
+
+            body.classList.toggle('--theme-dark');
+    
+            if(body.classList.contains('--theme-dark')){
+                switchBox.set('spoovaTheme', '--theme-dark');
+            }else{
+                switchBox.set('spoovaTheme', '');
+            }
+
+        })
 
     })
 
     switchBox.bind('spoovaTheme', function(value){ 
-        if(!value) $('body').removeClass('--theme-dark')
+       if(!value) body.classList.remove('--theme-dark')
     })
 
  
@@ -320,8 +327,6 @@ window.onload = function() {
             </div>
         </div>
          
-
-<!-- @lay('build.co.coords:header') -->
 
  
 
@@ -362,6 +367,7 @@ window.onload = function() {
                <li> <a href="<?= DomUrl('docs/plugins') ?>" class="<?= inPath('active') ?>"><span class="ico ico-spin"></span>Composer and Plugins</a></li>
                <li> <a href="<?= DomUrl('docs/libraries') ?>" class="<?= inPath('active') ?>"><span class="ico ico-spin"></span>Third-Party Libraries</a> </li>
                <li> <a href="<?= DomUrl('docs/other-features') ?>" class="<?= inPath('active') ?>"><span class="ico ico-spin"></span>Other Features</a> </li>
+               <li> <a href="<?= DomUrl('updates') ?>" class="<?= inPath('active') ?>"><span class="ico ico-spin"></span><span class="bi-arrow-down-circle c-dry-blue"></span> New Updates</a> </li>
           </ul>
       
      </nav>

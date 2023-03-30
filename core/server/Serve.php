@@ -6,7 +6,6 @@ namespace spoova\mi\core\server;
 use Server;
 use spoova\mi\core\classes\Ajax;
 use spoova\mi\core\classes\Router;
-use User;
 
 class Serve {
 
@@ -19,25 +18,34 @@ class Serve {
      */
     static function standardlogic() {
 
-        //load window root as window from routes folder
+        $map  = Router::map();
+        $win = window('root');
+        $winlow = strtolower($win);
+        $wininv = "!".$winlow;
+        $roots = $map[':root'] ?? [];
+        $iroot = [];
+
+        array_map(function($value, $key) use(&$iroot){
+            $key = (substr($key, 0, 1) === '!')? strtolower($key) : $key; 
+            $iroot[$key] = $value;
+        }, $roots, array_keys($roots));
+        $roots = $iroot;
+
+        $window = $roots[$wininv] ?? $roots[$win] ?? $map[$win] ?? ucfirst($win);
+
+        $root = Router::relate($window, $map);
+
         if(!Ajax::isAjax()){
-
-            $map = Router::map();
-
-            $root = $map[window('root')]?? window('root'); 
 
             if(!Server::callRoute(ucfirst($root?:'index'))) Server::close();
 
         } else{
 
-            if(!Server::callRoute(ucfirst(window('root')))) {
+            if(!Server::callRoute(ucfirst($root?:'index'))) {
                 Ajax::withJson('not found', 404);
                 response(404, 'not found');    
             }
         }
-
-        //Authenticate all sessions
-        User::auth()->id()->main();
 
     }
 
@@ -51,6 +59,7 @@ class Serve {
     static function baselogic(string $name = 'index') {
         //initialize the specified index page
         Server::callRoute($name);
+        
     }
 
     /**

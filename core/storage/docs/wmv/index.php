@@ -7,7 +7,7 @@
     <link rel="icon" type="image/png" href="http://localhost/spoova/res/main/images/icons/favicon.png">
     <title></title>
     
-    <link  rel="stylesheet" type="text/css" href="http://localhost/spoova/res/main/css/res.css" x-debug="res-css"><script src='http://localhost/spoova/res/main/js/jquery-3.6.0.js'></script><script src='http://localhost/spoova/res/main/css/bootstrap/js/bootstrap.min.js'></script><link  rel="stylesheet" type="text/css" href="http://localhost/spoova/res/main/css/mdb5/css/mdb.min.css"><script src='http://localhost/spoova/res/main/js/config.js'></script><script src='http://localhost/spoova/res/main/js/core.js'></script><script src='http://localhost/spoova/res/main/js/onLoaded.js'></script><script src='http://localhost/spoova/res/main/js/custom.js'></script><script src='http://localhost/spoova/res/main/js/device.js'></script><script src='http://localhost/spoova/res/main/js/loadImages.js'></script><script src='http://localhost/spoova/res/main/js/formValidator.js'></script><script src='http://localhost/spoova/res/main/js/jquery.mousewheel.js'></script><script src='http://localhost/spoova/res/main/js/anime.js'></script><script src='http://localhost/spoova/res/main/js/init.js'></script> 
+    <link  rel="stylesheet" type="text/css" href="http://localhost/spoova/res/main/css/res.css" x-debug="res-css"><script src='http://localhost/spoova/res/main/js/jquery/jquery-3.6.0.js'></script><script src='http://localhost/spoova/res/main/js/jquery/jquery.mousewheel.js'></script><script src='http://localhost/spoova/res/main/css/bootstrap/js/bootstrap.min.js'></script><link  rel="stylesheet" type="text/css" href="http://localhost/spoova/res/main/css/mdb5/css/mdb.min.css"><script src='http://localhost/spoova/res/main/js/local/core.js'></script><script src='http://localhost/spoova/res/main/js/local/onLoaded.js'></script><script src='http://localhost/spoova/res/main/js/local/jqmodex.js'></script><script src='http://localhost/spoova/res/main/js/local/device.js'></script><script src='http://localhost/spoova/res/main/js/local/loadImages.js'></script><script src='http://localhost/spoova/res/main/js/local/formValidator.js'></script><script src='http://localhost/spoova/res/main/js/local/helper.js'></script><script src='http://localhost/spoova/res/main/js/local/init.js'></script> 
     <style rel="build.css.tutorial"> 
 
      body{
@@ -287,28 +287,34 @@ body.--theme-dark{
         })
     </script>
     
-    <script> 
+    <script rel="build.js.theme"> 
 window.onload = function() {
     
 
     let switchBox = new Switcher;
 
-    $('.theme-btn').click(function() {
+    let themeBtn = document.querySelectorAll('.theme-btn');
+    let body = document.querySelector('body');
 
-        $('body').toggleClass('--theme-dark');
+    themeBtn.forEach(btn => {
 
-        if($('body').hasClass('--theme-dark')){                
-            switchBox.set('spoovaTheme', '--theme-dark')
-        }else{
-            switchBox.set('spoovaTheme', '')    
-        }
+        btn.addEventListener('click', () => {
+
+            body.classList.toggle('--theme-dark');
+    
+            if(body.classList.contains('--theme-dark')){
+                switchBox.set('spoovaTheme', '--theme-dark');
+            }else{
+                switchBox.set('spoovaTheme', '');
+            }
+
+        })
 
     })
 
-    switchBox.bind('spoovaTheme', function(value){
-        $('body').addClass(value)
+    switchBox.bind('spoovaTheme', function(value){ 
+       if(!value) body.classList.remove('--theme-dark')
     })
-
 
  
 }
@@ -331,7 +337,7 @@ window.onload = function() {
      <nav class="nav-left fixed">
 
           <div class="flex pxv-10">
-               <div class="flex-icon theme-btn box bd bd-silver rad-r anc-btn-link flow-hide bc-silver ripple relative" style="transition: none">
+               <div class="flex-icon theme-btn navtheme box bd bd-silver rad-r anc-btn-link flow-hide bc-silver ripple relative" style="transition: none">
                     <div class="px-40 b-cover ico-spin" data-src="http://localhost/spoova/res/main/images/icons/favicon.png" style="transition: none"></div>
                     <div class="font-em-1d5 px-40 flex mid overlay fb-9 calibri" style="top:-2px; left:.4px; z-index: 1; color:#202dd5;">
                          s 
@@ -414,7 +420,7 @@ window.onload = function() {
                             </div> <br>
                             
                             <div class="">
-                                <div class="fb-6 font-em-d85 bc-silver c-white-d pxv-10 rad-r">What are logics?</div> <br>
+                                <div class="fb-6 font-em-d85 bc-silver pxv-10 rad-r">What are logics?</div> <br>
                                 <div class="">
                                     Logics are structures designed for resolving how route urls are processed through the use of controller files. In WVM architecture, 
                                     web urls are divided into three subdivisions (i.e window, base and path) which are usually resolved by a controller file which determine how routes are loaded. In order to effectively manage routes and  
@@ -619,28 +625,85 @@ window.onload = function() {
                         </div>
 
                         <div class="">
-                            <div class="bc-silver pxv-10 rad-r"> <span class="bi-lock"></span> Standard Logic Protection</div>
-                            <div class="mvt-6">
-                                Usually, under standard logic, main controller files can be easily guessed from url structure since it is the url's main entry point. 
-                                In order to protect main controller file names, a map file <code>.map</code> must be created within the <code>window/Routes</code> directory. This map file 
-                                is expected to contain a json syntax for mapping url window to their corresponding class names. In this manner, window files becomes difficult to guess. An example of this 
-                                is shown below: <br><br>
+                            
+                            <div class="bc-silver pxv-10 rad-r"> <span class="bi-globe"></span> Working with map files </div>
+                            <div class="pxv-10">
+                                <div class="bc-silver pxv-10 rad-r"> <span class="bi-lock"></span> Standard Logic Protection</div>
+                                <div class="mvt-6">
+                                    Usually, under standard logic, main controller files can be easily guessed from url structure since it is the url's main entry point. 
+                                    In order to protect main controller file names, a map file <code>.map</code> must be created within the <code>window/Routes</code> directory. This map file 
+                                    is expected to contain a json syntax for mapping url window to their corresponding class names. In this manner, window files becomes difficult to guess. An example of this 
+                                    is shown below: <br><br>
 
-                                <div class="pre-area">
-                                    <div class="pxv-10 bc-silver"><span class="bi-gear"></span> windows/Routes/.map</div>
-                                    <pre class="pre-code">
+                                    <div class="pre-area">
+                                        <div class="pxv-10 bc-silver"><span class="bi-gear"></span> windows/Routes/.map</div>
+                                        <pre class="pre-code">
   {
       "Home"    : "HomeController",
       "Profile" : "ProfileClass",
   }
-                                    </pre>
+                                        </pre>
+                                    </div>
+                                </div>   
+
+                                <div class="foot-note">
+                                    Using the sample above as reference, under a standard logic when a url is visited, for example <code>http://localhost/home/user</code>, the <code>windows/Routes/Home</code> class 
+                                    is expected to be called but due to the <code>.map</code> file, the <code>windows/Routes/HomeController</code> will be called instead. This same approach will be used for 
+                                    the profile. This makes it possible to protect the main controller file names. We can also define a prefix name for all protected routes. This means that the prefix will be added before 
+                                    calling the route names. This makes it easier to fake route entry names. Example is shown below:
+                                </div> <br>
+
+                                    <div class="pre-area">
+                                        <div class="pxv-10 bc-silver"><span class="bi-gear"></span> windows/Routes/.map</div>
+                                        <pre class="pre-code">
+  {
+      "*"    : "App"
+  }
+                                        </pre>
+                                    </div>
+
+                                    <div class="foot-note">
+                                       When map file is used as above, the default behaviour of route file names will be changed. All route files will now be assumed to have a suffix of "App". For example, rather 
+                                       than looking for a <code>Home</code> route file for <code>http://localhost/domain/home</code>, instead, the route file that will be looked for is <code>AppHome</code>. This makes it difficult 
+                                        for anyone to guess the route entry file name.
+                                    </div> <br>     
+                                                           
+                            </div>
+
+                            <div class="pxv-10">
+                                <div class="bc-silver pxv-10 rad-r"> <span class="bi-lock"></span> Standard Logic Inverse</div>
+                                <div class="mvt-6">
+                                    Inverse is the way to reduce the strict level of standard logic. By default, the standard login assumes that 
+                                    window roots are have controller files within the <code>windows/Routes</code> directory and that the file name 
+                                    starts with an uppercase character while other characters are in lower case. This make it important that when a root <code>"docs/"</code> 
+                                    is accessed, then the route <code>Docs</code> is called. However, if the root "doCs" is called instead, this will fail because the 
+                                    route file "doCs" or "DoCs" does not exist but what we have is <code>"Docs"</code>. In other to remove the default strictness behaviour to 
+                                    ensure that window roots accepts any lower case character, we need to add a non-strict level directive into the map file. This 
+                                    can be seen in the example below <br><br>
+
+                                    <div class="pre-area">
+                                        <div class="pxv-10 bc-silver"><span class="bi-gear"></span> windows/Routes/.map</div>
+                                        <pre class="pre-code">
+  {
+      ":root":{
+
+          "!Docs"    : "Docs",
+
+      }
+  }
+                                        </pre>
+                                    </div>
+                                </div>   
+
+                                <div class="foot-note">
+                                    Using the sample above as reference, under a standard logic when a url is visited, for example <code>http://localhost/dOcS/user</code>, the <code>windows/Routes/Docs</code> class 
+                                    will now be called due to the <code>.map</code> file's directive to resolve that root in a non-strict type. Without the map file, only a url <code>http://localhost/docs/user</code> 
+                                    will be able to call the route file "Docs". Note that once the inverse operator <code>"!"</code> is used before the key (e.g "!Docs"), the case of the key does not matter, however, the 
+                                    case of the value must be maintained as the expected main route file name. 
                                 </div>
                             </div>
-                            <div class="foot-note">
-                                Using the sample above as reference, under a standard logic when a url is visited, for example <code>http://localhost/home/user</code>, the <code>windows/Routes/Home</code> class 
-                                is expected to be called but due to the <code>.map</code> file, the <code>windows/Routes/HomeController</code> will be called instead. This same approach will be used for 
-                                the profile. This makes it possible to protect the main controller file names.
-                            </div>
+
+
                         </div>
                         
                 
@@ -717,6 +780,7 @@ window.onload = function() {
                                 <li> <a href="<?= route('.middlewares'); ?>">Windows Middlewares</a> </li>
                                 <li> <a href="<?= route('.frames'); ?>">Window Frames</a> </li>
                                 <li> <a href="<?= route('.routes'); ?>">Window Routes</a> </li>
+                                <li> <a href="<?= route('.sessions'); ?>">Window Sessions</a> </li>
                                 <li> <a href="<?= route('::apis'); ?>">Window APIs</a> </li>
                                 <li> <a href="<?= route('::models'); ?>">Window Models</a> </li>
                                 <li> <a href="<?= route('::rex'); ?>">Window Rex</a> </li> 

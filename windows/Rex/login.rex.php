@@ -6,10 +6,6 @@
         <!-- add css -->
         @res('res/assets/css/index.css') 
         @style('build.css.inc:t-doc:index')
-        <!-- @live() -->
-        
-        <!-- script -->
-        <!-- @script('build.js.inc:index') -->
 
 
         <section>
@@ -25,7 +21,7 @@
                                 <span class="c-orange box-full pvs-8" @onShow('error', ':mod')> @error(':mod') </span>
                                 <span class="c-orange box-full pvs-8" @onShow('error', ':dbi')> @error(':dbi') </span>
                                 <span class="c-orange box-full pvs-8" @onShow('error', 'user')> @error('user') </span>
-                                <span class="c-orange box-full pvs-8">{{ Res::Flash('mod', 'no errors') }} Hey</span>
+                                <span class="c-orange box-full pvs-8">{{ Res::Flash('mod', 'no errors') }}</span>
                             </div>
                             <div class="i-flex-full-in rad-4">
                                 <input type="text" class="flex-full pxv-4" name="user" placeholder="username" value="@post.user">
@@ -45,14 +41,14 @@
                             <div class="flex-btn">
                                 <button class="flex-btn bg-primary rad-4 c-white pxv-10" @btn('login') >Submit</button>
                             </div>
-                            <div class="">
-                                <input type="checkbox" name="remember"> RememberMe
+                            <div class="c-white">
+                                <input type="checkbox" name="remember"> remember me
                             </div>
                             <div class="flex">
                                 <div class="flex mid c-white font-menu font-em-1">
                                     <div class="flex">forgot password?</div>
-                                    <div class="flex pxs-10 mxs-10">
-                                       <span class="mxr-6">or</span> 
+                                    <div class="flex">
+                                       <span class="mxs-6">or</span> 
                                        <span class="i"><a href="@domurl('signup')">sign up</a></span> 
                                     </div>
                                 </div>

@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -6,7 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" type="image/png" href="http://localhost/spoova/res/main/images/icons/favicon.png">
-    <title>Live-server</title>
+    <title></title>
     
     <link  rel="stylesheet" type="text/css" href="http://localhost/spoova/res/main/css/res.css" x-debug="res-css"><script src='http://localhost/spoova/res/main/js/jquery/jquery-3.6.0.js'></script><script src='http://localhost/spoova/res/main/js/jquery/jquery.mousewheel.js'></script><script src='http://localhost/spoova/res/main/css/bootstrap/js/bootstrap.min.js'></script><link  rel="stylesheet" type="text/css" href="http://localhost/spoova/res/main/css/mdb5/css/mdb.min.css"><script src='http://localhost/spoova/res/main/js/local/core.js'></script><script src='http://localhost/spoova/res/main/js/local/onLoaded.js'></script><script src='http://localhost/spoova/res/main/js/local/jqmodex.js'></script><script src='http://localhost/spoova/res/main/js/local/device.js'></script><script src='http://localhost/spoova/res/main/js/local/loadImages.js'></script><script src='http://localhost/spoova/res/main/js/local/formValidator.js'></script><script src='http://localhost/spoova/res/main/js/local/helper.js'></script><script src='http://localhost/spoova/res/main/js/local/init.js'></script> 
     <style rel="build.css.tutorial"> 
@@ -329,11 +328,9 @@ window.onload = function() {
         </div>
          
 
-    
+<!-- @lay('build.co.coords:header') -->
 
-    <!-- @lay('build.co.coords:header') -->
-
-     
+ 
 
      
 
@@ -372,104 +369,183 @@ window.onload = function() {
                <li> <a href="<?= DomUrl('docs/plugins') ?>" class="<?= inPath('active') ?>"><span class="ico ico-spin"></span>Composer and Plugins</a></li>
                <li> <a href="<?= DomUrl('docs/libraries') ?>" class="<?= inPath('active') ?>"><span class="ico ico-spin"></span>Third-Party Libraries</a> </li>
                <li> <a href="<?= DomUrl('docs/other-features') ?>" class="<?= inPath('active') ?>"><span class="ico ico-spin"></span>Other Features</a> </li>
+               <li> <a href="<?= DomUrl('updates') ?>" class="<?= inPath('active') ?>"><span class="ico ico-spin"></span><span class="bi-arrow-down-circle c-dry-blue"></span> New Updates</a> </li>
           </ul>
       
      </nav>
 
 
-    
-    <div class="box pxl-2 bc-white-dd pull-right">
-        <section class="pxv-10 tutorial bc-white">
+
+   <div class="box-full pxl-2 bc-white pull-right">
+       <section class="pxs-10 tutorial bc-white">
            <div class="font-em-1d2">
 
                
- <div class="font-menu pvs-4"> <a href="http://localhost/spoova/docs">Docs</a> <span class="bi-chevron-right"></span> <a href="http://localhost/spoova/docs/live-server">Live-server</a>  </div>
+ <div class="font-menu pvs-4">   </div>
 
-            <div class="c-black-ll">
-                <div class="font-em-1d2 c-orange">Live server implementation</div>         
-                
-                <div class="calibri font-em-d8">
-                    <ul class="list-free pxs-1">
-                        <li> 
+
+               <div class="start">
+
+                    <div class="pvs-20">
+                        <div class=" c-orange font-em-2 fb-6 c-dodger-blue-d"> <span class="bi-recycle"></span> Spoova 1.5!</div>
+                    
+                        <div class="font-em-d8">
+                            New features have been added to version 1.5.0 to improve security and fixing of bugs
+                        </div> <br>
+
+                        <div class="">
+                            <div class=" fb-9 font-em-1d2 calibri">What's new?</div>
+                        </div>
+                    </div>
+
+                    <div class="bc-white-dd rad-4 flow-hide">
+                        <div class="bc-dodger-blue-dd c-white-d pxv-10 font-em-d8">
+    
+                            <div class="bi"> <span class="bi-circle"></span> Ajax requests </div>  
+    
+                        </div>
+                        <div class="pxv-20 pvb-1  font-em-d8">
+
                             <p>
-                                Live server is an inbuilt server that runs on javascript language and helps to enable
-                                live php development. In order to keep live server efficient, the live server runs at the top 
-                                of the application before any content is rendered. Helper classes or functions
-                                have been restructured and integerated into this framework to support live development. 
-                                An error notification system was attached to php error handlers to convert php errors into an error pop-up 
-                                notification message to reduce what is known as a "KILL EFFECT" which occurs when live server terminates and may not be able to 
-                                continue unless the page is refreshed or reloaded. 
+                                Special characters are now allowed in ajax urls. Prior to this version, when a request 
+                                data is sent to ajax urls having special characters, while the url may be accessed, there 
+                                could be a data loss due to a bug preventing post data from forwarding the request data. This bug only affected urls 
+                                that have special characters like underscore (_) and hyphen (-). In version 1.5.0, this has been fixed. 
+                                Special characters are now allowed in ajax urls.  
                             </p>
                             
-                            <p>
-                                Certain PHP errors prevents the live server from running because they shut down the entire application. In order to reduce the 
-                                effect of these errors, the liveserver will continue to run with a relative error pop-up notification message until the page is manually 
-                                refreshed. Once the page is refreshed while such errors are active, the live server will not be able to restart until such errors are fixed 
-                                and the page is refreshed to reboot the liveserver. In the cases where soft errors (e.g warning and notice errors) occurs, the liveserver will 
-                                still try to reboot to keep the application on a live state and any error detected will be converted to a pop-up notification message.
-                            </p>
+                        </div>
+                    </div> <br>
 
-                            <p>
-                                Although, the live server may prove helpful, due to the comprehensive structure which php uses to handle its errors, 
-                                spoova debug system is still known to have major issues. Hence it is still in a beta phase. It is also important 
-                                to empasize that using the live server involves sending muliple requests which is cpu intensive. To reduce this effect 
-                                live server pauses its watch mode when a particular web page is not in view and resumes its monitoring when the page resumes.
-                                Although, the Live server was built to support majorly offline development, it is disabled by default and can be initialized 
-                                or turned off through different ways which are further explained below:
-                            </p>
+                    <div class="bc-white-dd rad-4 flow-hide">
+                        <div class="bc-dodger-blue-dd c-white-d pxv-10 font-em-d8">
+    
+                            <div class="bi"> <span class="bi-circle"></span> Map files </div>  
+    
+                        </div>
+                        <div class="pxv-20 pvb-1  font-em-d8">
 
-                        </li>
-                        <li>
-                            
-                            <div class="c-olive fb-6">1. Resource importing systems.</div>
-                            <div class="mvt-6">
-                                This is done through a default setup configuration file 
-                                by setting "RESOURCE_WATCH" to a default value of "1" or "2" which stands for 
-                                offline and online respectively. These tell the resource file handler class to automatically include the live server when
-                                importing or downloading resource urls in the desired environment. Setting as 2 (i.e online) enables it for both offline and online 
-                                environments while a default of zero(0) disables the live server. This configuration can be set in the <code>icore\init</code> file. <br><br>
+                            <div>
+                                Map files are used to protect route entry file names under a standard logic to ensure that entry files are not exposed to the public. 
+                                In version 1.5.0, the map file have been modified to allow two new features to further strengthen the security of these files.
+                                <br><br>
+                                <div class="list-free pxs-1">
+                                    <div class="mox bc-silver pxv-4 rad-5">
+                                        
+                                        <div class="pxv-10">
+                                           <span class="bi-lock"></span> File protection #1<br>
+                                        </div>
+                                    
+                                        <div class="pre-area">
+                                            <div class="pxv-10 bc-silver-d">windows/Routes/.map</div>
+                                            <pre class="pre-code">
+    {
+        "*": "Mi\\"
+    }
+                                            </pre>
+                                        </div>
+
+                                        <div class="foot-note pxv-10">
+                                            The addition of map files is to protect standard logic entry point names by selecting a custom subdirectory where route files are saved just by a single declaration. 
+                                            In the sample above, the <code>".map"</code> file will direct the standard logic to look for route files 
+                                            within the <code>windows/Routes/Mi</code> directory. For example, rather than for a url <code>http://localhost/home</code> to call the main route <code>"Home"</code>, 
+                                            from <code>windows/Routes</code> directory, it will be called from <code>windows/Routes/Mi</code> directory. This makes it easier to protect standard logic entry files path.
+                                            We can also fake file names if the double slash is not added to the value, that is "Mi" instead of "Mi\\".
+                                        </div>
+                                    </div> <br>
+                                </div>
+                                <div class="list-free pxs-1">
+                                    <div class="mox bc-silver pxv-4 rad-5">
+                                        
+                                        <div class="pxv-10">
+                                           <span class="bi-arrow-clockwise"></span> Entry inverse #2<br>
+                                        </div>
+                                    
+                                        <div class="pre-area">
+                                            <div class="pxv-10 bc-silver-d">windows/Routes/.map</div>
+                                            <pre class="pre-code">
+    {
+        ":root": {
+
+            "!home" => 'Home'
+
+        }
+    }
+                                            </pre>
+                                        </div>
+
+                                        <div class="foot-note pxv-10">
+                                            By default under standard logic, the url entry point "home" or "Home" means the same thing as they forward the url to a route file 
+                                            "windows/Routes/Home" file to call. This is because the lowercase or sentence case is accepted. However, when an entry point file name 
+                                            which does not follow this pattern is called (e.g "HOme", "hoMe") is called, a 404 response is returned. We can however lessen this 
+                                            strictness using a map file. In the code above, the ":root" defines a set of entry names and the route files they call. Using an inverse 
+                                            operator on the entry point name, if known, will ensure that such route allows the entry point to have any form of text cases (e.g uppercase, camelcase, etc.). 
+                                        </div>
+                                    </div> <br>
+                                </div>
                             </div>
-    
-                            <span class="c-olive fb-6">2.</span> By including the directive <code class="font-em-d8">&lt;?= Res::import("::watch") ?&gt;</code>
-                            in your project file. <br><br>
-    
-                            <span class="c-olive fb-6">3.</span> By including the <code class="font-em-d8">&lt;?= Res::live() ?&gt;</code> which is a shorthand for 2 above <br><br>
-    
-                            <span class="c-olive fb-6">4.</span> By including the <code class="font-em-d8">&#64;live()</code> or <code class="font-em-d8">&#64;live</code> directive in template engines <br><br>
                             
-                            <span class="c-olive fb-6">5.</span> By including the <code class="font-em-d8">&#64;Res('::watch')</code> directive in template engines <br><br>
-                            
-                            <span class="c-olive fb-6">6.</span> By the use of helper function <code class="font-em-d8">monitor()</code> in window route files.<br><br>
-                            
-                            <span class="c-olive fb-6">7.</span> The template importing directive "&#64;template(file:off)" can also turn off a template inherited live server. 
-                        </li> <br>
-    
-                        <li> 
-                            <span class="c-olive fb-6">8.</span> Live server can also be switched off or on with <code class="font-em-d8">&lt;?= Res::watch() ?&gt;</code> and <code class="font-em-d8">&lt;?= Res::off() ?&gt;</code> respectively.
-                            <br><br>
-    
-                            <span class="font-em-d85 box c-brown-ll bc-white-d shadow rad-5 pxv-10">
-                                <div class="font-em-1d2 fb-9"><span class="bi-exclamation-triangle"></span> Warning</div> 
-                               
-                                <ul class="pxl-14 font-em-1d1">
-                                    <li style="list-style:square">
-                                        Turning off the live server can only be done before a previous setting is made to turn it on. This means that turning off can be done either 
-                                        before the page loads or before resource importation is done. Also, whenever the live server is turned off either by a KILL EFFECT 
-                                        or through code, when turned back on, the page must be reloaded for the changes to take effect.
-                                    </li>
-                                    <li style="list-style:square">
-                                        When working with database operations, operations that could change the state of another item permanently (for example, file update or delete) 
-                                        or operations that changes state frequently, it is advised to turn off the liveserver to prevent pre-execution of codes and recurrent page reload.
-                                    </li>
-                                </ul>
-                            </span>
-                        </li>   
-                    </ul>
-                </div>
+                        </div>
+                    </div><br>
 
-            </div>
+                    <div class="bc-white-dd rad-4 flow-hide">
+                        <div class="bc-dodger-blue-dd c-white-d pxv-10 font-em-d8">
+    
+                            <div class="bi"> <span class="bi-circle"></span> Live server </div>  
+    
+                        </div>
+                        <div class="pxv-20 pvb-1  font-em-d8">
+
+                            <div>
+                                When writing codes on live development state with the use of live server, the error notifications 
+                                are sometimes glitchy. This effect was due to an entrace animation effect which has now been removed. 
+                                The live server glitchy error notification bug has been fixed which now make the error notices look more stable for developers.
+                            </div>
+                            
+                        </div> <br>
+                    </div> <br>
+                    
+                    <div class="bc-white-dd rad-4 flow-hide">
+                        <div class="bc-dodger-blue-dd c-white-d pxv-10 font-em-d8">
+    
+                            <div class="bi"> <span class="bi-grid"></span> Template on the go </div>  
+    
+                        </div>
+                        <div class="pxv-20 pvb-1  font-em-d8">
+
+                            <p>
+                                Template on the go was a feature added to make it easier to create template files easily with 
+                                integrated live server. When such rex templates are generated, they come with the basic <code>&#64;live</code> 
+                                directive which keeps them on a live state mode. Some bugs were removed when the template is generated. 
+                            </p>
+                            
+                        </div>
+                    </div> <br>
+
+                    <div class="bc-white-dd rad-4 flow-hide">
+                        <div class="bc-red-dd c-white-d pxv-10 font-em-d8">
+    
+                            <div class="bi"> <span class="bi-circle"></span> Deprecated! </div>  
+    
+                        </div>
+                        <div class="pxv-20 pvb-1  font-em-d8">
+
+                            <div>
+                                Prior to the intial release, some resource methods such as <code>Res::get()</code>, <code>Res::gett()</code>, 
+                                <code>Res::post()</code> and <code>Res::postt()</code> were used as test cases to render routes before the wvm 
+                                logics were introduced. With the <code>wvm</code> 
+                                logics, we find no use for this methods any more because routes are now being handled by a server file and the 
+                                entire route is being managed by a shutter system. It is advised to desist from the use of this methods as they 
+                                may be removed at any point in time.
+                            </div>
+                            
+                        </div> <br>
+                    </div> <br>
+
+
+                </div>
            </div>
-        </section>
+       </section>
    </div>
 
 

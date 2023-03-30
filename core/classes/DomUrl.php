@@ -8,8 +8,8 @@ namespace spoova\mi\core\classes;
 class DomUrl {
 
     private static $keys = [];
-    private static $Hash;
     private static $Name;
+    private static $Port;
 
     /**
      * Generates a single one-way hash key on each supplied integer
@@ -36,6 +36,16 @@ class DomUrl {
             self::$Name = $name; 
         }
         return self::$Name;     
+
+    }
+
+    static function Port(int $port = null){
+
+        if(func_num_args() > 0){
+            self::$Port = $port;
+        }
+
+        return self::$Port;
 
     }
 
