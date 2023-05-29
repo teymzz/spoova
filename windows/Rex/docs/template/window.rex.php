@@ -15,11 +15,11 @@
     <section class="pxv-10 tutorial database bc-white">
       <div class="font-em-1d2">
 
-        @lay('build.co.links:tutor_pointer')
-
         <div class="start font-em-d8">
 
-            <div class="templating-intro">
+            @lay('build.co.links:tutor_pointer') <br>
+
+            <div class="templating-intro"> <br>
               <div class="font-em-1d5 c-orange">Rex On Windows</div> <br>  
               <div class="">
                 <p>
@@ -35,10 +35,9 @@
 
     use window;
 
-    namespace windows/Routes;
+    namespace spoova/mi/windows/Routes;
 
     class Home {
-
 
         function __construct(){
 
@@ -46,9 +45,7 @@
 
         }
 
-
     }
-    ?&gt;
     </pre>
                 </div> <br><br>
 
@@ -59,10 +56,9 @@
 
     use window;
 
-    namespace windows/Routes;
+    namespace spoova/mi/windows/Routes;
 
     class Home {
-
 
         function __construct(){
 
@@ -73,20 +69,15 @@
 
         }
 
-
     }
-    ?&gt;
     </pre>
                 </div>
-                <div class="foot-note mvs-6">
-                    
-                </div> <br>
                 
-                <div class="foot-note mvs-6">
-                    In the example above, the <code>view()</code> method will process all template files within it and 
-                    return its contents to the <code>index.rex.php</code> file which will inturn display its contents unlike the 
-                    <code>compile()</code> function which cannot be used more than once. However, though the <code>view()</code> 
-                    method may be used this way, it is highly discouraged to do so. Also, the <code>view()</code> method may be dropped in 
+                <div class="foot-note">
+                    In the example above, the <code>view()</code> function will process all template files within it and 
+                    return its contents to the <code>index.rex.php</code> file which will inturn display its contents. Although 
+                    the <code>view()</code> function may be used this way, it is highly discouraged to do so. Also, the <code>view()</code> 
+                    function may be dropped in 
                     future update to favor only the compile method.
                 </div>
               </div>

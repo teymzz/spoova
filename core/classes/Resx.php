@@ -22,7 +22,7 @@ abstract class Resx{
      * @param mixed $message
      * @return void
      */
-    public static function setFlash(string $key, $message = null){
+    final public static function setFlash(string $key, $message = null){
         if(!self::$notice){
           trigger_error('notice not initialized');
           return false;
@@ -37,7 +37,7 @@ abstract class Resx{
      * @param [type] $message
      * @return string | void
      */ 
-    public static function hasFlash(string $key) : bool {
+    final public static function hasFlash(string $key) : bool {
         if(static::$notice){
           return static::$notice->hasFlash(...func_get_args());
         }
@@ -51,7 +51,7 @@ abstract class Resx{
      * @param mixed $message
      * @return string|void
      */ 
-    public static function flash(string $key = '', $message = ''){
+    final public static function flash(string $key = '', $message = ''){
         if(static::$notice){
           return static::$notice->flash(...func_get_args());
         }

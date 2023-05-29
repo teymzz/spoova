@@ -10,9 +10,9 @@
     <section class="pxv-10 tutorial mails bc-white">
       <div class="font-em-1d2">
 
-        @lay('build.co.links:tutor_pointer')
-
         <div class="start font-em-d8">
+
+          @lay('build.co.links:tutor_pointer') <br>
 
           <div class="font-em-1d5 c-orange">About WMV</div> <br>  
           
@@ -26,8 +26,7 @@
 
                   <div class="pre-area shadow">
                     <div class="pxv-10 bc-silver">Window url entry point</div>
-                    <pre class="pre-code pxs-6">
-  <table style="min-width:40%; font-size: .9em;">
+                    <pre class="pre-code pxs-10"><table style="min-width:40%; font-size: .9em;">
     <tr><th class="pxv-4 c-orange-dd">window url sample</th> <th class="c-orange-dd">entry point (or window)</th> </tr>
     <tr><td><code class="bd-f">http://localhost/app/</code></td> <td><span class="comment no-select"> index </span></td></tr>
     <tr><td><code class="bd-f">http://localhost/app/index</code></td> <td><span class="comment no-select"> index </span></td></tr>
@@ -36,8 +35,7 @@
     <tr><td><code class="bd-f">http://www.site.com/</code></td> <td><span class="comment no-select"> index </span></td></tr>
     <tr><td><code class="bd-f">http://www.site.com/index</code></td> <td><span class="comment no-select"> index </span></td></tr>
     <tr><td><code class="bd-f">http://www.site.com/users/somepath</code></td> <td><span class="comment no-select"> users </span></td></tr>
-  </table>
-                    </pre>
+  </table> </pre>
                   </div>
 
 
@@ -55,7 +53,7 @@
     </pre>
                   </div> <br>
 
-                  <p class="font-menu mvt-10">
+                  <p class=" mvt-10">
                     According to the url samples above, a url's entry point is usually the immediate path name that comes after a localhost url 
                     or a domain url.
                   </p>
@@ -67,8 +65,8 @@
 
           <div class="why_wmv"> 
               <br>
-              <div class="font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
-                <div class="flex-full midv"> <span class="bi-question-circle mxr-8 c-lime-dd"></span> Why WMV </div>
+              <div class=" fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
+                <div class="flex-full midv"> <span class="bi-question-circle mxr-8 c-lime-dd"></span> Why WMV ? </div>
                 <div class="flex mid">
                   <span class="bi-chevron-double-right"></span>
                 </div>
@@ -94,7 +92,7 @@
 
           <div class="wmv_demerits"> 
               <br>
-              <div class="font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
+              <div class=" fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
                 <div class="flex-full midv"> <span class="bi-exclamation-triangle mxr-8 c-orange-dd"></span> WMV Demerits </div>
                 <div class="flex mid">
                   <span class="bi-chevron-double-right"></span>

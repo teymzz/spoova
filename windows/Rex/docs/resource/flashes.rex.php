@@ -12,12 +12,11 @@
                 <div class="start font-em-d8" >
                     
                     
-                    @lay('build.co.links:tutor_pointer')
-                    <div class="font-em-1d5 c-orange">Resource - Flashes</div>
+                    @lay('build.co.links:tutor_pointer') <br>
+                    <div class="font-em-1d5 c-orange">Resource - Flashes</div> <br>
                 
-                    <div class="intro mvt-6">
-                        <div class="fb-6">Introduction</div>
-                        <div class="font-menu font-em-1 mvt-10">
+                    <div class="intro">
+                        <div class=" font-em-1">
                             Flashes are notifications or messages that are displayed once in the application. 
                             Notifications are handled by the Notice class. However, Notice class can also be called on the
                             Resource class. This makes it easier to set up or display flash messages. The three (3) main methods 
@@ -25,7 +24,7 @@
                             The following are ways by which the flash can be applied to web applications.
                             <br><br>
 
-                            <div class="box-full font-menu font-em-d85 bc-white-dd flow-x">
+                            <div class="box-full  font-em-d85 bc-white-dd flow-x">
     <pre class="pre-code">
   $name = 'Foo';
   

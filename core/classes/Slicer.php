@@ -2,7 +2,11 @@
 
 namespace spoova\mi\core\classes;
 
-use \User;
+use Reflection;
+use ReflectionClass;
+use ReflectionMethod;
+use ReflectionProperty;
+use User;
 
 /**
  * class Slicer
@@ -32,71 +36,6 @@ class Slicer extends Directives{
       'Guest'     => '~@Guest:(.*?)?@Guest;~is', //to change this     
      ];
 
-     private const placeholders_structure = '
-      ~[\{]{2}\\s?\$?[\w+]+:?([\(]?[\w+,:\\s]*?[\)]?)?\??\\s?[\}]{2}~
-     ';   
-
-     private const placeholders = [
-      //spec resolve
-     'GET'  => '~[\{]{2}\s?get:[a-zA-Z_][a-zA-Z_0-9]*+\s?[\}]{2}~',
-     'POST' => '~[\{]{2}\s?post:[a-zA-Z_][a-zA-Z_0-9]*\s?[\}]{2}~',
-     'REQUEST'  => '~[\{]{2}\s?req:[a-zA-Z_][a-zA-Z_0-9]*\s?[\}]{2}~',
-     'VARIABLES_LOCAL' => '~[\{]{2}\s?[[a-zA-Z_][a-zA-Z_0-9]*\s?\??(\?\s\'[\s\w+\\\(\)]*?\')?\s?[\}]{2}~',
-      
-     //normal resolve
-     'PLACEHOLDER' => '~[\{]{2}.*?[\}]{2}~',
-
-    ];
-
-     private static $directives = [
-      //'@title',
-      '@authDirect',
-      '@guestDirect',
-      '@auth',
-      '@guest',
-      '@meta',
-      '@import',
-      '@inPath',
-      '@isPath',  
-      '@include',
-      '@Res',
-      '@src',
-      '@ress', //alias for src
-      '@mapp',
-      '@mass',
-      '@assets', 
-      '@live',
-      '@show',
-      '@view',
-      '@template',
-      '@onShow',
-      '@onHide',
-      '@yield',
-      '@layout',
-      '@styles',
-      '@style',
-      '@script',
-      '@onscript',
-      '@lay',
-      '@flash',
-      '@domurl', 
-      '@domlink', 
-      '@formurl', 
-      '@images',
-      '@route',
-      '@formdata',
-      '@csrf',
-      '@btn',
-      '@action',
-      '@old',
-      '@get',
-      '@post',
-      '@error',
-      '@vdump',
-      '@php',
-      '@attr',
-     ];
-
      /**
       * Store excluded comments hash
       *
@@ -120,10 +59,9 @@ class Slicer extends Directives{
       * @return Slicer
       */
      public static function slice($body, $return = false){ 
+        $process = self::process($body, $return);
 
-        if($return) return self::process($body, $return);
-        self::process($body, $return);
-        return new self;
+        return ($return)? $process : (new self);
      }
 
      protected function endSlice(){
@@ -133,7 +71,7 @@ class Slicer extends Directives{
      }
 
      /**
-      * Slice urls to naming conventions
+      * Converts file path to rex path based on url supplied
       *
       * @return string
       */
@@ -173,7 +111,7 @@ class Slicer extends Directives{
 
         if($body){
           self::sort_comments($body);
-          //self::unsort_lay_comments($body);
+          
           self::sort_excludes($body);
           
           self::sort_placeholders($body);
@@ -192,8 +130,12 @@ class Slicer extends Directives{
           self::sort_styles($body);
 
           self::sort_conditions($body);
+
+          // self::unsort_comments($body);
+
         }
 
+        $body = $body;
         if($return) return $body;
         self::$body = $body;
 
@@ -208,16 +150,18 @@ class Slicer extends Directives{
 
       foreach($fetches as $fetched) {
        $hashed = base_encode($fetched);
-       $body = str_replace($fetched, "<!--".$hashed."-->", $body);
-       self::$comments[] = "<!--".$hashed."-->";      
+       $rep = "@comments(c:$hashed)";
+       
+       $body = str_replace($fetched, $rep, $body);
+       self::$comments[] = $hashed;      
       }
 
     }
 
-    private static function unsort_comments(&$body){
+    public static function unsort_comments(&$body){
       foreach(self::$comments as $comment){
-        $content = base_decode(substr($comment, 4, strlen($comment) - 7));
-        $body = str_replace($comment, $content, $body);
+        $content = base_decode($comment);
+        $body = str_replace("@comments(c:$comment)", $content, $body);
       }
     }
 
@@ -251,96 +195,42 @@ class Slicer extends Directives{
     private static function sort_excludes(&$body){
       
       //fetch all comment-like structures in body
-      preg_match_all('~@\((.*?)\)@~', $body, $fetches);
+      preg_match_all('~@\(.*?\)@~s', $body, $fetches);
 
       $fetches = $fetches[0];
 
       foreach($fetches as $fetched) {
        $hashed = base_encode($fetched);
-       $body = str_replace($fetched, "<!--".$hashed."-->", $body);
-       self::$excludes[] = "<!--".$hashed."-->";      
+       $rep    = "@ccomments(c:$hashed)";
+       $body = str_replace($fetched, $rep, $body);
+       self::$excludes[] = $hashed;      
       }
             
     }
 
-    private static function unsort_excludes(&$body){
+    final public static function unsort_excludes(&$body){
       foreach(self::$excludes as $exclude){
-        $mod = base_decode(substr($exclude, 4, strlen($exclude) - 7));
-        $body = str_replace($exclude, $mod, $body);
-        $body = preg_replace('~@\(\{\{(.*?)\}\}\)@~', "&#123;&#123;$1&#125;&#125;", $body);
-        $body = preg_replace('~@\((.*?)\)@~', "&#64;$1", $body);
+        $mod = base_decode($exclude);
         
+        $body = str_replace("@ccomments(c:$exclude)", $mod, $body);
+        //$body = preg_replace('~@\(\{\{(.*?)\}\}\)@~', "&#123;&#123;$1&#125;&#125;", $body);
+        $body = preg_replace('~@\((.*?)\)@~s', "$1", $body);
       }
     }
 
     /**
      * Sorts all placeholders that are not directives
      *
-     * @param string $body refrenced body template
+     * @param string $body referenced body template
      * @return void
      */
     private static function sort_placeholders(&$body){
-      
-      $specas = ['GET','POST','REQUEST','VARIABLES_LOCAL'];
 
-      //fetch all placeholder-like structures in body
-      preg_match_all(self::placeholders_structure, $body, $fetches);
-      
-      $allFetches = ($fetches[0])?? [];
+      $body = preg_replace('~{{\s?([a-zA-Z_0-9]+)?\?\s?}}~is','<?= $$1 ?? \'\' ?>', $body);
+      $body = preg_replace('~{{\s?\$([a-zA-Z_0-9]+)?\?\s?}}~is','<?= $$1 ?? \'\' ?>', $body);
+    
+      $body = preg_replace('~{{\s?(.*?)?\s?}}~is','<?= $1 ?>', $body);
 
-      $requests = ['GET','POST','REQUEST'];
-      $placeholders = self::placeholders;
-
-      $results = [];
-     
-      foreach($placeholders as $placeholderkey => $pattern){
-
-
-          preg_match_all($pattern, $body, $matches);
-
-          $matches = ($matches[0])?? false;
-
-          #If matches was found in body for the current pattern
-          if($matches) {
-
-            foreach($matches as $placeholder){
-
-              //iterate over relative matches for current placeholder pattern
-              //render the placeholder with the placeholder pattern's key
-              if($placeholderkey == "VARIABLES_LOCAL"){
- 
-                //replace braces and resolve value
-                $anchor = str_replace([' ','{','}'], '', $placeholder);
-
-                //store resolved value into array
-                $results[$placeholder] = self::handleLocalVariables($anchor, $placeholder);
-
-              }elseif(in_array($placeholderkey, $requests)){
-
-                if(self::testMethod($placeholderkey, $isStrict)){
-
-                      //$type is allowed, proceed to get content
-                      $anchor = str_replace([' ','{', '}','post', 'get', 'req', ':', '?'], '', $placeholder);
-                      $results[$placeholder] = self::handleRequests($placeholderkey, $placeholder, $anchor);
-                      
-                  }
-              }
-
-            }         
-
-        }
-
-      }
-
-      //Replace resolved patterns
-      foreach ($results  as $patterns => $resolved){
-        $body = str_replace($patterns, $resolved, $body);
-      } 
-
-      $body = preg_replace('~{{\s?([\$a-zA-Z_\\s)\(-]+)\s?}}~is','<?= $1 ?>', $body);
-      $body = preg_replace('~{{\s?([\$a-zA-Z_\\s)\(-]+)\??\s?}}~is','<?= ($1)?? "" ?>', $body);
-      $body = preg_replace('~{{(.*?)?}}~is','<?= ($1)?? "" ?>', $body);
-     
     }
 
     /**
@@ -448,6 +338,8 @@ class Slicer extends Directives{
 
       if(SETTER::EXISTS(':STYLES')) {
         $body = str_ireplace('@styles', GET(':STYLES', '#1234'), $body);
+      }else{
+        $body = str_ireplace('@styles', '', $body);
       }
       
     }
@@ -461,119 +353,77 @@ class Slicer extends Directives{
      */
     private static function sort_directives(&$body){
 
-      //iterate over declared directives in self::$directives      
-      array_map(function($directive) use(&$body) {
 
-        if(stripos($body, $directive) !== false){
+
+      //get all directives ... 
+      $rc = new ReflectionClass('Rexit');
+      $statics = $rc->getMethods(ReflectionMethod::IS_PUBLIC | ReflectionMethod::IS_STATIC);
+      $staticMethods = [];
+
+      //iterate over declared directives      
+      $directives = array_keys(self::$pattern);    
+
+      foreach($statics as $method){
+        if($method->isPublic() && $method->isStatic()){
+          $name = $method->getName();
+          if(!in_array($name, $directives)){
+            $staticMethods[] = $method->getName();
+          }
+        }
+      }
+
+      array_map(function($directive) use(&$body, $staticMethods) {
+
+        if(stripos($body, '@'.$directive) !== false){
           //handle other directives
-          $handle = "directives".ltrim( $directive, '@');
+          //$handle = "directives".ltrim( $directive, '@');
+          $handle = "directives".$directive;
           $handle = str_replace('-','_', $handle);
           
-          if(method_exists(get_class(new self), $handle)){
-            $body = self::$handle($body);            
+          if(method_exists(get_called_class(), $handle)){
+            if($directive !== 'title') $body = self::$handle($body);
           }
 
         }
 
-      }, self::$directives);
+      }, $directives);
       
 
-    }
+      array_map(function($directive) use(&$body, $staticMethods) {
 
-    //* PLACEHOLDER HANDLER METHODS ------------------------------------------------------------------------------ */
+        if(stripos($body, '@'.$directive) !== false){
 
-    /**
-     * Handles all local variables declared
-     * Local variables exists only as arguments 
-     *
-     * @param string $anchor placeholder's content
-     * @param string $placeholder the matched braces
-     * @return string|false
-     */
-    private static function handleLocalVariables($anchor, $placeholder){
-        $explode = explode("??", $placeholder);
-        $value = '';
-
-        if(count($explode) == 2){
-          $anchor = trim(ltrim($explode[0],"{{"))."?";
-          $value  = rtrim(ltrim(rtrim($explode[1],'}}'),"' "), "' ");
+          $directive = str_replace('-','_', $directive);
+          
+          $body = self::directivesController($body, $directive);
+          
         }
-        
-        $isset = (substr($anchor, strlen($anchor) - 1, strlen($anchor)) == "?");
 
-        if($isset){
-          $anchor = rtrim($anchor, '?');
-          $result = (self::$locals[$anchor])?? $value;
-        }else{
-          $result = (self::$locals[$anchor])?? $placeholder;  
-        }
-        if (is_array($result)) {
-          trigger_error('array values cannot be returned in template scope for "'.$anchor.'"');
-          return false;
-        } 
-        return $result;
-    }    
-    
-    /**
-     * Handle all request formats
-     *
-     * @param string $placeholderkey the relative placeholder's key
-     * @param string $placeholder the matched braces
-     * @param string $anchor the content of matched braces
-     * @return string
-     */
-    private static function handleRequests($placeholderkey, $placeholder, $anchor){
+      }, $staticMethods);
+
+
       
-      //(sort variables or calculations here later...)
-      $type = str_replace('ISSET', '', $placeholderkey);
 
-      if (is_array($GLOBALS['_'.$type][$anchor])) {
-        trigger_error('array values cannot be returned in template scope');
-      }      
-      
-      if($placeholderkey === $type.'ISSET'){
-
-        //for variables only
-        return ($GLOBALS['_'.$type][$anchor])??  '';   
-        
-      }else{
-        //run as base request method
-        return ($GLOBALS['_'.$type][$anchor])??  $placeholder;
-      }     
-      
-    }
-
-    private static function testMethod($method, &$isStrict = true){
-      if(self::$method && self::$method !== $method){
-        
-        return false;
-        
-      }else if(self::$method !== $method){
-        
-        $isStrict = false;
-        
-      }
-      return true;
     }
 
     /**
-     * Loads a supplied file path. Only variable(local) parameters supplied will be resolved
+     * Raw loading a supplied file path without slicing. Only variable(local) parameters supplied will be resolved
      * This method is called before slice method
      *
      * @param string $file file url
      * @param array $params variables passed as arguments
-     * @return string contents of rendered file
+     * @return string raw contents of file
      */
-    public static function loadTemplate($file, $params = []){
+    public static function loadTemplate(string $file, $params = []){
 
       foreach($params as $locals => $value){
-        $$locals = $value;
+        if($locals != 'this') $$locals = $value;
       }
 
       foreach($params as $param => $value){
 
         if(!is_array($value) and !is_bool($value)) {
-          $$param = $value; 
+          if($param != 'this') $$param = $value; 
             /** store local variables supplied - to be used for slicing */
           self::$locals[$param] = $value;       
         }
@@ -587,6 +437,13 @@ class Slicer extends Directives{
 
     }
 
+    /**
+     * Slices a rex file 
+     *
+     * @param string $file
+     * @param array $params
+     * @return Slice
+     */
     public static function loadSlice($file, $params = []){
       $template = self::loadTemplate($file, $params);
       return self::slice($template, false);
@@ -596,14 +453,10 @@ class Slicer extends Directives{
      * When finalize is set as true, data returned will run the final steps on templating.
      * This means that the data returned will no longer be subjected to further slicing
      *
-     * @param boolean $finalize
      * @return string
      */
-    public function data(bool $finalize = false){
+    public function data() : string {
         $body = self::$body;
-        if($finalize){
-          $body = self::finalize(self::$body);
-        }
         return $body;
     }
 
@@ -626,14 +479,25 @@ class Slicer extends Directives{
     }
 
     /**
-     * This function is used after all slicing is done to unsort all comments
+     * This method is used to add more values to default arguments
+     *
+     * @param array $locals
+     * @return void
      */
-    public static function finalize(string $body) : string{
-      static::unsort_lay_comments($body);
-      static::unsort_comments($body);
-      static::unsort_comments($body);
-      static::unsort_excludes($body);
-      return $body;
+    public static function addlocals(array $locals = []){
+      
+      $compileLocals = [];
+
+      foreach ($locals as $key => $value) {
+        $compileLocals[$key] = $value;
+      }
+
+      self::$locals = array_merge(self::$locals, $compileLocals);
+
+    }
+
+    public static function args() {
+      return self::$locals;
     }
 
 }

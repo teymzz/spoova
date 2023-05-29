@@ -7,27 +7,26 @@
         <section class="pxv-10 tutorial bc-white">
             <div class="font-em-1d2">
 
-                @lay('build.co.links:tutor_pointer')
-
                 <div class="start font-em-d8">
+
+                    @lay('build.co.links:tutor_pointer') <br>
 
                     <div class="font-em-1d5 c-orange">Forms</div> <br>  
                     
                     <div class="helper-classes">
-                        <div class="fb-6">Introduction</div> <br>
                         <div class="">
 
                             <div class="">
-                                The <code>Form</code> class is a tool that is used to generate 
-                                html forms within classes. It is a more concise way of creating 
-                                html form inputs. Before a form class can be used, a form model must 
-                                be initialized. Models contain rules which the form can use in order to 
+                                This class is simply used to generate 
+                                html forms. Before a <code class="bd-f">Form</code> class can be used, 
+                                a form model must be initialized. Models contain rules which the form can use in order to 
                                 validate created forms. These rules are then applied on each form based 
-                                on their relativity with the database. The <code>form</code> class 
-                                accepts static calls on all form input types except a few like <code>date-local</code> and password
+                                on their relativity with the database. The <code>Form</code> class 
+                                accepts static calls on all form input types except a few like <code>date-local</code> and password 
+                                fields.
                             </div> <br>
 
-                            <ol>
+                            <ul>
                                 <li> <a href="#model"> Model </a> </li>
                                 <li> <a href="#init"> Init </a> </li>
                                 <li> <a href="#open"> Open </a> </li>
@@ -40,7 +39,7 @@
                                 <li> <a href="#isSaved"> isSaved </a> </li>
                                 <li> <a href="#isValidated"> isValidated </a> </li>
                                 <li> <a href="#close"> errors </a> </li>
-                            </ol>
+                            </ul>
                             
                         </div> 
                     </div>  
@@ -48,12 +47,13 @@
 
                     <div id="initialize" class="">
                         <div class="">
-                            <div class="font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
-                                <div class="flex-full midv"> 
-                                    <span class=" mxr-8 c-lime-dd">
-                                    </span> Initializing class
+                            <div class="fb-6 flex-full rad-4 pvs-8 lacier">
+                                <div class="flex-full midv c-orange-dd"> 
+                                    <span class="mxr-8">
+                                        <span class="bi-lightning-fill"></span>
+                                    </span> Initializing Form class
                                 </div>
-                            </div> <br>
+                            </div>
 
                             <div class="">
                                 To initialize a form element, the following proceedures must be followed
@@ -66,12 +66,12 @@
                             
                                 <div class="pre-area">
                                     <div class="box-full">
-                                        <div class="pxv-6 bc-off-white"><code>1. Creating Form model class (sample)</code></div>
+                                        <div class="pxv-6 bc-off-white">Create Form model (sample)</div>
                                         <pre class="pre-code">
-    <code>Form Model class</code>
-    <div class="pxs-10 bc-off-white c-green">
-    The following model can be created in any folder within the app folder.
-    </div>
+  &lt;?php 
+
+    namespace spoova\mi\windows\Model;
+
     use spoova\mi\core\classes\Model;
 
     class FormModel extends Model{
@@ -85,101 +85,98 @@
     }
                                         </pre>
                                     </div>
+                                </div>
 
-                                    <div class="font-menu pxs-10">
-                                        In the above, a form model was created with rules. The class 
-                                        will be instantiated and supplied into the Form class. The <code>rules</code>
-                                        method must contain form validation rules. This will be discussed later.
+                                <div class="foot-note">
+                                    In the above, a form model was created with the <code>rules()</code>
+                                    method which usually contain form validation rules. Once the model is created, 
+                                    the instance of that model will be loaded into the Form class for management. 
+                                    This is shown below.
+                                </div>
+
+                                <div class="pre-area">
+
+                                    <div class=" pxs-10">
                                     </div>
 
                                     <div id="model" class="box-full">
-                                        <div class="pxv-6 bc-off-white"><code>2. Instantiating form class (Form::model())</code></div>
-                                        <div class="pxv-10 c-green"><code>Form Model class</code></div>
+                                        <div class="pxv-6 bc-off-white">Instantiate form model</div>
                                         <pre class="pre-code">
-    $model = new FormModel;
-
-    Form::model($model);
+  Form::model(new FormModel);
                                         </pre>
                                     </div>
                                 </div>
 
                             </div>
 
-                        </div> <br><br>
-                    </div>
+                        </div>
+                    </div> <br>
 
                     <div id="keywords" class="">
                         <div class="">
-                            <div class="font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
-                                <div class="flex-full midv"> 
-                                    <span class=" mxr-8 c-lime-dd">
-                                    </span> keywords
-                                </div>
-                            </div> <br>
                             <div class="">
                             The following keywords should be noted:
                             <br><br>
                             
                             <div class="pre-area">
                                 <div class="box-full">
-                                    <div class="pxv-6 bc-off-white"><code>keywords</code></div>
+                                    <div class="pxv-6 bc-off-white">keywords</div>
                                     <pre class="pre-code">
     <span class="comment">
-    $Form  : referenced variable anchoring Form class instance (optional)
+  $Form  : referenced variable anchoring Form class instance (optional)
 
-    method : request method (optional)
+  method : request method (optional)
 
-    action : form action (optional)
+  action : form action (optional)
 
-    type   : form input type (e.g email, password...)
+  type   : form input type (e.g email, password...)
     </span>
                                     </pre>
                                 </div>
                             </div>
 
                             </div>
-                        </div> <br><br>
-                    </div>        
+                        </div>
+                    </div> <br>       
 
                     <div id="init" class="">
                         <div class="">
-                            <div class="font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
-                                <div class="flex-full midv"> 
-                                    <span class=" mxr-8 c-lime-dd">
-                                        <span class="numb-box">2.</span>
+                            <div class="fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
+                                <div class="flex-full midv c-orange-dd"> 
+                                    <span class="mxr-8">
+                                        <span class="bi-circle-fill"></span>
                                     </span> init
                                 </div>
-                            </div> <br>
+                            </div>
 
                             <div class="">
-                                The <code>init</code> method is used to open a form class in a automatic display mode.
+                                The <code class="bd-f">init()</code> method is used to open a form class in a automatic display mode.
                                 This means that when it is used, the form generated will be automatically printed out to the 
                                 page.
                                 <br><br>
                                 
                                 <div class="pre-area">
                                     <div class="box-full">
-                                        <div class="pxv-6 bc-off-white"><code>Syntax: init</code></div>
+                                        <div class="pxv-6 bc-off-white">Syntax: init</div>
  <pre class="pre-code">
-    Form::init($Form, method, action);
+  Form::init($Form, method, action);
  </pre>
                                     </div>
                                 </div>
                             </div>
-                        </div> <br>
+                        </div>
 
-                        The referenced variable <code>$var</code> will anchor the form instance itself.
-                        <br><br>
+                        <div class="foot-note">
+                            The referenced variable <code>$Form</code> will anchor the form instance itself.
+                        </div>
                             
                         <div class="pre-area">
                             <div class="box-full">
-                                <div class="pxv-6 bc-off-white"><code>Example: Opening form (init)</code></div>
-<pre class="pre-code">
-
-    <span class="comment">//starting a new form in rendering mode</span>
-    Form::init($Form, 'post', 'somepage.php');
-
-</pre>
+                                <div class="pxv-6 bc-off-white">Example: Opening form (init)</div>
+                                    <pre class="pre-code">
+   <span class="comment">//starting a new form in rendering mode</span>
+   Form::init($Form, 'post', 'somepage.php');
+                                    </pre>
                             </div>
                         </div>
 
@@ -188,43 +185,25 @@
 
                     <div id="open" class="">
                         <div class="">
-                            <div class="font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
-                                <div class="flex-full midv"> 
-                                    <span class=" mxr-8 c-lime-dd">
-                                        <span class="numb-box">3.</span>
+                            <div class="fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
+                                <div class="flex-full midv c-orange-dd"> 
+                                    <span class="mxr-8">
+                                        <span class="bi-circle-fill"></span>
                                     </span> open
                                 </div>
-                            </div> <br>
-                            <div class="">
-                            The <code>open</code> method is used to open a form class in without an 
-                            automatic display.
-                            This means that when it is used, the form generated has to be printed out using 
-                            either <code>echo</code> or <code>print</code> function. This is mostly used in classes.
-                            It takes the same parameters as the <code>init</code> class
-                            <br><br>
-                            
-                            <div class="pre-area">
-                                <div class="box-full">
-                                    <div class="pxv-6 bc-off-white"><code>Syntax: open</code></div>
-                                    <pre class="pre-code">
-    Form::open($Form, method, action);
-                                    </pre>
-                                </div>
                             </div>
-
+                            <div class="">
+                                The <code class="bd-f">open()</code> method is similar to the <code class="bd-f">init()</code> method 
+                                except that rather than printing directly, it returns the generated content of a form. It takes the same parameters as the <code class="bd-f">init()</code> method.
                             </div>
                         </div> <br>
-                        The referenced variable <code>$var</code> will anchor the form instance itself.
-                        <br><br>
                             
                         <div class="pre-area">
                             <div class="box-full">
-                                <div class="pxv-6 bc-off-white"><code>Example: Opening form (init)</code></div>
+                                <div class="pxv-6 bc-off-white">Example: Opening form (open)</div>
                                 <pre class="pre-code">
-
-    <span class="comment">//starting a new form without automatic display</span>
-    Form::open($Form, 'post', 'somepage.php');
-
+  <span class="comment">//starting a new form without automatic display</span>
+  echo Form::open($Form, 'post', 'somepage.php');
                                 </pre>
                             </div>
                         </div>
@@ -232,46 +211,44 @@
 
                     <div id="set" class="">
                         <div class="">
-                            <div class="font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
-                                <div class="flex-full midv"> 
-                                    <span class=" mxr-8 c-lime-dd">
-                                        <span class="numb-box">4.</span>
+                            <div class="fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
+                                <div class="flex-full midv c-orange-dd"> 
+                                    <span class="mxr-8">
+                                        <span class="bi-circle-fill"></span>
                                     </span> set
                                 </div>
-                            </div> <br>
+                            </div>
                             <div class="">
-                                The <code>set()</code> method is used to overide the default form settings.
+                                The <code class="bd-f">set()</code> method is used to overide the default form settings.
                                 <br><br>
 
                                 <div class="pre-area">
                                     <div class="box-full">
-                                        <div class="pxv-6 bc-off-white"><code>Syntax: set</code></div>
+                                        <div class="pxv-6 bc-off-white">Syntax: set</div>
                                         <pre class="pre-code">
-    Form::set($array); 
+  Form::set($array); 
     <span class="comment">
-        where: 
+    where: 
 
-            $array = list of options which can be contains array index: 
+        $array = list of options which can be contains array index: 
 
-            form_class  => This sets the forms global class attribute value which is applied on all <code>Form::Group()</code>
-            field_class => This sets the form inputs class attribute value which is applied on all <code>Form::Field()</code> 
+        form_class  => This sets the forms global class attribute value which is applied on all <code>Form::Group()</code>
+        field_class => This sets the form inputs class attribute value which is applied on all <code>Form::Field()</code> 
     </span>
                                         </pre>
                                     </div>
                                 </div>          
                                 <div class="pre-area">
                                     <div class="box-full">
-                                        <div class="pxv-6 bc-off-white"><code>Example: set</code></div>
+                                        <div class="pxv-6 bc-off-white">Example: set</div>
                                         <pre class="pre-code">
-                                        
     Form::set([
 
         'form_class'  => 'form-flex', <span class="comment no-select">// add form-flex class to all form groups</span>
 
         'field_class' => 'field-item bg-primary' <span class="comment no-select">// add bg-primary class to all form fields</span>
 
-        ]);
-
+    ]);
                                         </pre>
                                     </div>
                                 </div>
@@ -282,31 +259,30 @@
 
                     <div id="field" class="">
                         <div class="">
-                            <div class="font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
-                                <div class="flex-full midv"> 
-                                    <span class=" mxr-8 c-lime-dd">
-                                        <span class="numb-box">5.</span>
+                            <div class="fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
+                                <div class="flex-full midv c-orange-dd"> 
+                                    <span class="mxr-8">
+                                        <span class="bi-circle-fill"></span>
                                     </span> Field
                                 </div>
-                            </div> <br>
+                            </div>
 
                             <div class="">
-                                The <code>Field()</code> method is used to create a new form input field. The 
+                                This method is used to add a new form input field. The 
                                 syntax and examples are shown below.
                                 <br><br>
                     
                                 <div class="pre-area">
                                     <div class="box-full">
-                                        <div class="pxv-6 bc-off-white"><code>Syntax: Field</code></div>
+                                        <div class="pxv-6 bc-off-white">Syntax</div>
                                         <pre class="pre-code">
-    Form::Field(type, name, attrs); <span class="comment">// supplies data  to be hashed.</span>
-
+  Form::Field($type, $name, $attrs); <span class="comment">// supplies data  to be hashed.</span>
     <span class="comment">
-        where: 
+    where: 
 
-            type  : type of input field (e.g password)
-            name  : the name attribute value of the input field 
-            attrs : other added attributes <a href="attrs">learn more...</a>
+        $type  : type of input field (e.g password)
+        $name  : the name attribute value of the input field 
+        $attrs : other added attributes and value pairs
                                         </span>
                                         </pre>
                                     </div>
@@ -314,43 +290,43 @@
 
                                 <div class="pre-area">
                                     <div class="box-full">
-                                        <div class="pxv-6 bc-off-white"><code>Example: Field</code></div>
+                                        <div class="pxv-6 bc-off-white">Example</div>
                                         <pre class="pre-code">
-    <span class="comment">// add a new form input password field</span>
-    Form::Field('password', 'passfield');
+  <span class="comment">// add a new form input password field</span>
+  Form::Field('password', 'passfield');
 
-    <span class="comment">// add a new form input email field with attributes</span>
-    Form::Field('email', 'email', ['addClass'=>'i-flex']);  
+  <span class="comment">// add a new form input email field with attributes</span>
+  Form::Field('email', 'email', ['addClass'=>'i-flex']);  
 
-    <span class="comment">// add a new form input field by calling the direct name</span>
-    Form::Email('email', ['addClass'=>'i-flex']); 
-    
-    <span class="c-blue-dd no-comment">supported methods:</span>
-    <span class="comment">
-    Email, Text, TextBox/Textarea, Pass/Password, Range, 
-    Radio, Checkbox, Hidden, File, Number, Tel, Url, 
-    Date, DateLocal {date-local}, Week, Month, Year, 
-    Image, Color, CheckBox, Radio, Search, Submit, Button
-    </span>
+  <span class="comment">// add a new form input field by calling the direct name</span>
+  Form::Email('email', ['addClass'=>'i-flex']); 
+
+  <span class="c-dry-blue no-comment font-i">Supported methods:</span>
+  <span class="c-sky-blue-d">
+  Email, Text, TextBox/Textarea, Pass/Password, Range, 
+  Radio, Checkbox, Hidden, File, Number, Tel, Url, 
+  Date, DateLocal {date-local}, Week, Month, Year, 
+  Image, Color, CheckBox, Radio, Search, Submit, Button
+  </span>
                                         </pre>
                                     </div>
                                 </div>
                             </div>
                         </div> <br>
-                        <div class="font-menu">
+                        <div class="">
                         <!-- some code here -->
                         </div>
                     </div>
 
                     <div id="label" class="">
                         <div class="">
-                            <div class="font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
-                                <div class="flex-full midv"> 
-                                    <span class=" mxr-8 c-lime-dd">
-                                        <span class="numb-box">6.</span>
+                            <div class="fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
+                                <div class="flex-full midv c-orange-dd"> 
+                                    <span class="mxr-8">
+                                        <span class="bi-circle-fill"></span>
                                     </span> Label
                                 </div>
-                            </div> <br>
+                            </div>
 
                             <div class="">
                                 This method add  an html label tag to forms.
@@ -358,14 +334,14 @@
                     
                                 <div class="pre-area">
                                     <div class="box-full">
-                                        <div class="pxv-6 bc-off-white"><code>Syntax: Label</code></div>
+                                        <div class="pxv-6 bc-off-white">Syntax</div>
                                         <pre class="pre-code">
-    Form::label(attrs, content); 
+  Form::label($attrs, $content); 
         <span class="comment">
-            where:
-            
-            attrs: supplied attributes
-            content : text content of the label
+    where:
+    
+    $attrs: supplied attributes
+    $content : text content of the label
         </span>
                                         </pre>
                                     </div>
@@ -373,9 +349,9 @@
 
                                 <div class="pre-area">
                                     <div class="box-full">
-                                        <div class="pxv-6 bc-off-white"><code>Example: Label</code></div>
+                                        <div class="pxv-6 bc-off-white">Example</div>
                                         <pre class="pre-code">
-    Form::label(['class'=>'label'], 'Username'); <span class="comment"> // &#60;label class="label"&#62;Username&#60;/label&#62; </span>
+  Form::label(['class'=>'label'], 'Username'); <span class="comment"> // &#60;label class="label"&#62;Username&#60;/label&#62; </span>
                                         </pre>
                                     </div>
                                 </div>
@@ -386,60 +362,57 @@
 
                     <div id="group" class="">
                         <div class="">
-                            <div class="font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
-                                <div class="flex-full midv"> 
-                                    <span class=" mxr-8 c-lime-dd">
-                                        <span class="numb-box">7.</span>
+                            <div class="fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
+                                <div class="flex-full midv c-orange-dd"> 
+                                    <span class="mxr-8">
+                                        <span class="bi-circle-fill"></span>
                                     </span> Group
                                 </div>
-                            </div> <br>
+                            </div>
 
                             <div class="">
-                                This method is used to group a input fields. A group can only contain a  
-                                direct group child(ren). A grand child group is not supported. 
+                                This method is used to group input fields. A group can only contain a  
+                                direct group child or children. A grandchild group is not supported. 
                                 <br><br>
                     
                                 <div class="pre-area">
                                     <div class="box-full">
-                                        <div class="pxv-6 bc-off-white"><code>Syntax: Group</code></div>
+                                        <div class="pxv-6 bc-off-white">Syntax</div>
                                         <pre class="pre-code">
-    Form::Group(tag, content); 
+  Form::Group(tag, content); 
+  <span class="comment">
+    where: 
 
-    <span class="comment">
-        where: 
-
-            tag: html tag name (e.g div)
-            content: function or string
-    </span>
+        tag: html tag name (e.g div)
+        content: function or string
+  </span>
                                         </pre>
                                     </div>
                                 </div>
 
                                 <div class="pre-area">
                                     <div class="box-full">
-                                        <div class="pxv-6 bc-off-white"><code>Example 1: Group</code></div>
+                                        <div class="pxv-6 bc-off-white">Example 1</div>
                                         <pre class="pre-code">
-    Form::Group('div', fn() => 
+  Form::Group('div', fn() => 
 
-        Form::Text('firstname').
-        Form::Text('lastname')
+    Form::Text('firstname').
+    Form::Text('lastname')
 
-    ); 
-                                        <span class="comment"> // &#60;label class="label"&#62;Username&#60;/label&#62; </span>
+  ); 
                                         </pre>
                                                         </div>
                                                         <div class="box-full">
-                                        <div class="pxv-6 bc-off-white"><code>Example 2: Group </code></div>
+                                        <div class="pxv-6 bc-off-white">Example 2 : Adding class attribute and child Group </div>
                                         <pre class="pre-code">
-                                        <span class="comment"> // - Adding class and child Group </span>
-    Form::Group('div class="i-flex"', fn() => 
+  Form::Group('div class="i-flex"', fn() => 
 
-        Form::Group('div', fn() => 
-            Form::Text('firstname').
-            Form::Text('lastname')    
-        )
+    Form::Group('div', fn() => 
+        Form::Text('firstname').
+        Form::Text('lastname')    
+    )
 
-    ); 
+  ); 
                                         </pre>
                                     </div>
                                 </div>
@@ -449,30 +422,29 @@
 
                     <div id="groupeach" class="">
                         <div class="">
-                            <div class="font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
-                                <div class="flex-full midv"> 
-                                    <span class=" mxr-8 c-lime-dd">
-                                        <span class="numb-box">8.</span>
+                            <div class="fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
+                                <div class="flex-full midv c-orange-dd"> 
+                                    <span class="mxr-8">
+                                        <span class="bi-circle-fill"></span>
                                     </span> GroupEach
                                 </div>
-                            </div> <br>
+                            </div>
 
                             <div class="">
-                                This <code>GroupEach</code> method is used to apply a tag on each input 
-                                element supplied. GroupEach can only be applied 
+                                This method is used to apply a tag on each input 
+                                element supplied. GroupEach can only be applied once. 
                                 <br><br>
                     
                                 <div class="pre-area">
                                     <div class="box-full">
-                                        <div class="pxv-6 bc-off-white"><code>Syntax: GroupEach</code></div>
+                                        <div class="pxv-6 bc-off-white">Syntax</div>
                                         <pre class="pre-code">
-    Form::GroupEach(tag, content); <span class="comment"> // group each </span>
-        
+  Form::GroupEach($tagname, $content); <span class="comment"> // group each </span>
         <span class="comment">
-            where: 
+    where: 
 
-            tag     : html wrapper tag (e.g div)
-            content : function or string
+    $tagname : html wrapper tag (e.g div)
+    $content : function or string
         </span>
                                         </pre>
                                     </div>
@@ -480,76 +452,74 @@
 
                                 <div class="pre-area">
                                     <div class="box-full">
-                                        <div class="pxv-6 bc-off-white"><code>Example: GroupEach</code></div>
+                                        <div class="pxv-6 bc-off-white">Example</div>
                                         <pre class="pre-code">
-    Form::GroupEach( 
-        'div class="field"',
+  Form::GroupEach( 
+    'div class="field"',
 
-        Form::Text('firstname').
-        Form::Pass('lastname')
-
-        )
+    Form::Text('firstname').
+    Form::Pass('lastname')
+  );
                                         </pre>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <div class="font-menu pvs-10">
+                        <div class="foot-note">
                             In the above, each input field created will have a wrapper of "div" with a class of field.
                         </div>
                     </div>
 
                     <div id="close" class="">
                         <div class="">
-                            <div class="font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
-                                <div class="flex-full midv"> 
-                                    <span class=" mxr-8 c-lime-dd">
-                                        <span class="numb-box">9.</span>
-                                    </span> Close
+                            <div class="fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
+                                <div class="flex-full midv c-orange-dd"> 
+                                    <span class="mxr-8">
+                                        <span class="bi-circle-fill"></span>
+                                    </span> close
                                 </div>
-                            </div> <br>
+                            </div>
                             <div class="">
                                 When a form is opened using <code>Form::open()</code> or <code>Form::Init()</code>, 
-                                It is expected to be closed using <code>Form::close</code> which closes the form tag.
+                                It is expected to be closed using <code>Form::close()</code> which closes the form tag.
                                 <br><br>
                     
                                 <div class="pre-area">
                                     <div class="box-full">
-                                        <div class="pxv-6 bc-off-white"><code>Syntax: close</code></div>
+                                        <div class="pxv-6 bc-off-white">Syntax: close</div>
                                         <pre class="pre-code">
-    Form::close(); <span class="comment"> close a tag </span>
+  Form::close(); <span class="comment">//close a tag </span>
                                         </pre>
                                     </div>
                                 </div>
 
                                 <div class="pre-area">
                                     <div class="box-full">
-                                        <div class="pxv-6 bc-off-white"><code>Example: GroupEach</code></div>
+                                        <div class="pxv-6 bc-off-white">Example: GroupEach</div>
                                         <pre class="pre-code">
-    Form::GroupEach( 
-        'div class="field"',
+  Form::GroupEach( 
+    'div class="field"',
 
-            fn() =>
+        fn() =>
 
-                Form::Text('firstname').
-                Form::Pass('lastname').
-                Form::close()
-
-        )
+            Form::Text('firstname').
+            Form::Pass('lastname').
+            Form::close()
+  );
                                         </pre>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    </div> <br>
 
                     <div id="sample" class="">
                         <div class="">
-                            <div class="font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
-                                <div class="flex-full midv"> 
+                            <div class=" fb-6 bc-white-dd flex-full rad-4 pvs-8 lacier">
+                                <div class="flex-full midv c-orange-dd"> 
                                     SAMPLE STRUCTURE
                                 </div>
-                            </div> <br>
+                            </div>
 
                             <div>
 
@@ -559,33 +529,32 @@
 
                                 <div class="pre-area">
                                     <div class="box-full">
-                                        <div class="pxv-6 bc-off-white"><code>Example 1: sample structure</code></div>
-<pre class="pre-code">
+                                        <div class="pxv-6 bc-off-white">Example 1: sample structure</div>
+                                      <pre class="pre-code">
+  Form::model($model) <span class="comment">check <a href="@domurl('docs/wmv/models')">here</a> for how to create a model </span>
 
-    Form::model($model) <span class="comment">check <a href="model">here</a> for how to create a model </span>
+  Form::init($form, 'get'); 
 
-    Form::init($form, 'get'); 
-
-    <span class="comment">displays automatically because <code>init()</code> was used</span>
-    Form::Group('div', fn() => 
+  <span class="comment">//displays automatically because <code>init()</code> was used</span>
+  Form::Group('div', fn() => 
         
-        Form::GroupEach('div class="inputs"', fn() => 
-        
-            Form::Field('email', 'email', ['placeholder' => 'email'])
-            .Form::Pass('password', ['placeholder' => 'password'])
-            .Form::close()
+     Form::GroupEach('div class="inputs"', fn() => 
 
-        )
+        Form::Field('email', 'email', ['placeholder' => 'email'])
+        .Form::Pass('password', ['placeholder' => 'password'])
+        .Form::close()
 
-    )
-</pre>
+     )
+
+  );
+                                      </pre>
                                     </div>
                                 </div>
                                 <div class="pre-area">
                                     <div class="box-full">
-                                        <div class="pxv-6 bc-off-white"><code>Example 2: sample structure</code></div>
+                                        <div class="pxv-6 bc-off-white">Example 2: sample structure</div>
                                         <pre class="pre-code">
-    Form::model($model) <span class="comment">check <a href="model">here</a> for how to create a model </span>
+    Form::model($model) <span class="comment">check <a href="@domurl('docs/wmv/models')">here</a> for how to create a model </span>
     
     Form::open($form, 'post');
 
@@ -600,7 +569,7 @@
 
         )
 
-    )
+    );
                                         </pre>
                                     </div>
                                 </div>

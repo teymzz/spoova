@@ -28,6 +28,7 @@
 
      .nav-left ul li {
          list-style: none;
+         margin: .2em 0em;
      }
 
      .nav-left ul li:hover .ico:before {

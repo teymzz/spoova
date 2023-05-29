@@ -8,12 +8,13 @@
        <section class="pxv-10 tutorial bc-white">
            <div class="font-em-1d2">
 
-               @lay('build.co.links:tutor_pointer')
+               <div class="start font-em-d85">
 
-               <div class="start">
+                   @lay('build.co.links:tutor_pointer') <br>
+
                    <div class="font-em-1d5 c-orange">Installation</div>
                    
-                   <div class="font-em-d8 c-black-ll">
+                   <div class="c-black-ll">
                        It is strongly advised to learn about the features of this framework
                        before proceeding with installation. You can learn about the features 
                        <span class="c-orange-dd">
@@ -24,7 +25,7 @@
                    <div class="calibri bc-white-dd">
                        <div class="c-olive pxv-10 bc-silver">Application config</div>
     
-                       <div class="font-em-d85 pxv-10">
+                       <div class="pxv-10">
        
                            <ul class="list-square pxl-20">
                                <li>Download the spoova frame project pack file</li>
@@ -52,7 +53,7 @@
 
                <div class="install-page calibri bc-white-dd">
                    <div class="c-olive pxv-10 bc-silver">Web Installer</div>
-                   <div class="font-em-d8 pxv-10 no-select">
+                   <div class="font-em-d85 pxv-10 no-select">
                    
                         During project application generation, a web installer page may be added. If the installer page is missing. Use the command 
                         <code>php mi web-installer</code> to generate a new installer page. However, it is strongly advised that all configurations should be 
@@ -128,7 +129,7 @@
                            <li> <span class="fb-6 c-sky-blue-dd">Resource Meta:</span> <br>
                                Spoova comes with an inbuilt meta tags controller. 
                                When activated, default environment (i.e $_ENV) meta tag settings are applied to all pages during resource importation. 
-                               Resource importation is further discussed under <a href="@domurl('docs/resource/grouping')"><span class="c-olive ch-olive font-menu calibri fb-6 font-em-d9 hyperlink">Resource class</span></a> .
+                               Resource importation is further discussed under <a href="@domurl('docs/resource/grouping')"><span class="c-olive ch-olive  calibri fb-6 font-em-d9 hyperlink">Resource class</span></a> .
                            </li> <br>
 
                            <li> <span class="fb-6 c-sky-blue-dd">Database Control:</span> <br>
@@ -180,11 +181,11 @@
                    <div class="c-olive pxv-10 bc-silver">Getting ready</div>
 
                    
-                   <div class="calibri font-em-d8 mvt-5 pxv-10">
+                   <div class="calibri font-em-d85 mvt-5 pxv-10">
 
                        Spoova does an automatic caliberation of project folder once it is created. It is suggested to keep the name of project folders strictly as 
                        strings without any special characters which may lead to undesired responses. The caliberation system enables the project app to properly 
-                       configure the <code class="font-menu">.htaccess</code> file. 
+                       configure the <code class="">.htaccess</code> file. 
    
                        <ul class="list-square mvt-10 pxl-20">
                            <li>

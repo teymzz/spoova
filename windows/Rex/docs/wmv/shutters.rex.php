@@ -9,9 +9,9 @@
         <section class="pxv-10 tutorial bc-white">
             <div class="font-em-1d2">
 
-                @lay('build.co.links:tutor_pointer')
-
                 <div class="start font-em-d8">
+
+                  @lay('build.co.links:tutor_pointer') <br>
 
                   <div class="font-em-1d5 c-orange">Shutter</div> <br>  
                   
@@ -22,7 +22,7 @@
                         unless the shutter is pended which in turn leaves the url opened. This behaviour is one designed to prevent any access 
                         to a non-existing window in which the resulting effect could have been a blank page. However, when a window file exists and is called, the shutters are left opened to be manually closed by the respective window class 
                         or method. The closing of windows is a technicality that must be properly understood well in order to be able to close 
-                        windows efficiently especially when using the <a href="@route('.calls')" title="@route('.calls')"><span class="hyperlink c-olive">call shutter methods</span></a>. An improper 
+                        windows efficiently especially when using the <a href="@route('.calls')" title="@route('.calls')"><span class="hyperlink rule-dotted c-olive">call shutter methods</span></a>. An improper 
                         closing of windows can leave some urls opened unknowingly. Hence, developers must have a good knowledge of handling 
                         urls to be able to properly close them. <br><br>
 

@@ -7,14 +7,13 @@
             <section class="pxv-10 tutorial bc-white">
                 <div class="font-em-1d2">
 
-                    @lay('build.co.links:tutor_pointer')
-
                     <div class="start font-em-d8">
+
+                        @lay('build.co.links:tutor_pointer') <br>
 
                         <div class="font-em-1d5 c-orange">Cli Colors</div> <br>  
                         
                         <div class="helper-classes">
-                            <div class="fb-6">Introduction</div> <br>
                             <div class="">
 
                                 <div class="">
@@ -27,7 +26,7 @@
                                     </p>
 
                                     <p>
-                                        Cli colors are added to text based on color codes. Each text is wrapped within its own color code, making it impossible to 
+                                        Cli colors are added to text through the use of color codes. Each text is wrapped within its own color code, making it impossible to 
                                         add colors within another color code whether as a combination of text colors or text background colors. This in other words mean 
                                         that each text color must be defined separately for each texts. The available methods under these category are listed below:
                                     </p>
@@ -57,13 +56,13 @@
 
                         <div id="color" class="">
                             <div class="">
-                                <div class="font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
-                                    <div class="flex-full midv"> 
-                                        <span class=" mxr-8 c-lime-dd">
-                                            <span class="numb-box">1.</span>
+                                <div class=" fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
+                                    <div class="flex-full midv c-orange-dd"> 
+                                        <span class="mxr-8">
+                                            <span class="bi-circle-fill"></span>
                                         </span> Cli::color()
                                     </div>
-                                </div> <br>
+                                </div>
                                 <div class="">
                                 This method is used to apply colors on cli texts. There are four basic text colors support which are green, yellow, blue and red. Colors 
                                 are added by wrapping texts within the specific color code. The technology is based on the fact that a color code cannot be applied within another 
@@ -72,7 +71,7 @@
 
                             <div class="pre-area">
                                 <div class="box-full">
-                                    <div class="pxv-6 bc-off-white"><code>Syntax: color</code></div>
+                                    <div class="pxv-6 bc-off-white">Syntax</div>
                                     <pre class="pre-code">
     Cli::color($text, $name, $spacing); 
     <span class="comment no-select">
@@ -92,20 +91,20 @@
 
                         <div id="danger" class="">
                             <div class="">
-                                <div class="font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
-                                    <div class="flex-full midv"> 
-                                        <span class=" mxr-8 c-lime-dd">
-                                            <span class="numb-box">2.</span>
+                                <div class=" fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
+                                    <div class="flex-full midv c-orange-dd"> 
+                                        <span class="mxr-8">
+                                            <span class="bi-circle-fill"></span>
                                         </span> Cli::danger()
                                     </div>
-                                </div> <br>
+                                </div>
                                 <div class="">
                                 This method is a short form of applying a red color code on texts.
                                 <br><br>
 
                             <div class="pre-area">
                                 <div class="box-full">
-                                    <div class="pxv-6 bc-off-white"><code>Syntax: danger</code></div>
+                                    <div class="pxv-6 bc-off-white">Syntax</div>
                                     <pre class="pre-code">
     Cli::danger($text, $spacing); 
     <span class="comment no-select">
@@ -124,20 +123,20 @@
 
                         <div id="warn" class="">
                             <div class="">
-                                <div class="font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
-                                    <div class="flex-full midv"> 
-                                        <span class=" mxr-8 c-lime-dd">
-                                            <span class="numb-box">3.</span>
+                                <div class=" fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
+                                    <div class="flex-full midv c-orange-dd"> 
+                                        <span class="mxr-8">
+                                            <span class="bi-circle-fill"></span>
                                         </span> Cli::warn()
                                     </div>
-                                </div> <br>
+                                </div>
                                 <div class="">
                                 This method is a short form of applying a yellow color code on texts.
                                 <br><br>
 
                             <div class="pre-area">
                                 <div class="box-full">
-                                    <div class="pxv-6 bc-off-white"><code>Syntax: warn</code></div>
+                                    <div class="pxv-6 bc-off-white">Syntax</div>
                                     <pre class="pre-code">
     Cli::warn($text, $spacing); 
     <span class="comment no-select">
@@ -156,20 +155,20 @@
 
                         <div id="alert" class="">
                             <div class="">
-                                <div class="font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
-                                    <div class="flex-full midv"> 
-                                        <span class=" mxr-8 c-lime-dd">
-                                            <span class="numb-box">4.</span>
+                                <div class=" fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
+                                    <div class="flex-full midv c-orange-dd"> 
+                                        <span class="mxr-8">
+                                            <span class="bi-circle-fill"></span>
                                         </span> Cli::alert()
                                     </div>
-                                </div> <br>
+                                </div>
                                 <div class="">
                                 This method is a short form of applying a blue color code on texts.
                                 <br><br>
 
                             <div class="pre-area">
                                 <div class="box-full">
-                                    <div class="pxv-6 bc-off-white"><code>Syntax: alert</code></div>
+                                    <div class="pxv-6 bc-off-white">Syntax</div>
                                     <pre class="pre-code">
     Cli::alert($text, $spacing); 
     <span class="comment no-select">
@@ -188,20 +187,20 @@
 
                         <div id="valid" class="">
                             <div class="">
-                                <div class="font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
-                                    <div class="flex-full midv"> 
-                                        <span class=" mxr-8 c-lime-dd">
-                                            <span class="numb-box">5.</span>
+                                <div class=" fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
+                                    <div class="flex-full midv c-orange-dd"> 
+                                        <span class="mxr-8">
+                                            <span class="bi-circle-fill"></span>
                                         </span> Cli::valid()
                                     </div>
-                                </div> <br>
+                                </div>
                                 <div class="">
                                 This method is a short form of applying a green color code on texts.
                                 <br><br>
 
                             <div class="pre-area">
                                 <div class="box-full">
-                                    <div class="pxv-6 bc-off-white"><code>Syntax: valid</code></div>
+                                    <div class="pxv-6 bc-off-white">Syntax</code></div>
                                     <pre class="pre-code">
     Cli::valid($text, $spacing); 
     <span class="comment no-select">
@@ -220,13 +219,13 @@
 
                         <div id="bgColor" class="">
                             <div class="">
-                                <div class="font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
-                                    <div class="flex-full midv"> 
-                                        <span class=" mxr-8 c-lime-dd">
-                                            <span class="numb-box">6.</span>
+                                <div class=" fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
+                                    <div class="flex-full midv c-orange-dd"> 
+                                        <span class="mxr-8">
+                                            <span class="bi-circle-fill"></span>
                                         </span> Cli::bgColor()
                                     </div>
-                                </div> <br>
+                                </div>
                                 <div class="">
                                 This method is a used to apply background colors on texts. It is however important to lay emphasis on the fact that both the <code>bgColor()</code>
                                 and the <code>color()</code> methods cannot be applied within each other but can only be applied separately on different texts.
@@ -234,7 +233,7 @@
 
                             <div class="pre-area">
                                 <div class="box-full">
-                                    <div class="pxv-6 bc-off-white"><code>Syntax: bgColor</code></div>
+                                    <div class="pxv-6 bc-off-white">Syntax</div>
                                     <pre class="pre-code">
     Cli::bgColor($text, $name, $spacing); 
     <span class="comment no-select">
@@ -254,20 +253,20 @@
 
                         <div id="bgDanger" class="">
                             <div class="">
-                                <div class="font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
-                                    <div class="flex-full midv"> 
-                                        <span class=" mxr-8 c-lime-dd">
-                                            <span class="numb-box">7.</span>
+                                <div class=" fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
+                                    <div class="flex-full midv c-orange-dd"> 
+                                        <span class="mxr-8">
+                                            <span class="bi-circle-fill"></span>
                                         </span> Cli::bgDanger()
                                     </div>
-                                </div> <br>
+                                </div>
                                 <div class="">
                                 This method is a short form of applying a red background color code on texts.
                                 <br><br>
 
                             <div class="pre-area">
                                 <div class="box-full">
-                                    <div class="pxv-6 bc-off-white"><code>Syntax: bgDanger</code></div>
+                                    <div class="pxv-6 bc-off-white">Syntax</div>
                                     <pre class="pre-code">
     Cli::bgDanger($text, $spacing); 
     <span class="comment no-select">
@@ -286,20 +285,20 @@
 
                         <div id="bgWarn" class="">
                             <div class="">
-                                <div class="font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
-                                    <div class="flex-full midv"> 
-                                        <span class=" mxr-8 c-lime-dd">
-                                            <span class="numb-box">8.</span>
+                                <div class=" fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
+                                    <div class="flex-full midv c-orange-dd"> 
+                                        <span class="mxr-8">
+                                            <span class="bi-circle-fill"></span>
                                         </span> Cli::bgWarn()
                                     </div>
-                                </div> <br>
+                                </div>
                                 <div class="">
                                 This method is a short form of applying a yellow background color code on texts.
                                 <br><br>
 
                             <div class="pre-area">
                                 <div class="box-full">
-                                    <div class="pxv-6 bc-off-white"><code>Syntax: bgWarn</code></div>
+                                    <div class="pxv-6 bc-off-white">Syntax</div>
                                     <pre class="pre-code">
     Cli::warn($text, $spacing); 
     <span class="comment no-select">
@@ -318,20 +317,20 @@
 
                         <div id="bgAlert" class="">
                             <div class="">
-                                <div class="font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
-                                    <div class="flex-full midv"> 
-                                        <span class=" mxr-8 c-lime-dd">
-                                            <span class="numb-box">9.</span>
+                                <div class=" fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
+                                    <div class="flex-full midv c-orange-dd"> 
+                                        <span class="mxr-8">
+                                            <span class="bi-circle-fill"></span>
                                         </span> Cli::bgAlert()
                                     </div>
-                                </div> <br>
+                                </div>
                                 <div class="">
                                 This method is a short form of applying a blue color code on texts.
                                 <br><br>
 
                             <div class="pre-area">
                                 <div class="box-full">
-                                    <div class="pxv-6 bc-off-white"><code>Syntax: bgAlert</code></div>
+                                    <div class="pxv-6 bc-off-white">Syntax</div>
                                     <pre class="pre-code">
     Cli::bgAlert($text, $spacing); 
     <span class="comment no-select">
@@ -350,20 +349,20 @@
 
                         <div id="bgValid" class="">
                             <div class="">
-                                <div class="font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
-                                    <div class="flex-full midv"> 
-                                        <span class=" mxr-8 c-lime-dd">
-                                            <span class="numb-box">10.</span>
+                                <div class=" fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
+                                    <div class="flex-full midv c-orange-dd"> 
+                                        <span class="mxr-8">
+                                            <span class="bi-circle-fill"></span>
                                         </span> Cli::bgValid()
                                     </div>
-                                </div> <br>
+                                </div>
                                 <div class="">
                                 This method is a short form of applying a green color code on texts.
                                 <br><br>
 
                             <div class="pre-area">
                                 <div class="box-full">
-                                    <div class="pxv-6 bc-off-white"><code>Syntax: bgValid</code></div>
+                                    <div class="pxv-6 bc-off-white">Syntax</div>
                                     <pre class="pre-code">
     Cli::bgValid($text, $spacing); 
     <span class="comment no-select">

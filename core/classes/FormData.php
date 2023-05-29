@@ -1,9 +1,8 @@
 <?php
 
 /**
- * This class manages form request data
+ * This class manages form request data for window routes
  */
-
 class FormData extends Window{
 
     public const action = 'form-data';

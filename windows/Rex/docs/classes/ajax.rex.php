@@ -8,28 +8,27 @@
     <section class="pxv-10 tutorial mails bc-white">
       <div class="font-em-1d2">
 
-        @lay('build.co.links:tutor_pointer')
-
         <div class="start font-em-d85">
 
-          <div class="font-em-1d5 c-orange">Ajax Class</div> <br>  
+            @lay('build.co.links:tutor_pointer') <br>
+
+          <div class="font-em-1d5 c-orange-dd">Ajax Class</div> <br>  
         
             <div class="helper-classes">
-                <div class="fb-6">Introduction</div> <br>
                 <div class="">
 
                 <div class="">
-                    The <code>Ajax</code> class is an helper class that was created to 
+                    The <code class="bd-f">Ajax</code> class is an helper class that was created to 
                     manage Ajax requests. We suggest that you should learn about the 
-                    <a href="@domurl('docs/domurl')"><code>WMV</code></a>  pattern first before learning about 
-                    Ajax class as reference could be made to it in the course of this documentation. 
-                    The <code>Ajax</code> class handles Requests based on 3 main categories. 
+                    <a href="@domurl('docs/domurl')" class="c-olive rule-dotted"><code class="bd-f">WMV</code></a>  pattern first before learning about 
+                    Ajax class because reference could be made to it in the course of this documentation. 
+                    The <code class="bd-f">Ajax</code> class handles Requests based on 3 main categories. 
                 </div> <br>
 
                     <ol>
-                        <li> <a href="#direct-request"> Direct Request </a> </li>
-                        <li> <a href="#json-request"> JSON Restriction </a> </li>
-                        <li> <a href="#referred-request"> Referred Restriction </a> </li>
+                        <li> <a href="#direct-request" class="c-olive ch-olive-dd"> Direct Request </a> </li>
+                        <li> <a href="#json-request" class="c-olive ch-olive-dd"> JSON Restriction </a> </li>
+                        <li> <a href="#referred-request" class="c-olive ch-olive-dd"> Referred Restriction </a> </li>
                     </ol> 
                     
                     In this documentation, we will learn and understand the meaning of these loading types and how to 
@@ -40,17 +39,17 @@
 
             <div id="direct-request" class="">
                 <div class="">
-                    <div class="font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
-                        <div class="flex-full midv"> 
-                            <span class=" mxr-8 c-lime-dd">
+                    <div class=" fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
+                        <div class="flex-full midv c-orange-dd"> 
+                            <span class="mxr-8">
                             </span> Direct Request
                         </div>
-                    </div> <br>
+                    </div>
                     <div class="">
-                    When requests are naturally sent to urls, the raw contents of that url is returned as response. In this approach, 
+                    When requests are naturally sent to urls, the raw contents of that url is returned as response. This approach suggests that 
                     all requests are returned raw whether as an http request or as an ajax request. This means that the raw data obtained by 
                     sending an http request to a page is still the same data obtained when an ajax request is forwarded. This is termed 
-                    as direct loading of contents from urls. In this method, the <code>Ajax</code> class has no effect on responses obtained 
+                    as direct loading of contents from urls. In this method, the <code class="bd-f">Ajax</code> class has no effect on responses obtained 
                     because such data is just forwarded as obtained. 
                     </div>
                 </div> <br>
@@ -58,16 +57,16 @@
 
             <div id="json-request" class="">
                 <div class="">
-                    <div class="font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
-                        <div class="flex-full midv"> 
-                            <span class=" mxr-8 c-lime-dd">
+                    <div class=" fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
+                        <div class="flex-full midv c-orange-dd"> 
+                            <span class="mxr-8">
                             </span> JSON Restriction
                         </div>
-                    </div> <br>
+                    </div>
                     <div class="">
                     JSON Restriction is set when we declare content type of data obtained as JSON (i.e application/json). This 
                     means that we expect the response obtained from a request data to be in json format. If data obtained from a request (http or ajax) 
-                    is not a valid <code>JSON</code> string, then a <code>ParseError</code> is obtained. The <code>Ajax</code> class 
+                    is not a valid <code>JSON</code> string, then a <code>ParseError</code> is obtained. The <code class="bd-f">Ajax</code> class 
                     makes it easy for us to declare our content-type as json by calling the <code>Ajax::isAjax(':json')</code> 
                     or <code>Ajax::withJson()</code> method.    
                     </div>
@@ -76,12 +75,11 @@
 
             <div id="referred-restriction" class="">
                 <div class="">
-                    <div class="font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
-                        <div class="flex-full midv"> 
-                            <span class=" mxr-8 c-lime-dd">
-                            </span> REFFERED Restriction
+                    <div class=" fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
+                        <div class="flex-full midv c-orange-dd"> 
+                             REFFERED Restriction
                         </div>
-                    </div> <br>
+                    </div>
                     <div class="">
                     REFERRED restriction is applied when we set certain referer restrictions on a particular page. This restriction, when set,
                     prevents requests that are not sent through an XMLHttpRequest referer. In this way we can most likely keep our data 
@@ -93,9 +91,9 @@
 
             <div id="initializing-class" class="">
                 <div class="">
-                    <div class="font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
-                        <div class="flex-full midv"> 
-                            <span class=" mxr-8 c-lime-dd">
+                    <div class=" fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
+                        <div class="flex-full midv c-orange-dd"> 
+                            <span class="mxr-8 bi-lightning-fill">
                             </span> Initializing Ajax class
                         </div>
                     </div>
@@ -119,7 +117,7 @@
 <!-- code ended -->
 
  <!-- code description started -->                   
-<div class="font-em-d85">
+<div class="foot-note">
     Whenever arguments are supplied on the <code>Ajax</code> class, 
     the class becomes mandated to check if the current request is ajax. 
     However, if no arguments are supplied, then the ajax class will only create 
@@ -143,7 +141,7 @@
 </div>
 <!-- code ended -->
 <!-- code description started -->                   
-<div class="font-em-d85 mvt-6">
+<div class="foot-note mvt-6">
     In the example above, no check will be done to determine if the incoming request is 
     an ajax request. Only the instace of the class is created.
 </div>
@@ -160,7 +158,7 @@
 </div>
 <!-- code @domurl('abc') -->
 <!-- code description started -->                   
-<div class="font-em-d85 mvt-6">
+<div class="foot-note mvt-6">
     In the example above, the ajax class will check to determine if the incoming request is 
     an ajax request. If the incoming request is not ajax request, then the page will exit with a 
     response code of <code>401</code> and response message in the format below:
@@ -168,7 +166,7 @@
 <!-- code description ended -->
 
 <!-- code description started -->                   
-<div class="font-em-d85 mvt-6">
+<div class="foot-note mvt-6">
     In the example above, the ajax class will check to determine if the incoming request is 
     an ajax request. If the incoming request is not ajax request, then the page will exit with a 
     response code of <code>401</code> and response message in the format below:
@@ -179,7 +177,7 @@
  <!-- code started -->                   
  <div class="pre-area mvt-6 rad-4 box-full flow-hide">
     <div class="bc-silver pxv-10 c-brown">Example 2: Invalid Request Response Message Format</div>
-    <pre class="pre-code font-menu font-em-d87" style="color:red;">
+    <pre class="pre-code  font-em-d87" style="color:red;">
   {
     "success": false,
     "error": true,
@@ -191,7 +189,7 @@
 <!-- code ended -->
 
 <!-- code description started -->                   
-<div class="font-em-d85 mvt-6">
+<div class="foot-note mvt-6">
     Although, the first argument supplied was a string (i.e <code>"invalid request"</code> ), this can also be 
     an array which will be processed and returned as a json format.
 </div>
@@ -205,14 +203,15 @@
 
             <div id="ajax-methods" class="">
                 <div class="">
-                    <div class="font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
-                        <div class="flex-full midv"> 
-                            <span class=" mxr-8 c-lime-dd">
+                    <div class=" fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
+                        <div class="flex-full midv c-orange-dd"> 
+                            <span class="mxr-8">
+                                <span class="bi-circle"></span>
                             </span> Ajax Methods
                         </div>
-                    </div> <br>
+                    </div>
                     <div class="">
-                    Aside from Initializing our Ajax class, their are few methods provided for handling 
+                    Aside from Initializing our Ajax class, there are few methods provided for handling 
                     requests and request responses. These method are listed and explained below: <br> 
                     
                     <ul class="font-em-d9 c-olive mvt-10">
@@ -229,13 +228,13 @@
 
             <div id="isajax" class="">
                 <div class="">
-                    <div class="font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
-                        <div class="flex-full midv"> 
-                            <span class=" mxr-8 c-lime-dd">
-                                <span class="bi-circle-fill"> 1.</span>
+                    <div class=" fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
+                        <div class="flex-full midv c-orange-dd"> 
+                            <span class="mxr-8">
+                                <span class="bi-circle-fill"></span>
                             </span> isAjax
                         </div>
-                    </div> <br>
+                    </div>
                     <div class="">
                     This method is used to check or set an ajax response type and it can also be used 
                     to perform both operations at once. By default, it returns a boolean of true if 
@@ -245,7 +244,7 @@
 <!-- code started -->                   
                 <div class="pre-area">
                     <div class="box-full">
-    <div class="pxv-6 bc-silver"><code>Example: isAjax</code></div>
+    <div class="pxv-6 bc-silver">Example: isAjax</div>
     <pre class="pre-code">
   Ajax::isAjax(); <span class="comment">// returns true or false</span>
   Ajax::isAjax('application/json'); <span class="comment">// returns true or false and sets content-type </span>
@@ -256,7 +255,7 @@
                 </div>
 <!-- code ended -->
 <!-- code description started -->                   
-<div class="font-em-d85 mvt-6">
+<div class="foot-note mvt-6">
     The example above shows how the <code>isAjax()</code> method can be applied. The first code line will not set a 
     content-type for url. However, in the second code line, the argument 
     supplied is used to set the content-type to <code>application/json</code>. Also, if our content-type is 
@@ -271,7 +270,7 @@
                     
                 <div class="pre-area">
                     <div class="box-full">
-    <div class="pxv-6 bc-silver"><code>Example: checking request</code></div>
+    <div class="pxv-6 bc-silver">Example: checking request</div>
     <pre class="pre-code">
   if( Ajax::isAjax() ) {
 
@@ -287,20 +286,20 @@
 
             <div id="setcode" class="">
                 <div class="">
-                    <div class="font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
-                        <div class="flex-full midv"> 
-                            <span class=" mxr-4 c-lime-dd">
-                                <span class="bi-circle-fill"> 2.</span>
+                    <div class=" fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
+                        <div class="flex-full midv c-orange-dd"> 
+                            <span class="mxr-4">
+                                <span class="bi-circle-fill"></span>
                             </span>setcode
                         </div>
-                    </div> <br>
+                    </div> 
                     <div class="">
                     This <code>setcode()</code> method is used to set a response code
                     <br><br>
 <!-- code started -->                   
                 <div class="pre-area">
                     <div class="box-full">
-    <div class="pxv-6 bc-silver"><code>Example: setcode</code></div>
+    <div class="pxv-6 bc-silver">Example: setcode</div>
     <pre class="pre-code">
   $Ajax = (new Ajax);
 
@@ -315,7 +314,7 @@
                 </div>
 <!-- code ended -->
 <!-- code description started -->                   
-<div class="font-em-d85 mvt-6">
+<div class="foot-note mvt-6">
     The example above shows how the <code>setcode()</code> method can be applied. Naturally, the 
     <code>setcode()</code> only sets a last response obtained. Ordinarily, this method has no effect 
     unless used with other methods like <code>accept()</code> and <code>referred</code> which will be discussed later
@@ -329,13 +328,13 @@
 
             <div id="getcode" class="">
                 <div class="">
-                    <div class="font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
-                        <div class="flex-full midv"> 
-                            <span class=" mxr-4 c-lime-dd">
-                                <span class="bi-circle-fill"> 3.</span>
+                    <div class=" fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
+                        <div class="flex-full midv c-orange-dd"> 
+                            <span class="mxr-4">
+                                <span class="bi-circle-fill"></span>
                             </span>getcode
                         </div>
-                    </div> <br>
+                    </div>
                     <div class="">
                     This <code>getcode()</code> method returns the last response code set be <code>setcode()</code>
                     method.
@@ -343,7 +342,7 @@
 <!-- code started -->                   
                 <div class="pre-area">
                     <div class="box-full">
-    <div class="pxv-6 bc-silver"><code>Example: getcode</code></div>
+    <div class="pxv-6 bc-silver">Example: getcode</div>
     <pre class="pre-code">
   $Ajax = (new Ajax);
 
@@ -363,7 +362,7 @@
                 </div>
 <!-- code ended -->
 <!-- code description started -->                   
-<div class="font-em-d85 mvt-6">
+<div class="foot-note mvt-6">
     In the example above, the <code>getcode()</code> method will print out the last response set 
     by the <code>setcode()</code> method.
 </div>
@@ -378,13 +377,13 @@
 
             <div id="referred" class="">
                 <div class="">
-                    <div class="font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
-                        <div class="flex-full midv"> 
-                            <span class=" mxr-4 c-lime-dd">
-                                <span class="bi-circle-fill"> 4.</span>
+                    <div class=" fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
+                        <div class="flex-full midv c-orange-dd"> 
+                            <span class="mxr-4">
+                                <span class="bi-circle-fill"></span>
                             </span>referred
                         </div>
-                    </div> <br>
+                    </div>
                     <div class="">
                     This <code>referred()</code> method is used to declare that the request of the page 
                     must have a referer url. If the url is loaded directly, then the page will automatically 
@@ -393,7 +392,7 @@
 <!-- code started -->                   
                 <div class="pre-area">
                     <div class="box-full">
-    <div class="pxv-6 bc-silver"><code>Example: referred</code></div>
+    <div class="pxv-6 bc-silver">Example: referred</div>
     <pre class="pre-code">
   (new Ajax)->setcode(401)->referred(); <span class="comment">// Ensure that a referer url is sent</span>
     </pre>
@@ -401,7 +400,7 @@
                 </div>
 <!-- code ended -->
 <!-- code description started -->                   
-<div class="font-em-d85 mvt-6">
+<div class="foot-note mvt-6">
     The example above shows how the <code>referred()</code> method is used. The 401 response code was set first using
     <code>setcode()</code> method, then the <code>referred()</code> method was called. If the url was loaded directly,
     then the <code>referred()</code> method will trigger an <code>"invalid request"</code> response, then a 401 response
@@ -415,8 +414,8 @@
 <!-- code started -->                       
                 <div class="pre-area">
                     <div class="box-full">
-    <div class="pxv-6 bc-silver"><code>Example: Invalid request response format</code></div>
-    <pre class="pre-code font-menu font-em-d85" style="color:grey">
+    <div class="pxv-6 bc-silver">Example: Invalid request response format</div>
+    <pre class="pre-code  foot-note" style="color:grey">
     {
       "success": false,
       "error": true,
@@ -428,7 +427,7 @@
                 </div>
 <!-- code ended -->
 <!-- code description started -->                   
-<div class="font-em-d85 mvt-6">
+<div class="foot-note mvt-6">
     Alhough, the response is similar to when the <code>Ajax</code> class was initialized, it might be useful in cases when 
     we don't want to initialize <code>Ajax</code> in referred validation mode.
 </div>
@@ -437,13 +436,13 @@
 
             <div id="withjson" class="">
                 <div class="">
-                    <div class="font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
-                        <div class="flex-full midv"> 
-                            <span class=" mxr-4 c-lime-dd">
-                                <span class="bi-circle-fill"> 5.</span>
+                    <div class=" fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
+                        <div class="flex-full midv c-orange-dd"> 
+                            <span class="mxr-4">
+                                <span class="bi-circle-fill"></span>
                             </span>withJson
                         </div>
-                    </div> <br>
+                    </div>
                     <div class="">
                     This <code>withjson()</code> method is a good way to perform all the activities of setting json content type and 
                     also checking if request is referred all in one line. Just like instantiating the class itself, <code>withJson</code>
@@ -453,7 +452,7 @@
 <!-- code started -->                   
                 <div class="pre-area">
                     <div class="box-full">
-    <div class="pxv-6 bc-silver"><code>Example: withJson</code></div>
+    <div class="pxv-6 bc-silver">Example: withJson</div>
     <pre class="pre-code">
     Ajax::withJson('invalid request', 401)<span class="comment">// Ensure that a referer url is sent</span>
     </pre>
@@ -461,7 +460,7 @@
                 </div>
 <!-- code ended -->
 <!-- code description started -->                   
-<div class="font-em-d85 mvt-6">
+<div class="foot-note mvt-6">
     The example above shows how the <code>withJson()</code> method is used. The response message <code>"invalid request"</code>. 
     will be retuned along with 401 response code, if the url was loaded directly. Also a parseError will be sent if 
     the content data returned is not a valid json format.
@@ -473,13 +472,13 @@
 
             <div id="request" class="">
                 <div class="">
-                    <div class="font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
-                        <div class="flex-full midv"> 
-                            <span class=" mxr-4 c-lime-dd">
-                                <span class="bi-circle-fill"> 6.</span>
+                    <div class=" fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
+                        <div class="flex-full midv c-orange-dd"> 
+                            <span class="mxr-4">
+                                <span class="bi-circle-fill"></span>
                             </span>request
                         </div>
-                    </div> <br>
+                    </div>
                     <div class="">
                     The <code>request()</code> method simply returns the request method of any request 
                     sent.
@@ -487,7 +486,7 @@
 <!-- code started -->                   
                 <div class="pre-area">
                     <div class="box-full">
-    <div class="pxv-6 bc-silver"><code>Example: withJson</code></div>
+    <div class="pxv-6 bc-silver">Example: withJson</div>
     <pre class="pre-code">
     Ajax::request(); <span class="comment">// returns post, get, ...etc</span>
     </pre>
@@ -500,13 +499,13 @@
 
             <div id="accept" class="">
                 <div class="">
-                    <div class="font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
-                        <div class="flex-full midv"> 
-                            <span class=" mxr-4 c-lime-dd">
-                                <span class="bi-circle-fill"> 6.</span>
+                    <div class=" fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
+                        <div class="flex-full midv c-orange-dd"> 
+                            <span class="mxr-4">
+                                <span class="bi-circle-fill"></span>
                             </span>accept
                         </div>
-                    </div> <br>
+                    </div>
                     <div class="">
                     This method sets the accepted request methods required for data to be obtained
                     from the content url. These request methods are <code>post</code>, <code>get</code>,
@@ -519,7 +518,7 @@
 <!-- code started -->                   
                 <div class="pre-area">
                     <div class="box-full">
-    <div class="pxv-6 bc-silver"><code>Example: accept</code></div>
+    <div class="pxv-6 bc-silver">Example: accept</div>
     <pre class="pre-code">
   Ajax::accept('post'); <span class="comment">// Accept only post request methods, return 401 on error</span>
   
@@ -533,7 +532,7 @@
                 </div>
 <!-- code ended -->
 <!-- code description started -->                   
-<div class="font-em-d85 mvt-6">
+<div class="foot-note mvt-6">
     The example above shows the behavioral pattern of the <code>accept()</code> method when used. 
     <ul>
         <li>
@@ -563,8 +562,8 @@
 <!-- code started -->                       
                 <div class="pre-area">
                     <div class="box-full">
-    <div class="pxv-6 bc-silver"><code>Example: Invalid request response format</code></div>
-    <pre class="pre-code font-menu font-em-d85" style="color:grey">
+    <div class="pxv-6 bc-silver">Example: Invalid request response format</div>
+    <pre class="pre-code  foot-note" style="color:grey">
     {
       "success": false,
       "error": true,
@@ -576,7 +575,7 @@
                 </div>
 <!-- code ended -->
 <!-- code description started -->                   
-<div class="font-em-d85 mvt-6">
+<div class="foot-note mvt-6">
     Although, the response is similar to when the <code>Ajax</code> class was initialized, it might be useful in cases when 
     we don't want to initialize <code>Ajax</code> in referred validation mode.
 </div>
@@ -596,8 +595,8 @@
 <!-- code started -->
                 <div class="pre-area">
                     <div class="box-full">
-    <div class="pxv-6 bc-silver"><code>Syntax: response()</code></div>
-    <pre class="pre-code font-menu font-em-d85">
+    <div class="pxv-6 bc-silver">Syntax: response()</div>
+    <pre class="pre-code  foot-note">
     response($code, $message, $modifier);
       <span class="comment">
         where: 
@@ -613,8 +612,8 @@
 <!-- code started -->
                 <div class="pre-area">
                     <div class="box-full">
-    <div class="pxv-6 bc-silver"><code>Example 1: response()</code></div>
-<pre class="pre-code font-menu font-em-d85">
+    <div class="pxv-6 bc-silver">Example 1: response()</div>
+<pre class="pre-code  foot-note">
     response(401, 'invalid request');
     <span class="comment">
     returns: 
@@ -634,8 +633,8 @@
 <!-- code started -->
                 <div class="pre-area">
                     <div class="box-full">
-    <div class="pxv-6 bc-silver"><code>Example 2: response()</code></div>
-<pre class="pre-code font-menu font-em-d85">
+    <div class="pxv-6 bc-silver">Example 2: response()</div>
+<pre class="pre-code  foot-note">
     response(200, 'valid request');
     <span class="comment">
     returns: 
@@ -654,8 +653,8 @@
 <!-- code started -->
                 <div class="pre-area">
                     <div class="box-full">
-    <div class="pxv-6 bc-silver"><code>Example 3: response()</code></div>
-<pre class="pre-code font-menu font-em-d85">
+    <div class="pxv-6 bc-silver">Example 3: response()</div>
+<pre class="pre-code  foot-note">
     response(401, 'modified message', true);
     <span class="comment">
     returns: 
@@ -673,7 +672,7 @@
 <!-- code ended -->
 
 <!-- code description started -->                   
-<div class="font-em-d85 mvt-6">
+<div class="foot-note mvt-6">
     In the syntax above, <code>$code</code> is used to set the header response code. This code 
     will also be returned in the list of data keys under the key index name "response_code" as previously 
     seen in the examples above. The response message <code>$message</code> will also 

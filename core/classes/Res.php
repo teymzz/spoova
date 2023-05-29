@@ -1,14 +1,11 @@
 <?php
-
-use spoova\mi\core\classes\EInfo;
 use spoova\mi\core\classes\Resin;
 use spoova\mi\core\classes\Notice;
 use spoova\mi\core\classes\Router;
-use spoova\mi\core\classes\Slicer;
-use spoova\mi\core\classes\Request;
 use spoova\mi\core\classes\Resource;
 use spoova\mi\core\classes\Application;
 use spoova\mi\core\classes\FileManager;
+use spoova\mi\core\classes\Rex;
 
 /**
  * This class is an extension of Resource class
@@ -19,8 +16,8 @@ final class Res extends Resource implements Resin{
 
     private static ?Res $self = null;
     private static $body;
-    private static $compile;
-    private static $compilebody = '';
+    private static $storepath = '';
+    private static $content;
     private static $inload;
     private static ?Router $router = null;
     private static ?Application $app = null;
@@ -52,7 +49,7 @@ final class Res extends Resource implements Resin{
     }
 
     /**
-     * Load the init configuration file
+     * free variables
      *
      * @return void
      */
@@ -109,83 +106,6 @@ final class Res extends Resource implements Resin{
       return (new Notice());
     }
 
-   /**
-    * Renders and Outputs the res template files
-
-    * @param string $url res template url
-    * @param array|string|\Closure $callback template handler function
-    * @return string
-    */
-    public static function load($url = '', $callback = ''){
-        self::init();       
-        self::$inload = true;
-        return self::engine(...func_get_args());   
-    }
-
-    /**
-     * Renders the res templates files using the get method
-     * @deprecated 1.5.0
-     * @param string $url rex template url
-     * @param array|string|\Closure $callback template handler function
-     * @return string
-     */
-    public static function gett($url = '', $callback = ''){
-      self::freeVars();
-      self::$method = 'get';
-      self::load(...func_get_args());
-    }
-    
-    /**
-     * Renders the res templates files using the post method
-     * @deprecated 1.5.0
-     * @param string $url rex template url
-     * @param array|string|\Closure $callback template handler function
-     * @return void
-     */
-    public static function postt($url = '', $callback = ''){
-      self::freeVars();
-      self::$method = 'post';
-      self::load(...func_get_args());
-    } 
-
-    /**
-     * Router get method
-     * @deprecated 1.5.0
-     * @param string $url rex template url
-     * @param array|string|\Closure $callback template handler function
-     *  -If string is supplied, it must be a valid rex file that will be rendered into request url
-     *  -If Closure or array is supplied,  
-     * @return Res|void
-     */
-    public static function get($url = '', $callback = ''){
-      self::app();
-      self::$method = 'get';
-      $router = self::$router;
-      $router->get(...func_get_args());
-      return self::loadRoute($router);
-    }
-
-    /**
-     * Router post method
-     * @deprecated 1.5.0
-     * @param string $url rex template url
-     * @param array|string|\Closure $callback template handler function
-     * @return void     
-     *    parameter 1 (string)         => file name in the rex folder
-     *    parameter 2 (string|closure) => string or callback function 
-     *
-     * @return string routed component
-     */
-    public static function post($url = '', $callback = ''){
-
-      self::app();
-      self::$method = 'post';
-      $router = self::$router;
-      $router->post(...func_get_args());
-      return self::loadRoute($router);
-
-    }
-
     /**
      * This method returns a rendered component
      *
@@ -200,217 +120,53 @@ final class Res extends Resource implements Resin{
     }
 
    /**
+    * Renders and Outputs the res template files
+
+    * @param string $url res template url
+    * @param array|string|\Closure $callback template handler function
+    * @return string
+    */
+    public static function load($url = '', $callback = '') : string {
+        return (string) Rex::load(...func_get_args());
+    }
+
+   /**
     * Process and Returns the rex template files
 
     * @param string $url res template url
     * @param mixed $callback template handler function
     * @return string
     */
-    public static function markup($url, $callback) : string|false {
-            
-        self::$inload = true;
-        self::$parse = true;
-        $result = self::engine(...func_get_args());
-        self::$parse = false;
-        self::$inload = false;
-        return $result;
-    }
+    public static function markup(string $url, string|false|Closure $callback = false) : string|false {
 
+       return Rex::markup(...func_get_args());
+
+    }
 
     /**
-     * Defines that a rex file should be created if it does not exist
+     * Saves stored template into a storage file
      *
-     * @param boolean $add
-     * @return void
+     * @param string $storage template storage file path
+     * @param array $args template arguments
+     * @return string
      */
-    public static function addRex(bool|string $add = true){
-      self::$addRex = $add;
-    }
+    public static function build(array $args = []) : string {
 
-   /**
-    * Renders the res template files
+      $storage = self::$storepath;
 
-    * @param string $url res template file url
-    * @param mixed $callback res template handler function
-    * @return string
-    */
-    private static function engine($url, $callback) : string|false { 
-
-      // //set call scope if first argument is instance of router
-      if((func_get_args()[0]?? false) instanceof Router){
-        self::$call_scope = 'router';
-        return '';
-      }
-
-      //process arguments if first argument is not instance of router
-      self::$call_scope = 'res';
-
-      $args = func_get_args();
-      $num_args = func_num_args();
-
-      if(empty($num_args)){ 
-        $xbody = self::$body;
-        self::$body = '';
-        self::$compile = '';
-        self::$compilebody = '';
-        self::$inload = '';
-        if(self::$parse) return $xbody;
-        print $xbody;
-        return ''; 
-      } 
-
-      $isCompile = false; //compile marker
-
-      $template  = ''; //template item
-      
-      //process only if not in router scope
-      if(!self::isRouter()){
-
-        //sort file supplied
-        $url = $args[0];
-
-        //Slicer::sort_url($url, $sorted, $id); //do this later
-
-        $reserved = ['::404', '::csrf'];
-
-        $isScreen = ((substr($url, 0, 2) == '::') && !in_array($url, $reserved));
- 
-        if($isScreen){
-          $url = substr($url, 2, strlen($url));
-        }
-
-        $escape = false;
-        $rexpath = rtrim($url,'/');
-        $rexpath = str_replace('.','/', $rexpath);
-        
-        if(strpos($url, docroot, 0) === false){        
-          $file = $fileUrl = docroot.DS.WIN_REX.$rexpath;
-        }else{
-          $file = $fileUrl = $url; $escape = true;
-          $rexpath = explode(docroot, rtrim($file, '.rex.php'), 2)[1];
-        }
-
-        if($rexpath == '::404'){
-          $data = file_get_contents(E_404.'.rex.php');
-          $template = Slicer::slice($data)->data();
-          $fileUrl = E_404;
-          $rexpath = 'errors/e-404';
-        }elseif($rexpath == '::csrf'){
-          $data = file_get_contents(E_CSRF.'.rex.php');
-          $template = Slicer::slice($data)->data();
-          $fileUrl = E_CSRF;
-          $rexpath = 'errors/e-csrf';          
-        }
-        
-        $file = !$escape? Slicer::sliceUrl($fileUrl): $file;
-
-        if(!$isScreen && !is_file($file)) {
-          $addRex = self::$addRex;
-          if($addRex){
-            //create rex file... 
-            $Filemanager = new FileManager;
-            if($Filemanager->openFile(true, $file)){
-
-              $fileName = pathinfo($file, PATHINFO_FILENAME);
-              $fileName = substr($fileName, 0, strlen($fileName) - 4);
-                
-              if(is_string($addRex) && is_file(docroot.'/windows/Rex/'.to_frontslash($addRex, true).".rex.php") ) {          
-                
-                  $template = <<<Template
-                  @template('$addRex')
-    
-
-
-                  @template;
-                  Template;
-  
-              }  else {
-
-                  $template = <<<Template
-                  <!DOCTYPE html>
-                  <html lang="en">
-                  <head>
-                      @live
-                      <meta charset="UTF-8">
-                      <meta http-equiv="X-UA-Compatible" content="IE=edge">
-                      <meta name="viewport" content="width=device-width, initial-scale=1.0">
-                      <title>$fileName</title>
-                  </head>
-                  <body>
-                      
-                  </body>
-                  </html>
-                  Template;
-
-              }   
-              
-              file_put_contents($file, $template);
-            }
-            monitor();
-          }
-          return EInfo::view('Template file: <i><u>'.Slicer::sliceUrl($rexpath).'</u></i> does not exists. Ensure your template file is of php extension within "rex" directory');
-        }
-
-        if($num_args > 1){
-          
-          //process a second argument if it exists
-
-          $string  = $args[1];
-
-          //test string
-          if($string instanceof \Closure || (is_array($string))) {
-            
-            if(is_array($string)){
-              if($string[0]?? false){
-                $string[0] = new $string[0];
-              }else{
-                trigger_error( 'array must contain at least 1 callback' );
-                return '';
-              }
-            }
-
-            $Request = new Request;
-            $string = call_user_func($string, $Request);
-            
-            if($isScreen && self::$compile){
-              return EInfo::view('invalid compile() function called on screen view');
-            }
-
-            if($string and self::$compile) {
-              $string = self::$compilebody;
-              if(!$isScreen) $template = Slicer::loadTemplate($file, self::$locals);
-            }
-
-            Slicer::setLocals(self::$locals);
-          }
-        } else {
-          if(!$isScreen) $template = Slicer::loadTemplate($file, self::$locals);
-        }
-        
-        $string  = $string?? '';
-        $template = $string.$template;
-      }
- 
-      if($template?? false){
-
-        //run the slice Tool  
-        $body = Slicer::slice($template)->data(true);    
-
-        self::$body = $body;
-
-      }
-
-      if(self::$parse) return self::$body;
-    
       foreach(self::$locals as $locals => $value){
         $$locals = $value;
+      }
+
+      foreach($args as $arg => $argval){
+        $$arg = $argval;
       }
 
       $content = self::$body;
 
       //create path in storage folder
       $Filemanager = new FileManager;
-      $realFile    = docroot.'/core/storage/'.$rexpath.'.php';
+      $realFile    = docroot.'/core/storage/'.to_frontslash($storage).'.php';
 
       if($Filemanager->openFile(true, $realFile)){
   
@@ -431,13 +187,33 @@ final class Res extends Resource implements Resin{
               ob_start();
               include($realFile);
               $content = ob_get_clean();
-              print $content;
+              self::$content = $content;
 
             }
   
         }
-        return '';
-    } 
+        return $content;
+    }
+
+    /**
+     * Determines if the template content is returned or printed on page
+     *
+     * @param boolean $display
+     * @return string
+     */
+    public static function display(bool $display = true) : string {
+       if($display) {
+
+         print self::$content; 
+         return '';
+
+       } else {
+
+        return self::$content;
+
+       }
+
+    }
 
     /**
      * Resolves routing if method is validated and run by Router
@@ -484,7 +260,13 @@ final class Res extends Resource implements Resin{
 
       $ref = new ReflectionClass(__CLASS__);
       $props = $ref->getProperties();
-      $exc = ['router','app', 'self','notice', 'off', 'use_watch','watched','initAutoload', 'noheaders','initialized_watch','locals', 'addRex'];
+      $exc = [
+        'router','app', 
+        'self','notice', 
+        'off', 'use_watch',
+        'watched','initAutoload', 
+        'noheaders','initialized_watch',
+        'body'];
       
       foreach($props as $prop){
           $key = $prop->getName();
@@ -516,70 +298,6 @@ final class Res extends Resource implements Resin{
       }
       if(!self::$viewType) self::$viewType = 'view';
       return '';
-    }
-
-    /**
-     * compile strings for unrouted files
-     *
-     * @param string|array $arg1 body or arguments
-     * @param array|string $arg2 arguments or body
-     *  - array as arguments parsed as variables 
-     *  - string as b
-     * @return string|false
-     */
-    static function compile($arg1 = '', $arg2 = ''){      
-      
-      if(is_array($arg1) and is_array($arg2)){
-        trigger_error("compile can only have a single array as first or second argument");
-        return false;
-      }
-
-      if(is_string($arg1)){ 
-        $body = $arg1;        
-        if(func_num_args() > 1 and !is_array($arg2)){
-           trigger_error("Compile argument(#2) must be an array if supplied when argument(#1) is a string");
-           return '';
-        }
-        $locals = (array) $arg2;
-      } else {
-        $body = $arg2;
-        if($arg1 === null){
-           trigger_error("argument 1 cannot be null or void.");
-           return '';          
-        }
-        if(!is_array($arg1)){
-           trigger_error("Compile argument(#1) must be a string or an array");
-           return '';
-        }
-        $locals = (array) $arg1;
-      }
-
-      self::$viewType = (!self::$viewType)? 'compile' : self::$viewType;
-
-      if(!self::$inload){
-        trigger_error(self::$viewType.' should be used within resource or route scope');
-        return false;
-      }
-
-      self::$compile = 1;
-      self::$compilebody = $body;
-
-      $compileLocals = [];
-
-      foreach ($locals as $key => $value) {
-        $compileLocals[$key] = $value;
-      }
-    
-      self::$locals = $compileLocals;
-
-      //keep to use later -not working
-      foreach (self::$locals as $key => $value) {
-        $$key = $value;
-      }   
-
-      $var = print(Res::$body) ;
-      return $var;
-
     }
 
 }

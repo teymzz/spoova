@@ -9,9 +9,9 @@
         <section class="pxv-10 tutorial bc-white">
             <div class="font-em-1d2">
 
-                @lay('build.co.links:tutor_pointer')
-
                 <div class="start font-em-d85">
+
+                    @lay('build.co.links:tutor_pointer') <br>
 
                     <div class="font-em-1d5 c-orange">Shutters - Calls</div> <br>  
         
@@ -168,7 +168,7 @@
                                     </div>
                                 </div> <br>
                                 
-                                <div class="font-menu mvt-6">
+                                <div class=" mvt-6">
                                     Since we now understand that the domain part of our url can be <code>localhost/folder</code> or 
                                     <code>site.com</code>, in tutorial course, we will use the name "domain" to refer to this part 
                                     of url.
@@ -188,7 +188,7 @@
     </pre>
 </div> <br>
 
-                                <div class="font-menu mvt-10">
+                                <div class=" mvt-10">
                                     In the above, the root, path and base options returns their equivalent part of the url. The ellipes is used to denote more paths. Although, <code>window(':')</code> is a short form of 
                                     <code>window("root")</code> There are special uses of this reserved option. The colon is a directive that append root directory to urls supplied urls. When the colon 
                                     character precedes any argument, the window function understands that such arguments are relative paths which must be appended to url. For example, using the previous 
@@ -205,7 +205,7 @@
     </pre>
 </div> <br>
 
-                                <div class="font-menu mvt-10">In the sample, above, since the root of the url is <span class="c-brown-ll">"app"</span>, when colons are applied, to arguments, spoova will 
+                                <div class=" mvt-10">In the sample, above, since the root of the url is <span class="c-brown-ll">"app"</span>, when colons are applied, to arguments, spoova will 
                                 automatically prefix such url with the current page root name. The last line is an alternative way which involves defining the full structure. This also means that the <code>root:</code> 
                                 can be replaced by <code>base:</code> or <code>path:</code> but when only the colon <code>:</code> precedes the argument, then the <code>root:</code> is automatically assumed as revealed in 
                                 the sample above.
@@ -229,7 +229,7 @@
                 
 
                             <div class="">
-                                <div class="font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
+                                <div class=" fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
                                     <div class="flex-full midv"> <span class="bi-circle mxr-8 c-orange-dd"></span> Root Path </div>
                                 </div> <br>
                                 <div class="">
@@ -267,7 +267,7 @@
 </pre>
                                 </div> <br><br>
                                 
-                                <div class="font-menu">
+                                <div class="">
                                     In the above, when the home web url is visited, then, the index method is called. The <code>rootcall</code> 
                                     will only match the url's window entry point "home". Since our root class name is "home", this means that using 
                                     <code>window(':')</code> within this class 
@@ -297,7 +297,7 @@
 </pre>
                                 </div> <br><br>
                                 
-                                <div class="font-menu">
+                                <div class="">
                                     The <code>root()</code> method is only realistic for use in window root server files. This is because the 
                                     <code>rootcall()</code> only works on the root entry point. As long as a urls root name is matched, the <code>rootcall()</code> 
                                     method will not bother to check the relative paths on that particular request url. The figure below best explain this behavior. 
@@ -318,7 +318,7 @@
 
                                 </div> <br>
                                 
-                                <div class="font-menu mvt-10">
+                                <div class=" mvt-10">
                                     In the above, we can see that as long as <code>home</code> is the root entry point, the window url 
                                     will become a valid url. It is important to remember that domain for localhost is usally the <code>localhost/project_folder_name</code>
                                     
@@ -361,7 +361,7 @@
 </pre>    
 
                                 </div> <br>                                   
-                                <div class="font-menu mvt-10">
+                                <div class=" mvt-10">
                                     In the code above, the <code>win:</code> directive tells the window class to load its value as a class.
                                     When a url, for example <code>http://domain/home</code> or <code>http://domain/home/any/path</code> is visited, 
                                     the class <code>spoova\mi\windows\Routes\Home</code> will be triggered. The <code>profile</code> also works in a similar way. 
@@ -373,7 +373,7 @@
                                 <br><br>
 
                             <div class="">
-                                <div class="font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
+                                <div class=" fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
                                     <div class="flex-full midv"> <span class="bi-circle mxr-8 c-orange-dd"></span> Window's Path </div>
                                 </div> <br>
                                 <div class="">
@@ -431,7 +431,7 @@
 </pre>
                                 </div> <br><br> 
 
-                                <div class="font-menu">By standard logic, assuming a window file <code>Home</code> was added into the windows folder, when a url 
+                                <div class="">By standard logic, assuming a window file <code>Home</code> was added into the windows folder, when a url 
                                 (e.g <code>http://domain/home/whatever/path</code>) is visited, the Home file is triggered. If the Home window file does not exist, a 404
                                 response is returned
                                     <br><br>
@@ -450,7 +450,7 @@
 
                             <!-- Direct Path -->
                             <div class="">
-                                <div class="font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
+                                <div class=" fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
                                     <div class="flex-full midv"> <span class="bi-circle mxr-8 c-orange-dd"></span> Direct Path </div>
                                 </div> <br>
                                 <div class="">
@@ -507,7 +507,7 @@
 
                                     <div class="">
 
-                                        <div class="pvs-10 font-menu">
+                                        <div class="pvs-10 ">
                                             In the above, notice that the name of the class "home" preceded the urls supplied. 
                                             This is essential because the <code>call()</code> requires the direct full path 
                                             of the urls accepted. When working with multiple urls, redefining the class name at every 
@@ -559,7 +559,7 @@
 </pre>
                                         </div>
 
-                                        <div class="pvs-10 font-menu">
+                                        <div class="pvs-10 ">
                                             When working with direct <code>call</code>, one may give 
                                             preference to example 2 because it 
                                             keeps track of the current window name should it ever change. Also, developers are encouraged to 
@@ -573,7 +573,7 @@
 
                             <!-- base path -->
                             <div class="base-call">
-                                <div class="font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
+                                <div class=" fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
                                     <div class="flex-full midv"> <span class="bi-circle mxr-8 c-orange-dd"></span> Base Path </div>
                                 </div> <br>
                                 <div class="explanation">
@@ -660,7 +660,7 @@
     </pre>
 </div>
 
-                                <div class="font-menu mvt-6">
+                                <div class=" mvt-6">
                                     In the code above, the <code>call()</code> was pended to allow the <code>basecall()</code> to also run. 
                                     If a url is resolved by <code>call()</code>, then <code>basecall()</code> will trip off. However,
                                     if a url is not resolved by the <code>call()</code> method, then the <code>basecall</code> will try to resolve its own 
@@ -702,7 +702,7 @@
     </pre>
 </div>
 
-                                <div class="font-menu mvt-6">
+                                <div class=" mvt-6">
                                     Whenever a url is successfuly loaded or resolved, the shutter method returns a boolean value of true. If the url does not exist, in the 
                                     list of accepted urls, then false is returned. This response can alse be useful to help us check if a url has been resolved by a 
                                     shutter even if it was pended, especially for <code>basecall()</code> which is a soft shutter (i.e allows unlimited paths on it).
@@ -720,7 +720,7 @@
   }
     </pre>
 </div>
-                                <div class="font-menu mvt-6">
+                                <div class=" mvt-6">
                                     The code structure above is a good example of how to check if a url is resolved. If the <code>call()</code> cannot resolve its urls, 
                                     then since it was pended,  this will allow <code>basecall</code> to try to resolve its own urls. If basecall happens to resolve it urls, 
                                     since it is a soft shutter, it will leave the resolved url opened to allow multiple paths unless it is handled properly. Naturally, we don't 
@@ -778,7 +778,7 @@
     </pre>
 </div>
 
-                                <div class="font-menu mvt-6">
+                                <div class=" mvt-6">
                                     In the code above, the varible <code>$var</code> was passed across to all methods called. 
                                     In the <code>user()</code> method, since the <code>$Request</code> is naturally available to us as a second argument, 
                                     we can supply the argument and still get our <code>Request</code> class instance. In this way, our request was obtained 
@@ -838,7 +838,7 @@
                             </div>
                         </div> <br>
 
-                        <div class="font-menu mvt-6">
+                        <div class=" mvt-6">
                             In the code above, the function allows us to pass different arguments to the window method.
                         </div> <br>
 
@@ -883,7 +883,7 @@
     </pre>
 </div>
 
-                                <div class="font-menu mvt-6">
+                                <div class=" mvt-6">
                                     In the code above, while the <code>home</code> url will call the <code>root()</code> 
                                     method of the current window, the <code>home/user</code> will call the <code>spoova\mi\Windows\Path\To\File</code> 
                                     class.
@@ -975,7 +975,7 @@
     </pre>
 </div>
 
-                                <div class="font-menu mvt-6">
+                                <div class=" mvt-6">
                                     In the code above, <code>Home</code> class uses its shutter method to call its 
                                     <code>root()</code>  method when <code>home</code> is visited. However, when <code>home/user</code> is visited, 
                                     the <code>User</code> class is called. The <code>lastCall()</code> function tracks this movement and makes it easier 

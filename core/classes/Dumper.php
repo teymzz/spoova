@@ -21,6 +21,7 @@ class Dumper{
 
         print '<style>'.self::style().'</style>';   
 
+        // print "<pre>";
         foreach(func_get_args() as $args){
 
             print '<details class="main">';
@@ -30,6 +31,7 @@ class Dumper{
             print '</details>';   
 
         }
+        // print "</pre>";
 
         return new self;
 
@@ -95,27 +97,27 @@ class Dumper{
 
             $items = !is_numeric($property)? $property : gettype($value);
 
-            $objectType = (is_object($value))? basename(get_class($value)) : 'Element';
+            $objectType = (is_object($value))? basename(get_class($value)) : ucfirst(gettype($value));
             $traversable = (is_object($property) && ($property instanceof \Traversable))? ' (Traversable)' : '';
+
+            $objectType = (!is_object($value) && ($objectType === 'Double'))? 'Float' : $objectType;
 
             print '<summary><span>'.$objectType.$traversable.'</span></summary>';
             
             $openHTML = $closeHTML = '';
-            $summary = '<details><summary><span>%s</span></summary><div class="padd-16">%s</div></details>';
+            $summary = '<details><summary><span>%s</span></summary><div class="padd-16 dump">%s</div></details>';
 
             if(!is_object($value)){
-                $openHTML = '<details>
-                <summary><span>'.$items.$traversable.'</span></summary>';
-                $closeHTML= '</details>';
+                // $openHTML = '<details><summary><span>'.$items.$traversable.'</span></summary>';
+                // $closeHTML= '</details>';
             }else{
                 $traversable = ($value instanceof \Traversable)? ' (Traversable)' : '';
-                $openHTML = '<details>
-                                <summary><span>class'.$traversable.'</span></summary>';
+                $openHTML = '<details><summary><span>class'.$traversable.'</span></summary>';
                 $closeHTML= '</details>';
             }
 
             print $openHTML;
-            print '<div class="dumper">';
+            print '<div class="dumper dump">';
             var_dump($value);
             print '</div>';
             print $closeHTML;
@@ -155,15 +157,20 @@ class Dumper{
     private static function style() {
         return '
 
-            details.main {        
+            :where(*) {
+                margin:0;
+                padding:0;
+                box-sizing: border-box;
+            }
+
+            details.main {  
+                font-family: monospace;     
                 display: inline-block;
-                word-break: break-word;
                 color: #3b4664;
                 background: rgba(238, 238, 238, 0.9); 
-                float:left; width:100%; 
+                float:left; 
+                width:100%; 
                 padding: 1em;
-                overflow-x: auto;
-                max-height: 94vh;
                 margin-bottom: 10px;
             }
 
@@ -172,11 +179,20 @@ class Dumper{
                 color: white;
             }
 
+            details[open] > .dump {
+                background-color:white;
+                overflow-x: auto;
+                margin-top: 1em;
+                border-radius: 10px;
+                padding-top: 10px;
+                padding-bottom: 12px;
+            }
+
             details.main[open] > summary {
                 margin-bottom: 10px;
             }
 
-            details:not(.main){
+            details.main details:not(.main){
                 padding:10px;
             }
 

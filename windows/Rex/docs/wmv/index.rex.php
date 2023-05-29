@@ -1,6 +1,6 @@
 @template('template.t-tut')
 
-    <!-- @lay('build.co.coords:header') -->
+    @title('WMV')
 
     @lay('build.co.navbars:left-nav')
 
@@ -9,11 +9,11 @@
         <section class="pxv-10 tutorial bc-white">
             <div class="font-em-1d2">
 
-                @lay('build.co.links:tutor_pointer')
-
                 <div class="start font-em-d8">
 
-                    <div class="font-em-1d5 c-orange">WMV PATTERN</div> <br>  
+                    @lay('build.co.links:tutor_pointer') <br>
+
+                    <div class="font-em-1d5 c-orange"> <i class="bi-window-dock"></i> WMV PATTERN</div> <br>  
                     
                     <div class="resource-intro">
                         <div class="">
@@ -33,7 +33,7 @@
                     
                     <div class="windows-folder"> 
                         <br>
-                        <div class="font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
+                        <div class=" fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
                             <div class="flex-full midv"> <span class="bi-folder mxr-8 c-lime-dd"></span> Windows Directory </div>
                         </div> <br>
 
@@ -113,9 +113,9 @@
  <div class="pxv-10 bc-silver">windows/Routes/Index.php</div>
  <pre class="pre-code">
  
-  <span class="c-violet-dd">namespace spoova\mi\windows\Routes;</span>
+  <span class="c-dry-blue-d">namespace spoova\mi\windows\Routes;</span>
   
-  <span class="c-purple">use Window;</span>
+  <span class="c-dry-blue-d">use Window;</span>
 
   class Index extends Window {
 
@@ -200,9 +200,9 @@
  <div class="pxv-10 bc-silver">windows/Routes/Index.php</div>
  <pre class="pre-code">
  
-  <span class="c-violet-dd">namespace spoova\mi\windows\Routes;</span>
+  <span class="c-dry-blue-d">namespace spoova\mi\windows\Routes;</span>
   
-  <span class="c-purple">use Window;</span>
+  <span class="c-dry-blue-d">use Window;</span>
 
   class Index extends Window {
 
@@ -338,7 +338,7 @@
 
                     <div class="windows-files"> 
                         <br>
-                        <div class="font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
+                        <div class=" fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
                         <div class="flex-full midv"> <span class="bi-folder mxr-8 c-lime-dd"></span> Windows Files </div>
                         </div> <br>
 
@@ -359,7 +359,7 @@
 
                     <div class="windows-frames"> 
                         
-                        <div class="font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
+                        <div class=" fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
                         <div class="flex-full midv"> <span class="bi-folder mxr-8 c-lime-dd"></span> Windows Frames </div>
                         </div> <br>
 
@@ -391,7 +391,7 @@
 
                     <div class="about_wmv"> 
                         <br>
-                        <div class="font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
+                        <div class=" fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
                         <div class="flex-full midv"> <span class="bi-card-list mxr-8 c-lime-dd"></span> Note </div>
                         </div> <br>
 
@@ -401,7 +401,7 @@
                             pattern, we have categorized important keynotes to the underlying subjects:
                             <br><br>
                             <ul class="c-olive">
-                                <li> <a href="@route('.wmv')">About <span class="fb-6 pointer" title="Windows Models View">WMV</span> and <span class="fb-6 pointer" title="Model View Controller">MVC</span>?</a></li>
+                                <li> <a href="@route('.wmv')">About <span class="fb-6 pointer" title="Windows Models View">WMV</span></a></li>
                                 <li> <a href="@route('.open')">Opening and Closing windows</a> </li>
                                 <li> <a href="@route('.calls')">Windows Calls</a> </li>
                                 <li> <a href="@route('.middlewares')">Windows Middlewares</a> </li>

@@ -7,47 +7,46 @@
         <section class="pxv-10 tutorial bc-white">
             <div class="font-em-1d2">
 
-                @lay('build.co.links:tutor_pointer')
-
                 <div class="start font-em-d8">
+
+                    @lay('build.co.links:tutor_pointer') <br>
 
                     <div class="font-em-1d5 c-orange">FileUploader</div> <br>  
                     
                     <div class="helper-classes">
-                        <div class="fb-6">Introduction</div> <br>
                         <div class="">
 
                         <div class="">
-                            FileUploader class is a special tool that is used for uploading files.
+                            The FileUploader class is used for uploading files.
                             The following are the available methods in the class.
                         </div> <br>
 
-                            <ol>
-                            <li> <a href="#start"> start </a> </li>
-                            <li> <a href="#filesize"> filesize </a> </li>
-                            <li> <a href="#getfilename"> GetFileName </a> </li>
-                            <li> <a href="#getfiletype"> GetFileType </a> </li>
-                            <li> <a href="#getfilesize"> GetFileSize </a> </li>
-                            <li> <a href="#getfiletemp"> GetFileTemp </a> </li>
-                            <li> <a href="#getfileerror"> GetFileError </a> </li>
-                            <li> <a href="#getfiledata"> GetFileData </a> </li>
-                            <li> <a href="#uniquefile"> uniqueFile </a> </li>
-                            <li> <a href="#uploadfile"> uploadFile </a> </li>
-                            <li> <a href="#response"> response </a> </li>
-                            <li> <a href="#reconstruct"> reconstruct </a> </li>
-                            </ol>
+                            <ul>
+                            <li> <a href="#start" class="c-olive ch-olive-dd"> start </a> </li>
+                            <li> <a href="#filesize" class="c-olive ch-olive-dd"> filesize </a> </li>
+                            <li> <a href="#getfilename" class="c-olive ch-olive-dd"> GetFileName </a> </li>
+                            <li> <a href="#getfiletype" class="c-olive ch-olive-dd"> GetFileType </a> </li>
+                            <li> <a href="#getfilesize" class="c-olive ch-olive-dd"> GetFileSize </a> </li>
+                            <li> <a href="#getfiletemp" class="c-olive ch-olive-dd"> GetFileTemp </a> </li>
+                            <li> <a href="#getfileerror" class="c-olive ch-olive-dd"> GetFileError </a> </li>
+                            <li> <a href="#getfiledata" class="c-olive ch-olive-dd"> GetFileData </a> </li>
+                            <li> <a href="#uniquefile" class="c-olive ch-olive-dd"> uniqueFile </a> </li>
+                            <li> <a href="#uploadfile" class="c-olive ch-olive-dd"> uploadFile </a> </li>
+                            <li> <a href="#response" class="c-olive ch-olive-dd"> response </a> </li>
+                            <li> <a href="#reconstruct" class="c-olive ch-olive-dd"> reconstruct </a> </li>
+                            </ul>
                             
                         </div> 
                     </div>  
 
                     <div class="">
-                        For the purpose of this documentation we shall be using the following data
+                        For the purpose of this documentation we shall be using the following sample data
                         <br><br>
                         <div class="pre-area shadow">
                             <div class="box-full">
-                                <div class="pxv-6 bc-off-white"><code>test data</code></div>
+                                <div class="pxv-6 bc-off-white">TEST DATA</div>
                                 <pre class="pre-code">
-<span class="c-green"> 
+<span class="c-sea-blue"> 
     $_FILES['name']  = 'Foo'; 
     $_FILES['type']  = 'image/png'; 
     $_FILES['size']  = 5000000; //5mb
@@ -61,19 +60,20 @@
 
                     <div id="initialize" class="">
                         <div class="">
-                            <div class="font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
-                                <div class="flex-full midv"> 
-                                    <span class=" mxr-8 c-lime-dd">
+                            <div class=" fb-6 flex-full rad-4 pxv-8 lacier">
+                                <div class="flex-full midv c-orange-dd"> 
+                                   <span class="mxr-8">
+                                        <span class="bi-lightning-fill"></span>
                                     </span> initializing class
                                 </div>
-                            </div> <br>
+                            </div>
                             <div class="">
                             The file uploader class can be easily initialized as shown below.
                             <br><br>
                             
                             <div class="pre-area shadow">
                                 <div class="box-full">
-                                <div class="pxv-6 bc-off-white"><code>Sample: Initializing Input</code></div>
+                                <div class="pxv-6 bc-off-white">Sample: Initializing Input</div>
                                 <pre class="pre-code">
     $FileUploader  = new FileUploader;
                                 </pre>
@@ -86,13 +86,13 @@
 
                     <div id="start" class="">
                         <div class="">
-                            <div class="font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
-                                <div class="flex-full midv"> 
-                                    <span class=" mxr-8 c-lime-dd">
-                                        <span class="numb-box">1.</span>
+                            <div class=" fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
+                                <div class="flex-full midv c-orange-dd"> 
+                                    <span class="mxr-8">
+                                        <span class="bi-circle-fill"></span>
                                     </span> start
                                 </div>
-                            </div> <br>
+                            </div>
                             <div class="">
                             The <code>start</code> method is used to set parameters 
                             into the input class.
@@ -100,7 +100,7 @@
                             
                             <div class="pre-area shadow">
                                 <div class="box-full">
-                                    <div class="pxv-6 bc-off-white"><code>Syntax: start</code></div>
+                                    <div class="pxv-6 bc-off-white">Syntax: start</div>
                                     <pre class="pre-code">
     $FileUploader->start($files, $type);
     <span class="comment no-select">
@@ -117,7 +117,7 @@
                         </div>
                         <div class="pre-area shadow">
                             <div class="box-full">
-                                <div class="pxv-6 bc-off-white"><code>Example: setting files</code></div>
+                                <div class="pxv-6 bc-off-white">Example: setting files</div>
                                 <pre class="pre-code">
     $FileUploader->start($_FILES); <span class="comment">// set files for upload</span>
 
@@ -131,13 +131,13 @@
 
                     <div id="filesize" class="">
                         <div class="">
-                            <div class="font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
-                                <div class="flex-full midv"> 
-                                    <span class=" mxr-8 c-lime-dd">
-                                        <span class="numb-box">2.</span>
+                            <div class=" fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
+                                <div class="flex-full midv c-orange-dd"> 
+                                    <span class="mxr-8">
+                                        <span class="bi-circle-fill"></span>
                                     </span> filesize
                                 </div>
-                            </div> <br>
+                            </div>
 
                             <div class="">
                                 The <code>filesize()</code> method sets the maximum number of 
@@ -145,7 +145,7 @@
 
                                 <div class="pre-area shadow">
                                     <div class="box-full">
-                                        <div class="pxv-6 bc-off-white"><code>Syntax: filesize</code></div>
+                                        <div class="pxv-6 bc-off-white">Syntax: filesize</div>
                                         <pre class="pre-code">
     $FileUploader->filesize($size); 
         <span class="comment">
@@ -159,7 +159,7 @@
 
                                 <div class="pre-area shadow">
                                     <div class="box-full">
-                                        <div class="pxv-6 bc-off-white"><code>Example: filesize</code></div>
+                                        <div class="pxv-6 bc-off-white">Example: filesize</div>
                                         <pre class="pre-code">
     $FileUploader->start($_FILES);
 
@@ -174,13 +174,13 @@
 
                     <div id="getfilename" class="">
                         <div class="">
-                            <div class="font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
-                                <div class="flex-full midv"> 
-                                    <span class=" mxr-8 c-lime-dd">
-                                        <span class="numb-box">3.</span>
+                            <div class=" fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
+                                <div class="flex-full midv c-orange-dd"> 
+                                    <span class="mxr-8">
+                                        <span class="bi-circle-fill"></span>
                                     </span> GetFileName
                                 </div>
-                            </div> <br>
+                            </div>
 
                             <div class="">
                                 This method returns the file name of the currently set file.
@@ -188,7 +188,7 @@
                     
                                 <div class="pre-area shadow">
                                     <div class="box-full">
-                                        <div class="pxv-6 bc-off-white"><code>Syntax: GetFileName</code></div>
+                                        <div class="pxv-6 bc-off-white">Syntax: GetFileName</div>
                                         <pre class="pre-code">
     $FileUploader->GetFileName(); <span class="comment"> // returns name of file</span>
                                         </pre>
@@ -197,7 +197,7 @@
 
                                 <div class="pre-area shadow">
                                     <div class="box-full">
-                                        <div class="pxv-6 bc-off-white"><code>Example: GetFileName</code></div>
+                                        <div class="pxv-6 bc-off-white">Example: GetFileName</div>
                                         <pre class="pre-code">
     $FileUploader->start($_FILES, 'image');
     $FileUploader->GetFileName(); <span class="comment"> // returns Foo</span>
@@ -210,13 +210,13 @@
 
                     <div id="getfiletype" class="">
                         <div class="">
-                            <div class="font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
-                                <div class="flex-full midv"> 
-                                    <span class=" mxr-8 c-lime-dd">
-                                        <span class="numb-box">4.</span>
+                            <div class=" fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
+                                <div class="flex-full midv c-orange-dd"> 
+                                    <span class="mxr-8">
+                                        <span class="bi-circle-fill"></span>
                                     </span> GetFileType
                                 </div>
-                            </div> <br>
+                            </div>
 
                             <div class="">
                                 This method returns the type of current file set.
@@ -224,7 +224,7 @@
                         
                                 <div class="pre-area shadow">
                                     <div class="box-full">
-                                        <div class="pxv-6 bc-off-white"><code>Syntax: GetFileType</code></div>
+                                        <div class="pxv-6 bc-off-white">Syntax: GetFileType</div>
                                         <pre class="pre-code">
     $FileUploader->GetFileType(); <span class="comment"> // returns type of file </span>
                                         </pre>
@@ -232,7 +232,7 @@
                                 </div>
                                 <div class="pre-area shadow">
                                     <div class="box-full">
-                                        <div class="pxv-6 bc-off-white"><code>Example: GetFileType</code></div>
+                                        <div class="pxv-6 bc-off-white">Example: GetFileType</div>
                                         <pre class="pre-code">
     $FileUploader->start($_FILES, 'image');
     $FileUploader->GetFileType(); <span class="comment"> // image/png</span>
@@ -245,20 +245,20 @@
 
                     <div id="getfilesize" class="">
                         <div class="">
-                            <div class="font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
-                                <div class="flex-full midv"> 
-                                    <span class=" mxr-8 c-lime-dd">
-                                        <span class="numb-box">5.</span>
+                            <div class=" fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
+                                <div class="flex-full midv c-orange-dd"> 
+                                    <span class="mxr-8">
+                                        <span class="bi-circle-fill"></span>
                                     </span> GetFileSize
                                 </div>
-                            </div> <br>
+                            </div>
                             <div class="">
                                 This method returns the size of current file set.
                                 <br><br>
                     
                                 <div class="pre-area shadow">
                                     <div class="box-full">
-                                        <div class="pxv-6 bc-off-white"><code>Syntax: GetFileSize</code></div>
+                                        <div class="pxv-6 bc-off-white">Syntax: GetFileSize</div>
                                         <pre class="pre-code">
     $FileUploader->GetFileSize(); <span class="comment"> // returns size of file </span>
                                         </pre>
@@ -267,7 +267,7 @@
 
                                 <div class="pre-area shadow">
                                     <div class="box-full">
-                                        <div class="pxv-6 bc-off-white"><code>Example: GetFileSize</code></div>
+                                        <div class="pxv-6 bc-off-white">Example: GetFileSize</div>
                                         <pre class="pre-code">
     $FileUploader->start($_FILES, 'image');
     $FileUploader->GetFileSize(); <span class="comment"> // 5000000</span>
@@ -280,20 +280,20 @@
 
                     <div id="getfiletemp" class="">
                         <div class="">
-                            <div class="font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
-                                <div class="flex-full midv"> 
-                                    <span class=" mxr-8 c-lime-dd">
-                                        <span class="numb-box">6.</span>
+                            <div class=" fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
+                                <div class="flex-full midv c-orange-dd"> 
+                                    <span class="mxr-8">
+                                        <span class="bi-circle-fill"></span>
                                     </span> GetFileTemp
                                 </div>
-                            </div> <br>
+                            </div>
                             <div class="">
                             This method returns the <code>tmp_name</code> of current file set.
                             <br><br>
                     
                             <div class="pre-area shadow">
                                 <div class="box-full">
-                                    <div class="pxv-6 bc-off-white"><code>Syntax: GetFileTemp</code></div>
+                                    <div class="pxv-6 bc-off-white">Syntax: GetFileTemp</div>
                                     <pre class="pre-code">
     $FileUploader->GetFileTemp(); <span class="comment"> // returns the temporary directory of file </span>
                                     </pre>
@@ -301,7 +301,7 @@
                             </div>
                             <div class="pre-area shadow">
                                 <div class="box-full">
-                                    <div class="pxv-6 bc-off-white"><code>Example: GetFileTemp</code></div>
+                                    <div class="pxv-6 bc-off-white">Example: GetFileTemp</div>
                                     <pre class="pre-code">
     $FileUploader->start($_FILES, 'image');
     $FileUploader->GetFileTemp(); <span class="comment"> // /tmp/files/image.png</span>
@@ -314,32 +314,32 @@
 
                     <div id="getfileerror" class="">
                         <div class="">
-                            <div class="font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
-                                <div class="flex-full midv"> 
-                                    <span class=" mxr-8 c-lime-dd">
-                                        <span class="numb-box">7.</span>
+                            <div class=" fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
+                                <div class="flex-full midv c-orange-dd"> 
+                                    <span class="mxr-8">
+                                        <span class="bi-circle-fill"></span>
                                     </span> GetFileError
                                 </div>
-                            </div> <br>
+                            </div>
                             <div class="">
                             This method returns the <code>error</code> for current file set.
                             <br><br>
                     
                             <div class="pre-area shadow">
                                 <div class="box-full">
-                                    <div class="pxv-6 bc-off-white"><code>Syntax: GetFileError</code></div>
+                                    <div class="pxv-6 bc-off-white">Syntax: GetFileError</div>
                                     <pre class="pre-code">
-    $FileUploader->GetFileError(); <span class="comment"> // returns the current file error </span>
+  $FileUploader->GetFileError(); <span class="comment"> // returns the current file error </span>
                                     </pre>
                                 </div>
                             </div>
 
                             <div class="pre-area shadow">
                                 <div class="box-full">
-                                    <div class="pxv-6 bc-off-white"><code>Example: GetFileError</code></div>
+                                    <div class="pxv-6 bc-off-white">Example: GetFileError</div>
                                     <pre class="pre-code">
-    $FileUploader->start($_FILES, 'image');
-    $FileUploader->GetFileError(); <span class="comment"> // returns null</span>
+  $FileUploader->start($_FILES, 'image');
+  $FileUploader->GetFileError(); <span class="comment"> // returns null</span>
                                     </pre>
                                 </div>
                             </div>
@@ -350,36 +350,36 @@
 
                     <div id="getfiledata" class="">
                         <div class="">
-                            <div class="font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
-                                <div class="flex-full midv"> 
-                                    <span class=" mxr-8 c-lime-dd">
-                                        <span class="numb-box">8.</span>
+                            <div class=" fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
+                                <div class="flex-full midv c-orange-dd"> 
+                                    <span class="mxr-8">
+                                        <span class="bi-circle-fill"></span>
                                     </span> GetFileData
                                 </div>
-                            </div> <br>
+                            </div>
                             <div class="">
                             This method returns the <code>data</code> for current file set.
                             <br><br>
                     
                             <div class="pre-area shadow">
                                 <div class="box-full">
-                                    <div class="pxv-6 bc-off-white"><code>Syntax: GetFileData</code></div>
+                                    <div class="pxv-6 bc-off-white">Syntax: GetFileData</div>
                                     <pre class="pre-code">
-    $FileUploader->GetFileData(<span class="c-orange-dd">bool</span>); <span class="comment"> //  returns string of supplied data </span>
+  $FileUploader->GetFileData(<span class="c-orange-dd">bool</span>); <span class="comment"> //  returns string of supplied data </span>
     <span class="comment">
-      where: 
+    where: 
 
-        <span class="c-orange-dd">bool</span> : boolean of true adds the new directory and new file name of an uploaded file to the data string returned.
+      <span class="c-orange-dd">bool</span> : boolean of true adds the new directory and new file name of an uploaded file to the data string returned.
     </span>                         </pre>
                                 </div>
                             </div>
 
                             <div class="pre-area shadow">
                                 <div class="box-full">
-                                    <div class="pxv-6 bc-off-white"><code>Example: GetFileData</code></div>
+                                    <div class="pxv-6 bc-off-white">Example: GetFileData</div>
                                     <pre class="pre-code">
-    $FileUploader->start($_FILES, 'image');
-    $FileUploader->GetFileData(); <span class="comment"> //list $_FILES as string</span>
+  $FileUploader->start($_FILES, 'image');
+  $FileUploader->GetFileData(); <span class="comment"> //list $_FILES as string</span>
                                     </pre>
                                 </div>
                             </div>
@@ -389,26 +389,26 @@
 
                     <div id="uniquefile" class="">
                         <div class="">
-                            <div class="font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
-                                <div class="flex-full midv"> 
-                                    <span class=" mxr-8 c-lime-dd">
-                                        <span class="numb-box">9.</span>
+                            <div class=" fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
+                                <div class="flex-full midv c-orange-dd"> 
+                                    <span class="mxr-8">
+                                        <span class="bi-circle-fill"></span>
                                     </span> uniqueFile
                                 </div>
-                            </div> <br>
+                            </div>
                             <div class="">
                             This function directs the uploader class to upload a file with a unique new name 
                             <br><br>
                     
                             <div class="pre-area shadow">
                                 <div class="box-full">
-                                    <div class="pxv-6 bc-off-white"><code>Syntax: uniqueFile</code></div>
+                                    <div class="pxv-6 bc-off-white">Syntax: uniqueFile</div>
                                     <pre class="pre-code">
-    $FileUploader->uniqueFile($param); 
+  $FileUploader->uniqueFile($param); 
     <span class="comment">
-      where :
+    where :
 
-        $param : <span class="c-orange">true</span> permits a unique output name
+      $param : <span class="c-orange">true</span> permits a unique output name
                  <span class="c-orange">false</span> keeps the source file name
                  <span class="c-orange">string</span> sets a new output name. 
     </span>
@@ -418,13 +418,13 @@
 
                             <div class="pre-area shadow">
                                 <div class="box-full">
-                                    <div class="pxv-6 bc-off-white"><code>Example: uniqueFile</code></div>
+                                    <div class="pxv-6 bc-off-white">Example: uniqueFile</div>
                                     <pre class="pre-code">
-    $FileUploader->start($_FILES);
-    
-    $FileUploader->uniqueFile(); <span class="comment">// generate a new output name</span>
-    $FileUploader->uniqueFile(false); <span class="comment">// keep source name</span>
-    $FileUploader->uniqueFile('foo'); <span class="comment">// use a unique output name foo</span>
+  $FileUploader->start($_FILES);
+
+  $FileUploader->uniqueFile(); <span class="comment">// generate a new output name</span>
+  $FileUploader->uniqueFile(false); <span class="comment">// keep source name</span>
+  $FileUploader->uniqueFile('foo'); <span class="comment">// use a unique output name foo</span>
                                     </pre>
                                 </div>
                             </div>
@@ -434,24 +434,24 @@
 
                     <div id="uploadfile" class="">
                         <div class="">
-                            <div class="font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
-                                <div class="flex-full midv"> 
-                                    <span class=" mxr-8 c-lime-dd">
-                                        <span class="numb-box">10.</span>
+                            <div class=" fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
+                                <div class="flex-full midv c-orange-dd"> 
+                                    <span class="mxr-8">
+                                        <span class="bi-circle-fill"></span>
                                     </span> uploadFile
                                 </div>
-                            </div> <br>
+                            </div>
 
                             <div class="">
                                 This method executes the upload directive. <br><br>
                     
                                 <div class="pre-area shadow">
                                     <div class="box-full">
-                                        <div class="pxv-6 bc-off-white"><code>Syntax: uploadFile</code></div>
+                                        <div class="pxv-6 bc-off-white">Syntax: uploadFile</div>
                                         <pre class="pre-code">
-    $FileUploader->uploadFile($validFiles, $destination, $makedir); <span class="comment"> // returns : true if file was uploaded</span> 
+  $FileUploader->uploadFile($validFiles, $destination, $makedir); <span class="comment"> // returns : true if file was uploaded</span> 
     <span class="comment"> 
-      where :
+    where :
 
        $validFiles: array list of valid or acceptable extensions.
        $destination: destination path of uploaded file.
@@ -462,12 +462,12 @@
                                 </div>
                                 <div class="pre-area shadow">
                                     <div class="box-full">
-                                        <div class="pxv-6 bc-off-white"><code>Example: uploadFile</code></div>
+                                        <div class="pxv-6 bc-off-white">Example: uploadFile</div>
                                         <pre class="pre-code">
 
-    $FileUploader->start($_FILES, 'image');
+  $FileUploader->start($_FILES, 'image');
 
-    $FileUploader->uploadFile(['jpg','png'], dirname(__FILE__).'/images', true); 
+  $FileUploader->uploadFile(['jpg','png'], dirname(__FILE__).'/images', true); 
     <span class="comment">// 1. upload only files with jpg or png extensions</span>
     <span class="comment">// 2. upload into destination path supplied </span>
     <span class="comment">// 3. create directory of destination if it does not exist</span>
@@ -481,13 +481,13 @@
 
                     <div id="response" class="">
                         <div class="">
-                            <div class="font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
-                                <div class="flex-full midv"> 
-                                    <span class=" mxr-8 c-lime-dd">
-                                        <span class="numb-box">11.</span>
+                            <div class=" fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
+                                <div class="flex-full midv c-orange-dd"> 
+                                    <span class="mxr-8">
+                                        <span class="bi-circle-fill"></span>
                                     </span> response
                                 </div>
-                            </div> <br>
+                            </div>
 
                             <div class="">
                                 The <code>response</code> returns the response of the processes executed. This 
@@ -496,21 +496,21 @@
                     
                                 <div class="pre-area shadow">
                                     <div class="box-full">
-                                        <div class="pxv-6 bc-off-white"><code>Example: response</code></div>
+                                        <div class="pxv-6 bc-off-white">Example: response</div>
                                         <pre class="pre-code">
-    $FileUploader->start($_FILES, 'image');
+  $FileUploader->start($_FILES, 'image');
 
-    $upload = $FileUploader->uploadFile(['jpg','png'], dirname(__FILE__).'/images', true); 
+  $upload = $FileUploader->uploadFile(['jpg','png'], dirname(__FILE__).'/images', true); 
 
-    if($upload){
+  if($upload){
 
-        <span class="comment">//file uploaded successfully</span>
+      <span class="comment">//file uploaded successfully</span>
 
-    } else {
+  } else {
         
-        var_dump( $FileUploader->response() ); //return the upload response.
+      var_dump( $FileUploader->response() ); //return the upload response.
 
-    }
+  }
                                         </pre>
                                     </div>
                                 </div>
@@ -520,26 +520,26 @@
 
                     <div id="reconstruct" class="">
                         <div class="">
-                            <div class="font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
-                                <div class="flex-full midv"> 
-                                    <span class=" mxr-8 c-lime-dd">
-                                        <span class="numb-box">7.</span>
+                            <div class=" fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
+                                <div class="flex-full midv c-orange-dd"> 
+                                    <span class="mxr-8">
+                                        <span class="bi-circle-fill"></span>
                                     </span> reconstruct
                                 </div>
-                            </div> <br>
+                            </div>
                             <div class="">
                                 The <code>reconstruct</code> method is used to restructure multiple files for upload
                                 <br><br>
                         
                                 <div class="pre-area shadow">
                                     <div class="box-full">
-                                    <div class="pxv-6 bc-off-white"><code>Syntax: reconstruct</code></div>
+                                    <div class="pxv-6 bc-off-white">Syntax: reconstruct</div>
                                         <pre class="pre-code">
-    $FileUploader->reconstruct($data);
+  $FileUploader->reconstruct($data);
     <span class="comment no-select"> 
-      where : 
+    where : 
 
-        $data: array of multiple files
+      $data: array of multiple files
     </span>
                                         </pre>
                                     </div>
@@ -547,54 +547,56 @@
 
                                 <div class="pre-area shadow">
                                     <div class="box-full">
-                                        <div class="pxv-6 bc-off-white"><code>Example: reconstruct</code></div>
+                                        <div class="pxv-6 bc-off-white">Example: reconstruct</div>
                                         <pre class="pre-code">
-    <span class="c-green">
-    $_FILES['name'][0]  = 'Foo'; 
-    $_FILES['name'][1]  = 'Bar';   
+  <span class="c-olive-dd">
+  $_FILES['name'][0]  = 'Foo'; 
+  $_FILES['name'][1]  = 'Bar';   
 
-    $_FILES['type'][0]  = 'image/png'; 
-    $_FILES['type'][1]  = 'image/png'; 
+  $_FILES['type'][0]  = 'image/png'; 
+  $_FILES['type'][1]  = 'image/png'; 
 
-    $_FILES['size'][0]  = 5000000; //5mb
-    $_FILES['size'][1]  = 2000000; //2mb
+  $_FILES['size'][0]  = 5000000; //5mb
+  $_FILES['size'][1]  = 2000000; //2mb
 
-    $_FILES['tmp_name'][0]   = '/tmp/files/foo.png'; 
-    $_FILES['tmp_name'][1]   = '/tmp/files/bar.png'; 
-        
-    $_FILES['error'][0] = ''; 
-    $_FILES['error'][1] = ''; 
-    </span>
+  $_FILES['tmp_name'][0]   = '/tmp/files/foo.png'; 
+  $_FILES['tmp_name'][1]   = '/tmp/files/bar.png'; 
+    
+  $_FILES['error'][0] = ''; 
+  $_FILES['error'][1] = ''; 
+  </span>
 
-    $files = $FileUploader->reconstruct($_FILES);
+  $files = $FileUploader->reconstruct($_FILES);
 
-    var_dump($files); <span class="comment">// returns: </span>
+  var_dump($files); 
+    
+  <span class="c-dry-blue">//The above returns: </span>
     <span class="comment">
-        [
+      [
         
-            0 => [
-                'name'     => 'Foo'; 
-                'type'     => 'image/png'; 
-                'size'     => 5000000; 
-                'tmp_name' => '/tmp/files/foo.png';
-                'error'    => ''; 
-            ],
-        
-            1 => [
-                'name'     => 'Bar'; 
-                'type'     => 'image/png'; 
-                'size'     => 2000000; 
-                'tmp_name' => '/tmp/files/bar.png';
-                'error'    => ''; 
-            ],
+        0 => [
+            'name'     => 'Foo'; 
+            'type'     => 'image/png'; 
+            'size'     => 5000000; 
+            'tmp_name' => '/tmp/files/foo.png';
+            'error'    => ''; 
+        ],
+    
+        1 => [
+            'name'     => 'Bar'; 
+            'type'     => 'image/png'; 
+            'size'     => 2000000; 
+            'tmp_name' => '/tmp/files/bar.png';
+            'error'    => ''; 
+        ],
 
-        ] 
+      ] 
     </span>
                                         </pre>
                                     </div>
                                 </div>
                         
-                                <div class="font-menu pvs-10">
+                                <div class="foot-note pvs-10">
                                     This method makes it easier to organize files for upload. Then upload can be done easily by:
                                 </div>
 
@@ -602,26 +604,26 @@
                                     <div class="box-full">
                                         <div class="pxv-6 bc-off-white"><code>...continued</code></div>
                                         <pre class="pre-code">
-    <span class="comment">... using previous data</span>
+  <span class="comment">... using previous data</span>
 
-        $files = $FileUploader->reconstruct($_FILES);
+  $files = $FileUploader->reconstruct($_FILES);
 
-        foreach( $files as $file ) {
-
-            $FileUploader->start($file, 'image');
-            $FileUploader->uniqueFile();
-
-            if($FileUploader->uploadFile(['jpg', 'png'])) {
-
-                <span class="comment">//upload successful</span>
-
-            } else {
-
-                var_dump( $FileUploader->response() );
-
-            }
-
-        }
+  foreach( $files as $file ) {
+  
+      $FileUploader->start($file, 'image');
+      $FileUploader->uniqueFile();
+  
+      if($FileUploader->uploadFile(['jpg', 'png'])) {
+  
+          <span class="comment">//upload successful</span>
+  
+      } else {
+  
+          var_dump( $FileUploader->response() );
+  
+      }
+  
+  }
     </span>
                                         </pre>
                                     </div>

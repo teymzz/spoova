@@ -9,14 +9,13 @@
         <section class="pxv-10 tutorial database bc-white">
             <div class="font-em-1d2">
 
-                @lay('build.co.links:tutor_pointer')
-
                 <div class="start font-em-d8">
+
+                    @lay('build.co.links:tutor_pointer') <br>
 
                     <div class="font-em-1d5 c-orange">Sessions</div> <br>
                     
                     <div class="resource-intro">
-                        <div class="fb-6 c-olive">Introduction</div>
                         <div class="">
                             Sessions by default are handled by the <a href="@route('::session')" class="hyperlink">Session</a> class. 
                             The session class depends on series of configurations both in files and code in other to work 
@@ -25,20 +24,22 @@
 
                             <br><br>
                             
-                            <li>Configuration of init file</li>
-                            <li>Top level code configuration of session class</li>
+                            <ul>
+                                <li>Configuration of init file</li>
+                                <li>Top level code configuration of session class</li>
+                            </ul>
                             
                         </div> 
                     </div> <br>
 
                     <div>
-                        <div class="font-menu fb-6 c-olive bc-white-dd box-full rad-4 pxv-8">
+                        <div class=" fb-6 c-olive bc-white-dd box-full rad-4 pxv-8">
                             1. Init File setup
                         </div> <br><br>
 
 
                         <div class="">
-                            <div class="font-menu font-em-d9">
+                            <div class=" font-em-d9">
                             The init file <code>icore/init</code> contains few configurations that helps the 
                             Session class to properly map itself to the database. In the init file, the following must be configured
                             <br><br>
@@ -58,13 +59,13 @@
                     </div>
 
                     <div>
-                        <div class="font-menu fb-6 c-olive bc-white-dd box-full rad-4 pxv-8">
+                        <div class=" fb-6 c-olive bc-white-dd box-full rad-4 pxv-8">
                             2. Session Setup
                         </div> <br><br>
 
 
                         <div class="">
-                            <div class="font-menu font-em-d9">
+                            <div class=" font-em-d9">
                             Since spoova supports multi-sessions, session class requires a session key and an optional cookie key to run sucessfully. 
                             This should be set at the top of your application or project file.
                             </div> <br>
@@ -75,7 +76,7 @@
                 </pre>
                             </div> <br><br>
 
-                            <div class="font-menu font-em-d9">
+                            <div class=" font-em-d9">
                                 Once the Session class is set, then the User class will become active for use. This is because 
                                 the User class depends on the session class to function properly. The Session set above can also 
                                 be done on the User class. Hence, the user class can be used to start a session system. This means
@@ -92,14 +93,14 @@
                     </div><br>
 
                     <div>
-                        <div class="font-menu fb-6 c-olive bc-white-dd box-full rad-4 pxv-8">
+                        <div class=" fb-6 c-olive bc-white-dd box-full rad-4 pxv-8">
                             3. Session Channels
                         </div> <br><br>
 
 
                         <div class="">
 
-                            <div class="font-menu font-em-d9">
+                            <div class=" font-em-d9">
                             Session channels are different session accounts that are built on top of the user application.
                             They are parallel sessions that are controlled by different session keys. This provides an easy 
                             structure in building sessions which contains data that can be obtained based on its predefined access key 
@@ -117,7 +118,7 @@
                 </pre>
                             </div> <br><br>
 
-                            <div class="box-full font-menu font-em-d85 bc-white-dd shadow flow-x">
+                            <div class="box-full  font-em-d85 bc-white-dd shadow flow-x">
                                 <div class="pxv-10 bc-silver">File 2 - AdminAccount.php</div>
                 <pre class="pre-code">
   new Session('admin', 'admin_cookie');
@@ -151,7 +152,7 @@
                 </div> <br>
                 
                 
-                            <div class="font-em-d87">
+                            <div class="font-em-d9">
                                 In the code above, we connected to the framework and loaded UserAccount.php file from the <code>windows/Sessions</code> directory.
                                 So, if your account file's name is <code>User</code>, you can access your session main keys just by writing <code>session('User')</code>.
                                 Since <code>Frames</code> have a <code>super()</code> method functionality, the <code>Account('UserAccount')</code> can also be placed in the 
@@ -162,13 +163,13 @@
                     </div>
 
                     <div>
-                        <div class="font-menu fb-6 c-olive bc-white-dd box-full rad-4 pxv-8">
+                        <div class=" fb-6 c-olive bc-white-dd box-full rad-4 pxv-8">
                             4. User Class
                         </div> <br><br>
 
 
                         <div class="">
-                            <div class="font-menu font-em-1">
+                            <div class=" font-em-1">
                         The user class bridges the gap between User account and Database control. It makes it easier 
                         to set up a User-Session-Database relationship. This relationship makes it easier to 
                         perform the following: <br><br>
@@ -299,7 +300,7 @@
                 </pre>
                 </div> <br><br>   
                 <!-- code ended -->
-                                            <div class="font-em-d87">
+                                            <div class="font-em-1">
                                                 In the code above, the User class is used to update the default connections set in <code>dbconfig.php</code> file. 
                                                 Every other subsequent connections will obtain their configuration from the last update instead of the default config file.
                                             </div> <br>

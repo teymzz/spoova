@@ -10,16 +10,16 @@
     <section class="pxv-10 tutorial mails bc-white">
       <div class="font-em-1d2">
 
-        @lay('build.co.links:tutor_pointer')
-
         <div class="start font-em-d8">
 
-          <div class="font-em-1d5 c-orange">Mails</div> <br>  
+          @lay('build.co.links:tutor_pointer') <br>
+
+          <div class="font-em-1d5 c-orange">Mails : inject</div> <br>  
           
           <div class="mails-intro">
 
               <div class="fb-6">
-                  <div class="font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
+                  <div class=" fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
                     <div class="flex-full midv"> 
                         <span class="bi-update mxr-8 c-lime-dd"></span> Injecting template variables 
                     </div>
@@ -82,7 +82,7 @@
 
           </div>  <br>
 
-          <div class="font-menu">
+          <div class="">
               The mail template file accepts pushing forward requests as either get or post request. 
               However, this must be defined in the placeholder.
           </div>

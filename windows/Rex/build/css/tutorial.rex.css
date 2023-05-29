@@ -3,6 +3,7 @@
      body{
           color: rgb(111, 110, 110);
           background-color : rgba(var(--white-dd));
+          font-family: Roboto;
      }
 
      .tutorial{
@@ -10,7 +11,6 @@
      }
 
      .pre-area{
-          font: menu;
           font-size: .85em;
           display: inline-block;
           width:100%;
@@ -28,7 +28,8 @@
           overflow: auto hidden;
           font-size: .95em; 
           margin-bottom:0;
-          padding-top:1em;
+          padding-top:1.5em;
+          font-family: firacode;
      } 
      
      pre.pre-code:not([class*="c-"]) {
@@ -40,12 +41,11 @@
      }
   
      .lacier.active {
-          background-color: #3ecb32;
+          background-color: #0c947b;
           color: white;
-          box-shadow: 0 0 2px 3px #32bc27 inset;
      }
   
-     .lacier.active .c-lime-dd{
+     .lacier.active > *{
           color: white;
      }  
 
@@ -59,6 +59,8 @@
 
      [class*="foot-note"] {
          color: rgb(32, 130, 130);
+         margin-top: 10px;
+         margin-bottom: 10px;
      }
 
      :where(.d85){
@@ -68,7 +70,7 @@
           font-size: .87em;
      }
      :where([class*="foot-note"]){
-          font-size: .87em;
+          font-size: .95em;
      }
      :where([class*="foot-note"] .head){
           font-weight: 600;
@@ -77,9 +79,14 @@
      [class*="rule-dashed"] {
           border-bottom: dashed .1em;
      }   
+   
      
      [class*="hyperlink"] {
           border-bottom: dashed .1em;
+     }
+
+     [class*="rule-dotted"] {
+          border-bottom: dotted .1em;
      }
 
      .olist {

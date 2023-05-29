@@ -9,9 +9,10 @@
         <section class="pxv-10 tutorial bc-white">
           <div class="font-em-1d2">
 
-              @lay('build.co.links:tutor_pointer')
-
               <div class="start font-em-d8">
+
+                @lay('build.co.links:tutor_pointer') <br>
+
                 <div class="font-em-1d5 c-orange">Routes</div> <br>  
                 
                 <div class="resource-intro">
@@ -27,13 +28,13 @@
                 
                 <div class="example"> 
                   <br>
-                  <div class="font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
+                  <div class=" fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
                     <div class="flex-full midv"> <span class="bi-globe2 mxr-8 c-lime-dd"></span> Routes Example </div>
                   </div> <br>
 
                   <div class="">
                       <div class="pre-area">
-                          <div class="file-1 pxv-10 bc-orange c-white">Home.php (sample window)</div>
+                          <div class="file-1 pxv-10 bc-silver">Home.php (sample window)</div>
                           <pre class="pre-code">
   &lt;?php
 
@@ -69,7 +70,7 @@
 
 
                     <!-- addRoute -->
-                    <div class="font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
+                    <div id="addroute" class=" fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
                       <div class="flex-full midv"> <span class="bi-circle mxr-8 c-lime-dd"></span> addRoutes </div>
                     </div>
 
@@ -81,7 +82,7 @@
 
                       <div class="">
                           <div class="pre-area">
-                              <div class="file-1 pxv-10 bc-orange c-white">sample 1 - Local addRoutes()</div>
+                              <div class="file-1 pxv-10 bc-silver">sample 1 - Local addRoutes()</div>
                               <pre class="pre-code">
   &lt;?php
 
@@ -118,7 +119,7 @@
 
                       <div class="">
                           <div class="pre-area">
-                              <div class="file-1 pxv-10 bc-orange c-white">sample 2 - Global addRoutes()</div>
+                              <div class="file-1 pxv-10 bc-silver">sample 2 - Global addRoutes()</div>
                               <pre class="pre-code">
   &lt;?php
 
@@ -160,17 +161,17 @@
                     </div> <br>
 
                     <!-- loadRoutes -->
-                    <div class="font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
+                    <div class=" fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
                       <div class="flex-full midv"> <span class="bi-circle mxr-8 c-lime-dd"></span> loadRoutes </div>
                     </div> <br>
                     <div class="">
                       By default, the <code>loadRoutes()</code> method calls the <code>addRoutes()</code> method of the root Window class or last globally named route. 
                       However, since <code>addRoutes()</code> method can be re-defined in child Window classes, if the <code>addRoutes()</code> 
-                      is re-defined, then only the root <code>Window::addRoutes()</code> method, can be used to update the named urls. This example is displayed in <b>sample 2</b> of <a href="#addroute">addRoutes</a> 
+                      is re-defined, then only the root <code>Window::addRoutes()</code> method, can be used to update the named urls. This example is displayed in <b>sample 2</b> of <a href="#addroute" class="c-olive rule-dotted">addRoutes</a> 
                       discussed earlier. In the event that the <code>addRoutes()</code> method of the current Route uses a direct array only, then it is required 
                       to pass the current Window class as an argument into the <code>loadRoutes()</code> method when calling it within that class. 
                       A sample of this is shown below. <br><br>
-                      <div class="pre-area font-menu">
+                      <div class="pre-area ">
                         <pre class="pre-code">
 
   use Window;
@@ -202,13 +203,13 @@
                         default routes by passing the instance of the current class into the <code>loadRoutes()</code> method which 
                         by default automatically updates the routes by using the root <code>Window::addRoutes()</code> to pull the 
                         route names from the <code>addRoutes()</code> method of the current class. Once this is done, then the <code>routes()</code> 
-                        method will be able to access the declared names.
+                        function and <code>@(@route())@</code> template directive will be able to access the declared names.
                       </div>
 
                     </div> <br>
 
                     <!-- getRoutes -->
-                    <div class="font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
+                    <div class=" fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
                       <div class="flex-full midv"> <span class="bi-circle mxr-8 c-lime-dd"></span> getRoutes </div>
                     </div> <br>
 
@@ -218,7 +219,7 @@
                       If these methods are not applied, then the default named routes are returned, if any.
                     </div> <br>
 
-                    <div class="pre-area font-menu">
+                    <div class="pre-area ">
                       <div class="bc-silver pxv-10">Sample 1 - getRoutes()</div>
                         <pre class="pre-code">
 
@@ -247,7 +248,7 @@
                         </pre>
                     </div> <br><br>
 
-                    <div class="pre-area font-menu">
+                    <div class="pre-area ">
                       <div class="bc-silver pxv-10">Sample 2 - getRoutes()</div>
                         <pre class="pre-code">
 

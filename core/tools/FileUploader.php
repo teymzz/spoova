@@ -81,10 +81,11 @@ class FileUploader{
   public function resetVars(){
     $class  = get_class();
     $varvals = get_class_vars($class);
+
     $uniquefile = $this->uniquefile;
-    foreach($varvals as $vals){
-      if($vals != 'msg') {
-        $this->$vals = false;
+    foreach($varvals as $prop => $val){
+      if($prop != 'msg') {
+        $this->$prop = false;
       }
     }
     $this->uniquefile = $uniquefile;

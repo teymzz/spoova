@@ -5,14 +5,14 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" type="image/png" href="@mapp('images/icons/favicon.png')">
-    <title>{{title?}}</title>
+    <title>{{ title? }}</title>
     @meta('dump')
-    @Res(':headers') 
+    @load('headers')
     @styles
     @style('build.css.tutorial:root')
     @style('build.css.headers:tutorial')
-    @res('res/main/js/switcher.js')
-    @live
+    @res('res/main/js/local/switcher.js')
+    <!-- @live -->
 </head>
 <body class="--theme-dark">
 
@@ -62,7 +62,7 @@
     
     @onScript('build.js.theme:theme')
 
-    <section class="">
+    <section class="font-menu font-em-1d1">
         <div class="control font-em-2 fixed c-orange box">
             <div class="flex px-40 mid rad-r shadow anc-btn-link bc-white">
                 <span class="bi-list controller flex"></span>

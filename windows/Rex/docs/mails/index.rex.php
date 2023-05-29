@@ -9,14 +9,13 @@
     <section class="pxv-10 tutorial mails bc-white">
       <div class="font-em-1d2">
 
-        @lay('build.co.links:tutor_pointer')
-
         <div class="start font-em-d8">
+
+          @lay('build.co.links:tutor_pointer') <br>
 
           <div class="font-em-1d5 c-orange">Mails</div> <br>  
           
           <div class="resource-intro">
-              <div class="fb-6">Introduction</div> <br>
               <div class="">
 
                 <div class="">
@@ -29,7 +28,7 @@
 
                 <div class="">
                   <div class="fb-6 c-orange-d">Installation</div>
-                  <div class="">
+                  <div class="mvs-10">
                     In order to use the Mailer class, the PHPMailer and CssInliner libraries must be installed as dependencies. The composer.json file 
                     should contain a similar code syntax below 
                     can be used to install the supported version of these classes.
@@ -44,14 +43,15 @@
   }
                     </pre>
                   </div>
-                  <div class="">
+                  <div class="foot-note">
                     Once the dependencies are installed through the <code>composer dump-autoload -o</code>, then we need to modify the <code>CssInliner</code> 
                     class <code>__construct()</code> method in order for <code>Mailer</code> class to work. This method should be set as public rather than private. 
                     Once this is done, we can proceed to set up the configuration files. 
                   </div>
-                </div>
+                </div> <br>
+
                   Before the <code>Mailer</code> class can be used, there is need to set up the mailer system. Setting up mail system can be addressed in two categories 
-                  <br><br>
+                  <br>
                   <ul>
                     <li>mail configuration setup</li>
                     <li>mail content setup</li>
@@ -62,7 +62,7 @@
           
           <div id="core" class="core-helpers"> 
               <br>
-              <div class="font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
+              <div class="fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
                 <div class="flex-full midv"> <span class="bi-gear mxr-8 c-lime-dd"></span> Setting up mail - config </div>
               </div> <br>
               
@@ -120,37 +120,48 @@
         
           </div>  
           
-          <div class="font-em-d8 mvt-6">
-            <p>
+          <div class="foot-note">
+
+          <ul>
+            <li>
               In the examples above, we have two files 
-              <code>server.php</code> and <code>headers.php</code>.
+              <code class="bd-f">server.php</code> and <code class="bd-f">headers.php</code>.
               The <code>server.php</code> is used to setup the phpMailer server 
               according to the PHPMailer Documentation. The <code>headers.php</code>
               is a default file that anchors the PHPMailer headers.
-            </p>
-            
-            <p>
+            </li>
+            <li>
               The <code>$webmail</code>
               is a reserved variable that anchors PHPMailers headers' values. Although the 
               <code>$webmail['body']</code> can be configured here, it is not advisable to do so as 
               the content may change from time to time depending on what type of mail is expected 
               to be sent. 
-            </p>
-            
-            <p>
+            </li>
+            <li>
               The <code>$webmail['client']['mail']</code> refers to user email to which
               the mail is expected to be forwarded while the <code>$webmail['client']['name']</code>
               is the user name. Both of the <code>$webmail['client']</code> can easily change, therefore, 
               setting them within the <code>header</code> file is not realistic.
-            </p>
-
+            </li>
+            <li>
+              After setting up the default parameters, the files can be loaded up when using the Mailer tool. 
+              The example below shows how the <code>server.php</code> and <code>headers.php</code> files can be
+              imported.
+            </li>
+          </ul>
             <p>
-            After setting up the default parameters, the files can be loaded up when using the Mailer tool. 
-            The example below shows how the <code>server.php</code> and <code>headers.php</code> files can be
-            imported.
             </p>
-          </div>
+            
+            <p>
+            </p>
+            
+            <p>
+            </p>
 
+          </div>
+          
+          <p class="">
+          </p>
           <div class="mailer">
                 <div class="pre-area">
                   <div class="box-full">
@@ -184,7 +195,7 @@
                 </div>
         </div> 
 
-        <div class="font-em-d8 mvt-6">
+        <div class="font-em-d95 mvt-6">
             <p>
               In the example above, <code>$mailer->server()</code> and <code>$mailer->setup()</code> are used to 
               load the default server config and server header respectfully from a config file or array.

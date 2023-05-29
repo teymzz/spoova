@@ -10,10 +10,10 @@
         <section class="pxv-10 tutorial database bc-white">
             <div class="font-em-1d2">
 
-                @lay('build.co.links:tutor_pointer')
-
                 <div class="start font-em-d8">
 
+                    @lay('build.co.links:tutor_pointer') <br>
+                    
                     <div class="font-em-1d5 c-orange">Database : Errors</div> <br>
 
                     <div class="pxs-6">
@@ -45,7 +45,7 @@
 
                             <br>
 
-                            <div class="box-full font-menu font-em-d85 bc-white-dd shadow">
+                            <div class="box-full  font-em-d85 bc-white-dd shadow">
 <div class="pxv-10 bc-silver">Example 1 : Handling connection errors </div>
                         <pre class="pre-code">
   $db = ($dbc = new DB())->openDB();
@@ -76,7 +76,7 @@
                                 database, the name must be selected or specified. We can check if a table is selected through
                                 of <code>active()</code> method while <code>currentDB()</code> returns the currently selected database name.
                             </div> <br>
-                            <div class="box-full font-menu font-em-d85 bc-white-dd shadow">
+                            <div class="box-full  font-em-d85 bc-white-dd shadow">
 <div class="pxv-10 bc-silver">Example 2 : Handling environment errors</div>
                         <pre class="pre-code">
   $db = ($dbc = new DB)->openDB();
@@ -118,7 +118,7 @@
                                 Sql errors are errors that occur after queries have been attempted for execution. To handle this errors, we 
                                 use the <code>error_exists()</code> and <code>error()</code> methods just as discussed earlier
                             </div> <br>
-                            <div class="box-full font-menu font-em-d85 bc-white-dd shadow">
+                            <div class="box-full  font-em-d85 bc-white-dd shadow">
 <div class="pxv-10 bc-silver">Example 3 : Handling sql errors </div>
                         <pre class="pre-code">
   $db = ($dbc = new DB)->openDB();
@@ -130,7 +130,7 @@
 
     if( $results = $db->results() ) {
         
-        <span class="c-lime-dd">var_dump( $results() );</span>
+        <span class="c-lime-dd">var_dump( $results );</span>
 
     } else if ( $db->error_exists() ) {
 
@@ -155,6 +155,37 @@
                             </div>
                             <br>
                         </li>
+
+                        <li>
+                            <div class="c-olive">Fetching errors globally</div>
+                            <div class="d87">
+                                All errors are tracked with the <code>DBStatus::error()</code> which returns the last error encountered when a 
+                                database operation is performed. This is the global way to fetch an error and it returns any error encountered.
+                            </div> <br>
+                            <div class="box-full  font-em-d85 bc-white-dd shadow">
+<div class="pxv-10 bc-silver">Example 4 : Fetching errors globally</div>
+                        <pre class="pre-code">
+  $db = ($dbc = new DB)->openDB();
+  
+  if(DBStatus::error()) {
+  
+      <span class="comment">// output the error </span>
+      echo DBStatus::error();
+  
+  }
+                        </pre>
+                            </div> <br>
+
+                            <div class="d87">
+                                For any reason, when running queries, if the <code>$db->error()</code> does not return an error, if an error exists, 
+                                the <code>DBStatus::error()</code> may still be able to find it. However, to ensure that <code>$db->error()</code> 
+                                always an error if it exists, it has to be set to global mode. This is done by supplying an argument of <code class="bd-f">true</code> to the 
+                                <code>$db->error()</code> method which will ensure that it remembers to check the <code>DBStatus::error()</code> for any error too.
+                            </div>
+                            <br>
+
+                        </li>
+
                     </ul>
                 </div>
             </div>

@@ -1,13 +1,14 @@
 <?php
 
+use spoova\mi\core\classes\Rex;
 use spoova\mi\core\classes\Ajax;
-use spoova\mi\core\classes\constants\CASTED;
-use spoova\mi\core\classes\Controller;
+use spoova\mi\core\classes\Compiler;
 use spoova\mi\core\classes\EInfo;
 use spoova\mi\core\classes\Request;
-use spoova\mi\core\classes\Router;
 use spoova\mi\core\classes\UrlMapper;
-use spoova\mi\windows\Routes\Docs\Wmv;
+use spoova\mi\core\classes\Controller;
+use spoova\mi\core\classes\constants\CASTED;
+use spoova\mi\core\classes\Container;
 
 /**
  * Controls view from windows frame
@@ -46,6 +47,9 @@ use spoova\mi\windows\Routes\Docs\Wmv;
         
         #pend close window
         'pend' => false,
+
+        #keep dot convention
+        'keep' => false,
 
         #preloaded callbacks
         'preload' => [],
@@ -139,7 +143,8 @@ use spoova\mi\windows\Routes\Docs\Wmv;
           /* resolve as path */
           $expkey = explode(":", $key, 2);
           $key = $expkey[0]?: 'root';
-          $path = str_replace('.', '/', $expkey[1]?? '');
+          $path = $expkey[1]?? '';
+          if(!self::wvm('keep')) $path = str_replace('.', '/', $path);
           $basepath = static::$wvm[$key]?? '';
           $newpath = $basepath.'/'.$path;
           return $marker.rtrim($newpath, '/');
@@ -454,23 +459,21 @@ use spoova\mi\windows\Routes\Docs\Wmv;
               }
             }
 
+            response(200, 'status ok');
+            self::$lastCall = $root;
+            static::$isPended = !$close;
+            static::$pender = static::$isPended? 'root' : '';
+            $Container = new Container($instance);
+
+            if($ONCALL instanceof \Closure) $ONCALL();
+
             if($reflect->getMethod($method)->isStatic()){
-              response(200, 'status ok');
-              self::$lastCall = $root;
-              static::$isPended = !$close;
-              if($ONCALL instanceof \Closure) $ONCALL();
-              $class::$method(...$arguments);
-              $instance->resolved(true);
+              $Container::$method(...$arguments);
             } else {
-              response(200, 'status ok');
-              self::$lastCall = $root;
-              static::$isPended = !$close;
-              static::$pender = static::$isPended? 'root' : '';
-              if($ONCALL instanceof \Closure) $ONCALL();
-              $instance->$method(...$arguments);
-              $instance->resolved(true);
+              $Container->$method(...$arguments);
             }
             
+            $instance->resolved(true);
             return $instance->resolved();
 
           }elseif(substr($method, 0, 4) == 'win:') {
@@ -485,9 +488,10 @@ use spoova\mi\windows\Routes\Docs\Wmv;
               static::$isPended = false;
               static::$pender = static::$isPended? 'root' : '';
               if($ONCALL instanceof \Closure) $ONCALL();
-              new $win(...$arguments);
+              $Container = new Container($win, ...$arguments);
               return $instance->resolved();
             }
+
           }elseif(is_object($method)) {
              response(200, 'status ok');
              $instance->resolved(true);
@@ -495,7 +499,8 @@ use spoova\mi\windows\Routes\Docs\Wmv;
              static::$isPended = false;
              static::$pender = static::$isPended? 'root' : '';
              if($ONCALL instanceof \Closure) $ONCALL();
-             new $method(...$arguments);
+             $Container = new Container(get_class($method), ...$arguments);
+            //  new $method(...$arguments);
              return $instance->resolved();
           }
 
@@ -514,24 +519,23 @@ use spoova\mi\windows\Routes\Docs\Wmv;
               self::$wvm['onCallResponse'][CASTED::E404][$root] = $onCall[CASTED::E404][$root]();
             }
           }
+
+          response(200, 'status ok');
+          self::$lastCall = $root;
+          static::$isPended = !$close;
+          static::$pender = static::$isPended? 'root' : '';
+
+          if($ONCALL instanceof \Closure) $ONCALL();          
           if($reflect->getMethod($method)->isStatic()){
-            response(200, 'status ok');
-            self::$lastCall = $root;
-            static::$isPended = !$close;
-            static::$pender = static::$isPended? 'root' : '';
-            if($ONCALL instanceof \Closure) $ONCALL();
-            $class::$method(...$arguments);
-            $instance->resolved(true);
+            $Container = new Container($class);
+            $Container::$method(...$arguments);
+            //$class::$method(...$arguments);
           } else {
-            response(200, 'status ok');
-            self::$lastCall = $root;
-            static::$isPended = !$close;
-            static::$pender = static::$isPended? 'root' : '';
-            if($ONCALL instanceof \Closure) $ONCALL();
-            $instance->$method(...$arguments);
-            $instance->resolved(true);
+            $Container = new Container($instance, $variables);
+            $Container->$method(...$arguments);
           }
         }
+        $instance->resolved(true);
         return $instance->resolved();
       }
 
@@ -594,6 +598,7 @@ use spoova\mi\windows\Routes\Docs\Wmv;
 
         }
 
+        //print $nWin;
         if($nBase === $nWin){
           
           if(method_exists($class, $method)){
@@ -611,23 +616,22 @@ use spoova\mi\windows\Routes\Docs\Wmv;
               }
             }
 
+            $Container = new Container($instance);
+
+            //handle method called
+            response(200, 'status ok');
+            self::$lastCall = $base;
+            static::$isPended = !$close;
+            static::$pender = static::$isPended? 'call' : '';
+            if($ONCALL instanceof \Closure) $ONCALL();
+
             if($reflect->getMethod($method)->isStatic()){
-              response(200, 'status ok');
-              static::$isPended = !$close;
-              static::$pender = 'call';
-              self::$lastCall = $base;
-              if($ONCALL instanceof \Closure) $ONCALL();
-              $class::$method(...$arguments);
-              $instance->resolved(true);
+              $Container::$method(...$arguments);
             } else {
-              response(200, 'status ok');
-              self::$lastCall = $base;
-              static::$isPended = !$close;
-              static::$pender = static::$isPended? 'call' : '';
-              if($ONCALL instanceof \Closure) $ONCALL();
-              $instance->$method(...$arguments);
-              $instance->resolved(true);
-            } 
+              $Container->$method(...$arguments);
+            }
+
+            $instance->resolved(true); 
             return $instance->resolved();
 
           }elseif(substr($method, 0, 4) == 'win:') {
@@ -642,7 +646,10 @@ use spoova\mi\windows\Routes\Docs\Wmv;
               static::$isPended = false;
               static::$pender = static::$isPended? 'call' : '';
               if($ONCALL instanceof \Closure) $ONCALL();
-              new $win($variables, $Request);
+              
+              //call window
+              new Container($win, $variables);
+
               return $instance->resolved();
             }
 
@@ -654,7 +661,10 @@ use spoova\mi\windows\Routes\Docs\Wmv;
               static::$isPended = false;
               static::$pender = static::$isPended? 'call' : '';
               if($ONCALL instanceof \Closure) $ONCALL();
-              new $method(...$arguments);
+              
+              //call window
+              new Container($method, ...$arguments);
+
               return $instance->resolved();
 
           }
@@ -680,7 +690,11 @@ use spoova\mi\windows\Routes\Docs\Wmv;
             static::$pender = static::$isPended? 'call' : '';
             self::$lastCall = $base;
             if($ONCALL instanceof \Closure) $ONCALL();
-            $class::$method(...$arguments);
+
+            //call window
+            $Container = new Container($instance);
+            $Container::$method(...$arguments);
+
             $instance->resolved(true);
           } else {
             response(200, 'status ok');
@@ -688,7 +702,8 @@ use spoova\mi\windows\Routes\Docs\Wmv;
             static::$isPended = !$close;
             static::$pender = static::$isPended? 'call' : '';
             if($ONCALL instanceof \Closure) $ONCALL();
-            $instance->$method(...$arguments);
+            $Container = new Container($instance);
+            $Container->$method(...$arguments);
             $instance->resolved(true);
           }
           return $instance->resolved();
@@ -722,7 +737,7 @@ use spoova\mi\windows\Routes\Docs\Wmv;
       $reflect = new \ReflectionClass($class);
       
       self::windowShutterVariables($Request, $windows, $variables, $ONCALL, $arguments, $STRICT);
-      
+
       static::integrateAPI();
       
       foreach($windows as $window => $method) {
@@ -773,23 +788,21 @@ use spoova\mi\windows\Routes\Docs\Wmv;
 
             if($nBasex == $nWin) {
 
+              response(200, 'status ok');
+              static::$isPended = !$close;
+              static::$pender = static::$isPended? 'base' : '';
+              static::$lastCall = $basex;
+              if($ONCALL instanceof \Closure) $ONCALL();
+              
+              //call window
+              $Container = new Container($instance);
+
               if($reflect->getMethod($method)->isStatic()){
-                response(200, 'status ok');
-                static::$isPended = !$close;
-                static::$pender = static::$isPended? 'base' : '';
-                static::$lastCall = $basex;
-                if($ONCALL instanceof \Closure) $ONCALL();
-                $class::$method(...$arguments);
-                $instance->resolved(true);
+                $Container::$method(...$arguments);
               } else {
-                response(200, 'status ok');
-                static::$isPended = !$close;
-                static::$pender = static::$isPended? 'base' : '';
-                static::$lastCall = $basex;
-                if($ONCALL instanceof \Closure) $ONCALL();
-                $instance->$method(...$arguments); 
-                $instance->resolved(true);
+                $Container->$method(...$arguments); 
               }       
+              $instance->resolved(true);
             }
 
         }elseif(substr($method, 0, 4) == 'win:') { 
@@ -815,7 +828,10 @@ use spoova\mi\windows\Routes\Docs\Wmv;
               static::$pender   = '';
               static::$lastCall = $basex;
               if($ONCALL instanceof \Closure) $ONCALL();
-              new $win(...$arguments);
+
+              //call window
+              $Container = new Container($win, $arguments);
+
               return $instance->resolved();
             }
           }
@@ -836,10 +852,13 @@ use spoova\mi\windows\Routes\Docs\Wmv;
           static::$pender   = '';
           static::$lastCall = $basex;
           if($ONCALL instanceof \Closure) $ONCALL();
-          new $win(...$arguments);
+
+          //call window
+          new Container($win, ...$arguments);
+
           return $instance->resolved();
 
-      }
+        }
 
       } 
       
@@ -855,27 +874,24 @@ use spoova\mi\windows\Routes\Docs\Wmv;
             }
           }
 
+          response(200, 'status ok');
+          self::$lastCall = $base;
+          self::$isPended = !$close;
+          if($ONCALL instanceof \Closure) $ONCALL();
+
+          //call window
+          $Container = new Container($win, $variables);
+
           if($reflect->getMethod($method)->isStatic()){
-            response(200, 'status ok');
-            self::$lastCall = $base;
-            self::$isPended = !$close;
-            if($ONCALL instanceof \Closure) $ONCALL();
-            $class::$method(...$arguments);
-            $instance->resolved(true);
+            $Container::$method(...$arguments);
           } else {
-            response(200, 'status ok');
-            self::$isPended = !$close;
-            self::$lastCall = $base;
-            if($ONCALL instanceof \Closure) $ONCALL();
-            $instance->$method(...$arguments);
-            $instance->resolved(true);
+            $Container->$method(...$arguments);
           }
+          $instance->resolved(true);
           return $instance->resolved();
         }
         return ;
       }
-
-      // if($close) self::close();
 
       if($instance->resolved()) return true;
       if($close) self::close();
@@ -947,22 +963,22 @@ use spoova\mi\windows\Routes\Docs\Wmv;
               }
             }
 
+            response(200, 'status ok');
+            static::$isPended = !$close;
+            self::$lastCall = $path; 
+            if($ONCALL instanceof \Closure) $ONCALL();
+
+            //call window
             if($reflect->getMethod($method)->isStatic()){ 
-              response(200, 'status ok');
-              static::$isPended = !$close;
-              self::$lastCall = $path; 
-              if($ONCALL instanceof \Closure) $ONCALL();
-              $class::$method(...$arguments);
-              $instance->resolved(true);
+              (new Container($class))::$method(...$arguments);
             } else {
-              response(200, 'status ok');
-              static::$isPended = !$close;
-              self::$lastCall = $path;
-              if($ONCALL instanceof \Closure) $ONCALL();
-              $instance->$method(...$arguments);
-              $instance->resolved(true);
+              $Container = new Container($instance);
+              $Container->$method(...$arguments);
             }
+
+            $instance->resolved(true);
             return $instance->resolved();
+
           }elseif(substr($method, 0, 4) == 'win:') {
 
             $class = substr($method, 4, strlen($method));
@@ -974,7 +990,10 @@ use spoova\mi\windows\Routes\Docs\Wmv;
               static::$isPended = false;
               self::$lastCall = $path;
               if($ONCALL instanceof \Closure) $ONCALL();
-              new $win(...$arguments);
+              
+              //call window
+              $Container = new Container($win, ...$arguments);
+
               return $instance->resolved();
             }
           }elseif(is_object($method)){
@@ -983,7 +1002,8 @@ use spoova\mi\windows\Routes\Docs\Wmv;
               static::$isPended = false;
               self::$lastCall = $path;
               if($ONCALL instanceof \Closure) $ONCALL();
-              new $method(...$arguments);
+              $Container = new Container($method, ...$arguments);
+              // new $method(...$arguments);
               return $instance->resolved();
           }
 
@@ -1002,22 +1022,21 @@ use spoova\mi\windows\Routes\Docs\Wmv;
               self::$wvm['onCallResponse'][CASTED::PATH][$path] = $onCall[CASTED::E404][$path]();
             }
           }
+          
+          response(200, 'status ok');
+          static::$isPended = !$close;
+          self::$lastCall = $path;
+          if($ONCALL instanceof \Closure) $ONCALL();
 
+          //call window
           if($reflect->getMethod($method)->isStatic()){
-            response(200, 'status ok');
-            static::$isPended = !$close;
-            self::$lastCall = $path;
-            if($ONCALL instanceof \Closure) $ONCALL();
-            $class::$method(...$arguments);
-            $instance->resolved(true);
+            $Container = new Container($class);
+            $Container::$method(...$arguments);
           } else {
-            response(200, 'status ok');
-            static::$isPended = !$close;
-            self::$lastCall = $path;
-            if($ONCALL instanceof \Closure) $ONCALL();
-            $instance->$method(...$arguments);
-            $instance->resolved(true);
+            $Container = new Container($instance);
+            $Container->$method(...$arguments);
           }
+          $instance->resolved(true);
           return $instance->resolved();
         }
         return;
@@ -1099,40 +1118,37 @@ use spoova\mi\windows\Routes\Docs\Wmv;
     /**
      * Close a window
      *
-     * @param boolean $bool force close
+     * @param boolean $bool true forces close and stops any pending
      * @return void
      */
     final public static function close(bool $bool = false) {
       
       if($bool) self::wvm('pend', false);
 
-      if(self::wvm('pend')
-          && (func_num_args() > 0)
-          && (func_get_args()[0] === true)
-          ) {
-            self::wvm('pend', false);
-            self::wvm('close', false);
+      $argsc = func_num_args();
+      $argss = func_get_args();
+
+      if(self::wvm('pend') && ($argsc > 0) && ($argss[0] === true) ) {
+        self::wvm('pend', false);
+        self::wvm('close', false);
       } 
       
-      if(self::wvm('pend') && 
-          (func_num_args() == 0)
-        )
-        {
-          return;
-      } 
+      if(self::wvm('pend') && ($argsc == 0)) return;
 
       if(self::wvm('close')) return;
       static::wvm('close', true);
 
-      //set response header
+      //set and return and array of response header
       $response = response(404, 'Page not found!');
 
       if(!static::$winAPI) {
-        Res::load(static::wvm(':404'), fn() => compile());
+        Rex::load(static::wvm(':404'), fn() => compile());
       } else{
         echo $response; /* print response header */
       }
+
       exit();
+
     }
    
     /**
@@ -1154,18 +1170,35 @@ use spoova\mi\windows\Routes\Docs\Wmv;
      * @return void
      */
     final protected static function addRex(string $template_path = ''){
-      Res::addRex(...func_get_args());
+      Compiler::addRex(...func_get_args());
     }
 
     /**
      * Renders and Outputs the rex template files
      * 
-     * @param string $url rex template url
+     * @param string $path rex template path
      * @param mixed $callback template handler function
      * @return void
      */
-    final protected static function load($url, $callback){
-      Res::load(...func_get_args());
+    final protected static function load($path, $callback){
+      Rex::load($path, $callback);
+    }
+
+    /**
+     * Rex view function
+     *
+     * @param string $url
+     * @param array|Closure|false|string $callback
+     * @param array $args arguments
+     * @return void
+     */
+    final protected static function view(string $url, array|Closure|false|string $callback = false, array $args = []) {
+      
+      if(func_num_args() > 2){
+        echo Rex::view(...func_get_args())->setArgs($args);
+      }else{
+        echo Rex::view(...func_get_args());
+      }
     }
 
 
@@ -1176,12 +1209,12 @@ use spoova\mi\windows\Routes\Docs\Wmv;
      * @return string
      */
     final protected static function markup($url, $callback){
-      return Res::markup(...func_get_args());
+      return Rex::markup(...func_get_args());
     }  
 
     /**
      * Parses / Splits a url to a predifined structure recognized by wmv pattern
-     * If no url is supplied, the current uri is assumed
+     * If no url is supplied, the default uri constant is assumed
      *
      * @param string $url
      * @return void
@@ -1246,6 +1279,7 @@ use spoova\mi\windows\Routes\Docs\Wmv;
      
     }
    
+
     final protected static function secure($route, $session = ''){
       $session = strtoupper($session);
       static::$wvm['secure'][$session][] = $route;
@@ -1259,12 +1293,14 @@ use spoova\mi\windows\Routes\Docs\Wmv;
      */
     final protected static function sleep() {
         http_response_code(200); 
-        \Res::live();
+        Res::live();
         self::close();
     }
 
     /**
-     * Re-Bind form data from accessed storage
+     * Automatically Re-binds route-to-route referred form data into accessible environment key. 
+     * This data is pushed into enviroment key when 
+     * Window::pushFormData() is called.
      * 
      * @return void
      */
@@ -1287,18 +1323,21 @@ use spoova\mi\windows\Routes\Docs\Wmv;
         $files  = &$_FILES;
         
         $formURI = $_SESSION[':FORM']['URI'];
-        // $formREF = str_replace($_SERVER['HTTP_HOST'], '', $formURI); 
+
         if($formURI != $_SERVER['REQUEST_URI']){
             $method = $_SESSION[':FORM']['DATA'];
             $files  = $_SESSION[':FORM']['FILES'];
         }
+
+        //set 
         $_ENV[':FORM']['CSRF_REF'] = $_SESSION[':FORM']['CSRF_REF'];
         unset($_SESSION[':FORM']);
       }
     }
 
     /**
-     * pushes form data into accessible storage
+     * This method is to push requested form data through an eternal route
+     * back to the current route using an automatic redirection.
      *
      * @return void
      */
@@ -1345,25 +1384,33 @@ use spoova\mi\windows\Routes\Docs\Wmv;
       }
     }
 
-    /** This method is used for caliberation */
+    /** This method is used for project application's caliberation */
     final static public function htcaliber($Server){
       $loader = (method_exists($Server, 'loader'))? $Server::loader() : '';
       if(self::isIndex()) htCaliber(true, $loader);  
     }
 
+    /**
+     * Set shutter variables
+     *
+     * @param [type] $STRICT
+     * @return void
+     */
     private static function windowShutterVariables(&$Request, &$windows, &$variables, &$ONCALL, &$arguments, &$STRICT){
       
       $Request = new Request;
 
-      $arguments = [$Request];
+      $arguments = [];
       
       $variables = $windows[SELF::ARG] ?? static::$variables;
 
       $ONCALL = $windows[SELF::ONCALL] ?? '';
-
-      unset($windows[SELF::ARG], $windows[SELF::ONCALL]);
       
-      array_unshift($arguments, $variables);
+      if($variables || isset($windows[SELF::ARG]) || isset(static::$variables)) {
+        array_unshift($arguments, $variables);   
+      }
+      
+      unset($windows[SELF::ARG], $windows[SELF::ONCALL]);
 
       $STRICT = $windows[SELF::STRICT] ?? false;
 

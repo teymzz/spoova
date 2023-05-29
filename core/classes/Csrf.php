@@ -54,33 +54,53 @@ class Csrf {
     final public function __construct() {}
 
     /**
-     * Generates a csrf session token
+     * Generates and returns a csrf session token. If other 
+     * valid options except for the default is supplied, the old 
+     * token is only returned. 
      *
      * @param string $type optional - [new|session/old]
      *  - Determines if a new token or an old token (session) is returned. 
-     *  - Note: When a new token is generated, it automaticalluy updates the old session token
+     *  - Note: When a new token is generated, it automatically updates the old session token
      * @return string
      */
     public static function token(string $type = 'new') : string {
 
-         if(strtolower($type) === 'new') {
-               $Hasher = new Hasher;
+        if(strtolower($type) === 'new') {
+            $Hasher = new Hasher;
 
-               $hash = $Hasher->randomHash(20);
+            $hash = $Hasher->randomHash(20);
 
-               $_SESSION['CSRF_TOKEN'] = $hash;
-               $_SESSION['CSRF_TIME'] = time();
+            $_SESSION['CSRF_TOKEN'] = $hash;
+            $_SESSION['CSRF_TIME'] = time();
+        }
 
-         }
+        if(in_array($type, ['old','session', 'new'])){
+               
+          return $_SESSION['CSRF_TOKEN'] ?? '';
+        
+        }
 
+        return '';
+
+    }
+
+    /**
+     * Returns an old token only without generating a new one
+     *
+     * @return string old token if it exists
+     */
+    public static function old() : string {
         return $_SESSION['CSRF_TOKEN'] ?? '';
     }
 
-    public static function old(){
-        return $_SESSION['CSRF_TOKEN'] ?? '';
-    }
-
-    public static function matches($csrf){
+    /**
+     * Returns a boolean value of true if the default token 
+     * matches the supplied token string 
+     *
+     * @param string $csrf token to be matched with session token
+     * @return void
+     */
+    public static function matches(string $csrf) : bool{
         return ($csrf === ($_SESSION['CSRF_TOKEN'] ?? ''));
     }
     
@@ -153,22 +173,36 @@ class Csrf {
       die();
     }
 
-    public static function strict(bool $strict = true) {
+    /**
+     * Set csrf authentication as strict type while returning the 
+     * instance of the same class. Strict types automatically display 
+     * error pages when Csrf::auth() is called and validation fails.
+     *
+     * @param boolean $strict
+     * @return Csrf
+     */
+    public static function strict(bool $strict = true) : Csrf {
      self::$strict = $strict;
      return new self;
     }
 
-    public static function isStrict() {
+    /**
+     * Return true if authentication is set as strict type.
+     *
+     * @return boolean
+     */
+    public static function isStrict() : bool {
      return self::$strict;
     }
 
     /**
+     * This tests if a csrf token exist, matches the session token and is not expired.
      * Token must be supplied for validation.
-     * This tests if a csrf token exist, matches the session token and is not expired
      * 
+     * @param string $csrfToken token to be checked for validity
      * @return bool
      */
-    public static function isValid($csrfToken) : bool {
+    public static function isValid(string $csrfToken) : bool {
 
       $matched = (self::old() && self::matches($csrfToken));
 
@@ -187,7 +221,15 @@ class Csrf {
 
     }
 
-    public static function ref(){
+    /**
+     * Return the object of a manually referenced form array data. 
+     * Referenced form data is accessible only after a form data is 
+     * pushed forward to external route and pulled back through window::pushFormData() 
+     * to the current route .
+     *
+     * @return object
+     */
+    public static function ref() : object {
       
       $default = [
         'VALID'  => false, 
@@ -209,16 +251,19 @@ class Csrf {
     }
 
     /**
-     * Authenticate csrf
+     * Authenticate csrf. When Csrf is set as strict type, if 
+     * authentication fails, an error page is automatically displayed. 
+     * Non-strict type will return false instead.
      *
      * @param string $csrfToken token to be validated
-     *  - Token must be supplied if the request is not redirected.
+     *  - Token must be supplied if the request data pulled from external redirect.
      * @param integer $expires in seconds defines the token expiry time
-     * @return void|false
+     * @return void|bool
      */
     public static function auth(string $csrfToken = '') {
 
       if(self::isReferred()) {
+        //run this if form data is pulled from a push request
 
         $Request = new Request;
 
@@ -256,6 +301,11 @@ class Csrf {
       
     }
 
+    /**
+     * Return csrf errors encountered
+     *
+     * @return array
+     */
     public static function error() : array {
       return self::$error;
     }
@@ -302,7 +352,14 @@ class Csrf {
       return self::$errorType;
     }
 
-    public static function isReferred(){
+    /**
+     * Returns true if environment key ':FORM' is defined. 
+     * This is automatically defined when a pushed form data is
+     * pulled back from an external route.
+     *
+     * @return boolean
+     */
+    public static function isReferred() : bool {
       return isset($_ENV[':FORM']);
     }
 

@@ -10,16 +10,16 @@
     <section class="pxv-10 tutorial mails bc-white">
       <div class="font-em-1d2">
 
-        @lay('build.co.links:tutor_pointer')
-
         <div class="start font-em-d8">
 
-          <div class="font-em-1d5 c-orange">Mails</div> <br>  
+          @lay('build.co.links:tutor_pointer') <br>
+
+          <div class="font-em-1d5 c-orange">Mails : sent</div> <br>  
           
           <div class="pulling-data">
 
               <div class="fb-6">
-                  <div class="font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
+                  <div class=" fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
                   <div class="flex-full midv"> 
                       <span class="bi-check-circle mxr-8 c-lime-dd"></span> Sent mails
                   </div>
@@ -77,7 +77,7 @@
                 </div>
               </div>
 
-              <div class="font-menu pvs-6">
+              <div class=" pvs-6">
                   In the example above, notice that the <code>online</code> and <code>offline</code> 
                   parameters were supplied as strings not constants. The <code>sent('online')</code> 
                   was used to check if a mail was truly sent in online mode. For this to work, success 

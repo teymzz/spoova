@@ -1,4 +1,6 @@
 @template('template.t-html')
+
+    @title('Spoova')
   
     <!-- add css -->
     @res('res/assets/css/index.css') 
@@ -57,7 +59,7 @@
             <header data-src="@domurl('res/assets/images/bkg.jpg')">
                 <div class="overlay">
                 <div class="inner">
-                    <h2 class="title"> {{ site_name ?? 'spoova' }} </h2>
+                    <h2 class="title"> {{ $site_name ?? 'spoova' }} </h2>
                     <p>
                     An environmental friendly, simple and light php framework for fast web development
                     </p>

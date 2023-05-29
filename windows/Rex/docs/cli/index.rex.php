@@ -1,6 +1,8 @@
 
 @template('template.t-tut')
 
+  @title('Cli commands')
+
   @lay('build.co.navbars:left-nav')
 
   <div class="box-full pxl-2 bc-white-dd pull-right">
@@ -12,7 +14,7 @@
 
         <div class="start font-em-d8">
 
-          <div class="font-em-1d5 c-orange">Cli Commands</div> <br>  
+          <div class="font-em-1d5 c-orange"> <span class="bi-terminal"> </span>Cli Commands</div> <br>  
           
           <div class="resource-intro">
             <div class="">
@@ -24,7 +26,7 @@
           
           <div id="core" class="core-helpers"> 
             <br>
-            <div class="font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
+            <div class=" fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
               <div class="flex-full midv"> <span class="bi-folder mxr-8 c-lime-dd"></span> Commands </div>
 
             </div> <br>
@@ -70,7 +72,7 @@
           
           <div id="add"> 
             <br>
-            <div class="font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
+            <div class=" fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
               <div class="flex-full midv"> <span class="bi-file-text mxr-8 c-lime-dd"></span> add</div>
 
             </div>
@@ -94,7 +96,7 @@
           
           <div id="add-window"> 
             <br>
-            <div class="font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
+            <div class=" fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
               <div class="flex-full midv"> <span class="bi-file-text mxr-8 c-lime-dd"></span> add:window </div>
 
             </div>
@@ -130,7 +132,7 @@
           
           <div id="add-frame"> 
             <br>
-            <div class="font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
+            <div class=" fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
               <div class="flex-full midv"> <span class="bi-file-text mxr-8 c-lime-dd"></span> add:frame </div>
 
             </div>
@@ -163,7 +165,7 @@
 
           <div id="add-routes"> 
             <br>
-            <div class="font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
+            <div class=" fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
               <div class="flex-full midv"> <span class="bi-file-text mxr-8 c-lime-dd"></span> add:route </div>
             </div>
             
@@ -195,7 +197,7 @@
 
           <div id="add-api"> 
             <br>
-            <div class="font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
+            <div class=" fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
               <div class="flex-full midv"> <span class="bi-file-text mxr-8 c-lime-dd"></span> add:api </div>
 
             </div>
@@ -232,7 +234,7 @@
 
           <div id="add-migrator"> 
             <br>
-            <div class="font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
+            <div class=" fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
               <div class="flex-full midv"> <span class="bi-file-text mxr-8 c-lime-dd"></span> add:migrator </div>
 
             </div>
@@ -262,7 +264,7 @@
           
           <div id="add-model"> 
             <br>
-            <div class="font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
+            <div class=" fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
               <div class="flex-full midv"> <span class="bi-file-text mxr-8 c-lime-dd"></span> add:model </div>
 
             </div>
@@ -295,7 +297,7 @@
           
           <div id="add-rex"> 
             <br>
-            <div class="font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
+            <div class=" fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
               <div class="flex-full midv"> <span class="bi-file-text mxr-8 c-lime-dd"></span> add:rex </div>
 
             </div>
@@ -334,7 +336,7 @@
           
           <div id="backup-project"> 
             <br>
-            <div class="font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
+            <div class=" fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
               <div class="flex-full midv"> <span class="bi-file-text mxr-8 c-lime-dd"></span> backup project </div>
 
             </div>
@@ -357,7 +359,7 @@
           
           <div id="backup-clear"> 
             <br>
-            <div class="font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
+            <div class=" fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
               <div class="flex-full midv"> <span class="bi-file-text mxr-8 c-lime-dd"></span> backup :clear </div>                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               
             </div>
             
@@ -379,7 +381,7 @@
 
           <div id="clean-storage"> 
             <br>
-            <div class="font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
+            <div class=" fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
               <div class="flex-full midv"> <span class="bi-file-text mxr-8 c-lime-dd"></span> clean storage </div>
 
             </div>
@@ -401,7 +403,7 @@
           
           <div id="config-all"> 
             <br>
-            <div class="font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
+            <div class=" fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
               <div class="flex-full midv"> <span class="bi-gear mxr-8 c-lime-dd"></span> config:all </div>
 
             </div>
@@ -427,7 +429,7 @@
           
           <div id="config-dbonline"> 
             <br>
-            <div class="font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
+            <div class=" fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
               <div class="flex-full midv"> <span class="bi-gear mxr-8 c-lime-dd"></span> config:dbonline </div>
 
             </div>
@@ -466,7 +468,7 @@
           
           <div id="config-dboffline"> 
             <br>
-            <div class="font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
+            <div class=" fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
               <div class="flex-full midv"> <span class="bi-gear mxr-8 c-lime-dd"></span> config:dboffline </div>
 
             </div>
@@ -525,7 +527,7 @@
                   
           <div id="config-env"> 
             <br>
-            <div class="font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
+            <div class=" fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
               <div class="flex-full midv"> <span class="bi-gear mxr-8 c-lime-dd"></span> config:env </div>
 
             </div>
@@ -558,7 +560,7 @@
 
           <div id="config-userstable"> 
             <br>
-            <div class="font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
+            <div class=" fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
               <div class="flex-full midv"> <span class="bi-gear mxr-8 c-lime-dd"></span> config:usersTable </div>
 
             </div>
@@ -590,7 +592,7 @@
                   
           <div id="config-cookiefield"> 
             <br>
-            <div class="font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
+            <div class=" fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
               <div class="flex-full midv"> <span class="bi-gear mxr-8 c-lime-dd"></span> config:cookieField </div>
 
             </div>
@@ -624,7 +626,7 @@
                   
           <div id="config-idField"> 
             <br>
-            <div class="font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
+            <div class=" fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
               <div class="flex-full midv"> <span class="bi-gear mxr-8 c-lime-dd"></span> config:idField </div>
 
             </div>
@@ -658,7 +660,7 @@
                   
           <div id="config-meta"> 
             <br>
-            <div class="font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
+            <div class=" fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
               <div class="flex-full midv"> <span class="bi-gear mxr-8 c-lime-dd"></span> config:meta </div>
 
             </div>
@@ -691,7 +693,7 @@
                   
           <div id="cli"> 
             <br>
-            <div class="font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
+            <div class=" fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
               <div class="flex-full midv"> <span class="bi-file-code mxr-8 c-lime-dd"></span> cli </div>
 
             </div> <br>
@@ -719,7 +721,7 @@
                   
           <div id="features"> 
             <br>
-            <div class="font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
+            <div class=" fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
               <div class="flex-full midv"> <span class="bi-file-text mxr-8 c-lime-dd"></span> features </div>
 
             </div>
@@ -746,7 +748,7 @@
 
           <div id="info"> 
             <br>
-            <div class="font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
+            <div class=" fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
               <div class="flex-full midv"> <span class="bi-info-circle mxr-8 c-lime-dd"></span> info </div>
 
             </div>
@@ -780,7 +782,7 @@
 
           <div id="install"> 
             <br>
-            <div class="font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
+            <div class=" fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
               <div class="flex-full midv"> <span class="bi-download mxr-8 c-lime-dd"></span> Install </div>
             </div>
             
@@ -813,7 +815,7 @@
 
           <div id="migrate"> 
             <br>
-            <div class="font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
+            <div class=" fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
               <div class="flex-full midv"> <span class="bi-server mxr-8 c-lime-dd"></span> Migrate </div>
             </div>
             
@@ -847,7 +849,7 @@
           </div> <br>
 
           <div id="project"> 
-              <div class="font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
+              <div class=" fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
                 <div class="flex-full midv"> <span class="bi-folder mxr-8 c-lime-dd"></span> project  </div>
                 <div class="flex mid">
                   <span class="bi-chevron-double-right"></span>
@@ -882,7 +884,7 @@
           </div> <br>
 
           <div id="support"> 
-            <div class="font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
+            <div class=" fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
               <div class="flex-full midv"> <span class="bi-file-text mxr-8 c-lime-dd"></span> support </div>
 
             </div>
@@ -906,7 +908,7 @@
 
           <div id="version"> 
             <br>
-            <div class="font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
+            <div class=" fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
               <div class="flex-full midv"> <span class="bi-file-text mxr-8 c-lime-dd"></span> version </div>
             </div>
             
@@ -927,7 +929,7 @@
                   
           <div id="watch"> 
             <br>
-            <div class="font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
+            <div class=" fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
               <div class="flex-full midv"> <span class="bi-clock mxr-8 c-lime-dd"></span> watch </div>
 
             </div>
@@ -965,7 +967,7 @@
                   
           <div id="wiz"> 
             <br>
-            <div class="font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
+            <div class=" fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
               <div class="flex-full midv"> <span class="helvetica mxr-6"><span class="bi-code-slash"></span></span> <span>wiz</span> </div>
 
             </div>

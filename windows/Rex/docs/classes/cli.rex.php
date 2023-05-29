@@ -145,7 +145,7 @@
 
                         <div id="textIndent" class="">
                             <div class="">
-                                <div class="font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
+                                <div class=" fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
                                     <div class="flex-full midv"> 
                                         <span class=" mxr-8 c-lime-dd">
                                             <span class="numb-box">1.</span>
@@ -178,7 +178,7 @@
 
                         <div id="textView" class="">
                             <div class="">
-                                <div class="font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
+                                <div class=" fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
                                     <div class="flex-full midv"> 
                                         <span class=" mxr-8 c-lime-dd">
                                             <span class="numb-box">2.</span>
@@ -251,7 +251,7 @@
 
                         <div id="List" class="">
                             <div class="">
-                                <div class="font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
+                                <div class=" fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
                                     <div class="flex-full midv"> 
                                         <span class=" mxr-8 c-lime-dd">
                                             <span class="numb-box">3.</span>
@@ -319,7 +319,7 @@
 
                         <div id="textYield" class="">
                             <div class="">
-                                <div class="font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
+                                <div class=" fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
                                     <div class="flex-full midv"> 
                                         <span class=" mxr-8 c-lime-dd">
                                             <span class="numb-box">4.</span>
@@ -354,7 +354,7 @@
 
                         <div id="backspace" class="">
                             <div class="">
-                                <div class="font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
+                                <div class=" fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
                                     <div class="flex-full midv"> 
                                         <span class=" mxr-8 c-lime-dd">
                                             <span class="numb-box">5.</span>
@@ -384,7 +384,7 @@
 
                         <div id="cls" class="">
                             <div class="">
-                                <div class="font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
+                                <div class=" fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
                                     <div class="flex-full midv"> 
                                         <span class="mxr-8 c-lime-dd">
                                             <span class="numb-box">6.</span>
@@ -399,7 +399,7 @@
 
                         <div id="clearUp" class="">
                             <div class="">
-                                <div class="font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
+                                <div class=" fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
                                     <div class="flex-full midv"> 
                                         <span class="mxr-8 c-lime-dd">
                                             <span class="numb-box">7.</span>
@@ -429,7 +429,7 @@
 
                         <div id="clearLine" class="">
                             <div class="">
-                                <div class="font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
+                                <div class=" fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
                                     <div class="flex-full midv"> 
                                         <span class=" mxr-8 c-lime-dd">
                                             <span class="numb-box">8.</span>
@@ -459,7 +459,7 @@
 
                         <div id="upLine" class="">
                             <div class="">
-                                <div class="font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
+                                <div class=" fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
                                     <div class="flex-full midv"> 
                                         <span class=" mxr-8 c-lime-dd">
                                             <span class="numb-box">9.</span>
@@ -489,7 +489,7 @@
 
                         <div id="br" class="">
                             <div class="">
-                                <div class="font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
+                                <div class=" fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
                                     <div class="flex-full midv"> 
                                         <span class=" mxr-8 c-lime-dd">
                                             <span class="numb-box">10.</span>
@@ -518,7 +518,7 @@
 
                         <div id="break" class="">
                             <div class="">
-                                <div class="font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
+                                <div class=" fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
                                     <div class="flex-full midv"> 
                                         <span class=" mxr-8 c-lime-dd">
                                             <span class="numb-box">11.</span>
@@ -552,7 +552,7 @@
 
                         <div id="emo" class="">
                             <div class="">
-                                <div class="font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
+                                <div class=" fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
                                     <div class="flex-full midv"> 
                                         <span class=" mxr-8 c-lime-dd">
                                             <span class="numb-box">12.</span>
@@ -589,7 +589,7 @@
 
                         <div id="color" class="">
                             <div class="">
-                                <div class="font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
+                                <div class=" fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
                                     <div class="flex-full midv"> 
                                         <span class=" mxr-8 c-lime-dd">
                                             <span class="numb-box">13.</span>
@@ -624,7 +624,7 @@
 
                         <div id="danger" class="">
                             <div class="">
-                                <div class="font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
+                                <div class=" fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
                                     <div class="flex-full midv"> 
                                         <span class=" mxr-8 c-lime-dd">
                                             <span class="numb-box">14.</span>
@@ -656,7 +656,7 @@
 
                         <div id="warn" class="">
                             <div class="">
-                                <div class="font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
+                                <div class=" fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
                                     <div class="flex-full midv"> 
                                         <span class=" mxr-8 c-lime-dd">
                                             <span class="numb-box">15.</span>
@@ -688,7 +688,7 @@
 
                         <div id="alert" class="">
                             <div class="">
-                                <div class="font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
+                                <div class=" fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
                                     <div class="flex-full midv"> 
                                         <span class=" mxr-8 c-lime-dd">
                                             <span class="numb-box">16.</span>
@@ -720,7 +720,7 @@
 
                         <div id="valid" class="">
                             <div class="">
-                                <div class="font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
+                                <div class=" fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
                                     <div class="flex-full midv"> 
                                         <span class=" mxr-8 c-lime-dd">
                                             <span class="numb-box">17.</span>
@@ -752,7 +752,7 @@
 
                         <div id="bgColor" class="">
                             <div class="">
-                                <div class="font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
+                                <div class=" fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
                                     <div class="flex-full midv"> 
                                         <span class=" mxr-8 c-lime-dd">
                                             <span class="numb-box">18.</span>
@@ -786,7 +786,7 @@
 
                         <div id="bgDanger" class="">
                             <div class="">
-                                <div class="font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
+                                <div class=" fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
                                     <div class="flex-full midv"> 
                                         <span class=" mxr-8 c-lime-dd">
                                             <span class="numb-box">19.</span>
@@ -818,7 +818,7 @@
 
                         <div id="bgWarn" class="">
                             <div class="">
-                                <div class="font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
+                                <div class=" fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
                                     <div class="flex-full midv"> 
                                         <span class=" mxr-8 c-lime-dd">
                                             <span class="numb-box">20.</span>
@@ -850,7 +850,7 @@
 
                         <div id="bgAlert" class="">
                             <div class="">
-                                <div class="font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
+                                <div class=" fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
                                     <div class="flex-full midv"> 
                                         <span class=" mxr-8 c-lime-dd">
                                             <span class="numb-box">21.</span>
@@ -882,7 +882,7 @@
 
                         <div id="bgValid" class="">
                             <div class="">
-                                <div class="font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
+                                <div class="fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
                                     <div class="flex-full midv"> 
                                         <span class=" mxr-8 c-lime-dd">
                                             <span class="numb-box">22.</span>
@@ -914,7 +914,7 @@
 
                         <div id="error" class="">
                             <div class="">
-                                <div class="font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
+                                <div class=" fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
                                     <div class="flex-full midv"> 
                                         <span class=" mxr-8 c-lime-dd">
                                             <span class="numb-box">23.</span>
@@ -946,7 +946,7 @@
 
                         <div id="warning" class="">
                             <div class="">
-                                <div class="font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
+                                <div class=" fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
                                     <div class="flex-full midv"> 
                                         <span class=" mxr-8 c-lime-dd">
                                             <span class="numb-box">24.</span>
@@ -978,7 +978,7 @@
 
                         <div id="caution" class="">
                             <div class="">
-                                <div class="font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
+                                <div class=" fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
                                     <div class="flex-full midv"> 
                                         <span class=" mxr-8 c-lime-dd">
                                             <span class="numb-box">25.</span>
@@ -1010,7 +1010,7 @@
 
                         <div id="notice" class="">
                             <div class="">
-                                <div class="font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
+                                <div class=" fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
                                     <div class="flex-full midv"> 
                                         <span class=" mxr-8 c-lime-dd">
                                             <span class="numb-box">26.</span>
@@ -1042,7 +1042,7 @@
 
                         <div id="success" class="">
                             <div class="">
-                                <div class="font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
+                                <div class=" fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
                                     <div class="flex-full midv"> 
                                         <span class=" mxr-8 c-lime-dd">
                                             <span class="numb-box">27.</span>
@@ -1074,7 +1074,7 @@
 
                         <div id="btn" class="">
                             <div class="">
-                                <div class="font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
+                                <div class=" fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
                                     <div class="flex-full midv"> 
                                         <span class=" mxr-8 c-lime-dd">
                                             <span class="numb-box">28.</span>
@@ -1089,7 +1089,7 @@
 
                         <div id="play" class="">
                             <div class="">
-                                <div class="font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
+                                <div class=" fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
                                     <div class="flex-full midv"> 
                                         <span class=" mxr-8 c-lime-dd">
                                             <span class="numb-box">29.</span>
@@ -1124,7 +1124,7 @@
 
                         <div id="pause" class="">
                             <div class="">
-                                <div class="font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
+                                <div class=" fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
                                     <div class="flex-full midv"> 
                                         <span class=" mxr-8 c-lime-dd">
                                             <span class="numb-box">30.</span>
@@ -1153,7 +1153,7 @@
 
                         <div id="animeTest" class="">
                             <div class="">
-                                <div class="font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
+                                <div class=" fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
                                     <div class="flex-full midv"> 
                                         <span class=" mxr-8 c-lime-dd">
                                             <span class="numb-box">31.</span>
@@ -1188,7 +1188,7 @@
 
                         <div id="animate" class="">
                             <div class="">
-                                <div class="font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
+                                <div class=" fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
                                     <div class="flex-full midv"> 
                                         <span class=" mxr-8 c-lime-dd">
                                             <span class="numb-box">32.</span>
@@ -1220,7 +1220,7 @@
 
                         <div id="endAnime" class="">
                             <div class="">
-                                <div class="font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
+                                <div class=" fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
                                     <div class="flex-full midv"> 
                                         <span class=" mxr-8 c-lime-dd">
                                             <span class="numb-box">33.</span>
@@ -1255,7 +1255,7 @@
 
                         <div id="loadTime" class="">
                             <div class="">
-                                <div class="font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
+                                <div class=" fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
                                     <div class="flex-full midv"> 
                                         <span class=" mxr-8 c-lime-dd">
                                             <span class="numb-box">34.</span>
@@ -1286,7 +1286,7 @@
 
                         <div id="dots" class="">
                             <div class="">
-                                <div class="font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
+                                <div class=" fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
                                     <div class="flex-full midv"> 
                                         <span class=" mxr-8 c-lime-dd">
                                             <span class="numb-box">35.</span>

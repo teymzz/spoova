@@ -6,14 +6,14 @@
      <nav class="nav-left fixed">
 
           <div class="flex pxv-10">
-               <div class="flex-icon theme-btn navtheme box bd bd-silver rad-r anc-btn-link flow-hide bc-silver ripple relative" style="transition: none">
-                    <div class="px-40 b-cover ico-spin" data-src="@mapp('images/icons/favicon.png')" style="transition: none"></div>
-                    <div class="font-em-1d5 px-40 flex mid overlay fb-9 calibri" style="top:-2px; left:.4px; z-index: 1; color:#202dd5;">
+               <div class="flex-icon theme-btn navtheme bd bd-silver rad-r anc-btn-link flow-hide bc-silver ripple relative" style="transition: none">
+                    <div class="px-40 b-cover ico-spin" data-src="@mapp('images/icons/favicon.png')" style="transition: none;"></div>
+                    <div class="font-em-1d2 px-40 flex mid overlay fb-2 fira" style="top:-1.1px; left:.4px; z-index: 1; color:#202dd5;">
                          s 
                     </div>
                </div>
                <a href="@Domurl()" class="flex">
-                    <div class="flex midv mxl-8 fb-9 font-menu font-em-1d2" style="color: #202dd5">POOVA</div>
+                    <div class="flex midv mxl-8 fb-9  font-em-1d2" style="color: #202dd5">POOVA</div>
                </a>
           </div> <br>
 
@@ -38,7 +38,7 @@
                <li> <a href="@DomUrl('docs/plugins')" class="@inPath('active')"><span class="ico ico-spin"></span>Composer and Plugins</a></li>
                <li> <a href="@DomUrl('docs/libraries')" class="@inPath('active')"><span class="ico ico-spin"></span>Third-Party Libraries</a> </li>
                <li> <a href="@DomUrl('docs/other-features')" class="@inPath('active')"><span class="ico ico-spin"></span>Other Features</a> </li>
-               <li> <a href="@DomUrl('updates')" class="@inPath('active')"><span class="ico ico-spin"></span><span class="bi-arrow-down-circle c-dry-blue"></span> New Updates</a> </li>
+               <li> <a href="@DomUrl('updates')" class="@inPath('active')"><span class="bi-recycle c-dry-blue"></span> Updates</a> </li>
           </ul>
       
      </nav>

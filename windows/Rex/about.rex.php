@@ -1,6 +1,6 @@
 @template('template.t-tut')
 
-@lay('build.co.navbars:left-nav')
+   @lay('build.co.navbars:left-nav')
 
    <div class="box-full pxl-2 bc-white pull-right">
        <section class="pxs-10 tutorial bc-white">
@@ -44,19 +44,30 @@
                             <p>
                                 There are different ways by which a window url can be handled. Spoova's flexibility supports 
                                 multiple ways of loading urls but however, favors a standard logic and provides a great support for it. In order for the logic to 
-                                work, all window files (or entry points) and window subdirectories containing window files are expected to be placed within the <code>windows/Routes/</code> directory including all APIs. 
-                                The standard logic uses the window files as the base for any url visited. This means that any url visited that does not have its 
-                                entry point within the Routes folder is considered as an invalid url. This structure helps in file organization and code deployment. 
+                                work, all window route files (or entry points) and route subdirectories containing route files are expected to be placed within the 
+                                <code>windows/Routes/</code> directory including all APIs. 
+                                The standard logic uses the window (route) files as the base for any url visited. This means that any url visited that does not have its 
+                                entry point within the <code>windows/Routes</code> directory is considered as an invalid url. This structure helps in file organization and code deployment. 
                                 It also helps to locate files easily with a minimal level of stress.
                             </p>
-                            
+                            <p>
+                                Internally, the framework also introduces a <code>domurl()</code> function for mapping urls to their environment. This function tries to create a form of environmental 
+                                handshake that makes relative static urls recognizable in the development environment. Hence, all relative urls of static resource files are converted into an http protocol 
+                                format that makes them accessible across different enviroments. This makes it easier to migrate project applications from production to live environment.
+                            </p>
+                            <p>
+                                The live server system was integerated into the application to make development faster. There are couple of ways it can be started, however the best way is through 
+                                the use of template directive <code>@(@live)@</code> in template files. If a template file cannot be used, there are other ways in which it can be 
+                                turned off or on within routes. This live server also makes it possible to easily create template files easily when a non-existing template file is autoloaded. Together, 
+                                all these features and functionalities ensures a faster project development rate.
+                            </p>
                         </div>
                     </div>
 
                     <div class="bc-white-dd mvt-10">
                         <div class="bc-orange c-white pxv-10 font-em-d8">
     
-                            <div class="bi"> <span class="bi-lock"></span> Security </div>  
+                            <div class="bi"> <span class="bi-shield-check"></span> Security </div>  
     
                         </div>
     
@@ -75,11 +86,31 @@
                                     By default, all php files are protected along with some core directories. This behaviour may affect file download which 
                                     can be fixed by creating a route and setting header content-type of that url
                                 </li>
-                                <div class="">
-                                    All texts with the <code>@</code> symbol should be properly commented with <code>@(()@)@</code> to avoid conflicts with the 
-                                    template directives. When dealing with forms inputs, this can be solved with the php <code>htmlentities()</code> inbuilt function.
-                                </div>
+                                <li>
+                                    All texts with the <code>@</code> symbol should be properly commented with <code>@(@()@)@</code> to avoid conflicts with the 
+                                    template directives. When dealing with forms inputs, this can be solved with the php <code>htmlentities()</code> in-built function.
+                                </li>
                             </ul>
+                        </div>
+                    </div>
+
+                    <div class="bc-white-dd mvt-10">
+                        <div class="bc-orange c-white pxv-10 font-em-d8">
+    
+                            <div class="bi"> <span class="bi-recycle"></span> Version updates </div>  
+    
+                        </div>
+    
+                        <div class="pxv-20 pvb-1 font-em-d85">
+
+                            <div class="">
+                                 There is a constant improvement and upgrades on spoova framework. While the basic documentation provides a first-hand understanding 
+                                 of the framework, it is important to do a follow up with new changes and developments made within the application. The initial documentation 
+                                 provides an assistance for the initial release of the framework. For update documentations on improvements made which are version specific, it is suggested to 
+                                 visit the <a href="@domurl('version')">version</a> page to learn more about recent updates or changes made within the framework. The <a href="@domurl('updates')">updates</a> 
+                                 page can also be visited to see the current version of the framework along with added changes.
+                            </div> <br>
+
                         </div>
                     </div>
 

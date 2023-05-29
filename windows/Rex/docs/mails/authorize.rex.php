@@ -10,16 +10,16 @@
     <section class="pxv-10 tutorial mails bc-white">
       <div class="font-em-1d2">
 
-        @lay('build.co.links:tutor_pointer')
-
         <div class="start font-em-d8">
 
-          <div class="font-em-1d5 c-orange">Mails</div> <br>  
+          @lay('build.co.links:tutor_pointer') <br>
+
+          <div class="font-em-1d5 c-orange">Mails : authorize</div> <br>  
           
           <div class="mails-intro">
 
               <div class="fb-6">
-                  <div class="font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
+                  <div class=" fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
                   <div class="flex-full midv"> 
                       <span class="bi-check-square mxr-8 c-lime-dd"></span> authorizing mails 
                   </div>
@@ -72,7 +72,7 @@
                 </div>
               </div>
 
-              <div class="font-menu pvs-6">
+              <div class=" pvs-6">
                   Note: when authorized, the <code>sendmail()</code> returns true only if the mail is successfully 
                   configured and an attempt is made to forward the mail. 
                   However, when <code>authorize(false)</code> is used, the sendmail returns true only if the configuration 
@@ -106,7 +106,7 @@
                 </div>
               </div>
 
-              <div class="font-menu pvs-6 font-em-d85">
+              <div class=" pvs-6 font-em-d85">
                   The <code>sendmail()</code> method is not a true way of checking if mail is 
                   successfully sent. This should be handled using the <code>sent()</code> method.
                   The <code>authorize()</code> method can be harvested to only send mails online by 

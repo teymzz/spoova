@@ -1106,7 +1106,7 @@ a.inherit {
     white-space: pre-wrap;
 }
 
-.font-menu {
+. {
     font: menu;
 }
 
