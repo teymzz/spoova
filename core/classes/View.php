@@ -1,17 +1,18 @@
 <?php
 
-    use spoova\mi\core\classes\Slicer;
+use spoova\mi\core\classes\Compiler;
+use spoova\mi\core\classes\EInfo;
+use spoova\mi\core\classes\Rex;
+use spoova\mi\core\classes\Slicer;
 
-    
     /**
-     * View is a function used render a page for routed files.
-     * The can be used with the Res::post() or Res::get() method. 
-     *
-     * @param string|array $arg1 body or arguments
-     * @param array|string $arg2 arguments or body
-     * @return string|void
+     * View is a function used render template files for routed files.
+     * 
+     * @param string $file_path file path
+     * @param array $arg2 variable arguments
+     * @return string|void void is returned if file path does not exist
      */
-    function view(string $file_path = '', $params = []){
+    function view(string $file_path = '', array $params = []){
 
         //get path extension            
         $file_path = ($file_path == '/')? "index" : $file_path;
@@ -27,18 +28,56 @@
     }
 
     /**
-     * Compile is a function used to compile a page for unrouted files.
-     * Because it accepts arguments (variables). It should only be used once
-     * within the Res::load() method. 
+     * Compile is a function used to compile a rex template files.
      * 
-     * {@See Res::compile()}
+     * {@See Rex::compile()}
      *
-     * @param string|array $arg1 body or arguments
-     * @param array|string $arg2 arguments or body
+     * @param string|array $arg1 url or arguments
+     * @param array|string $arg2 arguments or url
+     * @return Compiler|String
+     */
+    function compile(array|string $arg1 = [], array|string $arg2 = ''): Compiler|String {
+        $compiler = new Compiler();
+        return $compiler->compile(...func_get_args());
+    }   
+
+    /**
+     * Pulls out the raw content of a rex file
+     *
+     * @param string $file rex file path within WIN_REX directory.
+     *  - Note: supports dot convention with default extension as ".rex.php"
+     * 
      * @return string|false
      */
-    function compile($arg1 = '', $arg2 = ''){
-        return Res::compile(...func_get_args());
-    }   
+    function raw(string $file) : string|false {
+
+        $file = to_frontslash(WIN_REX.$file, true);
+        $file .= ".rex.php";
+
+        if(is_file($file)){
+
+            $contents = file_get_contents($file);
+
+            return $contents;
+
+
+        } else {    
+
+            return EInfo::view('invalid rex file path supplied!');
+
+        }
+
+    }
+
+    /**
+     * Returns the markup of a rendered component
+     */
+    function rex(string $url = '', bool|Closure $callback = false) {
+  
+      $rex = new Rex;
+      return (string) $rex::markup(...func_get_args());
+    
+    }
+
 
 ?>

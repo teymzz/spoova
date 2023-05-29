@@ -8,75 +8,42 @@
         <section class="pxv-10 tutorial bc-white">
             <div class="font-em-1d2">
 
-                @lay('build.co.links:tutor_pointer')
-
                 <div class="start font-em-d8">
 
-                    <div class="font-em-1d5 c-orange">FileUploader</div> <br>  
+                    @lay('build.co.links:tutor_pointer') <br>
+
+                    <div class="font-em-1d5 c-orange">Hasher</div> <br>  
                     
                     <div class="helper-classes">
-                        <div class="fb-6">Introduction</div> <br>
                         <div class="">
 
                             <div class="">
-                                The <code>Hasher</code> class is a tool that is used to generate 
-                                hashes. It generates salts in multiple ways that makes it difficult to
-                                bypass. The methods available on <code>Hasher</code> are:
+                                The <code class="bd-f">Hasher</code> class is used to generate 
+                                hashes. It tries to generates salts in multiple custom ways. 
+                                The methods available on <code class="bd-f">Hasher</code> are:
                             </div> <br>
 
-                            <ol>
-                                <li> <a href="#sethash"> setHash </a> </li>
-                                <li> <a href="#randomhash"> randomHash </a> </li>
-                                <li> <a href="#hashfunc"> hashFunc </a> </li>
-                                <li> <a href="#hashify"> hashify </a> </li>
-                                <li> <a href="#randomize"> randomize </a> </li>
-                            </ol>
+                            <ul>
+                                <li> <a href="#sethash" class="c-olive ch-olive-dd"> setHash </a> </li>
+                                <li> <a href="#randomhash" class="c-olive ch-olive-dd"> randomHash </a> </li>
+                                <li> <a href="#hashfunc" class="c-olive ch-olive-dd"> hashFunc </a> </li>
+                                <li> <a href="#hashify" class="c-olive ch-olive-dd"> hashify </a> </li>
+                                <li> <a href="#randomize" class="c-olive ch-olive-dd"> randomize </a> </li>
+                            </ul>
                             
                         </div> 
                     </div>  
 
 
-                    <div id="initialize" class="">
-                        <div class="">
-                            <div class="font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
-                                <div class="flex-full midv"> 
-                                    <span class=" mxr-8 c-lime-dd">
-                                    </span> Initializing class
-                                </div>
-                            </div> <br>
-
-                            <div class="">
-                                The hasher tool can be easily initialized as shown below.
-                                <br><br>
-                            
-                                <div class="pre-area shadow">
-                                    <div class="box-full">
-                                        <div class="pxv-6 bc-off-white"><code>Sample: Initializing Hasher</code></div>
-                                        <pre class="pre-code">
-    $hasher  = new Hasher;
-                                        </pre>
-                                    </div>
-                                </div>
-
-                            </div>
-                        </div> <br><br>
-                    </div>
-
                     <div id="keywords" class="">
                         <div class="">
-                            <div class="font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
-                                <div class="flex-full midv"> 
-                                    <span class=" mxr-8 c-lime-dd">
-                                    </span> keywords
-                                </div>
-                            </div> <br>
                             <div class="">
                                 The following keywords should be noted:
                                 <br><br>
                             
                                 <div class="pre-area shadow">
                                     <div class="box-full">
-                                        <div class="pxv-6 bc-off-white"><code>keywords</code></div>
+                                        <div class="pxv-6 bc-off-white">keywords</div>
                                         <pre class="pre-code">
     <span class="comment">
     data    : array or string data expected to be hashed
@@ -97,17 +64,44 @@
 
                             </div>
                         </div>
-                    </div> <br>       
+                    </div> <br>  
+
+                    <div id="initialize" class="">
+                        <div class="">
+                            <div class="fb-6 flex-full rad-4 pxv-8 lacier">
+                                <div class="flex-full midv c-orange"> 
+                                    <span class="mxr-8">
+                                        <span class="bi-lightning-fill"></span>
+                                    </span> Initializing class
+                                </div>
+                            </div>
+
+                            <div class="">
+                                The hasher tool can be easily initialized as shown below.
+                                <br><br>
+                            
+                                <div class="pre-area shadow">
+                                    <div class="box-full">
+                                        <div class="pxv-6 bc-off-white">Sample: Initializing Hasher</div>
+                                        <pre class="pre-code">
+  $hasher  = new Hasher;
+                                        </pre>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div> <br>
+                    </div>     
 
                     <div id="sethash" class="">
                         <div class="">
-                            <div class="font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
-                                <div class="flex-full midv"> 
-                                    <span class=" mxr-8 c-lime-dd">
-                                        <span class="numb-box">1.</span>
+                            <div class=" fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
+                                <div class="flex-full midv c-orange"> 
+                                    <span class="mxr-8">
+                                        <span class="bi-circle-fill"></span>
                                     </span> sethash
                                 </div>
-                            </div> <br>
+                            </div>
 
                             <div class="">
                                 The <code>sethash</code> method is used to set a data meant for hashing along with 
@@ -116,9 +110,9 @@
                                 
                                 <div class="pre-area shadow">
                                     <div class="box-full">
-                                        <div class="pxv-6 bc-off-white"><code>Syntax: sethash</code></div>
+                                        <div class="pxv-6 bc-off-white">Syntax: sethash</div>
                                         <pre class="pre-code">
-    $hasher->sethash(data, secret);
+  $hasher->sethash(data, secret);
                                         </pre>
                                     </div>
                                 </div>
@@ -130,15 +124,13 @@
                             
                         <div class="pre-area shadow">
                             <div class="box-full">
-                                <div class="pxv-6 bc-off-white"><code>Example: setting hash</code></div>
+                                <div class="pxv-6 bc-off-white">Example: setting hash</div>
                                 <pre class="pre-code">
-
-    $hasher->sethash('sometext'); <span class="comment">// set a string to be hashed</span>
+  $hasher->sethash('sometext'); <span class="comment">// set a string to be hashed</span>
     
-    $hasher->sethash(['user' => 'foo']); <span class="comment">// set an array to be hashed</span>
+  $hasher->sethash(['user' => 'foo']); <span class="comment">// set an array to be hashed</span>
 
-    $hasher->sethash(['user' => 'foo'], 'password123'); <span class="comment">// set an array to be hashed with a secret password</span>
-
+  $hasher->sethash(['user' => 'foo'], 'password123'); <span class="comment">// set an array to be hashed with a secret password</span>
                                 </pre>
                             </div>
                         </div>
@@ -148,20 +140,20 @@
 
                     <div id="randomhash" class="">
                         <div class="">
-                            <div class="font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
-                                <div class="flex-full midv"> 
-                                    <span class=" mxr-8 c-lime-dd">
-                                        <span class="numb-box">2.</span>
+                            <div class=" fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
+                                <div class="flex-full midv c-orange"> 
+                                    <span class="mxr-8">
+                                        <span class="bi-circle-fill"></span>
                                     </span> randomHash
                                 </div>
-                            </div> <br>
+                            </div>
                             <div class="">
                                 The <code>randomHash()</code> method is used to generate a random hash string
                                 <br><br>
 
                                 <div class="pre-area shadow">
                                     <div class="box-full">
-                                        <div class="pxv-6 bc-off-white"><code>Syntax: randomhash</code></div>
+                                        <div class="pxv-6 bc-off-white">Syntax: randomhash</div>
                                         <pre class="pre-code">
     $hasher->randomHash(length, keys, algo); 
 
@@ -178,18 +170,18 @@
 
                                 <div class="pre-area shadow">
                                     <div class="box-full">
-                                        <div class="pxv-6 bc-off-white"><code>Examples: randomHash</code></div>
+                                        <div class="pxv-6 bc-off-white">Examples: randomHash</div>
                                         <pre class="pre-code">
-    $hasher->randomHash(50);  <span class="comment no-select">generate 50 character string</span>
+  $hasher->randomHash(50);  <span class="comment no-select">generate 50 character string</span>
 
-    $hasher->randomHash(50, 'abc');  <span class="comment no-select">generate 50 character string from abc</span>
+  $hasher->randomHash(50, 'abc');  <span class="comment no-select">generate 50 character string from abc</span>
 
-    $hasher->randomHash('', 'abc', 'sha1');  <span class="comment no-select">hash 'abc' with sha1 + time</span>
+  $hasher->randomHash('', 'abc', 'sha1');  <span class="comment no-select">hash 'abc' with sha1 + time</span>
     
-    <span class="comment no-select">
-    When using hash algorithms, length of character returned depends on the hash algorithm itself. 
-    This means that using lengths does not have any on code sample 3 above.
-    </span>
+  <span class="comment no-select">
+  When using hash algorithms, length of character returned depends on the hash algorithm itself. 
+  This means that using lengths does not have any on code sample 3 above.
+  </span>
                                         </pre>
                                     </div>
                                 </div>
@@ -199,20 +191,20 @@
 
                     <div id="hashFunc" class="">
                         <div class="">
-                            <div class="font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
-                                <div class="flex-full midv"> 
-                                    <span class=" mxr-8 c-lime-dd">
-                                        <span class="numb-box">3.</span>
+                            <div class=" fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
+                                <div class="flex-full midv c-orange"> 
+                                    <span class="mxr-8">
+                                        <span class="bi-circle-fill"></span>
                                     </span> hashFunc
                                 </div>
-                            </div> <br>
+                            </div>
                             <div class="">
                                 The <code>hashFunc()</code> method sets the algorithms for hashing.
                                 <br><br>
                         
                                 <div class="pre-area shadow">
                                     <div class="box-full">
-                                        <div class="pxv-6 bc-off-white"><code>Syntax: hashFunc</code></div>
+                                        <div class="pxv-6 bc-off-white">Syntax: hashFunc</div>
                                         <pre class="pre-code">
     $hasher->hashFunc(algo); <span class="comment">// supplies data  to be hashed.</span>
                                         </pre>
@@ -221,7 +213,7 @@
 
                                 <div class="pre-area shadow">
                                     <div class="box-full">
-                                        <div class="pxv-6 bc-off-white"><code>Example: hashFunc</code></div>
+                                        <div class="pxv-6 bc-off-white">Example: hashFunc</div>
                                         <pre class="pre-code">
     $hasher->setHash(['foo','bar'],'1234');
 
@@ -233,7 +225,7 @@
                                 </div>
                             </div>
                         </div> <br>
-                        <div class="font-menu">
+                        <div class="">
                         In the above sample, the array data will be hashed depending on the number of algorithms 
                         supplied. 
                         </div>
@@ -241,13 +233,13 @@
 
                     <div id="hashify" class="">
                         <div class="">
-                            <div class="font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
-                                <div class="flex-full midv"> 
-                                    <span class=" mxr-8 c-lime-dd">
-                                        <span class="numb-box">4.</span>
+                            <div class=" fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
+                                <div class="flex-full midv c-orange"> 
+                                    <span class="mxr-8">
+                                        <span class="bi-circle-fill"></span>
                                     </span> hashify
                                 </div>
-                            </div> <br>
+                            </div>
 
                             <div class="">
                                 This method executes the hash code. It works in different formats which are revealed below
@@ -255,7 +247,7 @@
                     
                                 <div class="pre-area shadow">
                                     <div class="box-full">
-                                        <div class="pxv-6 bc-off-white"><code>Syntax: hashify</code></div>
+                                        <div class="pxv-6 bc-off-white">Syntax: hashify</div>
                                         <pre class="pre-code">
     $hasher->hasify(param1, param2); 
         <span class="comment no-select">
@@ -281,7 +273,7 @@
 
                                 <div class="pre-area shadow">
                                     <div class="box-full">
-                                        <div class="pxv-6 bc-off-white"><code>Example 1: hashify</code></div>
+                                        <div class="pxv-6 bc-off-white">Example 1: hashify</div>
                                         <pre class="pre-code">
     $hasher->setHash('mydata', 'password');
     $hasher->hashFunc(['sha1','md5']);  <span class="comment">// set function(s) to use for hashtype</span>
@@ -305,7 +297,7 @@
                                 </div>
                                 <div class="pre-area shadow">
                                     <div class="box-full">
-                                        <div class="pxv-6 bc-off-white"><code>Example 2: hashify</code></div>
+                                        <div class="pxv-6 bc-off-white">Example 2: hashify</div>
                                         <pre class="pre-code">
     $hasher->setHash('mydata', 'password');
 
@@ -322,7 +314,7 @@
                                 </div>
                                 <div class="pre-area shadow">
                                     <div class="box-full">
-                                        <div class="pxv-6 bc-off-white"><code>Example 3: hashify</code></div>
+                                        <div class="pxv-6 bc-off-white">Example 3: hashify</div>
                                         <pre class="pre-code">
     $hasher->setHash('mydata', 'password');
 
@@ -341,7 +333,7 @@
                                 
                                 <div class="pre-area shadow">
                                     <div class="box-full">
-                                        <div class="pxv-6 bc-off-white"><code>Example 4: hashify</code></div>
+                                        <div class="pxv-6 bc-off-white">Example 4: hashify</div>
                                         <pre class="pre-code">
     $hasher->setHash('mydata', 'password');
     `
@@ -363,13 +355,13 @@
 
                     <div id="randomize" class="">
                         <div class="">
-                            <div class="font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
-                                <div class="flex-full midv"> 
-                                    <span class=" mxr-8 c-lime-dd">
-                                        <span class="numb-box">5.</span>
+                            <div class=" fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
+                                <div class="flex-full midv c-orange"> 
+                                    <span class="mxr-8">
+                                        <span class="bi-circle-fill"></span>
                                     </span> randomize
                                 </div>
-                            </div> <br>
+                            </div>
                             <div class="">
                                 This method is used to randomize an hash function. When used, it provides a one-way 
                                 hash code that cannot be recovered. The <code>randomize</code> method makes sure that 
@@ -378,7 +370,7 @@
                     
                                 <div class="pre-area shadow">
                                     <div class="box-full">
-                                        <div class="pxv-6 bc-off-white"><code>Syntax: randomize</code></div>
+                                        <div class="pxv-6 bc-off-white">Syntax: randomize</div>
                                         <pre class="pre-code">
     $hasher->randomize(bool|string); 
     <span class="comment">
@@ -394,7 +386,7 @@
 
                                 <div class="pre-area shadow">
                                     <div class="box-full">
-                                        <div class="pxv-6 bc-off-white"><code>Example 1: randomize</code></div>
+                                        <div class="pxv-6 bc-off-white">Example 1: randomize</div>
                                         <pre class="pre-code">
 
     $hasher->setHash(['somearray']);
@@ -409,7 +401,7 @@
                                 
                                 <div class="pre-area shadow">
                                     <div class="box-full">
-                                        <div class="pxv-6 bc-off-white"><code>Example 2: randomize</code></div>
+                                        <div class="pxv-6 bc-off-white">Example 2: randomize</div>
                                         <pre class="pre-code">
     $hasher->setHash(['somearray']);
         

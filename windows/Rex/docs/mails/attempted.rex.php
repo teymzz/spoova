@@ -10,17 +10,16 @@
         <section class="pxv-10 tutorial mails bc-white">
             <div class="font-em-1d2">
 
-                @lay('build.co.links:tutor_pointer')
-
                 <div class="start font-em-d8">
-                    <div class="font-em-1d5 c-orange">Mails</div> <br>  
+
+                    @lay('build.co.links:tutor_pointer') <br>
+
+                    <div class="font-em-1d5 c-orange">Mails : attempted</div> <br>  
                     
                     <div class="pulling-data">
 
-
-
                         <div class="fb-6">
-                            <div class="font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
+                            <div class=" fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
                             <div class="flex-full midv"> 
                                 Checking attempted mails 
                             </div>
@@ -83,7 +82,7 @@
 
                     </div> <br>
 
-                    <div class="font-menu">
+                    <div class="">
                         If the <code>authorize</code> is not set as true or necessary config 
                         parameters needed to send a mail (server and recipient) are not set, 
                         the <code>attempted()</code> method returns false even if <code>sendmail</code> 

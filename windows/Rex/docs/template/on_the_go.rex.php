@@ -7,14 +7,13 @@
             <section class="pxv-10 tutorial bc-white">
                 <div class="font-em-1d2">
 
-                    @lay('build.co.links:tutor_pointer')
-
                     <div class="start font-em-d8">
+
+                        @lay('build.co.links:tutor_pointer') <br>
 
                         <div class="font-em-1d5 c-orange">Template on the go</div> <br>  
                         
                         <div class="helper-classes">
-                            <div class="fb-6">Introduction</div> <br>
                             <div class="">
 
                                 <div class="">
@@ -97,7 +96,7 @@
                                       </div>
                                   </div>  
 
-                                  <div class="foot-note pvs-20">
+                                  <div class="foot-note pvs-10">
 
                                     In the code above, assuming the <code>home.index</code> template file 
                                     (i.e windows/Rex/window/home/index.rex.php) file does not exist, when the <code>home</code> 
@@ -107,7 +106,7 @@
                                     rex template files. In certain situations, we can also use the <code>addRex()</code> method to add link to external template 
                                     files. This is mostly useful when we have a live template file that can keep our page on the go. 
 
-                                  </div> <br>
+                                  </div>
 
                                   <div class="pre-area">
                                       <div class="box-full">

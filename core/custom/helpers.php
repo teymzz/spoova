@@ -2,17 +2,16 @@
 
 /* Custom Helper Functions: Mainly for classes */
 // NOTICE : These functions should not be modified
-
-use spoova\mi\core\classes\Collectibles;
-use spoova\mi\core\classes\Collection;
 use spoova\mi\core\classes\Url;
-use spoova\mi\core\classes\DomUrl;
 use spoova\mi\core\classes\EInfo;
-use spoova\mi\core\classes\FileManager;
-use spoova\mi\core\classes\ModelOptimizer;
+use spoova\mi\core\classes\DomUrl;
 use spoova\mi\core\classes\SETTER;
 use spoova\mi\core\classes\Spoova;
 use spoova\mi\core\classes\UserDB;
+use spoova\mi\core\classes\Collection;
+use spoova\mi\core\classes\FileManager;
+use spoova\mi\core\classes\Collectibles;
+use spoova\mi\core\classes\ModelOptimizer;
 
 if(!function_exists('env')){
   /**
@@ -66,7 +65,7 @@ if(!function_exists('domlink')){
 
   function domlink($link, bool $modified = true){
 
-     $link = str_replace(['/','\\','.'], '/', $link);
+     $link = str_replace(['\\','.'], '/', $link);
 
      return domUrl($link, $modified);
 
@@ -79,7 +78,21 @@ if(!function_exists('monitor')){
    * Short function for setting on live server.
    */
   function monitor() {
-    \Res::live();
+    Res::live();
+  }
+}
+
+if(!function_exists('recall')){
+  /**
+   * Short function for setting on live server.
+   */
+  function recall($args) : string {
+    $args = func_get_args();
+    $resource = '';
+    foreach($args as $res) {
+      $resource .= Res::recall($res);
+    }
+    return $resource;
   }
 }
 
@@ -125,9 +138,9 @@ if(!function_exists('webClass')){
    * @throws error if class does not exist
    *
    * @param string $className
-   * @return object|void
+   * @return object|false
    */
-  function webClass(string $className){
+  function webClass(string $className) : object|false {
     $args = func_get_args();
     unset($args[0]);
     $args = array_values($args);
@@ -135,6 +148,7 @@ if(!function_exists('webClass')){
     if(class_exists($class)){
         return new $class(...$args);
     }
+    return false;
   }
 }
 
@@ -146,11 +160,16 @@ if(!function_exists('window')){
    * divisions to supplied argument
    *
    * @param string $type options [window/root|path|base]
+   * @param bool $keepUrl true prevents the conversion of dots to slashes
    * @return string
    */
-  function window($type = 'root'){
-    
-    return Window::wvm($type);
+  function window($type = 'root', bool $keepUrl = false){
+
+    Window::wvm('keep', $keepUrl);
+    $response = Window::wvm($type);
+    Window::wvm('keep', false);
+
+    return $response;
 
   }
 
@@ -334,20 +353,20 @@ if(!function_exists('isUser')){
   }
 }
 
-if(!function_exists('user')){
-  /**
-   * This function returns the userDB class.
-   * It Handles only queries specific to the current user session id
-   * 
-   * @param $tableName database user relational table
-   *    - default uses the user default table name
-   * @return UserDB
-   */
-  function user($tableName = ''){
-    if(!$tableName) $tableName = User::tableName();
-    return new UserDB($tableName);
-  }
-}
+// if(!function_exists('user')){
+//   /**
+//    * This function returns the userDB class.
+//    * It Handles only queries specific to the current user session id
+//    * 
+//    * @param $tableName database user relational table
+//    *    - default uses the user default table name
+//    * @return UserDB
+//    */
+//   function user($tableName = ''){
+//     if(!$tableName) $tableName = User::tableName();
+//     return new UserDB($tableName);
+//   }
+// }
 
 if(!function_exists('url')){
   /**
@@ -536,9 +555,9 @@ if(!function_exists('error')) {
    *
    * @param $error error or input name (or key)
    * @param $subkey subkey of $error
-   * @return string
+   * @return array|string
    */
-  function error($error, $subkey = '') : string {
+  function error($error, $subkey = '') : array|string {
     
     $formErrors = Form::errors();
 

@@ -8,25 +8,24 @@
         <section class="pxv-10 tutorial mails bc-white">
             <div class="font-em-1d2">
 
-                @lay('build.co.links:tutor_pointer')
-
                 <div class="start font-em-d8">
+
+                    @lay('build.co.links:tutor_pointer') <br>
 
                     <div class="font-em-1d5 c-orange">Jsonfy</div> <br>  
                     
                     <div class="helper-classes">
-                        <div class="fb-6">Introduction</div> <br>
                         <div class="">
 
                         <div class="">
-                            <code>Jsonfy</code> class is used to handle a two 
+                            The <code class="bd-f">Jsonfy</code> class is used to handle a two 
                             level dimensionsional array or json string. It may convert a json string to 
                             an array, convert an array to json, modify an existing json or array data 
                             , fetch or remove data from a json string. The methods available are as follows: 
 
-                        </div> <br> <br>
+                        </div> <br>
 
-                            <ol>
+                            <ul>
                             <li> <a href="#newdata"> newData </a> </li>
                             <li> <a href="#datakey"> datakey </a> </li>
                             <li> <a href="#add"> add </a> </li>
@@ -34,53 +33,20 @@
                             <li> <a href="#delete"> delete </a> </li>
                             <li> <a href="#read"> read </a> </li>
                             <li> <a href="#data"> data </a> </li>
-                            </ol>
+                            </ul>
                             
                         </div> 
                     </div>  
 
-
-                    <div id="initialize" class="">
-                        <div class="">
-                            <div class="font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
-                                <div class="flex-full midv"> 
-                                    <span class=" mxr-8 c-lime-dd">
-                                    </span> Initializing class
-                                </div>
-                            </div> <br>
-
-                            <div class="">
-                                The jsonfy tool can be easily initialized as shown below.
-                                <br><br>
-                            
-                                <div class="pre-area shadow">
-                                    <div class="box-full">
-                                        <div class="pxv-6 bc-off-white"><code>Sample: Initializing Input</code></div>
-                                        <pre class="pre-code">
-    $jsonfy  = new Jsonfy;
-                                        </pre>
-                                    </div>
-                                </div>
-
-                            </div>
-                        </div> <br><br>
-                    </div>
-
                     <div id="keywords" class="">
                         <div class="">
-                            <div class="font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
-                                <div class="flex-full midv"> 
-                                    <span class=" mxr-8 c-lime-dd">
-                                    </span> keywords
-                                </div>
-                            </div> <br>
                             <div class="">
                             The following keywords should be noted:
                             <br><br>
                             
                         <div class="pre-area shadow">
                             <div class="box-full">
-                                <div class="pxv-6 bc-off-white"><code>keywords</code></div>
+                                <div class="pxv-6 bc-off-white">keywords</div>
                                 <pre class="pre-code">
     <span class="comment">
     $data : json string or array data
@@ -96,18 +62,46 @@
                         </div>
 
                             </div>
-                        </div> <br><br>
-                    </div>        
+                        </div>
+                    </div> <br> 
+
+                    <div id="initialize" class="">
+                        <div class="">
+                            <div class="fb-6 flex-full rad-4 pxv-8 lacier">
+                                <div class="flex-full midv c-orange-dd"> 
+                                <span class="mxr-8">
+                                        <span class="bi-lightning-fill"></span>
+                                    </span> Initializing Jsonfy class
+                                </div>
+                            </div>
+
+                            <div class="">
+                                The jsonfy class can be easily initialized as shown below.
+                                <br><br>
+                            
+                                <div class="pre-area shadow">
+                                    <div class="box-full">
+                                        <div class="pxv-6 bc-off-white">Sample: Initializing Input</div>
+                                        <pre class="pre-code">
+  $jsonfy  = new Jsonfy;
+                                        </pre>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div> <br>
+                    </div>
+      
 
                     <div id="newdata" class="">
                         <div class="">
-                            <div class="font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
-                                <div class="flex-full midv"> 
-                                    <span class=" mxr-8 c-lime-dd">
-                                        <span class="numb-box">1.</span>
+                            <div class=" fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
+                                <div class="flex-full midv c-orange-dd c-orange"> 
+                                    <span class="mxr-8">
+                                        <span class="bi-circle-fill"></span>
                                     </span> newData
                                 </div>
-                            </div> <br>
+                            </div>
 
                             <div class="">
                                 The <code>newData</code> method is used to set a new json string or array data
@@ -115,20 +109,22 @@
                             
                                 <div class="pre-area shadow">
                                     <div class="box-full">
-                                        <div class="pxv-6 bc-off-white"><code>Syntax: newData</code></div>
+                                        <div class="pxv-6 bc-off-white">Syntax: newData</div>
                                         <pre class="pre-code">
     $jsonfy->newData(data); 
                                         </pre>
                                     </div>
                                 </div>
                             </div>
-                        </div> <br>
-                        We shall be looking at a series of examples below.
-                        <br><br>
+                        </div>
+
+                        <div class="foot-note">
+                            We shall be looking at a series of examples below.
+                        </div>
                             
                         <div class="pre-area shadow">
                             <div class="box-full">
-                                <div class="pxv-6 bc-off-white"><code>Example: setting files</code></div>
+                                <div class="pxv-6 bc-off-white">Example: setting files</div>
                                 <pre class="pre-code">
 
     $jsonfy->newData($json); <span class="comment">// check <a href="#keywords">keywords</a> for $json</span>
@@ -144,13 +140,13 @@
 
                     <div id="add" class="">
                         <div class="">
-                            <div class="font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
-                                <div class="flex-full midv"> 
-                                    <span class=" mxr-8 c-lime-dd">
-                                        <span class="numb-box">2.</span>
+                            <div class=" fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
+                                <div class="flex-full midv c-orange-dd"> 
+                                    <span class="mxr-8">
+                                        <span class="bi-circle-fill"></span>
                                     </span> add
                                 </div>
-                            </div> <br>
+                            </div>
 
                             <div class="">
                                 The <code>add()</code> method is used to add a key and its value into 
@@ -160,7 +156,7 @@
 
                                 <div class="pre-area shadow">
                                     <div class="box-full">
-                                        <div class="pxv-6 bc-off-white"><code>Syntax: add</code></div>
+                                        <div class="pxv-6 bc-off-white">Syntax</div>
                                         <pre class="pre-code">
     $jsonfy->add(null); 
     $jsonfy->add(name); 
@@ -191,7 +187,7 @@
 
                                 <div class="pre-area shadow">
                                     <div class="box-full">
-                                        <div class="pxv-6 bc-off-white"><code>Examples: add</code></div>
+                                        <div class="pxv-6 bc-off-white">Examples</div>
                                         <pre class="pre-code">
     <span class="c-orange-d">Note:: all case lines below are assumed to be the first line</span>
 
@@ -215,9 +211,9 @@
                                 </div>
                         
                             </div>
-                        </div> <br>
+                        </div>
 
-                        <div class="font-menu">
+                        <div class="foot-note">
                             In the above, all empty strings (i.e '') resolves to <code>numbers</code> except in few 
                             occassions. Kindly note the following<br>
                             <ol>
@@ -244,13 +240,13 @@
 
                     <div id="datakey" class="">
                         <div class="">
-                            <div class="font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
-                                <div class="flex-full midv"> 
-                                    <span class=" mxr-8 c-lime-dd">
-                                        <span class="numb-box">3.</span>
+                            <div class=" fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
+                                <div class="flex-full midv c-orange-dd"> 
+                                    <span class="mxr-8">
+                                        <span class="bi-circle-fill"></span>
                                     </span> datakey
                                 </div>
-                            </div> <br>
+                            </div>
 
                             <div class="">
                                 The <code>datakey()</code> method returns the first key of a specified value for 
@@ -259,7 +255,7 @@
 
                                 <div class="pre-area shadow">
                                     <div class="box-full">
-                                        <div class="pxv-6 bc-off-white"><code>Syntax: datakey</code></div>
+                                        <div class="pxv-6 bc-off-white">Syntax: datakey</div>
                                         <pre class="pre-code">
     $jsonfy->datakey(key); 
 
@@ -273,7 +269,7 @@
                                 </div>          
                                 <div class="pre-area shadow">
                                     <div class="box-full">
-                                        <div class="pxv-6 bc-off-white"><code>Examples: datakey</code></div>
+                                        <div class="pxv-6 bc-off-white">Examples</div>
                                         <pre class="pre-code">
     <span class="comment">Note:: very line below is assumed to be the first list</span>
 
@@ -290,13 +286,13 @@
 
                     <div id="update" class="">
                         <div class="">
-                            <div class="font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
-                                <div class="flex-full midv"> 
-                                    <span class=" mxr-8 c-lime-dd">
-                                        <span class="numb-box">4.</span>
+                            <div class=" fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
+                                <div class="flex-full midv c-orange-dd"> 
+                                    <span class="mxr-8">
+                                        <span class="bi-circle-fill"></span>
                                     </span> update
                                 </div>
-                            </div> <br>
+                            </div>
                             <div class="">
                                 The <code>update()</code> method works similarly as the <code>add()</code> method, taking the 
                                 same count of parameters needed for a corresponding update
@@ -304,7 +300,7 @@
                         
                                 <div class="pre-area shadow">
                                     <div class="box-full">
-                                        <div class="pxv-6 bc-off-white"><code>Examples: update</code></div>
+                                        <div class="pxv-6 bc-off-white">Examples</div>
                                         <pre class="pre-code">
     <span class="comment">//example 1</span>
     $jsonfy->add('name', 'foo');                     <span class="comment">//['name'=>'foo']</span>
@@ -328,13 +324,13 @@
 
                     <div id="delete" class="">
                         <div class="">
-                            <div class="font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
-                                <div class="flex-full midv"> 
-                                    <span class=" mxr-8 c-lime-dd">
-                                        <span class="numb-box">5.</span>
+                            <div class=" fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
+                                <div class="flex-full midv c-orange-dd"> 
+                                    <span class="mxr-8">
+                                        <span class="bi-circle-fill"></span>
                                     </span> delete
                                 </div>
-                            </div> <br>
+                            </div>
                             <div class="">
                                 The <code>delete()</code> method deletes a value from existing jsonfy data
                                 It removes either the main key of a 2-level multidimentional array or the subkey 
@@ -343,7 +339,7 @@
                         
                                 <div class="pre-area shadow">
                                     <div class="box-full">
-                                        <div class="pxv-6 bc-off-white"><code>Examples: delete</code></div>
+                                        <div class="pxv-6 bc-off-white">Examples</div>
                                         <pre class="pre-code">
     <span class="comment">//test data</span>
     $jsonfy->add('user','foo','bar'); <span class="comment">//['user'=>['foo'=>'bar']]</span>
@@ -363,20 +359,20 @@
 
                     <div id="read" class="">
                         <div class="">
-                            <div class="font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
-                                <div class="flex-full midv"> 
-                                    <span class=" mxr-8 c-lime-dd">
-                                        <span class="numb-box">6.</span>
+                            <div class=" fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
+                                <div class="flex-full midv c-orange-dd"> 
+                                    <span class="mxr-8">
+                                        <span class="bi-circle-fill"></span>
                                     </span> read
                                 </div>
-                            </div> <br>
+                            </div>
                             <div class="">
                                 The <code>read</code> method reads data from a supplied jsonfy data.
                                 <br><br>
                     
                                 <div class="pre-area shadow">
                                     <div class="box-full">
-                                        <div class="pxv-6 bc-off-white"><code>Syntax: read</code></div>
+                                        <div class="pxv-6 bc-off-white">Syntax: read</div>
                                         <pre class="pre-code">
     $jsonfy->read(key); 
     <span class="comment">
@@ -390,7 +386,7 @@
 
                                 <div class="pre-area shadow">
                                     <div class="box-full">
-                                        <div class="pxv-6 bc-off-white"><code>Examples: read</code></div>
+                                        <div class="pxv-6 bc-off-white">Examples</div>
                                         <pre class="pre-code">
     <span class="comment">//example 1</span>
     $jsonfy->add('user','foo','bar');   <span class="comment">//['user'=>['foo'=>'bar']]</span>
@@ -411,13 +407,13 @@
 
                     <div id="data" class="">
                         <div class="">
-                            <div class="font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
-                                <div class="flex-full midv"> 
-                                    <span class=" mxr-8 c-lime-dd">
-                                        <span class="numb-box">7.</span>
+                            <div class=" fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
+                                <div class="flex-full midv c-orange-dd"> 
+                                    <span class="mxr-8">
+                                        <span class="bi-circle-fill"></span>
                                     </span> data
                                 </div>
-                            </div> <br>
+                            </div>
 
                             <div class="">
                                 This <code>data</code> method returns the entire stored data. This can be in 
@@ -426,7 +422,7 @@
                     
                                 <div class="pre-area shadow">
                                     <div class="box-full">
-                                        <div class="pxv-6 bc-off-white"><code>Syntax: data</code></div>
+                                        <div class="pxv-6 bc-off-white">Syntax: data</div>
                                         <pre class="pre-code">
     $jsonfy->data(type); 
     <span class="comment">
@@ -445,7 +441,7 @@
 
                                 <div class="pre-area shadow">
                                     <div class="box-full">
-                                        <div class="pxv-6 bc-off-white"><code>Example: returning a data</code></div>
+                                        <div class="pxv-6 bc-off-white">Example: returning a data</div>
                                         <pre class="pre-code">
     $jsonfy->newData(['foo' => 'bar']); 
 

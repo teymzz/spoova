@@ -9,9 +9,9 @@
         <section class="pxv-10 tutorial bc-white">
             <div class="font-em-1d2">
 
-                @lay('build.co.links:tutor_pointer')
-
                 <div class="start font-em-d8">
+
+                  @lay('build.co.links:tutor_pointer') <br>
 
                   <div class="font-em-1d5 c-orange">Frames</div> <br>  
                   
@@ -63,7 +63,7 @@
                             </pre>
                         </div>
 
-                        <div class="font-menu mvt-6">Now we can extend our Window entry files to the frame which will automatically call the super function.</div>
+                        <div class=" mvt-6">Now we can extend our Window entry files to the frame which will automatically call the super function.</div>
                         <br>
                         <div class="pre-area">
                             <pre class="pre-code">

@@ -39,14 +39,13 @@
     <section class="pxv-10 tutorial database bc-white">
       <div class="font-em-1d2">
 
-        @lay('build.co.links:tutor_pointer')
-
         <div class="start font-em-d8">
+
+          @lay('build.co.links:tutor_pointer') <br>
 
           <div class="font-em-1d5 c-orange">Template Engine : Rex</div> <br>  
 
           <div class="templating-intro">
-              <div class="fb-6">Introduction</div>
               <div class="">
                   Rex template engine is an inbuilt spoova engine for compiling and rendering template files which uses special 
                   predefined template directives to make it easier to build web pages. The <code>rex</code> files are mostly identified 
@@ -76,13 +75,11 @@
 
     class Home {
 
-
       function __construct() {
 
           self::load('home' => compile());
 
       }
-
 
     }
                     </pre>
@@ -97,7 +94,7 @@
                   <div class="pxv-10 bc-silver-d"><span class="bi-at"></span> Template Directives</div>
                   <div class="pre-area">
                     <pre class="pre-code vh-full">
-  @(template(rex-path))@
+  @(template('rex-path'))@
 
    Lorem, ipsum dolor sit amet consectetur adipisicing elit. 
    Cum tempora sunt accusamus tenetur nobis. Itaque, iure 
@@ -106,9 +103,7 @@
    provident atque laboriosam, dicta consectetur amet eius 
    voluptatum. Quos quod natus inventore culpa deserunt 
    laudantium aliquid quae magni laborum ab nostrum, 
-   ipsa aliquam repudiandae quam, dignissimos neque 
-   tempora necessitatibus nihil! Magni iste minima quo 
-   enim deleniti tempora optio ipsam?...
+   ipsa aliquam repudiandae quam, dignissimos ...
 
   @(template)@;
                     </pre>
@@ -127,7 +122,6 @@
 
     class Home {
 
-
       function __construct() {
 
           self::addRex();
@@ -135,7 +129,6 @@
           ...
 
       }
-
 
     }
                     </pre>
@@ -147,6 +140,7 @@
             
             <ul>
                 <li><a href="@route('::compilers')">Template compilers</a></li>
+                <li><a href="@domurl('version/2.0/compiler-class')">Compiler class</a></li>
                 <li><a href="@route('::files')">Template files</a></li>
                 <li><a href="@route('::directives')">Template directives</a></li>
                 <li><a href="@route('::window')">Templating on window</a></li>

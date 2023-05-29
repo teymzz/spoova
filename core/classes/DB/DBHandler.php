@@ -52,6 +52,8 @@ class DBHandler Implements DBHelpers{
    * @var bool
    */
   private $usedata;
+
+  public $fetched;
   
   /**
    * set the instance of a new connection
@@ -104,7 +106,7 @@ class DBHandler Implements DBHelpers{
   }
 
   /**
-   * Retrurn current connection
+   * Return current connection
    *
    * @return string
    */

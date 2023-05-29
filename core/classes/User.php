@@ -4,12 +4,10 @@ use spoova\mi\core\classes\DB;
 use spoova\mi\core\classes\DB\DBHandler;
 use spoova\mi\core\classes\UserAuth;
 use spoova\mi\core\classes\UserDB;
-use spoova\mi\core\classes\UserIdResolver;
+use spoova\mi\core\classes\UserId;
 
 class User extends Session{
 
-    private static $passField  = 'password';
-    private static $userFields = ['username']; 
     private static array $data = [];
 
     
@@ -17,36 +15,6 @@ class User extends Session{
         $args = func_get_args();
         parent::__construct(...$args);
     }
-
-    /**
-     * modify the user fields to be validated
-     * 
-     * @param string|array $fields name of fields
-     * @return void
-     */
-    public static function userFields($fields, $passField = ''){
-        if(is_string($fields)) $fields = (array) trim($fields);
-        if(!is_array($fields) || empty($fields)) trigger_error('invalid paramter supplied', E_USER_ERROR) ;
-
-        self::$userFields = $fields;
-
-        if(func_get_args() > 1){
-            self::passField($passField);
-        }
-    }
-
-    /**
-     * modifies only the default password field name
-     * 
-     * @param string $passField
-     * @return void
-     */
-    public static function passField(string $passField){
-        if(empty(trim($passField))) trigger_error('invalid password field name supplied', E_USER_ERROR);
-
-        self::$passField = $passField;
-    }
-
 
     /**
      * Returns the UserAuth class
@@ -63,12 +31,12 @@ class User extends Session{
     /**
      * Retrieves the current user session id value from session data (i.e ['userid'=>some_id])
      *
-     * @return string|UserIdResolver
+     * @return string|UserId
      *   - string returns current user id relative to user database configuration id field
      */
-    public static function id(){
+    public static function id(): string|UserId {
 
-        return (new UserIdResolver);
+        return (new UserId);
 
     }
 
@@ -112,7 +80,7 @@ class User extends Session{
      * Initializes a new user session with data supplied which must contain a userid key and value pair
      *
      * @param array $logdata session data containing a userid(key) & userid value (e.g ['userid'=>some_id])
-     * @param string|bool(false) $url redirection url (optional if already using Session auto), false prevents redirection
+     * @param string|false $url redirection url (optional if already using Session auto), false prevents redirection
      * @param int $lifeTime maximum session time. This is only used if cookie is set
      * 
      * @return bool true if login is successful

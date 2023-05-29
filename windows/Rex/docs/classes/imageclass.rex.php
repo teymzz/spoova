@@ -7,33 +7,32 @@
         <section class="pxv-10 tutorial bc-white">
             <div class="font-em-1d2">
 
-                @lay('build.co.links:tutor_pointer')
-
                 <div class="start font-em-d8">
+
+                    @lay('build.co.links:tutor_pointer') <br>
 
                     <div class="font-em-1d5 c-orange">ImageClass</div> <br>  
                     
                     <div class="helper-classes">
-                        <div class="fb-6">Introduction</div> <br>
                         <div class="">
 
-                        <div class="">
-                            The <code>ImageClass</code> is an extension of the <a href="@domurl('docs/classes/fileuploader')">FileUploader</a>  class. All methods 
-                            belonging to the FileUploader can be applied on the ImageClass. Other available methods 
-                            are:
-                        </div> <br> 
+                            <div class="">
+                                The <code class="bd-f">ImageClass</code> is an extension of the <a href="@domurl('docs/classes/fileuploader')" class="c-olive ch-olive-dd rule-dotted">FileUploader</a>  class. All methods 
+                                belonging to the FileUploader can be applied on the ImageClass. Other available methods 
+                                are:
+                            </div> <br> 
 
-                            <ol>
-                                <li> <a href="#setimage"> setImage </a> </li>
-                                <li> <a href="#setwidth"> setWidth </a> </li>
-                                <li> <a href="#resizeimage"> resizeImage </a> </li>
-                                <li> <a href="#runimage"> runImage </a> </li>
-                                <li> <a href="#imagedisplay"> imageDisplay </a> </li>
-                                <li> <a href="#imagedelete"> imageDelete </a> </li>
-                                <li> <a href="#check_jpeg"> check_jpeg </a> </li>
-                                <li> <a href="#newdata"> newData </a> </li>
-                                <li> <a href="#imagedestroy"> imageDestroy </a> </li>
-                            </ol>
+                            <ul>
+                                <li> <a href="#setimage" class="c-olive ch-olive-dd"> setImage </a> </li>
+                                <li> <a href="#setwidth" class="c-olive ch-olive-dd"> setWidth </a> </li>
+                                <li> <a href="#resizeimage" class="c-olive ch-olive-dd"> resizeImage </a> </li>
+                                <li> <a href="#runimage" class="c-olive ch-olive-dd"> runImage </a> </li>
+                                <li> <a href="#imagedisplay" class="c-olive ch-olive-dd"> imageDisplay </a> </li>
+                                <li> <a href="#imagedelete" class="c-olive ch-olive-dd"> imageDelete </a> </li>
+                                <li> <a href="#check_jpeg" class="c-olive ch-olive-dd"> check_jpeg </a> </li>
+                                <li> <a href="#newdata" class="c-olive ch-olive-dd"> newData </a> </li>
+                                <li> <a href="#imagedestroy" class="c-olive ch-olive-dd"> imageDestroy </a> </li>
+                            </ul>
                             
                         </div> 
                     </div>  
@@ -43,9 +42,9 @@
                         <br><br>
                         <div class="pre-area shadow">
                             <div class="box-full">
-                                <div class="pxv-6 bc-off-white"><code>test data</code></div>
+                                <div class="pxv-6 bc-off-white">TEST DATA</div>
                                 <pre class="pre-code">
-<span class="c-green"> 
+<span class="c-sea-blue"> 
     $_FILES['name']  = 'Foo'; 
     $_FILES['type']  = 'image/png'; 
     $_FILES['size']  = 5000000; //5mb
@@ -59,21 +58,22 @@
 
                     <div id="initialize" class="">
                         <div class="">
-                            <div class="font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
-                                <div class="flex-full midv"> 
-                                    <span class=" mxr-8 c-lime-dd">
+                            <div class="fb-6 bc-white-dd flex-full rad-4 pvs-8 lacier">
+                                <div class="flex-full midv c-orange"> 
+                                    <span class="mxr-8">
+                                        <span class="bi-lightning-fill"></span>
                                     </span> initializing class
                                 </div>
-                            </div> <br>
+                            </div>
                             <div class="">
                                 The file uploader class can be easily initialized as shown below.
                                 <br><br>
                                 
                                 <div class="pre-area shadow">
                                     <div class="box-full">
-                                        <div class="pxv-6 bc-off-white"><code>Sample: Initializing ImageClass</code></div>
+                                        <div class="pxv-6 bc-off-white">Sample: Initializing ImageClass</div>
                                         <pre class="pre-code">
-    $ImageClass  = new ImageClass;
+  $ImageClass  = new ImageClass;
                                         </pre>
                                     </div>
                                 </div>
@@ -86,43 +86,43 @@
                             <div class="">
                                 <div class="pre-area shadow">
                                     <div class="box-full">
-                                        <div class="pxv-6 bc-off-white"><code>Syntax: start</code></div>
+                                        <div class="pxv-6 bc-off-white">Syntax: start</div>
                                         <pre class="pre-code">
-    $ImageClass->start($files, $type);
+  $ImageClass->start($files, $type);
     <span class="comment no-select">
-      where:
+    where:
         
-       <span class="c-sky-blue-dd">$files:</span> $_FILES or files data array
-       <span class="c-sky-blue-dd">$type:</span> type of file. options [file|image]. An option 'image' allows internal processing of images supplied.
+     <span class="c-sky-blue-dd">$files:</span> $_FILES or files data array
+     <span class="c-sky-blue-dd">$type:</span> type of file. options [file|image]. An option 'image' allows internal processing of images supplied.
     </span>
                                         </pre>
                                     </div>
                                 </div>
 
                             </div>
-                        </div> <br>
+                        </div>
 
-                        We shall be looking at a series of examples below.
-                        <br><br>
+                        <div class="foot-note">
+                            We shall be looking at a series of examples below.
+                        </div>
                             
                         <div class="pre-area shadow">
                             <div class="box-full">
-                                <div class="pxv-6 bc-off-white"><code>Example: setting files</code></div>
+                                <div class="pxv-6 bc-off-white">Example: setting files</div>
                                 <pre class="pre-code">
-    $ImageClass->start($_FILES); <span class="comment">// set files for upload</span>
+  $ImageClass->start($_FILES); <span class="comment">// set files for upload</span>
 
-    $ImageClass->start($_FILES, 'image'); <span class="comment">// set image files for upload</span>
+  $ImageClass->start($_FILES, 'image'); <span class="comment">// set image files for upload</span>
 
-    $destination = "images/";
+  $destination = "images/";
 
-    if( $ImageClass->uploadFiles(['jpg']) ) {
-        $newFileName = $ImageClass->newfile;
-    }else{
-        $newFileName = '';
-    }
+  if( $ImageClass->uploadFiles(['jpg']) ) {
+      $newFileName = $ImageClass->newfile;
+  }else{
+      $newFileName = '';
+  }
 
-    $newFilePath = $destination.'/'.$newFileName;
-
+  $newFilePath = $destination.'/'.$newFileName;
                                 </pre>
                             </div>
                         </div>
@@ -131,25 +131,25 @@
 
                     <div id="setimage" class="">
                         <div class="">
-                            <div class="font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
-                                <div class="flex-full midv"> 
-                                    <span class=" mxr-8 c-lime-dd">
-                                        <span class="numb-box">1.</span>
+                            <div class=" fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
+                                <div class="flex-full midv c-orange"> 
+                                    <span class="mxr-8">
+                                        <span class="bi-circle-fill"></span>
                                     </span> setImage
                                 </div>
-                            </div> <br>
+                            </div>
                             <div class="">
                             The <code>setImage()</code> sets an image for processing<br><br>
 
                         <div class="pre-area shadow">
                             <div class="box-full">
-                                <div class="pxv-6 bc-off-white"><code>Syntax: setImage</code></div>
+                                <div class="pxv-6 bc-off-white">Syntax: setImage</div>
                                 <pre class="pre-code">
-    $ImageClass->setImage($path); 
+  $ImageClass->setImage($path); 
     <span class="comment">
-      where:
+    where:
         
-        <span class="c-sky-blue-dd">$path:</span> path of image
+      <span class="c-sky-blue-dd">$path:</span> path of image
     </span>
                                 </pre>
                             </div>
@@ -157,9 +157,9 @@
 
                         <div class="pre-area shadow">
                             <div class="box-full">
-                                <div class="pxv-6 bc-off-white"><code>Example: setImage</code></div>
+                                <div class="pxv-6 bc-off-white">Example</div>
                                 <pre class="pre-code">
-    $ImageClass->setImage($newFilePath);                         
+  $ImageClass->setImage($newFilePath);                         
                                 </pre>
                             </div>
                         </div>
@@ -170,28 +170,28 @@
 
                     <div id="setwidth" class="">
                         <div class="">
-                            <div class="font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
-                                <div class="flex-full midv"> 
-                                    <span class=" mxr-8 c-lime-dd">
-                                        <span class="numb-box">2.</span>
+                            <div class=" fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
+                                <div class="flex-full midv c-orange"> 
+                                    <span class="mxr-8">
+                                        <span class="bi-circle-fill"></span>
                                     </span> setWidth
                                 </div>
-                            </div> <br>
+                            </div>
                             <div class="">
                             The <code>setwidth()</code> sets the output width of an image<br><br>
 
                         <div class="pre-area shadow">
                             <div class="box-full">
-                                <div class="pxv-6 bc-off-white"><code>Syntax: setWidth</code></div>
+                                <div class="pxv-6 bc-off-white">Syntax: setWidth</div>
                                 <pre class="pre-code">
-    $ImageClass->width($width, $height, $quality, $fileOut); 
+  $ImageClass->width($width, $height, $quality, $fileOut); 
     <span class="comment">
-      where:
+    where:
         
-       <span class="c-sky-blue-dd">$width:</span> image width in pixels
-       <span class="c-sky-blue-dd">$height:</span> image height in pixels
-       <span class="c-sky-blue-dd">$quality:</span> optional image quality from 0 - 9. Nine is the maximum.
-       <span class="c-sky-blue-dd">$fileOut:</span> optional output file name.
+      <span class="c-sky-blue-dd">$width:</span> image width in pixels
+      <span class="c-sky-blue-dd">$height:</span> image height in pixels
+      <span class="c-sky-blue-dd">$quality:</span> optional image quality from 0 - 9. Nine is the maximum.
+      <span class="c-sky-blue-dd">$fileOut:</span> optional output file name.
     </span>
                                 </pre>
                             </div>
@@ -199,9 +199,9 @@
 
                         <div class="pre-area shadow">
                             <div class="box-full">
-                                <div class="pxv-6 bc-off-white"><code>Example: setWidth</code></div>
+                                <div class="pxv-6 bc-off-white">Example: setWidth</div>
                                 <pre class="pre-code">
-    $ImageClass->setWidth(500, 500, 9);                         
+  $ImageClass->setWidth(500, 500, 9);                         
                                 </pre>
                             </div>
                         </div>
@@ -212,13 +212,13 @@
 
                     <div id="resizeimage" class="">
                         <div class="">
-                            <div class="font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
-                                <div class="flex-full midv"> 
-                                    <span class=" mxr-8 c-lime-dd">
-                                        <span class="numb-box">3.</span>
+                            <div class=" fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
+                                <div class="flex-full midv c-orange"> 
+                                    <span class="mxr-8">
+                                        <span class="bi-circle-fill"></span>
                                     </span> resizeImage
                                 </div>
-                            </div> <br>
+                            </div>
                             <div class="">
 
                                 This method returns is used to resize an image.
@@ -226,20 +226,20 @@
                     
                                 <div class="pre-area shadow">
                                     <div class="box-full">
-                                        <div class="pxv-6 bc-off-white"><code>Syntax: resizeImage</code></div>
+                                        <div class="pxv-6 bc-off-white">Syntax: resizeImage</div>
                                         <pre class="pre-code">
-    $ImageClass->resizeImage(); <span class="comment"> // sets image class activity </span>
+  $ImageClass->resizeImage(); <span class="comment"> // sets image class activity </span>
                                         </pre>
                                     </div>
                                 </div>
 
                                 <div class="pre-area shadow">
                                     <div class="box-full">
-                                    <div class="pxv-6 bc-off-white"><code>Example: resizeImage </code></div>
+                                    <div class="pxv-6 bc-off-white">Example: resizeImage </div>
                                         <pre class="pre-code">
-    $ImageClass->setImage($newFilePath);
-    $ImageClass-setWidth(500, 500, 9);
-    $ImageClass->resizeImage();
+  $ImageClass->setImage($newFilePath);
+  $ImageClass-setWidth(500, 500, 9);
+  $ImageClass->resizeImage();
                                         </pre>
                                     </div>
                                 </div>
@@ -249,13 +249,13 @@
 
                     <div id="runimage" class="">
                         <div class="">
-                            <div class="font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
-                                <div class="flex-full midv"> 
-                                    <span class=" mxr-8 c-lime-dd">
-                                        <span class="numb-box">4.</span>
+                            <div class=" fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
+                                <div class="flex-full midv c-orange"> 
+                                    <span class="mxr-8">
+                                        <span class="bi-circle-fill"></span>
                                     </span> runImage
                                 </div>
-                            </div> <br>
+                            </div>
 
                             <div class="">
                                 This method returns the type of current file set.
@@ -263,20 +263,20 @@
                     
                                 <div class="pre-area shadow">
                                     <div class="box-full">
-                                        <div class="pxv-6 bc-off-white"><code>Syntax: runImage</code></div>
+                                        <div class="pxv-6 bc-off-white">Syntax: runImage</div>
                                         <pre class="pre-code">
-    $ImageClass->runImage(); <span class="comment"> // executes the activity declared. </span>
+  $ImageClass->runImage(); <span class="comment"> // executes the activity declared. </span>
                                         </pre>
                                     </div>
                                 </div>
                                 <div class="pre-area shadow">
                                     <div class="box-full">
-                                        <div class="pxv-6 bc-off-white"><code>Example: runImage</code></div>
+                                        <div class="pxv-6 bc-off-white">Example: runImage</div>
                                         <pre class="pre-code">
-    $ImageClass->setImage($newFilePath);
-    $ImageClass-setWidth(500, 500, 9);
-    $ImageClass->resizeImage();
-    $ImageClass->runImage(); <span class="comment">// executes the image resize previously declared</span>
+  $ImageClass->setImage($newFilePath);
+  $ImageClass-setWidth(500, 500, 9);
+  $ImageClass->resizeImage();
+  $ImageClass->runImage(); <span class="comment">// executes the image resize previously declared</span>
                                         </pre>
                                     </div>
                                 </div>
@@ -286,13 +286,13 @@
 
                     <div id="imagedisplay" class="">
                         <div class="">
-                            <div class="font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
-                                <div class="flex-full midv"> 
-                                    <span class=" mxr-8 c-lime-dd">
-                                        <span class="numb-box">5.</span>
+                            <div class=" fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
+                                <div class="flex-full midv c-orange"> 
+                                    <span class="mxr-8">
+                                        <span class="bi-circle-fill"></span>
                                     </span> imageDisplay
                                 </div>
-                            </div> <br>
+                            </div>
 
                             <div class="">
                                 This method displays the processed image to the screen using the html img tag.
@@ -300,25 +300,25 @@
                         
                                 <div class="pre-area shadow">
                                     <div class="box-full">
-                                        <div class="pxv-6 bc-off-white"><code>Syntax: imageDisplay</code></div>
+                                        <div class="pxv-6 bc-off-white">Syntax: imageDisplay</div>
                                         <pre class="pre-code">
-    $ImageClass->imageDisplay(); <span class="comment"> // prints the image to screen </span>
+  $ImageClass->imageDisplay(); <span class="comment"> // prints the image to screen </span>
                                         </pre>
                                     </div>
                                 </div>
                                 <div class="pre-area shadow">
                                     <div class="box-full">
-                                        <div class="pxv-6 bc-off-white"><code>Example: imageDisplay</code></div>
+                                        <div class="pxv-6 bc-off-white">Example: imageDisplay</div>
                                         <pre class="pre-code">    
-    $ImageClass->setImage($newFilePath);
-    $ImageClass-setWidth(500, 500, 9);
-    $ImageClass->resizeImage();
+  $ImageClass->setImage($newFilePath);
+  $ImageClass-setWidth(500, 500, 9);
+  $ImageClass->resizeImage();
     
-    if($ImageClass->runImage()) {
+  if($ImageClass->runImage()) {
 
-        echo( $ImageClass->imageDisplay() ); <span class="comment no-select">// displays array data of file. </span>
+      echo( $ImageClass->imageDisplay() ); <span class="comment no-select">// displays array data of file. </span>
 
-    }
+  }
                                         </pre>
                                     </div>
                                 </div>
@@ -328,13 +328,13 @@
 
                     <div id="imagedelete" class="">
                         <div class="">
-                            <div class="font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
-                                <div class="flex-full midv"> 
-                                    <span class=" mxr-8 c-lime-dd">
-                                        <span class="numb-box">6.</span>
+                            <div class=" fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
+                                <div class="flex-full midv c-orange"> 
+                                    <span class="mxr-8">
+                                        <span class="bi-circle-fill"></span>
                                     </span> imageDelete
                                 </div>
-                            </div> <br>
+                            </div>
                             <div class="">
                                 This method safely deletes an image if it exists without throwing an error. It returns true if image 
                                 was deleted and false if the image was not able to delete or does not exists.
@@ -342,11 +342,11 @@
                         
                                 <div class="pre-area shadow">
                                     <div class="box-full">
-                                        <div class="pxv-6 bc-off-white"><code>Syntax: imageDelete</code></div>
+                                        <div class="pxv-6 bc-off-white">Syntax: imageDelete</div>
                                         <pre class="pre-code">
-    $ImageClass->imageDelete($path); <span class="comment"> // returns true or false. </span>
+  $ImageClass->imageDelete($path); <span class="comment"> // returns true or false. </span>
     <span class="comment">
-      where : 
+    where : 
 
        $path: Optional relative path of image. If not provided, uses relative path defined in <code class="c-orange-dd">setImage()</code> method.
     </span>
@@ -355,15 +355,15 @@
                                 </div>
                                 <div class="pre-area shadow">
                                     <div class="box-full">
-                                        <div class="pxv-6 bc-off-white"><code>Example: imageDelete</code></div>
+                                        <div class="pxv-6 bc-off-white">Example: imageDelete</div>
                                         <pre class="pre-code">
-    $ImageClass->setImage($newFilePath);   <span class="comment">set image relative path</span> 
+  $ImageClass->setImage($newFilePath);   <span class="comment">set image relative path</span> 
 
-    if( $ImageClass->imageDelete() ) {
+  if( $ImageClass->imageDelete() ) {
 
-        <span class="comment">//image deleted successfully</span>
+      <span class="comment">//image deleted successfully</span>
 
-    }
+  }
                                         </pre>
                                     </div>
                                 </div>
@@ -373,24 +373,24 @@
 
                     <div id="check_jpeg" class="">
                         <div class="">
-                            <div class="font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
-                                <div class="flex-full midv"> 
-                                    <span class=" mxr-8 c-lime-dd">
-                                        <span class="numb-box">7.</span>
+                            <div class=" fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
+                                <div class="flex-full midv c-orange"> 
+                                    <span class="mxr-8">
+                                        <span class="bi-circle-fill"></span>
                                     </span> check_jpeg
                                 </div>
-                            </div> <br>
+                            </div>
                             <div class="">
                                 This method tries to detect if a jpeg image is bad.
                                 <br><br>
                     
                                 <div class="pre-area shadow">
                                     <div class="box-full">
-                                        <div class="pxv-6 bc-off-white"><code>Syntax: check_jpeg</code></div>
+                                        <div class="pxv-6 bc-off-white">Syntax: check_jpeg</div>
                                         <pre class="pre-code">
-    $ImageClass->check_jpeg($filepath, $fix); <span class="comment"> // returns true or false </span>
+  $ImageClass->check_jpeg($filepath, $fix); <span class="comment"> // returns true or false </span>
     <span class="comment">
-      where : 
+    where : 
         
        $filepath: path of image file 
        $fix: a bool of true tries to fix the image if possible.
@@ -400,13 +400,13 @@
                                 </div>
                                 <div class="pre-area shadow">
                                     <div class="box-full">
-                                        <div class="pxv-6 bc-off-white"><code>Example: check_jpeg</code></div>
+                                        <div class="pxv-6 bc-off-white">Example: check_jpeg</div>
                                         <pre class="pre-code">
-    if( $ImageClass->check_jpeg($newFilePath) ) {
+  if( $ImageClass->check_jpeg($newFilePath) ) {
 
-        <span class="comment">jpeg file seems okay.</span>
+      <span class="comment">jpeg file seems okay.</span>
 
-    }
+  }
  
                                         </pre>
                                     </div>
@@ -417,38 +417,38 @@
 
                     <div id="newdata" class="">
                         <div class="">
-                            <div class="font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
-                                <div class="flex-full midv"> 
-                                    <span class=" mxr-8 c-lime-dd">
-                                        <span class="numb-box">8.</span>
+                            <div class=" fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
+                                <div class="flex-full midv c-orange"> 
+                                    <span class="mxr-8">
+                                        <span class="bi-circle-fill"></span>
                                     </span> newdata
                                 </div>
-                            </div> <br>
+                            </div>
                             <div class="">
                                 This method returns the <code>data</code> for current processed file.
                                 <br><br>
                     
                                 <div class="pre-area shadow">
                                     <div class="box-full">
-                                        <div class="pxv-6 bc-off-white"><code>Syntax: newData</code></div>
+                                        <div class="pxv-6 bc-off-white">Syntax: newData</div>
                                         <pre class="pre-code">
-    $ImageClass->newData(); <span class="comment"> //  returns array data of valid file or empty array </span>
+  $ImageClass->newData(); <span class="comment"> //  returns array data of valid file or empty array </span>
                                         </pre>
                                     </div>
                                 </div>
                                 <div class="pre-area shadow">
                                     <div class="box-full">
-                                        <div class="pxv-6 bc-off-white"><code>Example: newData</code></div>
+                                        <div class="pxv-6 bc-off-white">Example: newData</div>
                                         <pre class="pre-code">
-    $ImageClass->setImage($newFilePath);
-    $ImageClass-setWidth(500, 500, 9);
-    $ImageClass->resizeImage();
+  $ImageClass->setImage($newFilePath);
+  $ImageClass-setWidth(500, 500, 9);
+  $ImageClass->resizeImage();
     
-    if($ImageClass->runImage()) {
+  if($ImageClass->runImage()) {
 
-        var_dump( $ImageClass->newData() ); <span class="comment no-select">// displays array data of file. </span>
+      var_dump( $ImageClass->newData() ); <span class="comment no-select">// displays array data of file. </span>
 
-    }
+  }
                                       </pre>
                                     </div>
                                 </div>
@@ -458,40 +458,40 @@
 
                     <div id="imagedestroy" class="">
                         <div class="">
-                            <div class="font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
-                                <div class="flex-full midv"> 
-                                    <span class=" mxr-8 c-lime-dd">
-                                        <span class="numb-box">9.</span>
+                            <div class=" fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
+                                <div class="flex-full midv c-orange"> 
+                                    <span class="mxr-8">
+                                        <span class="bi-circle-fill"></span>
                                     </span> uniqueFile
                                 </div>
-                            </div> <br>
+                            </div> 
                             <div class="">
                             This function directs the image class to destroy previous activity
                             <br><br>
                     
                             <div class="pre-area shadow">
                                 <div class="box-full">
-                                    <div class="pxv-6 bc-off-white"><code>Syntax: imageDestroy</code></div>
+                                    <div class="pxv-6 bc-off-white">Syntax: imageDestroy</div>
                                     <pre class="pre-code">
-    $ImageClass->imageDestroy();
+  $ImageClass->imageDestroy();
                                     </pre>
                                 </div>
                             </div>
 
                             <div class="pre-area shadow">
                                 <div class="box-full">
-                                    <div class="pxv-6 bc-off-white"><code>Example: imageDestroy</code></div>
-                                    <pre class="pre-code">    
-    $ImageClass->setImage($newFilePath);
-    $ImageClass-setWidth(500, 500, 9);
-    $ImageClass->resizeImage();
-    
-    if($ImageClass->runImage()) {
+                                    <div class="pxv-6 bc-off-white">Example: imageDestroy</div>
+                                    <pre class="pre-code">
+  $ImageClass->setImage($newFilePath);
+  $ImageClass-setWidth(500, 500, 9);
+  $ImageClass->resizeImage();
+  
+  if($ImageClass->runImage()) {
 
-        $data = $ImageClass->newData();
-        $ImageClass->imageDestroy();
+     $data = $ImageClass->newData();
+     $ImageClass->imageDestroy();
 
-    }
+  }
                                     </pre>
                                 </div>
                             </div>

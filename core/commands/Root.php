@@ -33,7 +33,7 @@ class Root extends Entry{
      */
     function version() {
 
-       Cli::textView(Cli::alert(Cli::emos('hot', 1).'SPOOVA VERSION').Cli::warn(SP_VERSION, 1). ' (Stable)', 0, '1|2');
+       Cli::textView(Cli::alert(Cli::emos('hot', 1).'SPOOVA VERSION').Cli::warn(SP_VERSION, 1). ' (Beta)', 0, '1|2');
 
     }
 

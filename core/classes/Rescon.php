@@ -174,7 +174,7 @@ abstract class Rescon extends Resx{
     private static function initAutoloader(){
       if(self::$initAutoload) return;
       self::$initAutoload = true;
-      return '<script src="'.DomUrl('res/res.js').'"></script>';
+      return '<script src="'.DomUrl('res/main/js/local/debug/live.js').'"></script>';
     }
 
     /*
@@ -208,94 +208,4 @@ abstract class Rescon extends Resx{
 }
 
 
-/*
- *
- * Res::watch() - switch on watch if initially switched off
- * Res::off - switch off watch if it has not been imported to the page
- * 
- * Note:: if configuration settings allows resource watch to be enabled, Res::import() will
- *        automatically import the watch to the page. To prevent this, Res::off() must be declared
- *        prior to the first importation. When Res::off() is used, Res::watch() will set back on and allow the
- *        appending import to import the watch. Res::import('::watch') will work fine
- * 
- * Resource::connect(url, respfield, settings) //javascript handler for connecting page components in a live state mode
- *      @url url path of component
- *      @respField a response field selector
- *      @settings (autoload.js) settings format below
- *        --all autoload keys can be supplied in array below. 
- *        --Strings as strings and Bools as Bools, Integers as Integers. 
- *        --Functions must be supplied as a string instead. This will be processed internally by the resource class. 
- *        -- the 'data' key can be written in array formats: 
- *              ['key'=>'value']  //send a post key 'key' with value 'value'
- *              
- *              ['key'=>['value1','value2']] //send a post key 'key' with packet values [value1, value2] (@ serialize == false)
- *              
- *              ['key'=>['value1','value2']] //send a post twice with key 'key' and values value1, value2 respectively (@ serialize == true)
- *              
- *              //*(@ serialize == true)  
- *                    -- send a post key 'first' with packet values [value1, value2], then
- *                    -- send a post key 'second' with packet values [value1, value2]
- *              [
- *                'first'=>['value1','value2'], 
- *                'second'=>['value1','value2']
- *              ] 
- *  
- *              --A sample format is written below.
- * 
- *              $sets = [   
- *                'beat'    => 10,
- *                'serialize' => true,
- *                'callfront' =>'
- *                    function done(){
- *                      ..javascript function here
- *                    }
- *                ',    
- *                'data' => [
- *                    'text' => 
- *                      [
- *                        'first',
- *                        'second',              
- *                      ]
- *                 ],
- *               ];
- * 
- *              // -- in the above, a post will be sent having a key of 'text' twice with different values 'first', then 'second';
- *              // -- note that an interval of 10 secs (beats) will be applied between the requests
- *              // -- as opposed to the methods above, supply the autoloader.js settings format as an alternative.
- *              // -- sample format is provided below. Please note that all quote needed to be escaped are escaped.
- *             
- *             //* start of code sample---------------------------------------------------------------------------------------------------------------------
- *             $sets = "
- *                      {   
- *                          
- *                          uiconsole: true, 
- *                          forwards: true, 
- *                          serialize: true,
- *                          callfront:
- *                              function done(){
- *                                  // $('#spinner').fadeIn(); 
- *                              },    
- *                          callback:
- *                              function done(){
- *                                  $('#spinner').fadeOut();
- *                              },
- *                          packetCut: 'terminate',
- *                          callfront:
- *                              function done(){
- *                                  alert('yeahw');     
- *                              }, 
- *                          'blendTime' : 200,
- *                          'blend'
- *                              :function anim(field, newHtml){
- *                                  $(field).children().wrapAll(\"<div></div>\").fadeOut(10,function(){
- *                                      $(field).html('<div style=\"display:none\">'+newHtml+'</div>').find('>div').fadeIn(10);
- *                                  });
- *                              }
- *                      }
- *                    ";
- *          //* end of code sample------------------------------------------------------------------------------------------------------------------------//
- * 
- *          //* other necessary documentations are provided in autoloader.js file.
- *
- */
 ?>

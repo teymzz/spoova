@@ -19,7 +19,7 @@
         Spoova
       </div>
 
-      <div class="flex-full fb-6 font-menu font-em-1d2 flex-r midv no-wrap mxr-10">
+      <div class="flex-full fb-6  font-em-1d2 flex-r midv no-wrap mxr-10">
         <span class="mxr-10">Home</span>
         <span class="mxr-10">Faq</span>
         <span class="mxr-10">About Us</span>
@@ -45,7 +45,7 @@
     
     <div class="absolute overlay ov-d5 grid-center c-silver">
 
-        <span class="span-btns bc-black-ll pxv-20 rad-r font-menu font-em-1d2">Welcome to Spoova</span> 
+        <span class="span-btns bc-black-ll pxv-20 rad-r  font-em-1d2">Welcome to Spoova</span> 
 
     </div>
 

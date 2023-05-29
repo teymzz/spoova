@@ -7,13 +7,13 @@
         <section class="pxv-10 tutorial database bc-white">
             <div class="font-em-1d2">
 
-                @lay('build.co.links:tutor_pointer')
+                <div class="start font-em-d8">
 
-                <div class="start font-em-d87">
+                    @lay('build.co.links:tutor_pointer') <br>
 
                     <div class="font-em-1d5 c-orange">Third Party Libraries</div>
                     
-                    <div class="db-connection font-em-d87 mvt-10">
+                    <div class="db-connection mvt-10">
                         Spoova includes third-party libraries which are subdivided into three. <br>
 
                         <ul class="mvt-10">
@@ -30,11 +30,11 @@
                             </div>
 
                             <ul>
-                                <li>PhpMailer <br>
+                                <li> <span class="c-dry-blue">PhpMailer</span> <br>
                                     This class is used to send mails. Spoova has an in-built support for this library through 
                                     the <code>Mailer</code> class.
                                 </li>
-                                <li>Css Emogrifier<br>
+                                <li> <span class="c-dry-blue">Css Emogrifier</span><br>
                                     This tool converts external and embeded css to inline css.
                                 </li>
                             </ul>
@@ -63,10 +63,10 @@
                                 Static file libraries such as <code>bootstrap</code> and javascript files can be found at the <code>res/main/css/</code> 
                                 and <code>res/main/js/</code> directories respectively. The global static resources folder is the <code>res/main</code> directory. 
                                 If any of the default libraries needs to be upgraded, that library should be 
-                                replaced with newly downloaded files and the correct path must match the path set in the <code>res/res.php</code> file. If new 
-                                path name is different, the old file path in <code>res/res.php</code> file should also be updated correctly. 
-                                However, as an alternative to using local library file path, cdn link of such libraries may be used instead which can be added or updated in the
-                                <code>res/res.php</code> file. 
+                                replaced with newly downloaded files and the correct path must match the path set in the <code>core/res.php</code> file. If new 
+                                path name is different, the old path should be updated accordingly. However, as an alternative to using local library file path, 
+                                cdn link of such libraries may be used instead which can be added or updated in the
+                                <code>core/res.php</code> file. Custom or new urls should be added from the <code>res/res.php</code> which is reserved for custom static urls.
                             </p>
                         </div> <br>
 

@@ -1,8 +1,6 @@
 
 @template('template.t-tut')
 
-    <!-- @lay('build.co.coords:header') -->
-
     @lay('build.co.navbars:left-nav')
 
     <style>
@@ -29,26 +27,28 @@
        <section class="pxv-10 tutorial bc-white">
            <div class="font-em-1d2">
 
-                @lay('build.co.links:tutor_pointer')
+                <div class="start font-em-d85" >
 
-                <div class="start" >
+                    @lay('build.co.links:tutor_pointer') <br>
                     
-                    <div class="font-em-1d2 c-orange">Resource Grouping (Importation)</div> <br>
+                    <div class="font-em-1d5 c-orange">Resource Grouping (Importation)</div> <br>
                    
                     <div class="intro">
-                        <div class="font-em-d8">
+                        <div class="">
                             Resource grouping is the use of resource class to group static file urls
                             which can be imported later into the webpage. The resource importer is not
                             only capable of loading static urls but can also load configured meta tags 
                             and live server through default configuration settings. The features of
                             resource grouping are listed below: <br><br>
-                            
-                            <li>Storing and importing static urls</li>
-                            <li>Validating local static urls</li>
-                            <li>Grouping static urls</li>
-                            <li>Resolving local urls into http protocol urls</li>
-                            <li>Loading the default meta tag configurations</li>
-                            <li>Live server importations and control</li>
+                           
+                            <ul>
+                                <li>Storing and importing static urls</li>
+                                <li>Validating local static urls</li>
+                                <li>Grouping static urls</li>
+                                <li>Resolving local urls into http protocol urls</li>
+                                <li>Loading the default meta tag configurations</li>
+                                <li>Live server importations and control</li>
+                            </ul>
                             
                         </div> 
                     </div> <br>
@@ -57,13 +57,13 @@
 
                     
                     
-                        <div class="font-em-d8">
+                        <div class="">
 
-                            <div class="font-menu fb-6 font-em-1 bc-white-dd box-full rad-4 pxv-8">
+                            <div class=" fb-6 font-em-1 bc-white-dd box-full rad-4 pxv-8">
                              Storing and importing static urls
                             </div> <br><br>
 
-                            <div class="font-menu font-em-1">
+                            <div class=" font-em-1">
                                 Static urls are imported from the global resource folder <code>res</code>.
                                 Therefore, all local static urls should begin with the res folder name although 
                                 a different folder name may be accepted. Before a file can be imported, it can 
@@ -73,7 +73,7 @@
                                 be stored in an unamed space. There are 
                                 several methods used for handling resource storage and importation and they are listed below
                                 <br><br>
-                                <ul class="font-em-d85 c-olive">
+                                <ul class="c-olive font-em-d85">
                                     <li>Res::name()</li>
                                     <li>Res::callFile()</li>
                                     <li>Res::getFile()</li>
@@ -109,10 +109,10 @@
 
                             <!-- Resource Naming -->
                             <div class="resource-naming">
-                                <div class="fb-6">#Resource naming</div>
+                                <div class="fb-6 c-orange-dd">#Resource naming</div>
                                 <div class="mvt-10">
 
-                                    <div class="font-menu font-em-d95">
+                                    <div class=" font-em-d95">
                                         Resource naming or grouping is done by giving static resources their own 
                                         storage group space which may be declared (named) or undeclared (unnamed).
                                         Example is shown below: <br><br>
@@ -124,15 +124,15 @@
 
   <span class="comment">2.</span> Res::new()->name('js');
     </pre>
-                                    </div> <br><br>
+                                    </div>
 
-                                    <div class="d87">
+                                    <div class="foot-note">
                                         The example above reveals two different ways by which static urls can be grouped 
                                         before they are being stored. While <code>Res::name()</code> is a direct static method of 
                                         naming a new resource group, the <code>Res::new()->name()</code> is an indirect instance method of naming groups.
                                         If multiple groups are defined, in order to switch to a previously declared group or declare a new group, line one will have to be repeated at each declaration but line 2 supports a chainable 
                                         structure naming convention reducing the number of times the <code>Res</code> class will have to be called just as shown in the example below:
-                                    </div> <br> 
+                                    </div>
 
                                     <div class="box-full pre-area shadow flow-x">
     <pre class="pre-code">
@@ -142,20 +142,20 @@
   <span class="comment">4.</span> Res::new()->name('css')->name('js');
     </pre>
 
-                                    </div> <br><br>
+                                    </div> 
 
-                                    <div class="d87">
+                                    <div class="foot-note">
                                         When adding multiple groups, line 1 & 2 will be harder to manage, hence line 4 is mostly recommended because it supports a chainable structure.
-                                    </div> <br>         
+                                    </div>      
                                 </div>
-                            </div>
+                            </div> <br>
 
 
                             <!-- Resource Setting -->
                             <div class="resource-input">
-                                <div class="fb-6">#Resource Setting</div>
+                                <div class="fb-6 c-orange-dd">#Resource Setting</div>
                                 <div class="mvt-10">
-                                    <div class="font-menu font-em-d95">
+                                    <div class=" font-em-d95">
                                         Resources can be added through 3 input methods which are
                                         <code>Res::callFile()</code> <code>Res::getFile()</code> and
                                         <code>Res::addFile()</code>
@@ -176,9 +176,9 @@
   Res::callFile('res/js/file1.js');
   Res::callFile('res/js/file2.js');
     </pre>
-                                    </div> <br><br>
+                                    </div>
 
-                                    <div class="d87">
+                                    <div class="foot-note">
                                         In example 1 above, two groups were declared. The first group 
                                         <code>css</code> is where <code>file1.css</code> and <code>file2.css</code>
                                         paths will be saved. While the <code>file1.js</code> and <code>file2.js</code> 
@@ -186,7 +186,7 @@
                                         can be imported later using the <code>Res::import()</code> method. Paths stored does not necessarily 
                                         have to be of the same extension. However, only four files extensions are supported which are 
                                         <code>html</code> <code>css</code> <code>js</code> and <code>php</code>
-                                    </div> <br> 
+                                    </div>
 
 
                                     <div class="example-2">
@@ -207,15 +207,15 @@
      ->url('res/css/file2.js')
         </pre>
             
-                                        </div> <br><br>
+                                        </div> 
                     
-                                        <div class="d87">
+                                        <div class="foot-note">
                                         
-                                        When using the instance method, a chainable structure can be employed that
-                                        helps to keep the code easier to maintain instead of calling the resource <code>Res</code>
-                                        class at every declaration like example 1 above.
+                                            When using the instance method, a chainable structure can be employed that
+                                            helps to keep the code easier to maintain instead of calling the resource <code>Res</code>
+                                            class at every declaration like example 1 above.
                     
-                                        </div> <br>         
+                                        </div>         
                                     </div>
 
 
@@ -227,17 +227,16 @@
   $resolved = Res::getFile('res/css/file2.js')
     </pre>
             
-                                        </div> <br><br>
+                                        </div>
                     
-                                        <div class="d87">
+                                        <div class="foot-note">
                                         
-                                        Just like the callFile method, the getFile method processes its arguments similarly 
-                                        and returns a resolved url of its input. It is however worth noting that local urls 
-                                        are validated before inclusion. If the path is not found, a null response is returned.
-                                        Such invalid urls are never imported to the page. 
-
+                                            Just like the <code class="bd-f">callFile()</code> method, the getFile method processes its arguments similarly 
+                                            and returns a resolved url of its input. It is however worth noting that local urls 
+                                            are validated before inclusion. If the path is not found, a null response is returned.
+                                            Such invalid urls are never imported to the page. 
                     
-                                        </div> <br>         
+                                        </div>       
                                     </div>
 
                                     <!-- example - 4 -->
@@ -253,15 +252,15 @@
   Res::addFile('res/css/file3.js');
     </pre>
             
-                                        </div> <br><br>
+                                        </div>
                     
-                                        <div class="d87">
+                                        <div class="foot-note">
                                         
-                                        Just like the callFile method, the addFile method processes its urls by adding files to 
-                                        an existing group. The group name to which the url will be added must be first declared as the first argument 
-                                        while the second argument should be the file path that will be added. After the first 
-                                        group declaration, <code>addFile</code> permits the omission of the class name for subsequent chained addFile 
-                                        calls.
+                                            Similarly to the <code class="bd-f">callFile()</code> method, the addFile method processes its urls by adding files to 
+                                            an existing group. The group name to which the url will be added must be first declared as the first argument 
+                                            while the second argument should be the file path that will be added. After the first 
+                                            group declaration, <code>addFile</code> permits the omission of the class name for subsequent chained addFile 
+                                            calls.
 
                     
                                         </div> <br>         
@@ -273,10 +272,10 @@
 
                             <!-- Resource Protection -->
                             <div class="resource-protection">
-                                <div class="fb-6">#Resource protection</div>
+                                <div class="fb-6 c-orange-dd">#Resource protection</div>
                                 <div class="mvt-10">
 
-                                    <div class="font-menu font-em-d95">
+                                    <div class="font-em-d95">
                                         Resource naming opens a (url) storage space which is expected to be closed. 
                                         The dangers of not closing resource space is that developers may accidentally save into a different storage 
                                         space. Hence, it is a good practice to either close your resources or start naming on a safe mode. The 
@@ -310,9 +309,9 @@
       ->name('js')
       ->url('http://www.site.com/file.css');
   </pre>
-                                    </div> <br><br>
+                                    </div>
 
-                                    <div class="d87">
+                                    <div class="foot-note">
                                         The examples above reveals three different ways by which resource grouping can be initialized in safe mode. 
                                         This can also be achieved by naming a group at the top of your application where the urls will be saved which automatically 
                                         declares or selects a storage space.
@@ -336,23 +335,23 @@
   ->urlClose();
     </pre>
 
-                                    </div> <br><br>
+                                    </div> 
 
-                                    <div class="d87">
+                                    <div class="foot-note">
                                         The resource <code>close()</code> can also clear previous storage when a bool of true 
                                         is supplied as its argument. Using the <code>close()</code> outside of a storage space will 
                                         reset all previously stored urls. This is why <code>open</code> or <code>urlOpen</code> is much
                                         preferred as it also provides a safe mean of exiting into unamed space. The "open" methods will 
                                         never reset the storage space unless an bool argument of true is supplied.
-                                    </div> <br>         
+                                    </div>       
                                 </div>
-                            </div>
+                            </div> <br>
 
                             <!-- Resource Url Defaulting -->
                             <div class="resource-defaulting">
-                                <div class="fb-6">#Resource url defaulting</div>
+                                <div class="fb-6 c-orange-dd">#Resource url defaulting</div>
                                 <div class="mvt-10">
-                                    <div class="font-menu font-em-d95">
+                                    <div class=" font-em-d95">
                                         Resource supports that a base or root url can be set for static files. Hence, 
                                         all subsequent urls will derive their parent url from the base url. The only way to 
                                         escape this is by using the <code>xurl</code> method to overide the default url set or by closing 
@@ -376,7 +375,7 @@
     </pre>
                                     </div> <br><br>
 
-                                    <div class="d87">
+                                    <div class="foot-note">
                                         The example above reveals that once a base url is set, the only way to overide it is by using the 
                                         <code>xurl</code> method. However, the full file path must be included into the <code>xurl()</code> 
                                         method. Every other <code>url()</code> declared will derive their base url from their parent <code>new()</code>
@@ -388,9 +387,9 @@
 
                             <!-- Resource Url Defaulting -->
                             <div class="resource-directory-switch">
-                                <div class="fb-6">#Resource directory switch</div>
+                                <div class="fb-6 c-orange-dd">#Resource directory switch</div>
                                 <div class="mvt-10">
-                                    <div class="font-menu font-em-d95">
+                                    <div class=" font-em-d95">
                                         The <code>Resource::path()</code> function enables the mapping of a parent directory to all local urls supplied when working 
                                         with a parent and child directory. If static files (absolute) urls are stored within the parent directory, A child directory 
                                         may have difficulty in importing the file except it uses the parent directory pointer <code>../</code> to pull the files. The 
@@ -406,7 +405,7 @@
     </pre>
                                     </div> <br><br>
 
-                                    <div class="d87">
+                                    <div class="foot-note">
                                         In the example above, when importing, resource will append the directory pointer to only absolute paths while the http urls will not be affected. 
                                     </div> <br> 
 
@@ -417,9 +416,9 @@
 
                             <!-- Resource Ignoring -->
                             <div class="resource-ignoring">
-                                <div class="fb-6">#Resource ignoring</div>
+                                <div class="fb-6 c-orange-dd">#Resource ignoring</div>
                                 <div class="mvt-10">
-                                    <div class="font-menu font-em-d95">
+                                    <div class=" font-em-d95">
                                         By default, the <code>Res</code> class imports its static files from the <code>res</code> folder 
                                         . In order to prevent this, a resource ignore <code>Res::ignore()</code> is used to reset its path from the root 
                                         folder.The <code>Res::ignore()</code> method should come before the urls to be imported are stored. The <code>close()</code> 
@@ -442,9 +441,9 @@
   ->url('folder/file.js')
   ->urlClose();
     </pre>
-                                    </div> <br><br>
+                                    </div>
 
-                                    <div class="d87">
+                                    <div class="foot-note">
                                         In example above, the <code>Res::ignore()</code> will only 
                                         affect the urls stored after it was called while those above will not be affected. 
                                         The <code>urlClose()</code> method will also terminate the effect of <code>Res::ignore()</code>
@@ -455,9 +454,9 @@
 
                             <!-- Resource Definition -->
                             <div class="resource-definition">
-                                <div class="fb-6">#Resource Defining</div>
+                                <div class="fb-6 c-orange-dd">#Resource Defining</div>
                                 <div class="mvt-10">
-                                    <div class="font-menu font-em-d95">
+                                    <div class=" font-em-d95">
                                         There are cases in which certain urls may not reveal their file extensions. This makes it difficult for 
                                         Resource class to properly resolve such urls to their respective script link. In such cases, the file extension should be supplied
                                         manually to help resource class to resolve such urls. An example is shown below:
@@ -472,9 +471,9 @@
   
   ->urlClose();
     </pre>
-                                    </div> <br><br>
+                                    </div>
 
-                                    <div class="d87">
+                                    <div class="foot-note">
                                         In example above, the urls supplied has no recognizable extension, however, if we know the 
                                         type of file it is, we can tell the resource class to resolve the url with its respective script tag.
                                         This is done by adding three colons and file extension after the url supplied. The extension will not be 
@@ -491,9 +490,9 @@
 
                             <!-- Resource Attributes -->
                             <div class="resource-attributes">
-                                <div class="fb-6">#Resource Attributes</div>
+                                <div class="fb-6 c-orange-dd">#Resource Attributes</div>
                                 <div class="mvt-10">
-                                    <div class="font-menu font-em-d95">
+                                    <div class=" font-em-d95">
                                         There are cases in which certain urls may have atrributes attached to them. In order to add attributes to tags, we can 
                                         employ the use of <code> = </code> & <code> > </code> sign (i.e <code>=></code> ) to point our attributes:
                                     </div> <br>
@@ -506,9 +505,9 @@
   
      <span class="comment no-select">// &lt;script src="http://site.com/js-file" class="value" id="some_id"&gt;&lt;/script&gt; </span>
     </pre>
-                                    </div> <br><br>
+                                    </div>
 
-                                    <div class="d87">
+                                    <div class="foot-note">
                                         In example above, we added attributes to our static urls. As revealed above, attributes can be separated using the 
                                         <code>;</code> semicolon character
                                     </div>
@@ -518,10 +517,10 @@
 
                             <!-- Resource Importation -->
                             <div class="resource-importing">
-                                <div class="fb-6">#Resource importation</div>
+                                <div class="fb-6 c-orange-dd">#Resource importation</div>
                                 <div class="mvt-10">
 
-                                    <div class="font-menu font-em-d95">
+                                    <div class=" font-em-d95">
                                         Resources can be imported using different methods. Stored resource urls can be imported using the resource import 
                                         <code>Res::import()</code> method. Before we proceed, we need to understand the features and capabilities of 
                                         resource importer. <br><br>
@@ -539,7 +538,7 @@
 
                                         <br><br>
                                         <div class="liveserver">
-                                            <div class="font-em-1d2 mvb-6">Live Server</div>
+                                            <div class="font-em-1d2 c-orange-dd mvb-6">Live Server</div>
                                             Using cli commands: <br>
                                             <ul>
                                                 <li>
@@ -562,7 +561,7 @@
 
                                         <br>
                                         <div class="meta-tags">
-                                            <div class="font-em-1d2 mvb-6">Meta Tags</div>
+                                            <div class="font-em-1d2 c-orange-dd mvb-6">Meta Tags</div>
                                             Using cli commands: <br>
                                             <ul>
                                                 <li>
@@ -586,19 +585,20 @@
 
 
                             <div>
-                                <div class="fb-6 box-full rad-4 resource-statics">
+                                <div class="fb-6 c-orange box-full rad-4 resource-statics">
                                     #Importing static urls
                                 </div>
     
     
                                 <div class="mvt-10">
-                                    <div class="font-menu font-em-d9">
+                                    <div class=" font-em-d9">
                                         Static urls are imported to the webpage by using the <code>Res::import()</code> method.
-                                        The <code>import()</code> method supports different level of arguments which are discussed below: <br> <br>
+                                        The <code>import()</code> method supports different level of arguments which are discussed below: 
+                                        <br> <br>
     
                                         <div class="importing-groups">
 
-                                            <div class="d87">
+                                            <div class="d89">
                                                 The sample code structure below <b>(Fig 1)</b> will be used to explain resource importation. <br><br>
                                             </div>
     
@@ -617,7 +617,7 @@
      -> url('js/design.js');
     </pre>
                                             </div> 
-                                            <b class="font-menu fb-6">Fig 1.</b>
+                                            <b class=" fb-6">Fig 1.</b>
                                             <br>
                                         
                                         </div>
@@ -625,7 +625,7 @@
                                 </div>   
     
                                 <div class="">
-                                    <div class="font-menu font-em-d9">
+                                    <div class=" font-em-d9">
                                     
                                         <div class="importing-groups">
                                             <div class="head fb-6">
@@ -650,7 +650,7 @@
     </pre>
                                             </div> <br>
                                         
-                                            <div class="d9 pvs-10">
+                                            <div class="d9 foot-note pvs-10">
                                                 In example above, <code>line 1 & 2</code>  are methods of importing stored groups 
                                                 separately. The use of array in <code>line 3</code> is a concise way of importing 
                                                 multiple groups, without having to call the <code>import()</code> directive every time.
@@ -664,7 +664,7 @@
                                 </div>   
     
                                 <div class="">
-                                    <div class="font-menu font-em-d9">
+                                    <div class=" font-em-d9">
                                     
                                         <div class="importing-groups">
                                             <div class="head fb-6">
@@ -688,7 +688,7 @@
     </pre>
                                             </div> <br>
                                         
-                                            <div class="d87 pvs-10">
+                                            <div class="foot-note pvs-10">
                                                 In example above, the variable <code>$url</code> was set with a value of 
                                                 <code>:lists</code>, then supplied into the <code>Res::import()</code> method. 
                                                 The directives tells the Resource class to update the value of <code>$url</code>
@@ -703,7 +703,7 @@
     </pre>
                                             </div> <br>
                                         
-                                            <div class="d87 mvt-6">
+                                            <div class="foot-note mvt-6">
                                             In example above, the first variable will contain the stored urls while line 2 adds a suffix of 
                                             <code>../</code> to imported local urls. The application of parent urls comes as a modification 
                                             to existing urls that may become invalid in static scripts. These helps to properly map the loaded urls to their 

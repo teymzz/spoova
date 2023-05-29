@@ -2,17 +2,17 @@
 
     @lay('build.co.navbars:left-nav')
     
-    <div class="box-full pxl-2 bc-white pull-right">
-      <div class="pxv-10 tutorial mails c-black-ll">
+    <div class="box-full font-em-1d2 pxl-2 bc-white pull-right">
+      <div class="pxv-10 font-em-d8 tutorial mails">
         
-        @lay('build.co.links:tutor_pointer')
+        @lay('build.co.links:tutor_pointer') <br>
 
         <div class="font-em-1d5 c-orange">Mails</div> <br>  
         
         <div class="pulling-data">
 
             <div class="fb-6">
-                <div class="font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
+                <div class=" fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
                 <div class="flex-full midv"> 
                     <span class="bi-window mxr-8 c-lime-dd"></span> Templating
                 </div>
@@ -52,15 +52,15 @@
         
         <div class="">
             <div class="fb-6">
-                <div class="font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
+                <div class=" fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
                     <div class="flex-full midv"> 
                         <span class="bi-person mxr-8 c-lime-dd"></span> Configuring Headers - Template File
                     </div>
                 </div>
-            </div> <br>
+            </div> 
             <div class="">
                 
-                <div class="">  
+                <div class="mvs-10">  
                     Aside from the <code>setup()</code> method, the template file also be used to configure headers. This is 
                     useful when handling html or txt files. The <code>@</code> symbol is used to process this just as displayed 
                     below. 
@@ -107,7 +107,7 @@
             </div>
         </div>
 
-        <div class="font-menu pvs-6">
+        <div class="pvs-6">
             In the above, the <code>setup</code> data will be used as mail headers when 
             forwarding a mail. Every parameter is just as similar to the <code>$webmail</code> 
             parameters discussed in <a href="@domurl('docs/mails/setup')">setup</a>. However, 
@@ -117,7 +117,7 @@
         </div>
         <div class="">
             <div class="fb-6">
-                <div class="font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
+                <div class=" fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
                     <div class="flex-full midv"> 
                         <span class="mxr-8 c-lime-dd">@({{ }})@</span> Template File - Placeholders
                     </div>
@@ -202,7 +202,7 @@
             </div>
         </div>
 
-        <div class="font-menu pvs-6">
+        <div class="foot-note pvs-6">
             The examples above shows how the placeholders can be used to 
             access global, local or request variables. <br><br>
 

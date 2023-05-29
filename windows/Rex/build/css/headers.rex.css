@@ -36,4 +36,16 @@ body.--theme-dark{
     color: rgb(125, 125, 125);
     background-color : rgba(21, 15, 39);
 }
+
+body.--theme-dark .lacier{
+    background-color : rgba(21, 15, 39);
+    box-shadow: none;
+    color: #8c8cb5;
+}
+
+body.--theme-dark .lacier.active > *{
+    color: #8c8cb5;
+}
+
+
 #style;

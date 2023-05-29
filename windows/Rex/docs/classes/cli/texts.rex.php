@@ -7,14 +7,13 @@
             <section class="pxv-10 tutorial bc-white">
                 <div class="font-em-1d2">
 
-                    @lay('build.co.links:tutor_pointer')
-
                     <div class="start font-em-d8">
+
+                        @lay('build.co.links:tutor_pointer') <br>
 
                         <div class="font-em-1d5 c-orange">Cli Texts Control</div> <br>  
                         
                         <div class="helper-classes">
-                            <div class="fb-6">Introduction</div> <br>
                             <div class="">
 
                                 <div class="">
@@ -48,10 +47,10 @@
 
                         <div id="textIndent" class="">
                             <div class="">
-                                <div class="font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
-                                    <div class="flex-full midv"> 
-                                        <span class=" mxr-8 c-lime-dd">
-                                            <span class="numb-box">1.</span>
+                                <div class=" fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
+                                    <div class="flex-full midv c-orange-dd"> 
+                                        <span class="mxr-8">
+                                            <span class="bi-circle-fill"></span>
                                         </span> Cli::textIndent()
                                     </div>
                                 </div> <br>
@@ -63,7 +62,7 @@
                                 
                                     <div class="pre-area">
                                         <div class="box-full">
-                                            <div class="pxv-6 bc-off-white"><code>Syntax: textIndent</code></div>
+                                            <div class="pxv-6 bc-off-white">Syntax</code></div>
                                             <pre class="pre-code">
     Cli::textIndent($text, $spaces);
     <span class="comment">
@@ -81,10 +80,10 @@
 
                         <div id="textView" class="">
                             <div class="">
-                                <div class="font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
-                                    <div class="flex-full midv"> 
-                                        <span class=" mxr-8 c-lime-dd">
-                                            <span class="numb-box">2.</span>
+                                <div class=" fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
+                                    <div class="flex-full midv c-orange-dd"> 
+                                        <span class="mxr-8">
+                                            <span class="bi-circle-fill"></span>
                                         </span> Cli::textView()
                                     </div>
                                 </div> <br>
@@ -96,7 +95,7 @@
                                 
                                     <div class="pre-area">
                                         <div class="box-full">
-                                            <div class="pxv-6 bc-off-white"><code>Syntax: textView</code></div>
+                                            <div class="pxv-6 bc-off-white">Syntax</div>
                                             <pre class="pre-code">
     Cli::textView($text, $spacing, $break, $pause);
     <span class="comment">
@@ -113,7 +112,7 @@
                                 
                                     <div class="pre-area">
                                         <div class="box-full">
-                                            <div class="pxv-6 bc-off-white"><code>Example 1: textView</code></div>
+                                            <div class="pxv-6 bc-off-white">Example 1</div>
                                             <pre class="pre-code">
     Cli::textView("Hello text", 2, 3, 1);
     <span class="comment no-select">
@@ -131,7 +130,7 @@
                                 
                                     <div class="pre-area">
                                         <div class="box-full">
-                                            <div class="pxv-6 bc-off-white"><code>Example 2: textView</code></div>
+                                            <div class="pxv-6 bc-off-white">Example 2</div>
                                             <pre class="pre-code">
     Cli::textView("Hello text", "2|2", "3|2", '2|1');
     <span class="comment no-select"> 
@@ -154,10 +153,10 @@
 
                         <div id="List" class="">
                             <div class="">
-                                <div class="font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
-                                    <div class="flex-full midv"> 
-                                        <span class=" mxr-8 c-lime-dd">
-                                            <span class="numb-box">3.</span>
+                                <div class=" fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
+                                    <div class="flex-full midv c-orange-dd"> 
+                                        <span class="mxr-8">
+                                            <span class="bi-circle-fill"></span>
                                         </span> Cli::List()
                                     </div>
                                 </div> <br>
@@ -168,7 +167,7 @@
                                     
                                     <div class="pre-area">
                                         <div class="box-full">
-                                            <div class="pxv-6 bc-off-white"><code>Syntax: list</code></div>
+                                            <div class="pxv-6 bc-off-white">Syntax</div>
                                             <pre class="pre-code">
     Cli::list($array, $spacing, $break, $interval);
     <span>
@@ -185,7 +184,7 @@
                                     
                                     <div class="pre-area">
                                         <div class="box-full">
-                                            <div class="pxv-6 bc-off-white"><code>Example 1: List</code></div>
+                                            <div class="pxv-6 bc-off-white">Example 1</div>
                                             <pre class="pre-code">
     Cli::List(['Foo','Bar', 'Baz'], 0, "|1");
     <span>
@@ -201,7 +200,7 @@
                                     
                                     <div class="pre-area">
                                         <div class="box-full">
-                                            <div class="pxv-6 bc-off-white"><code>Example 2: List</code></div>
+                                            <div class="pxv-6 bc-off-white">Example 2</div>
                                             <pre class="pre-code">
     Cli::List(['a'=>'Foo','b'=>'Bar', 'c' => 'Baz'], 0, "|1");
     <span>
@@ -222,10 +221,10 @@
 
                         <div id="dots" class="">
                             <div class="">
-                                <div class="font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
-                                    <div class="flex-full midv"> 
-                                        <span class=" mxr-8 c-lime-dd">
-                                            <span class="numb-box">4.</span>
+                                <div class=" fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
+                                    <div class="flex-full midv c-orange-dd"> 
+                                        <span class="mxr-8">
+                                            <span class="bi-circle-fill"></span>
                                         </span> Cli::dots()
                                     </div>
                                 </div> <br>
@@ -238,7 +237,7 @@
 
                             <div class="pre-area">
                                 <div class="box-full">
-                                    <div class="pxv-6 bc-off-white"><code>Syntax: dots</code></div>
+                                    <div class="pxv-6 bc-off-white">Syntax</div>
                                     <pre class="pre-code">
     Cli::dots($max, $text, $char); 
     <span class="comment no-select">
@@ -258,10 +257,10 @@
 
                         <div id="backspace" class="">
                             <div class="">
-                                <div class="font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
-                                    <div class="flex-full midv"> 
-                                        <span class=" mxr-8 c-lime-dd">
-                                            <span class="numb-box">5.</span>
+                                <div class=" fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
+                                    <div class="flex-full midv c-orange-dd"> 
+                                        <span class="mxr-8">
+                                            <span class="bi-circle-fill"></span>
                                         </span> Cli::backspace()
                                     </div>
                                 </div> <br>
@@ -272,7 +271,7 @@
 
                             <div class="pre-area">
                                 <div class="box-full">
-                                    <div class="pxv-6 bc-off-white"><code>Syntax: backspace</code></div>
+                                    <div class="pxv-6 bc-off-white">Syntax</div>
                                     <pre class="pre-code">
     Cli::backspace($times); 
     <span class="comment no-select">
@@ -288,13 +287,13 @@
 
                         <div id="cls" class="">
                             <div class="">
-                                <div class="font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
-                                    <div class="flex-full midv"> 
-                                        <span class="mxr-8 c-lime-dd">
-                                            <span class="numb-box">6.</span>
+                                <div class=" fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
+                                    <div class="flex-full midv c-orange-dd"> 
+                                        <span class="mxr-8">
+                                            <span class="bi-circle-fill"></span>
                                         </span> Cli::cls()
                                     </div>
-                                </div> <br>
+                                </div>
                                 <div class="">
                                 The <code>cls()</code> method is used to clear the terminal screen.
                                 </div>
@@ -303,13 +302,13 @@
 
                         <div id="clearLine" class="">
                             <div class="">
-                                <div class="font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
-                                    <div class="flex-full midv"> 
-                                        <span class=" mxr-8 c-lime-dd">
-                                            <span class="numb-box">7.</span>
+                                <div class=" fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
+                                    <div class="flex-full midv c-orange-dd"> 
+                                        <span class="mxr-8">
+                                            <span class="bi-circle-fill"></span>
                                         </span> Cli::clearLine()
                                     </div>
-                                </div> <br>
+                                </div>
                                 <div class="">
                                 The <code>clearLine()</code> method is used to delete the entire character on a line. This method takes 
                                 no arguments.
@@ -317,7 +316,7 @@
 
                             <div class="pre-area">
                                 <div class="box-full">
-                                    <div class="pxv-6 bc-off-white"><code>Syntax: backspace</code></div>
+                                    <div class="pxv-6 bc-off-white">Syntax</div>
                                     <pre class="pre-code">
     Cli::backspace($times); 
     <span class="comment no-select">
@@ -333,13 +332,13 @@
 
                         <div id="clearUp" class="">
                             <div class="">
-                                <div class="font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
-                                    <div class="flex-full midv"> 
-                                        <span class="mxr-8 c-lime-dd">
-                                            <span class="numb-box">8.</span>
+                                <div class=" fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
+                                    <div class="flex-full midv c-orange-dd"> 
+                                        <span class="mxr-8">
+                                            <span class="bi-circle-fill"></span>
                                         </span> Cli::clearUp()
                                     </div>
-                                </div> <br>
+                                </div>
                                 <div class="">
                                 The <code>clearUp()</code> method is used to delete a line before a text is printed. It shifts the positon of the cli pointer 
                                 up by deleting all characters found along the way to its destination point.
@@ -347,7 +346,7 @@
 
                             <div class="pre-area">
                                 <div class="box-full">
-                                    <div class="pxv-6 bc-off-white"><code>Syntax: clearUp</code></div>
+                                    <div class="pxv-6 bc-off-white">Syntax</div>
                                     <pre class="pre-code">
     Cli::clearUp($times); 
     <span class="comment no-select">
@@ -363,13 +362,13 @@
 
                         <div id="upLine" class="">
                             <div class="">
-                                <div class="font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
-                                    <div class="flex-full midv"> 
-                                        <span class=" mxr-8 c-lime-dd">
-                                            <span class="numb-box">9.</span>
+                                <div class=" fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
+                                    <div class="flex-full midv c-orange-dd"> 
+                                        <span class="mxr-8">
+                                            <span class="bi-circle-fill"></span>
                                         </span> Cli::upLine()
                                     </div>
-                                </div> <br>
+                                </div>
                                 <div class="">
                                 The <code>upLine()</code> method is used to shift the position of the command line pointer upwards without 
                                 deleting any character.
@@ -377,7 +376,7 @@
 
                             <div class="pre-area">
                                 <div class="box-full">
-                                    <div class="pxv-6 bc-off-white"><code>Syntax: upLine</code></div>
+                                    <div class="pxv-6 bc-off-white">Syntax</div>
                                     <pre class="pre-code">
     Cli::upLine($times); 
     <span class="comment no-select">
@@ -393,20 +392,20 @@
 
                         <div id="br" class="">
                             <div class="">
-                                <div class="font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
-                                    <div class="flex-full midv"> 
-                                        <span class=" mxr-8 c-lime-dd">
-                                            <span class="numb-box">10.</span>
+                                <div class=" fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
+                                    <div class="flex-full midv c-orange-dd"> 
+                                        <span class="mxr-8">
+                                            <span class="bi-circle-fill"></span>
                                         </span> Cli::br()
                                     </div>
-                                </div> <br>
+                                </div>
                                 <div class="">
                                 The <code>br()</code> method is used to apply text line breaks after a text has been printed.
                                 <br><br>
 
                             <div class="pre-area">
                                 <div class="box-full">
-                                    <div class="pxv-6 bc-off-white"><code>Syntax: br</code></div>
+                                    <div class="pxv-6 bc-off-white">Syntax</div>
                                     <pre class="pre-code">
     Cli::br($times); 
     <span class="comment no-select">
@@ -422,13 +421,13 @@
 
                         <div id="break" class="">
                             <div class="">
-                                <div class="font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
-                                    <div class="flex-full midv"> 
-                                        <span class=" mxr-8 c-lime-dd">
-                                            <span class="numb-box">11.</span>
+                                <div class=" fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
+                                    <div class="flex-full midv c-orange-dd"> 
+                                        <span class="mxr-8">
+                                            <span class="bi-circle-fill"></span>
                                         </span> Cli::break()
                                     </div>
-                                </div> <br>
+                                </div>
                                 <div class="">
                                 The <code>break()</code> method is also used to apply text line breaks after a text has been printed. The difference between <code>Cli::br()</code> 
                                 and <code>Cli::break()</code> is that the latter prints directly by default while the former returns line breaks. However, the <code>Cli::break()</code> 
@@ -437,7 +436,7 @@
 
                             <div class="pre-area">
                                 <div class="box-full">
-                                    <div class="pxv-6 bc-off-white"><code>Syntax: break</code></div>
+                                    <div class="pxv-6 bc-off-white">Syntax</div>
                                     <pre class="pre-code">
     Cli::break($times, $print); 
     <span class="comment no-select">

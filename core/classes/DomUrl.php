@@ -48,6 +48,10 @@ class DomUrl {
         return self::$Port;
 
     }
+    
+    static function last() {
+        return GET(DomUrl::Name(), DomUrl::hash());
+    }
 
 
 }

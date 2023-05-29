@@ -40,7 +40,7 @@
                             Using the syntax above, the "users" migration file will be added to the migration folder in the following format:
                         </div><br>
 
-                        <div class="box-full font-menu font-em-d85 bc-white-dd shadow">
+                        <div class="box-full  font-em-d85 bc-white-dd shadow">
 <div class="pxv-10 bc-silver">Example : Migration file sample</div>
                     <pre class="pre-code">
   &lt;?php 
@@ -98,7 +98,7 @@
                             </p>
                         </div> <br>
 
-                        <div class="box-full font-menu font-em-d85 bc-white-dd shadow">
+                        <div class="box-full  font-em-d85 bc-white-dd shadow">
 <div class="pxv-10 bc-silver">Example : Creating migration table for users table</div>
                     <pre class="pre-code">
   &lt;?php 

@@ -39,15 +39,12 @@ class Css extends Window {
                 window('base') => 'root',
 
                 /* argument */
-                SELF::ARG => $path
+               SELF::ARG => $path
             ]); 
 
         }else{
             self::call($this);
         }
-
-
-        
 
     }
 

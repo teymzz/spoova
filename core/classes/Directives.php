@@ -3,6 +3,8 @@
 namespace spoova\mi\core\classes;
 
 use Res;
+use Rexit;
+use spoova\mi\app\RexComponent;
 
 /**
  * Contains Directives for slice tool
@@ -13,71 +15,23 @@ abstract class Directives{
 
     protected static $locals = [];
 
-    private static $pattern = [
+    protected static $pattern = [
 
         // Set a page title
         'title'  => "~@title\('.*?'\)~i", 
-
-        // Handle all redirection
-        'authDirect'  => "~@authdirect\('[\w+\/]*?'\)~i", 
-        'guestDirect' => "~@guestdirect\('[\w+\/]*?'\)~i",
         
         // Handle content displayed
         'auth'        => "~@auth:\s?(.)*?@auth;~is", 
         'guest'       => "~@guest:\s?(.)*?@guest;~is",
-        
-        //Handle meta display
-        'meta'        => "~@meta\(\s?'\w*?'\s?\)~",
 
         // Import a specific resource
         'import'      => "~(<@import\s|@import\()\s?\'?(http(s)?:\/\/)?[A-Za-z_\/]+(.[A-Za-z]+)\'?\s?(\)|\/>)~i", //import (local or remote file) css / js files
-        
-        'inPath'       => '~@inPath\(\'\s?[A-Za-z_.:-]+\s?\'(,\s?\'\s?([A-Za-z_\s-]+\s?\')){0,1}\)~i',
-        'isPath'       => '~@isPath\(\'\s?[A-Za-z_.:-]+\s?\'(,\s?\'\s?([A-Za-z_\s-]+\s?\')){0,1}\)~i',
-
-        //Include a particular file
-        'include'     => "~@include\(\s?'.*?'\s?\)~i", //include local file
-        
-        //include a rendered file
-        'view'        => '~@view\(\'\s?\/?[A-Za-z_.-]+(.rex|)?\s?\'\)~i', //include a rendered file
-        
-        //Handle flash messages display
-        //'flash'       => '~@flash\(\'\s?[A-Za-z_.:-]+\s?\'(,\s?\'\s?(([A-Za-z_\s-]+\s?(\s<<<)?\')|(.+?\s<<<\'))){0,1}\)~i', //include a flash if it exists
-        'flash'       => '~@flash\(\'\s?.*?\s?\'\)~i', //include a flash if it exists
-        
-        //Handle resource importing
-        'res'         => '~@res\(\'\s?(::|:)?(http(s)?://)?[A-Za-z0-9-_/\.]+(.php|.js|.html|.css|::js|::css)?\'\s?\)~i',
-
-        //Add files from "res/" folder
-        'src'         => '~@src\(\s?\'[A-Za-z0-9-_/.]+\'\s?\)~i',  
-        
-        //Alias "src"
-        'ress'        => 'alias-for-src-index',  
-                        
-        //Returns link from "res/main" folder
-        'mapp'         => '~@mapp\(\s?\'[A-Za-z0-9-_/.]+\'\s?\)~i',
-                        
-        //Returns link from "res/assets" folder
-        'mass'         => '~@mass\(\s?\'[A-Za-z0-9-_/.]+\'\s?\)~i',
-
-        //Add files from "res/assets" folder
-        'assets'      => '~@assets\(\s?\'(::|:)?[A-Za-z0-9-_/.]+\'\s?\)~i', 
 
         //Handle live server
-        'live'        => '~@live(\((\'(console|pop|uiconsole|[0-9])?\')?\))?~i', 
-        
-        // Handle static files inclusion
-        'domurl'      => '~@domurl\((\'(\s?(http(s)?://)?[A-Za-z0-9-_/.#?]+)?\'\s?)?\)~i',
-
-        'domlink'     => '~@domlink\((\'(\s?(http(s)?://)?[A-Za-z0-9-_/.#?]+)?\'\s?)?\)~i',
-
-        'formurl'     => '~@formurl\((\'(\s?(http(s)?://)?[A-Za-z0-9-_/.#?]+)?\'\s?)?\)~i',
-
-        //Include images from "res/assets/images" folder
-        'images'      => '~@images\((\s?\'([A-Za-z0-9-_/.#?]+)?\'\s?)?\)~i',  
+        //'live'        => '~@live(\((\'(console|pop|uiconsole|[0-9])?\')?\))?~i', 
 
         // Handles layout templating
-        // 'styles'      => '~@styles~i', //set a layout a layout file
+        'styles'      => '~@styles~i', //set a layout a layout file
         'style'       => '~@style\(\s?\'[A-zA-Z0-9_\\.-]{2,}(:[A-zA-Z_0-9.\-_]*?)*?\'\s?\)~i', //set a layout a layout file
         'script'      => '~@script\(\s?\'[A-zA-Z0-9_\\.-]{2,}(:[A-zA-Z_0-9.\-_]*?)*?\'\s?\)~i', //set a layout a layout file
         'onscript'    => '~@onscript\(\s?\'[A-zA-Z0-9_\\.-]{2,}(:[A-zA-Z_0-9.\-_]*?)*?\'\s?\)~i', //set a layout a layout file
@@ -86,21 +40,6 @@ abstract class Directives{
         
         // Handle template injecting
         'template'    => '~@template\(\s?\'[-\w+\\.]+?(:off)?\'\s?\)~i',
-
-        'onShow'      => "~@onShow\(\s?'.*?'\s?\)~is", 
-        'onHide'      => "~@onHide\(\s?'.*?'\s?\)~is", 
-
-        'route'       => "~@route\(\s?'.*?'\s?\)~i",
-
-        'formdata'    => "~@formdata~i",
-        'csrf'        => "~@csrf~i",
-        'action'      => "~@action\(\s?'.*?'\s?\)~i",
-        'btn'         => "~@btn\(\s?'.*?'\s?\)~i",
-        'old'         => "~@old.(\w+)(\[[\w+\.-_]+\])?~i", 
-        'post'        => "~@post.(\w+)(\[[\w+\.-_]+\])?~i", 
-        'get'         => "~@get.(\w+)(\[[\w+\.-_]+\])?~i",
-        'error'       => "~@error\(\s?'.*?'\s?\)~i", 
-        'vdump'       => "~@vdump\(\s?'.*?'\s?\)~i", 
         'php'         => "~@php:.*?@php;~is",
         'attr'        => "~@((attr:[\w+-]+)|(attr\(\s?'.*?'\s?\)))~is",
         
@@ -132,6 +71,55 @@ abstract class Directives{
      */
     protected const defaultExtension = self::extensions['php'];
 
+    protected static function directivesController(string $body, $directive) : string {
+
+        $pattern1 = "~@$directive\((.*?)?\)~i"; 
+        $pattern2 = '~@'.$directive.'[\s\n]+?~i';
+        $pattern3 = '~@(old|post|get).(\w+)(\[[\w+\.-_]+\])?~i';
+
+        preg_match($pattern1, $body, $matches);
+
+        if($matches) {
+            $body = preg_replace($pattern1, '<?= Rexit::'.$directive.'($1); ?>', $body);
+        }else{
+
+            preg_match($pattern2, $body, $matches);
+
+            if($matches) {
+                $body = preg_replace($pattern2, '<?= Rexit::'.$directive.'(); ?>', $body);
+            }else{
+
+                //request pattern - 1
+                preg_match($pattern3, $body, $matches);
+
+                if($matches){
+                    $name = str_ireplace(["@$directive."],'', $matches[0]);
+
+                    $expNames = explode('[', $name, 2);
+                    if($name){
+                        $name = '['.$expNames[0].']'; 
+        
+                        if(count($expNames) > 1){
+                            $name .= '['.$expNames[1];
+                        }
+        
+                        $name = str_replace(['][','[',']'], ['\',\'','[\'','\']'], $name);
+
+                        $body = preg_replace($pattern3, '<?= Rexit::'.$directive.'('.$name.'); ?>', $body);
+
+                    }   
+
+                }
+               
+
+            }
+            
+        }
+
+        return $body;
+
+    }
+
     /**
      * Sets a page title
      *
@@ -140,7 +128,7 @@ abstract class Directives{
      */
     protected static function directivesTitle($body): string 
     { 
-       
+
         self::getMatches('title', $body, $matches);
 
         if($matches){
@@ -165,26 +153,6 @@ abstract class Directives{
         return $body;
     }
     
-    /**
-     * Authemticated user redirection
-     *
-     * @param string $body
-     * @return string
-     */
-    protected static function directivesAuthDirect($body): string{
-        //fetch pattern
-
-        self::getMatches('authDirect', $body, $matches);
-
-        foreach($matches as $match => $value){
-            $query = str_replace(' ', '', $value);
-            $url = str_ireplace(['@authdirect(\'','\')'], '', $query);
-            $body = str_ireplace($value, '' , $body);
-            authDirect($url);
-            break;
-        }
-        return $body;
-    }
 
     /**
      * Guest Redirection
@@ -229,32 +197,7 @@ abstract class Directives{
       
       return preg_replace_callback($pattern, $callback, $body);
       
-    }
-
-    protected static function directivesMeta($body): string {
-      
-      $pattern = self::$pattern['meta'];
-
-      //convert and process pattern
-      $callback = function($matches) use ($body) {
-         
-        $matched = $matches[0];
-
-        $matchedd = str_ireplace(['@meta(', ')', '\''] , '', $matched);
-
-        if(appenv('meta')->$matchedd(true)){
-            $rep = str_replace($matched , (appenv('meta')->$matchedd(true))?? '' , $matched);
-        } else {
-            $rep = str_replace($matched , '' , $matched);
-        }
-       
-        return $rep; 
-        
-      };
-      
-      return preg_replace_callback($pattern, $callback, $body);
-      
-    }    
+    } 
     
     protected static function directivesAuth(&$body): string {
         
@@ -308,391 +251,22 @@ abstract class Directives{
     }
 
     /**
-     * Checks if the current url matches a particular window base
-     *
-     * @param string $body
-     * @return string
-     */
-    protected static function directivesInPath($body): string {
-        //get all imports
-        $pattern = self::getMatches('inPath', $body, $matches);
-
-        foreach($matches as $match){
-            $arguments = str_ireplace(['@','(','inPath',')'], '', $match);
-
-            $body = str_replace($match,"<?= inPath({$arguments}) ?>", $body);
-        }
-
-        return $body;
-    }
-
-    /**
-     * Checks if the current url matches the entire request url
-     *
-     * @param string $body
-     * @return string
-     */
-    protected static function directivesIsPath($body): string {
-        //get all imports
-        self::getMatches('isPath', $body, $matches);
-        
-        foreach($matches as $match){
-            $arguments = str_ireplace(['@','(','isPath',')'], '', $match);
-
-            $body = str_replace($match,"<?= isPath({$arguments}) ?>", $body);
-        }
-
-        return $body;
-    }
-
-    /**
-     * Loads and renders all include tags from the template string supplied
-     *
-     *
-     * @param string $body
-     * @return string rendered $body
-     */
-    protected static function directivesInclude($body): string 
-    { 
-        //get all includes
-        self::getMatches('include', $body, $matches);
-
-        //convert and process pattern
-        foreach($matches as $match => $matchValue){
-
-            //strip off the rule pattern
-            $url = preg_replace("~@include\(\s?'(.*?)'\s?\)~", "<?php include('".docroot.DS."$1'); ?>", $matchValue);
-
-            $body = str_replace($matchValue, $url, $body);
-            
-        }
-
-        return $body;
-    }
-
-    /**
-     * Returns a named route
-     *
-     * @param string $body
-     * @return string rendered $body
-     */
-    protected static function directivesRoute($body): string 
-    {
-        self::getMatches('route', $body, $matches);
-
-        //convert and process pattern
-        foreach($matches as $match => $matchValue){
-
-            //strip off the rule pattern
-            $url = preg_replace("~@route\(\s?'(.*?)'\s?\)~", "<?= route('$1'); ?>", $matchValue);
-
-            $body = str_replace($matchValue, $url, $body);
-            
-        }
-
-        return $body;
-    }
-
-    /**
-     * Returns the default request data processor file
-     *
-     * @param string $body
-     * @return string rendered $body
-     */
-    protected static function directivesFormData($body): string 
-    { 
-        self::getMatches('formdata', $body, $matches);
-
-        //convert and process pattern
-        foreach($matches as $match => $matchValue){
-
-            //strip off the rule pattern
-            $url = preg_replace("~@formdata~", "<?= DomUrl(FormData::action); ?>", $matchValue);
-
-            $body = str_replace($matchValue, $url, $body);
-            
-        }
-
-        return $body;
-    }
-
-    /**
-     * Converts all error index directives to executable function
-     *
-     * @return string
-     */
-    protected static function directivesError($body) : string {
-
-        self::getMatches('error', $body, $matches);
-
-        foreach($matches as $structure) {
-
-            //get the error name - fix brackets later!!! using preg_replace instead
-            $errorArgs = str_replace(['@error','(',')'], '', $structure);
-
-            $body = str_replace($structure, "<?= error({$errorArgs}) ?>", $body);
-
-        }
-
-        return $body;
-        
-    }
-
-    /**
-     * Sets a csrf token on forms
-     *
-     * @param string $body
-     * @return string rendered $body
-     */
-    protected static function directivesCsrf($body): string 
-    { 
-        self::getMatches('csrf', $body, $matches);
-
-        if($matches){
-
-            $token = Csrf::token();
-            //convert and process pattern
-            foreach($matches as $match => $matchValue){
-
-                //strip off the rule pattern
-                $csrfBuild = str_replace('@csrf', '<input type="hidden" value="'.$token.'" name="CSRF_TOKEN">', $matchValue); 
-
-                $body = str_replace($matchValue, $csrfBuild, $body);
-                
-            }
-
-
-        }
-
-        return $body;
-    }
-
-    /**
-     * Sets the form action for a specific form
-     *
-     * @param string $body
-     * @return string rendered $body
-     */
-    protected static function directivesAction($body): string 
-    { 
-        //get all imports
-        self::getMatches('action', $body, $matches);
-
-        //convert and process pattern
-        foreach($matches as $match => $matchValue){
-
-            //strip off the rule pattern
-            $action = preg_replace("~@action\(\s?'(.*?)'\s?\)~", "<input hidden=\"\" name=\":form-action\" value=\"$1\">", $matchValue);
-
-            $body = str_replace($matchValue, $action, $body);
-            
-        }
-
-        return $body;
-    }
-
-    /**
-     * Sets the form attributes of name and value for a specific form input
-     *
-     * @param string $body
-     * @return string rendered $body
-     */
-    protected static function directivesBtn($body): string 
-    { 
-        //get all imports
-        self::getMatches('btn', $body, $matches);
-
-        //convert and process pattern
-        foreach($matches as $match => $matchValue){
-
-            //strip off the rule pattern
-            $action = preg_replace("~@btn\(\s?'(.*?)'\s?\)~", "name=\"$1\" value=\"$1\"", $matchValue);
-
-            $body = str_replace($matchValue, $action, $body);
-            
-        }
-
-        return $body;
-    }
-
-    /**
-     * Retrieves the value of a last post data request
-     *
-     * @param string $body
-     * @return string rendered $body
-     */
-    protected static function directivesGet($body): string 
-    { 
-
-        $pattern = self::getMatches('get', $body, $matches);
-
-        foreach($matches as $match => $matchValue){
-            
-            //strip off the rule pattern
-            $name = str_ireplace(['@get.'],'', $matchValue);
-
-             
-            $expNames = explode('[', $name, 2);
-            if($name){
-                $name = '['.$expNames[0].']'; 
-                if(count($expNames) > 1){
-                    $name .= '['.$expNames[1];
-                }
-
-                $name = str_replace('[', "['", $name);
-                $name = str_replace(']', "']", $name);
-            
-                $name = self::buildName($name, '$_GET');
-                $name = "<?= ".$name." ?>";
-  
-                $old = preg_replace($pattern, $name, $matchValue);
-
-                $body = str_replace($matchValue, $old, $body);
-            }   
-        }
-
-        return $body;
-    }
-
-    /**
-     * Retrieves the value of a last post data request
-     *
-     * @param string $body
-     * @return string rendered $body
-     */
-    protected static function directivesPost($body): string 
-    { 
-
-        $pattern = self::getMatches('post', $body, $matches);
-
-        foreach($matches as $match => $matchValue){
-
-            //strip off the rule pattern
-            $name = str_ireplace(['@post.'],'', $matchValue);
-
-             
-            $expNames = explode('[', $name, 2);
-            if($name){
-                $name = '['.$expNames[0].']'; 
-                if(count($expNames) > 1){
-                    $name .= '['.$expNames[1];
-                }
-
-                $name = str_replace('[', "['", $name);
-                $name = str_replace(']', "']", $name);
-            
-                $name = self::buildName($name, '$_POST');
-                $name = "<?= ".$name." ?>";
-  
-                $old = preg_replace($pattern, $name, $matchValue);
-
-                $body = str_replace($matchValue, $old, $body);
-            }   
-        }
-
-        return $body;
-    }
-
-    /**
-     * Retrieves the value of a last forwarded data
-     *
-     * @param string $body
-     * @return string rendered $body
-     */
-    protected static function directivesOld($body): string 
-    { 
-
-        $pattern = self::getMatches('old', $body, $matches);
-
-        foreach($matches as $match => $matchValue){
-
-            //strip off the rule pattern
-            $name = str_ireplace(['@old.'],'', $matchValue);
-
-             
-            $expNames = explode('[', $name, 2);
-            if($name){
-                $name = '['.$expNames[0].']'; 
-
-                if(count($expNames) > 1){
-                    $name .= '['.$expNames[1];
-                }
-
-                $name = str_replace('[', "['", $name);
-                $name = str_replace(']', "']", $name);
-            
-                $name = self::buildName($name);
-                $name = "<?=".trim($name, " ")."?>";
-
-                $old = preg_replace($pattern, $name, $matchValue);
-
-                $body = str_replace($matchValue, $old, $body);
-            }   
-
-        }
-
-        return $body;
-    }
-
-    private static function buildName($name, $method = '$_POST') {
-
-        $eName = rtrim(str_replace("['", '' , $name), "']");
-        $eName = explode("']", $eName);
-        $eName = 'reqValue(\''.$method.'\', [\''.implode("','",$eName).'\'])';
-
-        return $eName;
-        
-    }
-    
-    /**
      * Loads and renders the file path supplied
      *
      * @param string $file
      * @param array $params variables supplied as arguments
      * @return string rendered $body
      */
-    abstract protected static function loadTemplate($file, $params = []);
+    abstract protected static function loadTemplate(string $file, $params = []);
 
-    protected static function directivesRes($body): string
-    { 
-        //get pattern
-        self::getMatches('res', $body, $matches);
-
-        foreach($matches as $match){
-
-            //strip off the rule pattern
-            $url = str_ireplace(["@res(",")", "'",], "", $match);
-            if(substr($url, 0, 1) == ":"){
-
-                if($url == '::watch'){
-
-                     $values = Res::import($url);
-
-                } else {
-                    $values = ":lists";
-
-                    $values = Res::import('', $url, $values);
-                    
-                }
-               
-                $body = str_replace($match, $values, $body);
-                
-            } else {
-
-                $values = Res::callFile($url, false); //get values of index
-
-                $body = str_replace($match, $values, $body);    
-
-            }
-            
-        }
-
-
-        return $body;
-    }
-
+    /**
+     * Start a live server
+     *
+     * @param string $body
+     * @return string
+     */
     protected static function directivesLive($body): string {
-        
+    
         //get pattern
         self::getMatches('live', $body, $matches);
         $counter = 0;
@@ -706,7 +280,8 @@ abstract class Directives{
                 $params = str_replace(['@live(', '\'', ')'], '', $match);
                 $params = str_replace(['@live'], '', $params);
                 $params = explode(',', $params);
-                $body = str_replace($match, Res::import('::watch'), $body);
+                //$body = str_replace($match, Res::import('::watch'), $body);
+                $body = str_replace($match, '<?= Res::live() ?>', $body);
             } 
             $body = str_replace($match, '', $body);
             $counter++;
@@ -715,242 +290,6 @@ abstract class Directives{
         return $body;
     }
 
-    protected static function directivesDomUrl($body): string
-    { 
-  
-        //get pattern
-        self::getMatches('domurl', $body, $matches);
-
-        foreach($matches as $match){
-
-            //strip off the rule pattern
-            $url = str_ireplace(["@domurl(",")", "'"], "", $match);           
-            
-            $replacement = "<?= DomUrl('{$url}') ?>";
-            $body = str_replace($match, $replacement, $body);
-            
-        }
-
-
-        return $body;
-    }    
-
-    protected static function directivesDomLink($body): string
-    { 
-  
-        //get pattern
-        self::getMatches('domlink', $body, $matches);
-
-        foreach($matches as $match){
-
-            //strip off the rule pattern
-            $url = str_ireplace(["@domlink(",")", "'"], "", $match);           
-            
-            $replacement = "<?= domLink('{$url}') ?>";
-            $body = str_replace($match, $replacement, $body);
-            
-        }
-
-
-        return $body;
-    }    
-
-    protected static function directivesFormUrl($body): string
-    { 
-  
-        //get pattern
-        self::getMatches('formurl', $body, $matches);
-
-        foreach($matches as $match){
-
-            //strip off the rule pattern
-            $url = str_ireplace(["@formurl(",")", "'"], "", $match);           
-            
-            $replacement = FormUrl($url);
-            $body = str_replace($match, $replacement, $body);
-            
-        }
-
-
-        return $body;
-    }    
-    
-    protected static function directivesImages($body): string
-    { 
-  
-        //get pattern
-        self::getMatches('images', $body, $matches);
-
-        foreach($matches as $match){
-
-            //strip off the rule pattern
-            $url = str_ireplace(["@images(",")", "'"], "", $match);           
-            
-            $replacement = DomUrl('res/assets/images/'.$url);
-            $body = str_replace($match, $replacement, $body);
-            
-        }
-
-
-        return $body;
-    } 
-    
-    protected static function directivesSrc($body): string
-    { 
-           
-        //get pattern
-        self::getMatches('src', $body, $matches);
-
-        foreach($matches as $match){
-
-            //strip off the rule pattern
-            $url = str_ireplace(["@src(",")", "'"], "", $match);           
-            
-            $replacement = ress($url);
-            $body = str_replace($match, $replacement, $body);
-            
-        }
-
-
-        return $body;
-
-    } 
-
-    /**
-     * alias for directiveSrc
-     *
-     * @param string $body
-     * @return string
-     */
-    protected static function directivesRess($body): string
-    { 
-      
-        return self::directivesSrc($body);
-
-    } 
-
-    /**
-     * Add static files from the apps' res/main directory
-     *
-     * @param string $body
-     * @return string
-     */
-    protected static function directivesMapp($body): string
-    { 
-
-        //get pattern
-        self::getMatches('mapp', $body, $matches);
-
-        foreach($matches as $match){
-
-            //strip off the rule pattern
-            $url = str_ireplace(["@mapp(",")", "'"], "", $match);           
-            $url = 'main/'.ltrim($url, '/');
-            $replacement = ress($url);
-            $body = str_replace($match, $replacement, $body);
-            
-        }
-
-        return $body;
-
-    } 
-
-    /**
-     * Add static files from the apps' res/assets directory
-     *
-     * @param string $body
-     * @return string
-     */
-    protected static function directivesMass($body): string
-    { 
-
-        //get pattern
-        self::getMatches('mass', $body, $matches);
-
-        foreach($matches as $match){
-
-            //strip off the rule pattern
-            $url = str_ireplace(["@mass(",")", "'"], "", $match);           
-            $url = 'assets/'.ltrim($url, '/');
-            $replacement = ress($url);
-            $body = str_replace($match, $replacement, $body);
-            
-        }
-
-
-        return $body;
-
-    } 
-
-    /**
-     * This method will be removed later.. Use @mass instead
-     * - Add static files from the apps res/assets folder
-     * - Imports static files 
-     *
-     * @param string $body
-     * @return string
-     */
-    protected static function directivesAssets($body): string
-    { 
-
-      //get pattern
-      self::getMatches('assets', $body, $matches);
-
-      foreach($matches as $match){
-        //strip off the rule pattern
-        $url = str_ireplace(["@assets(",")", "'",], "", $match);
-        if(substr($url, 0, 1) == ":"){
-
-            if($url == '::watch'){
-
-                 $values = Res::import($url);
-
-            } else {
-                $values = ":lists";
-
-                $values = Res::import('', $url, $values);
-            }
-           
-            $body = str_replace($match, $values, $body);
-            
-        }  else {
-            $url = 'res/assets/'.$url;
-            $values = Res::callFile($url, false); //get values of index
-            $body = str_replace($match, $values, $body);    
-        }     
-          
-      }
-
-
-        return $body;
-    } 
-
-    /**
-     * Directs the slicer to render all view syntaxes using view function
-     * Syntax will be replaced with either empty string or the appropraite resolved value
-     *    - syntax @view('url')
-     *
-     * @param string $body
-     * @return string $body
-     */
-    protected static function directivesView($body) : string 
-    {
-        
-            //get pattern
-            self::getMatches('view', $body, $matches);
-    
-            foreach($matches as $match){
-    
-                //strip off the rule pattern
-                $url = str_ireplace(["@view(","@",")", "'"], "", $match);
-                $url = view($url);
-                $body = str_replace($match, $url, $body);    
-            }
-    
-            return $body;
-
-    }
-    
     /**
      * Directs the slicer to remove all layout syntaxes from render page
      * Only the syntax will be removed. The content of the syntax remains
@@ -1023,7 +362,7 @@ abstract class Directives{
 
                 //make replacement in the body
                 $newSlice =  Slicer::slice($replacement)->data();
-                self::sort_lay_comments($newSlice);
+                //self::sort_lay_comments($newSlice);
                 $data = preg_replace("~@lay\(\s?'{$value}'\s?\)~i",$newSlice, $body);
 
                 $body = $data;
@@ -1034,8 +373,6 @@ abstract class Directives{
     }
 
     protected static function directivesAttr($body): string {
-
-        
        
         $attrLists = GET('x-attrs', 'x-attr-list');
 
@@ -1051,11 +388,9 @@ abstract class Directives{
 
             $replacement = $attrLists[$value] ?? '';
 
-
             $body = str_replace($match1, $replacement, $body);
             
         }
-
 
         return $body;
     }
@@ -1063,6 +398,7 @@ abstract class Directives{
     protected static function directivesStyles($body): string {
         
         if(stripos($body, '@styles') !== false) self::$PULLSTYLES = true;
+        
         return $body;
 
     }
@@ -1130,7 +466,6 @@ abstract class Directives{
 
                     $replacement = '';
 
-
                     foreach($explode as $id){
 
                         //build a style pattern from style id
@@ -1145,7 +480,7 @@ abstract class Directives{
                     }                
                     
                     if(trim($replacement)){
-                        $replacement = '<style rel="'.$urx.'"> '.$replacement.' </style>';
+                        $replacement = '<style rel="'.$urx.'"> '.$replacement.' </style>'."\n";
                     }
                     
                     if(SELF::$PULLSTYLES){
@@ -1159,14 +494,9 @@ abstract class Directives{
                     }
                     
                     //make replacement in the body
-                    $body = $data; 
-                    
+                    $body = $data;
                     
                 }
-
-                //$id = $explode[1];
-
-  
 
             }
 
@@ -1387,7 +717,7 @@ abstract class Directives{
         //get the template url openers
         $pattern = "~@template\(\s?'[-\w+\\\.]+(:off)?\'\s?\).*?@template;~is";
         preg_match($pattern, $body, $matches);
-        
+
         //Get template
         $match = $matches[0] ?? ''; 
 
@@ -1437,14 +767,15 @@ abstract class Directives{
                 ob_start();
                 include($url);
                 $template = ob_get_clean(); //new replacement
-                
+
                 //filter out structure 
                 $content = str_replace([$opener, $closer], '', $match);
 
                 $template = str_replace('@yield()', $content, $template);
+
                 if($off){
                     $template = str_ireplace(['@live()','@live','@import(\'::watch\')', '@res::import(\'::watch\')'], '', $template);
-                }
+                }                
                 
                 $template = Slicer::slice($template)->data();
 
@@ -1452,50 +783,9 @@ abstract class Directives{
             }    
 
         }
-        
 
         return $body;
 
-    }
-
-    protected static function directivesOnShow($body) : string {
-
-        self::getMatches('onShow', $body, $matches);
-    
-        foreach($matches as $structure){
-    
-            //get onshow arguments
-            $onShowArgs = str_ireplace(['@onShow', '(',')', "'"], '', $structure);
-            $args = explode(',', $onShowArgs);
-            array_trim($args);
-    
-            $args = trim("'".implode("','", $args)."'", ' ');
-    
-            $body = str_replace($structure, "<?= onShow({$args})?>", $body);
-    
-        }
-        return $body;
-
-    }
-
-    protected static function directivesOnHide($body) : string {
-
-        self::getMatches('onHide', $body, $matches);
-
-        foreach($matches as $structure){
-
-            //get onshow arguments
-            $onShowArgs = str_ireplace(['@onHide', '(',')', "'"], '', $structure);
-            $args = explode(',', $onShowArgs);
-            array_trim($args);
-
-            $args = trim("'".implode("','", $args)."'", ' ');
-
-            $body = str_replace($structure, "<?= onHide({$args})?>", $body);
-
-        }
-        return $body;
-        
     }
 
 
@@ -1557,24 +847,6 @@ abstract class Directives{
         return preg_replace_callback($pattern, $callback, $body);
 
     }
-   
-    protected static function directivesFlash($body): string{
-      
-      //load flashes
-      self::getMatches('flash', $body, $matches);
-     
-      foreach($matches as $flash){
-
-        $flasharg = substr($flash, 7, strlen($flash));
-        $flasharg = substr($flasharg, 0, -1);
-
-        // print $flasharg;
-          
-        $body = str_replace($flash, "<?= Res::flash($flasharg)??'' ?>", $body);
-      }
-      
-      return $body;
-    } 
 
     private static function directivesMapError(array $array = [], $body = ''){
         if(func_num_args() > 0){
@@ -1601,66 +873,20 @@ abstract class Directives{
         }
     }
 
-    protected static function directivesVdump($body){
-
-        
-        ob_start();
-        include($url);
-        $template = ob_get_clean(); //new replacement
-
-        Res::load(_core.'/custom/errors/dump', fn() => compile($var));
-        if(func_num_args() > 0){
-          $arg = $array;
-    
-          $title = $arg['title']?? '';
-          $message =  $arg['message']?? '';
-          $icon    = array_key_exists('icon', $arg)? $arg['icon'] : 'bi-exclamation-triangle';
-    
-          $filePath    = $arg['path']?? '';
-          $message = '<span class="calibri fb-6 class="flex-full midv"><span class="'.$icon.'"></span> '.$title. ' <span> ' .$message.'</span> </span> <span class="c-grey font-em-d85">'.$filePath.' </span>';
-          
-          return '
-            <div class="spoova-route-error pxv-4 c-red-d">
-              <div class="box-full pxv-10 bc-white-dd">'.$message.'</div>
-            </div>
-          ';
-        }
-    }
-
     protected static function directivesPhp($body) : string {
-      //load flashes
+
       self::getMatches('php', $body, $matches);
 
       foreach($matches as $php){
 
-        $body = str_ireplace(['@php:','@php;'], ['<?php', '?>'], $body);
+        $newphp = str_ireplace(['@php:','@php;'], ['<?php', '?>'], $php);
+
+        $body = str_ireplace($php, $newphp, $body);
 
       }
 
       return $body;
 
-    }
-
-    private static function sort_lay_comments(&$body){
-        //fetch all comment-like structures in body
-        preg_match_all('~<!--.*?-->~s', $body, $fetches);
-
-        $fetches = $fetches[0];
-
-        foreach($fetches as $fetched) {
-            $hashed = base_encode(base_encode($fetched));
-            $body = str_replace($fetched, "<!--".$hashed."-->", $body);
-            static::$layComments[] = "<!--".$hashed."-->";      
-        }
-
-    }
-  
-    public static function unsort_lay_comments(&$body){
-        foreach(static::$layComments as $comment){
-            $commentHash = base_decode(base_decode(substr($comment, 4, strlen($comment) - 7)));
-            $commentElem = $commentHash;
-            $body = str_replace($comment, $commentElem , $body);
-        }
     }
 
     /**

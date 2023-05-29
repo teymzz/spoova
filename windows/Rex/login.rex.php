@@ -45,7 +45,7 @@
                                 <input type="checkbox" name="remember"> remember me
                             </div>
                             <div class="flex">
-                                <div class="flex mid c-white font-menu font-em-1">
+                                <div class="flex mid c-white  font-em-1">
                                     <div class="flex">forgot password?</div>
                                     <div class="flex">
                                        <span class="mxs-6">or</span> 

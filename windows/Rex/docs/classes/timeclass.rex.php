@@ -32,7 +32,7 @@
 
         <div id="initialize" class="">
             <div class="">
-                <div class="font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
+                <div class=" fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
                     <div class="flex-full midv"> 
                         <span class=" mxr-8 c-lime-dd">
                         </span> Initializing class
@@ -57,7 +57,7 @@
 
         <div id="keywords" class="">
             <div class="">
-                <div class="font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
+                <div class=" fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
                     <div class="flex-full midv"> 
                         <span class=" mxr-8 c-lime-dd">
                         </span> keywords
@@ -86,7 +86,7 @@
 
         <div id="hashFlash" class="">
             <div class="">
-                <div class="font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
+                <div class=" fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
                     <div class="flex-full midv"> 
                         <span class=" mxr-8 c-lime-dd">
                             <span class="numb-box">1.</span>
@@ -130,7 +130,7 @@
 
         <div id="getFlash" class="">
             <div class="">
-                <div class="font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
+                <div class=" fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
                     <div class="flex-full midv"> 
                         <span class=" mxr-8 c-lime-dd">
                             <span class="numb-box">2.</span>
@@ -209,7 +209,7 @@
 
         <div id="flash" class="">
             <div class="">
-                <div class="font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
+                <div class=" fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
                     <div class="flex-full midv"> 
                         <span class=" mxr-8 c-lime-dd">
                             <span class="numb-box">3.</span>
@@ -247,7 +247,7 @@
             </div> <br>
         </div> <br>
 
-       <div class="font-menu"> 
+       <div class=""> 
            The resource class <code>Res</code> only uses three static relative methods to access 
            the notice classe. These methods are <code>setFlash()</code> <code>hasFlash</code> and 
            <code>Res::flash()</code> which resolves similarly to the corresponding notice class methods.

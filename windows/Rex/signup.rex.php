@@ -69,7 +69,7 @@
                                 <div class="flex-btn">
                                     <button class="flex-btn bg-primary rad-4 c-white pxv-10" name="signup">Submit</button>
                                 </div>
-                                <div class="flex mid c-grey-dd font-menu font-em-1">
+                                <div class="flex mid c-grey-dd  font-em-1">
                                     <div class="flex">forgot password?</div>
                                     <div class="flex pxs-10">
                                        <span class="mxr-6">or</span> 

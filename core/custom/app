@@ -1,7 +1,7 @@
 
  app: spoova;
- version: 1.5.0;
- spack: spack_1.5.0;
+ version: 2.0.0;
+ spack: spack_2.0.0;
  path: D:\sites\wamp\www\spoova/core/custom/;
  install: 1;
  complete: true;

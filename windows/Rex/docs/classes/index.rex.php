@@ -8,14 +8,13 @@
     <section class="pxv-10 tutorial mails bc-white">
       <div class="font-em-1d2">
 
-        @lay('build.co.links:tutor_pointer')
-
         <div class="start font-em-d8">
+
+          @lay('build.co.links:tutor_pointer') <br>
 
           <div class="font-em-1d5 c-orange">Helper Classes</div> <br>  
           
           <div class="helper-classes">
-            <div class="fb-6">Introduction</div> <br>
             <div class="">
 
               <div class="">
@@ -23,7 +22,7 @@
                 apps. These classes are divided into two parts 
                 which are the <span class="fb-6">core classes</span> and 
                 <span class="fb-6">core tools</span>. Some of these classes have been previously 
-                explained under other subheadings. Hence, we will only be focusing on other related 
+                explained under other subheadings. Here, we will only be focusing on other related 
                 classes and their functions which are listed below.
               </div> <br>
 

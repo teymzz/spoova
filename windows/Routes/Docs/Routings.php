@@ -25,11 +25,11 @@ class Routings extends UserFrame {
 
     public function index($vars) {
 
-        self::load('routings', fn() => compile() );
+        self::load('routings', fn() => compile($vars) );
 
     }
 
-    public function mvc(){
+    public function mvc($vars){
         $pointer = self::mapurl('Tutorial/Routings/MVC', ' <span class="bi-chevron-right"></span> ');
 
         $vars = [
@@ -39,7 +39,7 @@ class Routings extends UserFrame {
         self::load('docs.routing.mvc', fn() => compile($vars) );        
     }
 
-    public function wmv(){
+    public function wmv($vars){
         $pointer = self::mapurl('Tutorial/Routings/WMV', ' <span class="bi-chevron-right"></span> ');
 
         $vars = [

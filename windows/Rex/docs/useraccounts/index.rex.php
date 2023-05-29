@@ -129,7 +129,7 @@
                                     <code>dbconfig.php</code> file. This means that, provided all default configurations are set, running queries will be as simple as :
                                     <br><br>   
                                         
-                                    <div class="pre-area bc-silver">
+                                    <div class="pre-area bc-white">
     <pre class="pre-code">
   if($db = User::auth()->dbh()){
   
@@ -207,17 +207,19 @@
             <pre class="pre-code">
     &lt;?php
 
-        use Window;
+    namespace spoova\mi\windows\Frames;
+    
+    use Window;
 
-        class UserFrame extends Window {
+    class UserFrame extends Window {
 
-            function super() {
+        function super() {
 
-                new Session('user', 'user_cookie');
-
-            }
+            new Session('user', 'user_cookie');
 
         }
+
+    }
             </pre>
                         </div> <br><br>
 
@@ -226,17 +228,19 @@
             <pre class="pre-code">
     &lt;?php
 
-        use Window;
+    namespace spoova\mi\windows\Frames;
+    
+    use Window;
 
-        class AdminFrame extends Window {
+    class AdminFrame extends Window {
 
-            function super() {
+        function super() {
 
-                new Session('admin', 'admin_cookie');
-
-            }
+            new Session('admin', 'admin_cookie');
 
         }
+
+    }
             </pre>
                         </div> <br><br>
 
@@ -398,7 +402,7 @@
                                         <!-- code started -->
                                         <div class="pre-area shadow">
     <pre class="pre-code">
-  $db = ($dbc = new DB)->openDB('newdb','newuser','newpass','newport','newserver');
+  $db = ($dbc = new DB)->openDB('db','user','pass','port','server');
     
   $auth = User::auth($db, $dbc); <span class="comment">// use a new connection </span>
     </pre>

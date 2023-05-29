@@ -50,7 +50,7 @@
                         </div>
                 </div>
                 <div href="@Domurl()" class="in-flex">
-                    <div class="flex midv fb-9 font-menu font-em-1d2 {{ spoovaLoaded('c-sea-blue','c-blue') }}">POOVA</div>
+                    <div class="flex midv fb-9  font-em-1d2 {{ spoovaLoaded('c-sea-blue','c-blue') }}">POOVA</div>
                 </div>
             </div>
         </div>

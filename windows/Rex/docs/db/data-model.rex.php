@@ -10,13 +10,13 @@
         <section class="pxv-10 tutorial database bc-white">
             <div class="font-em-1d2">
 
-                @lay('build.co.links:tutor_pointer')
-
-                <div class="start font-em-d8">
+                <div class="start font-em-d8"> 
+                    
+                    @lay('build.co.links:tutor_pointer') <br>
 
                     <div class="font-em-1d5 c-orange">Database : Data Model</div> <br>
 
-                    <div class="pxs-6">
+                    <div class="">
                         Models are structures built to have a direct relationship with database. Hence,
                         they are capable of performing database queries. Spoova handles database communications based 
                         on standard relationships and user session id. Database relationships are handles based on 
@@ -46,7 +46,7 @@
                                 as below:
                             </div> <br>
                             
-                            <div class="box-full font-menu  font-em-d85 bc-white-dd shadow">
+                            <div class="box-full   font-em-d85 bc-white-dd shadow">
                                 <div class="pxv-10 bc-silver"> 1a - User model</div>
                         <pre class="pre-code">
   &lt;?php 
@@ -67,7 +67,7 @@
                                 Since the class above is a model, we can access the <code>where()</code> method from a route as shown below:
                             </div>
 
-                            <div class="box-full font-menu  font-em-d85 bc-white-dd shadow">
+                            <div class="box-full   font-em-d85 bc-white-dd shadow">
                                 <div class="pxv-10 bc-silver">Example 1b - Using where() method of a model</div>
                         <pre class="pre-code">
   &lt;?php 
@@ -108,7 +108,7 @@
                                 the Example 2 below describes how to use the <code>read()</code> method.
                             </div> <br>
                             
-                            <div class="box-full font-menu font-em-d85 bc-white-dd shadow">
+                            <div class="box-full  font-em-d85 bc-white-dd shadow">
                                 <div class="pxv-10 bc-silver">Example 2 - Using read() method</div>
                         <pre class="pre-code">
   User::read()->User; <span class="comment">// fetch all user data</span>
@@ -130,7 +130,7 @@
                                 all records will be updated: 
                             </div> <br>
                             
-                            <div class="box-full font-menu font-em-d85 bc-white-dd shadow">
+                            <div class="box-full  font-em-d85 bc-white-dd shadow">
                                 <div class="pxv-10 bc-silver">Example 3 - Using update() method</div>
     <pre class="pre-code">
   Posts::update(['date' => {{date('Y-m-d')}} ]) <span class="comment">//update all posts records, set all date rows as "{{date('Y-m-d')}}"</span>
@@ -155,7 +155,7 @@
                                 this method will not delete any data. It is also advised to to keep the live server off if this method will be applied. 
                             </div> <br>
                             
-                            <div class="box-full font-menu font-em-d85 bc-white-dd shadow">
+                            <div class="box-full  font-em-d85 bc-white-dd shadow">
                                 <div class="pxv-10 bc-silver">Example 4 - Using delete() method</div>
     <pre class="pre-code">
   Posts::delete(<span class="c-red-dd">true</span>); <span class="comment">//delete all posts</span>
@@ -178,7 +178,7 @@
 
                             <br>
 
-                            <div class="box-full font-menu font-em-d85 bc-white-dd shadow">
+                            <div class="box-full  font-em-d85 bc-white-dd shadow">
                                 <div class="pxv-10 bc-silver">Example 5a - PostModel.php</div>
                         <pre class="pre-code">
   &lt;?php
@@ -211,7 +211,7 @@
                                 
                             </div> <br>
                                 
-                            <div class="box-full font-menu  font-em-d85 bc-white-dd shadow">
+                            <div class="box-full   font-em-d85 bc-white-dd shadow">
                                 <div class="pxv-10 bc-silver">Example 5b - Home.php (route)</div> 
     <pre class="pre-code">
   &lt;?php
@@ -259,7 +259,7 @@
                                 while the owner table must have an "id" local key field which helps spoova 
                                 to naturally connect the two fields. For example:
                             </div> <br>
-                            <div class="box-full font-menu font-em-d85 bc-white-dd shadow">
+                            <div class="box-full  font-em-d85 bc-white-dd shadow">
                                 <div class="pxv-10 bc-silver">Example 6 - Child of Parent table </div>
                                 <pre class="pre-code">
   Posts::of('admin', 3)->read()->Posts;
@@ -274,7 +274,7 @@
                                 that for a string with double "ss" last characters, one will be removed while the other will remain. 
                             </div> <br>
                             
-                            <div class="box-full font-menu font-em-d85 bc-white-dd shadow">
+                            <div class="box-full  font-em-d85 bc-white-dd shadow">
                                 <div class="pxv-10 bc-silver">Example 7 - Child with custom foreign key of Parent table  </div>
                         <pre class="pre-code">
   Posts::of('admin', 3, 'user_id')->read()->Posts;
@@ -363,7 +363,7 @@
                                 post id.
                             </div>
 
-                            <div class="box-full font-menu  font-em-d85 bc-white-dd shadow">
+                            <div class="box-full   font-em-d85 bc-white-dd shadow">
                         <pre class="pre-code">
   Comments::of('posts', 3)->bind('users')->read()->Comments;
                         </pre>
@@ -379,7 +379,7 @@
                                 argument of the foreign key field name on the <code>of()</code> method.
                             </div> <br>
 
-                            <div class="box-full font-menu  font-em-d85 bc-white-dd shadow">
+                            <div class="box-full   font-em-d85 bc-white-dd shadow">
                         <pre class="pre-code">
   Comments::of('posts', 3, 'foreignKey')->bind('users')->read()->Comments;
                         </pre>
@@ -456,24 +456,24 @@
 
   }
                                     </pre>
-                                </div> <br><br>
+                                </div> 
 
-                                <div class="">
+                                <div class="mvs-10">
                                     In the code above, the User model will try to look for a <code>"user_id"</code> foreign key 
                                     field within the admin table. The "user_id" is generated from the combination of the 
                                     current model's name and a default local key name "id". Once the relationship is defined, 
                                     we can obtain the data by calling the method as below: 
-                                </div><br>
+                                </div>
 
                                 <div class="pre-area shadow">
                                     <div class="pxv-10 bc-silver">Obtain relative data</div>
                                     <pre class="pre-code">
   User::admin()->read()->admin;
                                     </pre>
-                                </div> <br>                             
+                                </div>                             
 
                                 <div class="foot-note mvs-10">
-                                    The code above will return a travsersable object containing the obtained data. The <code>read()</code> 
+                                    The code above will return a traversable object containing the obtained data. The <code>read()</code> 
                                     method is a directive that tells the Model to obtain the defined relationship data between a model and 
                                     its respective child models. Also, unlike the <code>of()</code> and <code>ofUser()</code> methods that use 
                                     the Model's name as a property to obtain data, when accessing data under any of the known predefined relationships, 
@@ -501,8 +501,8 @@
 
   }
                                     </pre>
-                                </div> <br><br>
-<div class="d87">
+                                </div> 
+<div class="font-em-d9 mvs-10">
 The above data simulates a structure or format for setting up a one to one relationship between two database tables. By default, 
 spoova uses the model name of classes as the default database table name. This behaviour can be overidden by setting the model's table 
 name using the <code>tableName()</code> method which can be applied for any model. For example in the code below, the "PostItems" model will 

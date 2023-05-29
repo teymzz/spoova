@@ -32,17 +32,14 @@ class Resource extends UserFrame{
     }
 
     public function grouping($vars) {
-        Res::load('docs.resource.groupings', fn() => compile());
+        Res::load('docs.resource.groupings', fn() => compile($vars));
     }
 
-    public function flash() {
+    public function flash($vars) {
 
         $pointer = self::mapurl('Tutorial/Resource/Flash', ' <span class="bi-chevron-right"></span> ');
         
-        $vars = [
-            'title'   => 'Tutorial - Resource',
-            'pointer' => $pointer
-        ];
+        $vars['title']   = 'Tutorial - Resource';
 
         Res::load('docs/resource/flashes', fn() => compile($vars));
     }
