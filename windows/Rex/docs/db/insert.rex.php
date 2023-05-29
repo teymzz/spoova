@@ -4,8 +4,8 @@
 
   <section class="pxv-20 database tutorial bc-white">
     <div class="">
-        @lay('build.co.links:tutor_pointer')
-        <div class="font-em-1d5 c-orange">Database : Insert (CRUD)</div>
+        @lay('build.co.links:tutor_pointer') <br>
+        <div class="font-em-1d5 c-orange">Database : Insert (CRUD)</div> <br>
         <ul class="list-free pxs-1 mvt-10">
             <li >
                 <span class="bi-circle-fill c-silver-d"></span>
@@ -26,7 +26,7 @@
             </pre>
                 </div> <br>
 
-                <div class="font-menu mvt-6">The method above is used to set simple sql queries. Methods <code>columns()</code> and <code>values()</code> can only be chained once on the <code>insert_into()</code> operator in the predefined order.</div>
+                <div class=" mvt-6">The method above is used to set simple sql queries. Methods <code>columns()</code> and <code>values()</code> can only be chained once on the <code>insert_into()</code> operator in the predefined order.</div>
                 <br>
 
                 <div class="">Method 2 (Binded Parameters)</div> 
@@ -41,7 +41,7 @@
   $db->insert_into('users', ['username' => 'Felix']);
             </pre>
                 </div> <br><br>   
-                <div class="font-menu font-i">Recommend: Method 2 above works similarly as method 1. It is concise and easier to read which makes it the best choice for setting up insert queries</div>
+                <div class=" font-i">Recommend: Method 2 above works similarly as method 1. It is concise and easier to read which makes it the best choice for setting up insert queries</div>
 
                 <div class="c-orange-dd foot-note mvt-6">
                     <span class="head">Footnote:</span>

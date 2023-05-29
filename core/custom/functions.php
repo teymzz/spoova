@@ -557,19 +557,48 @@ function array_get(array $array, string $arraykey = ''){
   return array_key_exists($arraykey, $array)? $array[$arraykey] : false;
 }
 
+// /**
+//  * Converts an array to object format
+//  * @param array $array
+//  * @return object
+//  */
+// function array_object(array $array) : stdClass {   
+  
+//   $newarray = new stdClass();
+//   foreach($array as $array_keys => $array_vals){
+//      $newarray->$array_keys = $array_vals;
+//   }
+//   return $newarray;
+
+// }
+
 /**
  * Converts an array to object format
  * @param array $array
- * @return array
+ * @return string|int|float|bool|stdClass
  */
-function array_object(array $array){   
+function array_object($array) {   
   
-  $newarray = new stdClass();
-  foreach($array as $array_keys => $array_vals){
-     $newarray->$array_keys = $array_vals;
+  if(is_array($array)){
+    $newarray = new stdClass();
+    foreach($array as $array_keys => $array_vals){
+      $newarray->$array_keys = array_object($array_vals);
+    }    
+  }else{
+    $newarray = $array;
   }
+
   return $newarray;
 
+}
+
+/**
+ * Converts an array to object format
+ * @param array $array
+ * @return stdClass
+ */
+function toStdClass(array $array) : stdClass {   
+  return array_object($array);
 }
 
 /**
@@ -741,10 +770,10 @@ function javaconsole( $vals = [] ){
  * Adds a javascript tag or code to a page 
  *
  * @param string  $text, javascript url or javascript text
- * @param boolean $ready
+ * @param boolean $print print directly
  * @return string 
  */
-function script( string $text, $ready = false ){
+function script( string $text, bool|int $print = false ){
 
   $isSrc = ( filter_var($text, FILTER_VALIDATE_URL) || isAbsolutePath($text) );
 
@@ -758,9 +787,9 @@ function script( string $text, $ready = false ){
      $script = '<script>'.$text.'</script>';
   }
 
-  $ready = (int) $ready;
+  $print = (int) $print;
 
-  if($ready) echo $script; return ;
+  if($print) echo $script; return ;
   return $script;
 
 }
@@ -870,7 +899,7 @@ function limitChars( $string, $limit ){
  * Complex function that truncates the characters of a string to a better $length
  *
  * @param string $string Text to be truncated
- * @param int    $length
+ * @param int $length
  * @return string
  */
 function limitWord( string $string, $length = null ){

@@ -1,5 +1,3 @@
-`
-
 @template('template.t-tut')
 
     @lay('build.co.navbars:left-nav')
@@ -9,14 +7,13 @@
         <section class="pxv-10 tutorial mails bc-white">
             <div class="font-em-1d2">
 
-            @lay('build.co.links:tutor_pointer')
-
             <div class="start font-em-d8">
+
+                @lay('build.co.links:tutor_pointer') <br>
 
                 <div class="font-em-1d5 c-orange">Meta</div> <br>  
                 
                 <div class="helper-classes">
-                    <div class="fb-6">Introduction</div> <br>
                     <div class="">
 
                     <div class="">
@@ -50,19 +47,17 @@
 
                 <div id="charset" class="">
                     <div class="">
-                        <div class="font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
-                            <div class="flex-full midv"> 
-                                <span class=" mxr-8 c-lime-dd">
-                                    <span class="numb-box">1.</span>
-                                </span> Charset
+                        <div class=" fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
+                            <div class="flex-full midv c-orange"> 
+                                <span class="mxr-8 bi-circle-fill"></span> Charset
                             </div>
-                        </div> <br>
+                        </div>
                         <div class="">
                         This method is used to set the charset of meta tags. Example is shown below: <br><br>
                         
                         <div class="pre-area shadow">
                             <div class="box-full">
-                                <div class="pxv-6 bc-off-white"><code>Sample: setting charset</code></div>
+                                <div class="pxv-6 bc-off-white">Sample: setting charset</div>
                                 <pre class="pre-code">
   $meta  = new Meta();
   
@@ -77,13 +72,12 @@
 
                 <div id="add" class="">
                     <div class="">
-                        <div class="font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
-                            <div class="flex-full midv"> 
-                                <span class=" mxr-8 c-lime-dd">
-                                    <span class="numb-box">2.</span>
+                        <div class=" fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
+                            <div class="flex-full midv c-orange"> 
+                                <span class=" mxr-8 bi-circle-fill">
                                 </span> Add
                             </div>
-                        </div> <br>
+                        </div>
 
                         <div class="">
                             The <code>add</code> method is used to add attributes to meta tags.
@@ -91,7 +85,7 @@
                             
                             <div class="pre-area shadow">
                                 <div class="box-full">
-                                    <div class="pxv-6 bc-off-white"><code>Syntax: adding attributes</code></div>
+                                    <div class="pxv-6 bc-off-white">Syntax: adding attributes</div>
                                     <pre class="pre-code">
   $meta->add(name, content, type); 
 <span class="comment"> 
@@ -108,7 +102,7 @@
 
                             <div class="pre-area shadow">
                                 <div class="box-full">
-                                    <div class="pxv-6 bc-off-white"><code>Example: adding attributes</code></div>
+                                    <div class="pxv-6 bc-off-white">Example: adding attributes</div>
                                     <pre class="pre-code">
   $meta->add('viewport', 'width=device-width, initial-scale=1.0');
   
@@ -125,7 +119,7 @@
 
                             <div class="pre-area shadow">
                                 <div class="box-full">
-                                    <div class="pxv-6 bc-off-white"><code>Examples above respectfully translates:</code></div>
+                                    <div class="pxv-6 bc-off-white">Examples above respectfully translates:</div>
     <pre class="pre-code">
   <span class="comment no-select">&#60;meta name="viewport" content="width=device-width, initial-scale=1.0"/&#62</span>
   
@@ -146,13 +140,12 @@
 
                 <div id="name" class="">
                     <div class="">
-                        <div class="font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
-                            <div class="flex-full midv"> 
-                                <span class=" mxr-8 c-lime-dd">
-                                    <span class="numb-box">3.</span>
+                        <div class=" fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
+                            <div class="flex-full midv c-orange"> 
+                                <span class=" mxr-8 bi-circle-fill">
                                 </span> name
                             </div>
-                        </div> <br>
+                        </div>
 
                         <div class="">
                             The <code>name</code>  method is a shorthand for the meta tags with the attribute of property.
@@ -160,7 +153,7 @@
                             
                             <div class="pre-area shadow">
                                 <div class="box-full">
-                                    <div class="pxv-6 bc-off-white"><code>Syntax: adding property tags</code></div>
+                                    <div class="pxv-6 bc-off-white">Syntax: adding property tags</div>
                                     <pre class="pre-code">
   $meta->name(name, content); 
   <span class="comment"> 
@@ -175,7 +168,7 @@
 
                             <div class="pre-area shadow">
                                 <div class="box-full">
-                <div class="pxv-6 bc-off-white"><code>Example: adding named meta tags</code></div>
+                <div class="pxv-6 bc-off-white">Example: adding named meta tags</div>
     <pre class="pre-code">
   $meta->name('description', '150 words');  
   
@@ -190,13 +183,12 @@
 
                 <div id="prop" class="">
                     <div class="">
-                        <div class="font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
-                            <div class="flex-full midv"> 
-                                <span class=" mxr-8 c-lime-dd">
-                                    <span class="numb-box">4.</span>
+                        <div class=" fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
+                            <div class="flex-full midv c-orange"> 
+                                <span class=" mxr-8 bi-circle-fill">
                                 </span> Prop
                             </div>
-                        </div> <br>
+                        </div>
 
                         <div class="">
                             The <code>prop</code> method is a shorthand for the meta tags with the attribute of property.
@@ -204,7 +196,7 @@
                             
                             <div class="pre-area shadow">
                                 <div class="box-full">
-                                    <div class="pxv-6 bc-off-white"><code>Syntax: adding property tags</code></div>
+                                    <div class="pxv-6 bc-off-white">Syntax: adding property tags</div>
                                     <pre class="pre-code">
   $meta->prop(property, content); 
 <span class="comment"> 
@@ -219,7 +211,7 @@
                             
                             <div class="pre-area shadow">
                                 <div class="box-full">
-                                    <div class="pxv-6 bc-off-white"><code>Example: adding property meta tags</code></div>
+                                    <div class="pxv-6 bc-off-white">Example: adding property meta tags</div>
                                     <pre class="pre-code">
   $meta->prop('og:type', 'game.achievement');  
     <span class="comment no-select">
@@ -234,13 +226,12 @@
 
                 <div id="equiv" class="">
                     <div class="">
-                        <div class="font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
-                            <div class="flex-full midv"> 
-                                <span class=" mxr-8 c-lime-dd">
-                                    <span class="numb-box">5.</span>
+                        <div class=" fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
+                            <div class="flex-full midv c-orange"> 
+                                <span class=" mxr-8 bi-circle-fill">
                                 </span> http-equiv
                             </div>
-                        </div> <br>
+                        </div>
 
                         <div class="">
                             The <code>equiv</code>  method is a shorthand for the meta tags with the attribute of http-equiv.
@@ -248,7 +239,7 @@
                         
                             <div class="pre-area shadow">
                                 <div class="box-full">
-                                    <div class="pxv-6 bc-off-white"><code>Syntax: adding http-equiv to meta tags</code></div>
+                                    <div class="pxv-6 bc-off-white">Syntax: adding http-equiv to meta tags</div>
                                     <pre class="pre-code">
   $meta->equiv(http-equiv, content); 
     <span class="comment"> 
@@ -263,7 +254,7 @@
 
                             <div class="pre-area shadow">
                                 <div class="box-full">
-                                    <div class="pxv-6 bc-off-white"><code>Example: adding http-equiv meta tags</code></div>
+                                    <div class="pxv-6 bc-off-white">Example: adding http-equiv meta tags</div>
                                     <pre class="pre-code">
   $meta->equiv('Pragma', 'no-cache',);  
     <span class="comment no-select">
@@ -278,20 +269,19 @@
                 
                 <div id="refresh" class="">
                     <div class="">
-                        <div class="font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
-                            <div class="flex-full midv"> 
-                                <span class=" mxr-8 c-lime-dd">
-                                    <span class="numb-box">6.</span>
+                        <div class=" fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
+                            <div class="flex-full midv c-orange"> 
+                                <span class=" mxr-8 bi-circle-fill">
                                 </span> refresh
                             </div>
-                        </div> <br>
+                        </div>
                         <div class="">
                             The <code>refresh</code>  method is a shorthand for the meta tags with the attribute of 
                             <code>http-equiv="refresh"</code>. Example is shown below:<br><br>
                         
                             <div class="pre-area shadow">
                                 <div class="box-full">
-                                    <div class="pxv-6 bc-off-white"><code>Syntax: adding http-equiv to meta tags</code></div>
+                                    <div class="pxv-6 bc-off-white">Syntax: adding http-equiv to meta tags</div>
                                     <pre class="pre-code">
   $meta->refresh(time); 
     <span class="comment"> 
@@ -304,7 +294,7 @@
                             </div>
                             <div class="pre-area shadow">
                                 <div class="box-full">
-                                    <div class="pxv-6 bc-off-white"><code>Example: adding refresh to meta tags</code></div>
+                                    <div class="pxv-6 bc-off-white">Example: adding refresh to meta tags</div>
                                     <pre class="pre-code">
   $meta->refresh(30);  
     <span class="comment no-select">
@@ -319,13 +309,12 @@
 
                 <div id="og" class="">
                     <div class="">
-                        <div class="font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
-                            <div class="flex-full midv"> 
-                                <span class=" mxr-8 c-lime-dd">
-                                    <span class="numb-box">7.</span>
+                        <div class=" fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
+                            <div class="flex-full midv c-orange"> 
+                                <span class=" mxr-8 bi-circle-fill">
                                 </span> og
                             </div>
-                        </div> <br>
+                        </div>
 
                         <div class="">
                             The <code>og</code> method is a shorthand for the meta tags with the attribute of 
@@ -334,7 +323,7 @@
                             
                             <div class="pre-area shadow">
                                 <div class="box-full">
-                                    <div class="pxv-6 bc-off-white"><code>Syntax: adding og to meta tags</code></div>
+                                    <div class="pxv-6 bc-off-white">Syntax: adding og to meta tags</div>
                                     <pre class="pre-code">
   $meta->og(type, content); 
     <span class="comment"> 
@@ -349,7 +338,7 @@
 
                             <div class="pre-area shadow">
                                 <div class="box-full">
-                                    <div class="pxv-6 bc-off-white"><code>Example: adding og property to meta tags</code></div>
+                                    <div class="pxv-6 bc-off-white">Example: adding og property to meta tags</div>
                                     <pre class="pre-code">
   $meta->og('type', 'game.achievement');  
     <span class="comment no-select">
@@ -364,20 +353,19 @@
 
                 <div id="link" class="">
                     <div class="">
-                        <div class="font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
-                            <div class="flex-full midv"> 
-                                <span class=" mxr-8 c-lime-dd">
-                                    <span class="numb-box">8.</span>
+                        <div class=" fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
+                            <div class="flex-full midv c-orange"> 
+                                <span class=" mxr-8 bi-circle-fill">
                                 </span> link
                             </div>
-                        </div> <br>
+                        </div> 
                         <div class="">
                             The <code>link</code> method is used to add properties <code>link</code> meta tags. 
                             Examples are shown below: <br><br>
                             
                             <div class="pre-area shadow">
                                 <div class="box-full">
-                                    <div class="pxv-6 bc-off-white"><code>Syntax: adding og to meta tags</code></div>
+                                    <div class="pxv-6 bc-off-white">Syntax: adding og to meta tags</div>
                                     <pre class="pre-code">
   $meta->link(rel, href, attrs); 
     <span class="comment"> 
@@ -392,7 +380,7 @@
                             </div>
                             <div class="pre-area shadow">
                                 <div class="box-full">
-                                    <div class="pxv-6 bc-off-white"><code>Example: adding og property to meta tags</code></div>
+                                    <div class="pxv-6 bc-off-white">Example: adding og property to meta tags</div>
                                     <pre class="pre-code">
   $meta->link('icon', 'https://somesite.com/icon.png",['type' => 'image/png']);  
     <span class="comment no-select">
@@ -407,20 +395,19 @@
 
                 <div id="drop" class="">
                     <div class="">
-                        <div class="font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
-                            <div class="flex-full midv"> 
-                                <span class=" mxr-8 c-lime-dd">
-                                    <span class="numb-box">9.</span>
+                        <div class=" fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
+                            <div class="flex-full midv c-orange"> 
+                                <span class=" mxr-8 bi-circle-fill">
                                 </span> drop
                             </div>
-                        </div> <br>
+                        </div> 
                         <div class="">
                             The <code>drop()</code> method removes all stored meta definitions from storage list.
                             <br><br>
                             
                             <div class="pre-area shadow">
                                 <div class="box-full">
-                                    <div class="pxv-6 bc-off-white"><code>Sample: clearing definitions</code></div>
+                                    <div class="pxv-6 bc-off-white">Sample: clearing definitions</div>
                                     <pre class="pre-code">
   $meta->add('description', '150 words'); 
 
@@ -434,20 +421,19 @@
 
                 <div id="export" class="">
                     <div class="">
-                        <div class="font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
-                            <div class="flex-full midv"> 
-                                <span class=" mxr-8 c-lime-dd">
-                                    <span class="numb-box">10.</span>
+                        <div class=" fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
+                            <div class="flex-full midv c-orange"> 
+                                <span class=" mxr-8 bi-circle-fill">
                                 </span> export
                             </div>
-                        </div> <br>
+                        </div> 
                         <div class="">
                             The <code>export()</code> method displays all stored meta definitions from storage list on each line.
                             <br><br>
                             
                             <div class="pre-area shadow">
                                 <div class="box-full">
-                                    <div class="pxv-6 bc-off-white"><code>Sample: display all stored meta tags</code></div>
+                                    <div class="pxv-6 bc-off-white">Sample: display all stored meta tags</div>
                                     <pre class="pre-code">
     $meta->export(); <span class="comment">// displays each predefined meta tags in a listed order</span> 
                                     </pre>
@@ -459,13 +445,12 @@
 
                 <div id="dump" class="">
                     <div class="">
-                        <div class="font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
-                            <div class="flex-full midv"> 
-                                <span class=" mxr-8 c-lime-dd">
-                                    <span class="numb-box">11.</span>
+                        <div class=" fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
+                            <div class="flex-full midv c-orange"> 
+                                <span class=" mxr-8 bi-circle-fill">
                                 </span> dump
                             </div>
-                        </div> <br>
+                        </div> 
                         <div class="">
                             The <code>dump()</code> method returns all stored meta tags. However, when a boolean argument of <code>true</code> 
                             is supplied, it prints out all stored meta tags.
@@ -473,7 +458,7 @@
                             
                             <div class="pre-area shadow">
                                 <div class="box-full">
-                                    <div class="pxv-6 bc-off-white"><code>Sample: clearing definitions</code></div>
+                                    <div class="pxv-6 bc-off-white">Sample: clearing definitions</div>
                                     <pre class="pre-code">
   $meta->add('description', '150 words'); 
 
@@ -488,13 +473,12 @@
 
                 <div id="sample" class="">
                     <div class="">
-                        <div class="font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
-                            <div class="flex-full midv"> 
-                                <span class=" mxr-8 c-lime-dd">
-                                    <span class="numb-box">12.</span>
+                        <div class=" fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
+                            <div class="flex-full midv c-orange"> 
+                                <span class=" mxr-8 bi-circle-fill">
                                 </span> sample
                             </div>
-                        </div> <br>
+                        </div> 
                         <div class="">
                             The <code>sample()</code> method returns an array of meta tag samples. This data 
                             was compiled from across different source on the internet.
@@ -502,7 +486,7 @@
                             
                             <div class="pre-area shadow">
                                 <div class="box-full">
-                                    <div class="pxv-6 bc-off-white"><code>Sample: get samples of meta tags</code></div>
+                                    <div class="pxv-6 bc-off-white">Sample: get samples of meta tags</div>
                                     <pre class="pre-code">
   var_dump( $meta->sample() ); <span class="comment">// outputs array of meta tag sample attributes</span> 
                                     </pre>

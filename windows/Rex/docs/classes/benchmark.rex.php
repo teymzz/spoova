@@ -7,14 +7,13 @@
         <section class="pxv-10 tutorial bc-white">
             <div class="font-em-1d2">
 
-                @lay('build.co.links:tutor_pointer')
-
                 <div class="start font-em-d8">
+
+                    @lay('build.co.links:tutor_pointer') <br>
 
                     <div class="font-em-1d5 c-orange">Benchmark</div> <br>  
                     
                     <div class="helper-classes">
-                        <div class="fb-6">Introduction</div> <br>
                         <div class="">
 
                             <div class="">
@@ -29,20 +28,21 @@
 
                     <div id="initialize" class="">
                         <div class="">
-                            <div class="font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
-                                <div class="flex-full midv"> 
-                                    <span class=" mxr-8 c-lime-dd">
+                            <div class=" fb-6 flex-full rad-4 pvs-8 lacier">
+                                <div class="flex-full midv c-orange-dd"> 
+                                    <span class="mxr-8">
+                                        <span class="bi-lightning-fill"></span>
                                     </span> Initializing class
                                 </div>
-                            </div> <br>
+                            </div>
 
                             <div class="">
-                                The hasher tool can be easily initialized as shown below.
+                                The benchmark tool can be easily initialized as shown below.
                                 <br><br>
                             
                                 <div class="pre-area">
                                     <div class="box-full">
-                                        <div class="pxv-6 bc-off-white"><code>Sample code: Benchmark</code></div>
+                                        <div class="pxv-6 bc-off-white">Sample code: Benchmark</div>
                                         <pre class="pre-code">
     \spoova\mi\core\classes\Benchmark::fn([
 

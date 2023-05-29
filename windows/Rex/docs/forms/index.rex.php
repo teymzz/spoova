@@ -7,9 +7,10 @@
         <section class="pxv-10 tutorial mails bc-white">
             <div class="font-em-1d2">
 
-                @lay('build.co.links:tutor_pointer')
+                <div class="start font-em-d8"> 
 
-                <div class="start font-em-d8">
+                    @lay('build.co.links:tutor_pointer')<br>
+
                     <div class="font-em-1d5 c-orange">Handling Forms</div> <br>  
                     
                     <div class="pulling-data">
@@ -43,7 +44,7 @@
                             <div class="mvs-10">
                                 Request data are strictly advised to be obtained using the <code>$Request->data()</code> method. This method ensures 
                                 that only request data forwarded with a CSRF request token are obtainable. If a request data is fowarded without a request 
-                                token, an empty array will be returned. When working within the template files, the <code>@(csrf)@</code> template directive 
+                                token, an empty array will be returned. When working within the template files, the <code>@(@csrf)@</code> template directive 
                                 is used to add CSRF tokens input fields to forms. The sample below reflects the syntax of obtaining request data: 
                                 <br> <br>
 <div class="pre-area">
@@ -55,8 +56,8 @@
 </div>       
                                 <div class="font-em-d87 mvt-10">
                                     Although the <code>$Request->data()</code> is expected to return the form data sent from request by default, 
-                                    if the <code>@(csrf)@</code> directive is not supplied, the data returned will be an empty array. In order 
-                                    to ensure that all data supplied are accepted, each form must have a <code>@(csrf)@</code> directive attached to it. 
+                                    if the <code>@(@csrf)@</code> directive is not supplied, the data returned will be an empty array. In order 
+                                    to ensure that all data supplied are accepted, each form must have a <code>@(@csrf)@</code> directive attached to it. 
                                 </div>
                             </div>
                         </div> <br>
@@ -117,14 +118,14 @@
                         <div>
                             <div class="font-em-1 c-orange">Timing Request Data - Timed Token</div> 
                             <div class="mvs-10">
-                                A request can be timed by using the <code>expires()</code> method. This tells the data the 
-                                number of seconds required in order for a data to be sent. If a data is not sent within the 
+                                A request can be timed by using the <code>expires()</code> method. This tells the request the 
+                                number of seconds required in order for a data to be sent. If a request data is not sent within the 
                                 required number of seconds, the data sent is not accepted hence, it returns an empty array or displays error message. It should 
                                 be noted that even if a <code>csrf</code> token has expired leading to an empty data, the
                                 <code>has()</code> method will still allow the checking of data forwarded as long as the <code>strict()</code> method is not applied before it. 
                                 However, unlike the <code>strict()</code> method, the <code>expires()</code> method alone  
                                 has no effect on the <code>has()</code> method if used before it unless a <code>strict()</code> method is declared along with it. 
-                                The example is the best way to declare the strict type along with the <code>expires()</code> method:
+                                The example below is the best way to declare the strict type along with the <code>expires()</code> method:
                                 <br><br>
 <div class="pre-area">
     <pre class="pre-code">
@@ -303,7 +304,7 @@
     $errors = Form::errors($inputErrors);
     
     </pre>
-</div>                      
+                            </div>                      
                             <div class="font-em-d87 mvt-10">
                                 
                                 <div class="">
@@ -311,9 +312,9 @@
                                     restricting invalid forms, validating form data and saving the data into database. This operation is explained in steps below
                                 </div> <br>
                                 <ul>
-                                    <li><code>$Request->has('submit')</code>: This checks if the data forwarded has a "submit" attribute</li>
+                                    <li><code>$Request->has('submit')</code>: This checks if the request data forwarded has a "submit" key</li>
                                     <li><code>$Request->strict()</code>: This ensures that an error page is shown if csrf token is rejected</li>
-                                    <li><code>$Request->expires(30)</code>: This ensures the crsf token generated can only be valid for 30 second</li>
+                                    <li><code>$Request->expires(30)</code>: This ensures the csrf token generated can only be valid for 30 second</li>
                                     <li><code>Form::model(new Signup)</code>: Sets up a model class used for form data authentication</li>
                                     <li><code>Form::loadData($Request->data())</code>: Sets data to validated by the form and the supplied model</li>
                                     <li><code>Form::isValidated()</code>: By default, this calls the <code>Signup::isAuthenticated()</code> method to check if data is valid</li>
@@ -325,20 +326,73 @@
                                 </ul>
 
                                 <p>
-                                    The <code>Signup</code> model 
-                                    defines what table and what field the validated data is inserted in the database. In the above, the request data returned by 
-                                    <code>$Request->data()</code> is loaded directly into 
-                                    the <code>Form</code> class using <code>loadData()</code> method. The data is then validated using the <code>Form::isValidated()</code> 
-                                    method. Lastly, the form is saved into the database table "users" defined within the <code>tableName()</code> method of <code>Signup</code> model. 
-                                    Although, in all of these processes, no error was obtained, this is because the <code>Form::errors()</code> allows us to fetch all required errors 
-                                    depending on the stage where the error occurred. All form input errors only are obtained by reference through the <code>$inputErrors</code> while 
-                                    the entire errors returned by the <code>errors()</code> method are obtained into the <code>$errors</code> variable.
+                                    The <code>Signup</code> model defines the database table and columns the validated data is inserted in the database. In the above, 
+                                    the request data returned by <code>$Request->data()</code> is loaded directly into 
+                                    the <code>Form</code> class using <code>Form::loadData()</code> method. The <code>Form::isValidated()</code> will validate each property using their respective 
+                                    keys defined within the model's <code>rule()</code> method and return <code>true</code> by default. If more custom tests are 
+                                    done within the supplied model's <code>isAuthenticated()</code> method, this will further determine if the <code>Form::isAuthenticated()</code> will return a <code class="bd-f">true</code> or 
+                                    <code class="bd-f">false</code> value. Lastly, the <code>Form::isSaved()</code> will try to save the data the database table "users" defined within the <code>tableName()</code> method of <code>Signup</code> model. 
+                                    When an error occurs in the execution of these process, we can obtain the all errors using the <code>Form::errors()</code> method which allows us to fetch all required errors 
+                                    depending on the stage where the error occurred. This method also makes it easier to fetch only errors that occur in input validation by supplying a variable e.g <code>$inputErrors</code>, which acts as reference
+                                    for errors that occurs for a property when its specified validation rule is not passed.  
+                                    To obtain the entire errors, the <code>Form::errors()</code> method returns the entire error that occured which may be from database connection, operation or input validation.
                                 </p>
 
                                 <p>
-                                    Lastly, since the <code>Form::isValidated()</code> can naturally call the model's <code>isAuthenticated()</code> method, The code line 
-                                    <code>(Form::isValidated() && Form::isSaved())</code> can both be replaced with <code>Form::isAuthenticated()</code>
+                                    Lastly, since the <code>Form::isAuthenticated()</code> can naturally call the model's <code>isAuthenticated()</code> method, we can easily add the <code>Form::isSaved()</code> into the 
+                                    current model's <code>isAuthenticated()</code> method. Hence, The code line 
+                                    <code>(Form::isValidated() && Form::isSaved())</code> can both be replaced with a single <code>Form::isAuthenticated()</code>. The <code>Signup</code> model's <code>isAuthenticated()</code> method 
+                                    will resemble the format below:
                                 </p>
+
+                                <div class="pre-area">
+                                    <pre class="pre-code">
+   <span class="comment">/**
+    * Determines if a form authentication is completed 
+    *
+    * @return bool
+    */</span>
+    public static function isAuthenticated(): bool {
+
+        return Form::isSaved(); <span class="comment">//save and return true of data is saved</span>
+
+    } 
+                                    </pre>
+                                </div>
+
+                                <div class="mvs-10">
+                                    The code line that manages the request will resemble the format below:
+                                </div>
+
+                                <div class="pre-area">
+    <pre class="pre-code">
+  &lt;?php
+    
+    use spoova\mi\core\classes\Request;
+    use Form;
+
+    $Request = new Request;
+
+    if($Request->has('submit')){
+
+        $Request->strict();
+        $Request->expires(30);
+
+        Form::model(new Signup);
+
+        Form::loadData($Request->data());
+
+        <span class="c-lime-dd">if(Form::isAuthenticated()) {</span>
+            
+            if(Form::errors()) var_dump(Form::errors);
+
+        <span class="c-lime-dd">}</span>
+    }
+
+    $errors = Form::errors($inputErrors);
+    
+    </pre>
+                            </div>                              
                             </div> 
                         </div> <br>
 
@@ -386,7 +440,7 @@
 </pre>
 </div>                      
 
-                            <div class="foot-note mvs-6">A sample array format is shown below</div>
+                            <div class="foot-note">A sample rule returned by a model is shown below</div>
 
                             <div class="pre-area">
                                 <pre class="pre-code">

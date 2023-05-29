@@ -11,6 +11,7 @@
   //include accessory files  controller
   require_once docroot.'/core/classes/Dev.php';
   require_once docroot.'/core/classes/Res.php';
+  require_once docroot.'/core/classes/Rexit.php';
   require_once docroot.'/core/classes/Window.php';
   require_once docroot.'/core/custom/base-files.php'; 
   require_once docroot.'/core/server/Server.php'; 

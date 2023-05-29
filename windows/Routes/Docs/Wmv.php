@@ -36,147 +36,100 @@ class Wmv extends UserFrame{
             self::load("docs.wmv.index", fn() => compile($vars) );            
         }
 
-        function about_wmv(){
-            $pointer = self::mapurl('Docs/Wmv/About_wmv', ' <span class="bi-chevron-right"></span> ');
+        function about_wmv($vars){
 
-            $vars = [
-                'title' => 'Tutorial - About WMV',
-                'pointer' => $pointer
-            ];
+            $vars['title'] = 'Tutorial - About WMV';
+
             self::load("docs.wmv.about_wmv", fn() => compile($vars) );  
         }
 
-        function shutters() {
-            $pointer = self::mapurl('Docs/Wmv/Shutters', ' <span class="bi-chevron-right"></span> ');
+        function shutters($vars) {
 
-            $vars = [
-                'title' => 'Tutorial - Shutters',
-                'pointer' => $pointer
-            ];
+            $vars['title'] = 'Tutorial - Shutters';
+
             self::load("docs.wmv.shutters", fn() => compile($vars) );  
         }
 
-        function calls() {
-            $pointer = self::mapurl('Docs/Wmv/Calls', ' <span class="bi-chevron-right"></span> ');
+        function calls($vars) {
 
-            $vars = [
-                'title' => 'Tutorial - WMV Calls',
-                'pointer' => $pointer,
-            ];
+            $vars['title'] = 'Tutorial - WMV Calls';
+            
             self::load("docs.wmv.calls", fn() => compile($vars) );  
         }
 
-        function middlewares() {
-            $pointer = self::mapurl('Docs/Wmv/Middlewares', ' <span class="bi-chevron-right"></span> ');
+        function middlewares($vars) {
 
-            $vars = [
-                'title' => 'Tutorial - WMV Middlewares',
-                'pointer' => $pointer,
-            ];
+            $vars['title'] = 'Tutorial - WMV Middlewares';
+            
             self::load("docs.wmv.middlewares", fn() => compile($vars) );  
         }
 
-        function frames() {
-            $pointer = self::mapurl('Docs/Wmv/Frames', ' <span class="bi-chevron-right"></span> ');
+        function frames($vars) {
 
-            $vars = [
-                'title' => 'Tutorial - WMV Frames',
-                'pointer' => $pointer,
-            ];
+            $vars['title'] = 'Tutorial - WMV Frames';
+
             self::load("docs.wmv.frames", fn() => compile($vars) );  
         }
 
-        static function routes($array = []) {
-            $pointer = self::mapurl('Docs/Wmv/Routes', ' <span class="bi-chevron-right"></span> ');
+        static function routes($vars) {
 
-            $vars = [
-                'title' => 'Tutorial - WMV Routes',
-                'pointer' => $pointer,
-            ];
-            
-            self::load('docs.wmv.routes', fn() =>compile());
+            $vars['title'] = 'Tutorial - WMV Routes';
+
+            self::load('docs.wmv.routes', fn() =>compile($vars));
 
         }
 
-        static function apis($array = []) {
-            $pointer = self::mapurl('Docs/Wmv/APIs', ' <span class="bi-chevron-right"></span> ');
+        static function apis($vars) {
 
-            $vars = [
-                'title' => 'Tutorial - WMV Routes',
-                'pointer' => $pointer,
-            ];
+            $vars['title'] = 'Tutorial - WMV Routes';
             
             self::load('docs.wmv.apis', fn() =>compile($vars));
 
         }
 
-        static function methods($array = []) {
-            $pointer = self::mapurl('Docs/Wmv/Methods', ' <span class="bi-chevron-right"></span> ');
+        static function methods($vars) {
 
-            $vars = [
-                'title' => 'Tutorial - WMV Methods',
-                'pointer' => $pointer,
-            ];
+            $vars['title'] = 'Tutorial - WMV Methods';
             
             self::load('docs.wmv.methods', fn() =>compile($vars));
 
         }
 
-        static function models($array = []) {
-            $pointer = self::mapurl('Docs/Wmv/Models', ' <span class="bi-chevron-right"></span> ');
-
-            $vars = [
-                'title' => 'Tutorial - Window Models',
-                'pointer' => $pointer,
-            ];
+        static function models($vars) {
+            
+            $vars['title'] = 'Tutorial - Window Models';
             
             self::load('docs.wmv.models', fn() =>compile($vars));
 
         }
 
-        static function rex($array = []) {
-            $pointer = self::mapurl('Docs/Wmv/Rex', ' <span class="bi-chevron-right"></span> ');
-
-            $vars = [
-                'title' => 'Tutorial - Window Rex',
-                'pointer' => $pointer,
-            ];
+        static function rex($vars) {
+            
+            $vars['title'] = 'Tutorial - Window Rex';
             
             self::load('docs.wmv.rex', fn() =>compile($vars));
 
         }
 
-        static function sessions($array = []) {
-            $pointer = self::mapurl('Docs/Wmv/Sessions', ' <span class="bi-chevron-right"></span> ');
-
-            $vars = [
-                'title' => 'Tutorial - Window Rex',
-                'pointer' => $pointer,
-            ];
+        static function sessions($vars) {
+            
+            $vars['title'] = 'Tutorial - Window Rex';
             
             self::load('docs.wmv.sessions', fn() =>compile($vars));
 
         }
 
-        static function inverse($array = []) {
-            $pointer = self::mapurl('Docs/Wmv/Inverse', ' <span class="bi-chevron-right"></span> ');
-
-            $vars = [
-                'title' => 'Tutorial - Window Url Inverse',
-                'pointer' => $pointer,
-            ];
+        static function inverse($vars) {
+            
+            $vars['title'] = 'Tutorial - Window Url Inverse';
             
             self::load('docs.wmv.inverse', fn() => compile($vars));
 
         }
 
-        static function errors($array = []) {
-            $pointer = self::mapurl('Docs/Wmv/Errors', ' <span class="bi-chevron-right"></span> ');
-
-            $vars = [
-                'title' => 'Tutorial - Handling Window Errors',
-                'pointer' => $pointer,
-            ];
+        static function errors($vars) {
+            
+            $vars['title'] = 'Tutorial - Handling Window Errors';
             
             self::load('docs.wmv.errors', fn() =>compile($vars));
 

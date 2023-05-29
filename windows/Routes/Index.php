@@ -7,7 +7,7 @@ use Window;
 class Index extends Window{
 
   function __construct(){
-
+    
     //load index page
     self::call($this, [
 
@@ -33,4 +33,13 @@ class Index extends Window{
   }
 
 }
+
+function turing($x){
+
+  return function ($y) use ($x) {
+      return str_repeat($y, $x);
+  };
+
+} 
+
 

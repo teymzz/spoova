@@ -4,6 +4,7 @@ namespace spoova\mi\core\classes;
 
 use User;
 use DBStatus;
+use spoova\mi\core\classes\DB\DBHandler;
 use spoova\mi\core\classes\DB\DBModel;
 use spoova\mi\core\tools\Input;
 
@@ -34,6 +35,9 @@ use spoova\mi\core\tools\Input;
     private array $MODEL_LoadData = [];
     private array $MODEL_FormData = [];
     private Input $MODEL_Input;
+    private string $id = '';
+    private static string $insertID = '';
+    private DBHandler $conn;
 
 
     /**
@@ -410,6 +414,17 @@ use spoova\mi\core\tools\Input;
         return $iformdata;
     }
 
+    public function id() : string {
+        
+        if(!$this->id){
+            if($id = $this->conn->insertID()){
+                $this->id = $id;
+            }
+        }
+       
+        return $this->id;
+    }
+
     /**
      * Update formdata
      *
@@ -443,6 +458,8 @@ use spoova\mi\core\tools\Input;
      */
     final public function saved(array $update = [], bool $show_error = false) : bool{
 
+        $this->id = '';
+        
         if($data = $this->formdata()){ 
 
             //update existing columns with new value
@@ -452,16 +469,23 @@ use spoova\mi\core\tools\Input;
                 }
             }
 
-            $dbh = User::auth()->dbh();
+            $dbh = isset($this->conn)? $this->conn : $this->connection();
             
             $dbh->insert_into(static::table(), $data);
             $insert = $dbh->insert();
+            self::$insertID = $dbh->insertID();
 
             if(!$insert){
                 if($show_error) return EInfo::view(DBStatus::err());
                 return false;
             }
-            
+
+            if(isset($data[User::idField()])){
+                $this->id = $data[User::idField()];
+            }else{
+                $this->id = self::$insertID;
+            }    
+
             return true;
 
         }
@@ -492,6 +516,10 @@ use spoova\mi\core\tools\Input;
         return $messages[$rule]?? '';
     }
 
+    final static function insertID() {
+        return self::$insertID;
+    }
+
     /**
      * Map input field name with database columns.
      * This is useful for securing database column names.
@@ -512,6 +540,22 @@ use spoova\mi\core\tools\Input;
      */
     public function isAuthenticated() : bool {
         return self::errors()? false : true;
+    }
+
+    /**
+     * Set and return database connection using user authetication
+     * @param DBHandler $dbh database connection handler
+     * @return DBHandler
+     */
+    final function connection(DBHandler $dbh = null) : DBHandler{
+        $this->id = '';
+        if(func_num_args() < 1){
+            if(isset($this->conn)) return $this->conn;
+            if($dbh = (User::auth())->dbh()){
+                return $this->conn = $dbh;      
+            }     
+        }
+        return $this->conn = $dbh;
     }
 
  }

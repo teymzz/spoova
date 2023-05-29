@@ -19,7 +19,7 @@ use spoova\mi\core\classes\FileManager;
  * 
  * Through configuration files, resource is capable of loading meta tags, provide live server support along with
  * a light error debugging notification system when developing your site. The live server is
- * implemented through a the Res class, and the Res.js located in res folder. 
+ * implemented through a the Res class, and the Live.js located in res folder. 
  * 
  * Through the power of Resource, Setup Installation, File Structuring and Control, and other functions and constant,
  *  a merging of offline and online development is hereby achieved.
@@ -36,18 +36,21 @@ class Resource Extends Rescom{
     private static $extTags  = array("css","js");
     private static $extFils  = array("php","html");    
     private static $cpath = '';
-    private static $dir;
-    private static $xdir;
+    private static string $dir = '';
+    private static bool|string $xdir = ''; //skip directory $dir
     private static $error = [];
-    private static $resources = [];
-    private static $resourceName;  
-    private static $storeImports; 
-    private static $currentImports = [];
-    private static $resource_path;
-    private static $prepend;
+    private static array $resources = [];
+    private static bool|string $resourceName;  
+    private static bool $storeImports = false; 
+    private static array $currentImports = [];
+    private static string $resource_path = '';
+    private static string $prepend = '';
     private static $meta_on = true;
     private static $ignore;
-    private static $called_static = null;
+    private static ?Resource $called_static = null;
+    private static string $currentScript = '';
+    private static array $namedFiles = [];
+    private static array $namedGroup = [];
 
     /**
      * instantiate resource watch if configured
@@ -78,12 +81,17 @@ class Resource Extends Rescom{
 
     }
     
+    /**
+     * Undocumented function
+     *
+     * @return void
+     */
     public static function ignore(){
       //after every ignore remember to close
       self::$ignore = true;
     }
 
-    /*
+    /**
      * Sort and Build the url to be stored
      *
      * @param string $url file path
@@ -108,7 +116,7 @@ class Resource Extends Rescom{
 
     }
 
-    /* 
+    /** 
      * filters out the extension of a file path using supplied extension (::: + ext) if no extension is found
      * @param  $url referenced variable url to be sorted
      * @param $colons reference variable to fetch customized or coloned extension
@@ -139,41 +147,16 @@ class Resource Extends Rescom{
     private static function processUrl(&$url, &$ext = null, &$attrs = null,$store = false){
         
         $path = self::$resource_path; //get resource path
-        //$done = false;
-        $asterisk = self::$ignore ? "**" : "*";
-        $asterisk = isset($asterisk)? $asterisk : "";
-        if(substr($url, 0, 1) === '*'){ 
-          //$done = true;
-          if(substr($url, 0, 2) === '**'){
-            $asterisk = "**";
-            $url = ltrim ($url, '** ');
-          }else{
-            $asterisk = "*";
-            $url = ltrim ($url, '* ');
-          }
-        } 
+        $asterisk = '';
 
         //split url
         $ext = self::getExt($url, $colons, $attrs);
-        
-        
-        // if(!$done && $asterisk !== '**' && !self::$ignore && !self::is_protocol($url)){
-
-        //   if(self::is_ext($ext, self::$extTags)){
-        //       // $url = DomUrl((defined('fol')? '/'.fol.$url : $url));
-        //     }else{
-        //       // $url = fol.$url; //php
-        //   }
-          
-        // }else 
         
         if(self::is_ext($ext, self::$extTags) && !self::is_protocol($url)){
             if(realpath(docroot.'/'.$url)){
               $url = DomUrl($url);
             }
         }
-         
-        $asterisk = "*";
         
 
 	    //store url and path forms (save memory)
@@ -212,7 +195,7 @@ class Resource Extends Rescom{
         }
                	   
         //resource: store url if neccessary
-        if(self::$resourceName != null){
+        if(self::$resourceName){
           if($store == true){self::$resources[self::$resourceName][] = $asterisk.$url.$colons.$attrs;}
         }else{
           if($store == true){self::$resources[] = $asterisk.$url.$colons.$attrs;}
@@ -354,7 +337,7 @@ class Resource Extends Rescom{
       return self::call_error("Resource path :$url: is not found");
     }
 
-    /*
+    /**
      * check if extension is of valid types
      *
      * @param string $ext extension name
@@ -366,7 +349,7 @@ class Resource Extends Rescom{
       return (in_array($ext, $exts));
     }
 
-    /*
+    /**
      * Resets the resource class
      *
      * @param boolean $param 
@@ -376,24 +359,32 @@ class Resource Extends Rescom{
      */
     private static function refresh($param = false){
       if($param === true){
-        self::$resource_path = null;
+        self::$resource_path = '';
         self::$error = [];  
         self::$resources = [];
-        self::$resourceName = null; 
         self::$ignore = false;
+        self::$dir = '';
+        self::$xdir = '';
+        self::$error = [];
+        self::$resourceName = '';
+        self::$storeImports = false;
+        self::$currentImports = [];
+        self::$currentScript = '';
+        self::$namedFiles = [];
+        self::$namedGroup = [];
       }else{
-        self::$resource_path = null;
+        self::$resource_path = '';
       }  
     }
 
-    /*
+    /**
      * renders content based on type
      *
      * @param string $script inclusion format (as file url | script tags) 
      * @param boolean $type
      * @return void|false
      */
-    private static function execute(string $script,$type=false){
+    private static function execute(string $script, bool $type = false){
        
         if($type === true){
         	if(self::is_script($script)){
@@ -417,7 +408,7 @@ class Resource Extends Rescom{
 
     }
 
-    /*
+    /**
      * stores or logs error in error lists
      *
      * @param array|string $error
@@ -431,7 +422,7 @@ class Resource Extends Rescom{
     /**
      * sets a root directory for absolute paths
      */
-    public function dir($dir = ''){
+    public function dir(string $dir = ''){
       self::$dir = $dir; 
       return $this;
     }
@@ -443,10 +434,8 @@ class Resource Extends Rescom{
       self::$dir = '';
       return $this;
     }
-    
-    
 
-    /*
+    /**
      * sets a global path for all file urls
      *
      * @param string|void $path
@@ -461,7 +450,7 @@ class Resource Extends Rescom{
       self::$resource_path = $path;
     }
 
-    /*
+    /**
      * executes a url supplied immediately 
      *
      * @param string $url url to be executed immediately
@@ -482,7 +471,7 @@ class Resource Extends Rescom{
       self::execute($script,$execute);
     }
 
-    /*
+    /**
      * stores and returns a url stored (static)
      *
      * @param string $url file url to be processed
@@ -495,10 +484,11 @@ class Resource Extends Rescom{
       $xdir = self::$xdir? '' : self::$dir;
       $url = self::is_protocol($url)? $url : $xdir.$url; 
     	$script = self::make_request($url, $store);
+      self::$currentScript = $script;
      	return $script;
     }
 
-    /*
+    /**
      * stores and returns a url stored similarly as callFile() method ...
      * ...but employs a chainable structure
      * chainable only with name() method chains: url(), urlOpen() and urlClose() methods !!!
@@ -510,8 +500,113 @@ class Resource Extends Rescom{
       self::callFile(...$args);
       return $this;
     }
+
+    /**
+     * This is used immediately after url() method is called to bind a name to a called url.
+     * @return Resource
+     */
+    public function named(string $name) : Resource{
+      $current = self::$currentScript;
+      if($current) {
+        if(!isset(self::$namedFiles[$name])){
+          self::$namedFiles[$name] = $current;
+          self::$namedGroup[] = $name;
+        }
+      }
+      return $this;
+    }
+
+    /**
+     * This is use to fetch a named file.
+     * 
+     * @param string $name name of file
+     * @param bool $array when set as true, data returned will be in array format
+     * @return String
+     */
+    public static function recall(string $name, bool $array = false) : Array|String {
+
+      $file = self::$namedFiles[$name] ?? '';
+
+      if(is_array($file)){
+        if($array) return $file;
+        $file = implode("\n", $file);
+      }elseif($array) {
+        $file = $file? [$file] : [] ;
+      }
+
+      return $file;
+
+    }
+
+    /**
+     * This is use to bind named files together into a new unique group name
+     * @param String[] $names names of named files
+     * @return Resource
+     */
+    public function bind($name, array $names) : Resource {
+
+      $resources = [];
+
+      foreach($names as $resource){
+        $resources[] = self::recall($resource);
+      }
+
+      if(isset(self::$namedFiles[$name])) {
+
+        return EInfo::view('binded name "'.$name.'" already exists for resource group!');
+
+      }else{
+        self::$namedFiles[$name] = $resources;
+      }
+
+
+      return $this;
+
+    }
+
+    /**
+     * Binds previously named urls to new named group and flushes the binded values.
+     * @param String[] $names names of named files
+     * @return Resource
+     */
+    public function bindTo(string $group, array $names = []) : Resource {
+
+      $resources = self::$namedFiles; //get all unique names
+      $FileLists = self::$namedGroup; //get recently decalared names
+
+      if(func_num_args() < 2){
+
+        //bind previously named urls to new unique group
+        $newList = array_intersect_key($resources, array_flip($FileLists));
+
+        if(!isset(self::$namedFiles[$group])) {
+          self::$namedFiles[$group] = $newList; 
+        }else{
+          EInfo::view('binded "'.$group.'" already exists in unique group!'); 
+        }
+
+        self::$namedGroup = []; //flush declarations
+      }elseif(func_num_args() > 1){
+        
+        $resources = [];
+
+        foreach($names as $resource){
+          $resources[] = self::recall($resource);
+        }
+
+        $oldResources = self::$namedFiles[$group] ?? [];
+        $newResources = array_merge($oldResources, $resources);
+        self::$namedFiles[$group] = $newResources; 
+
+      }
+
+
+
+      return $this;
+
+    }
     
-    /*
+    /**
      * stores and returns a url stored similarly as url() method ...
      * ...but prevents the use of base url set by (new()) method
      * chainable only with name() method chains: url(), urlOpen() and urlClose() methods !!!
@@ -526,7 +621,7 @@ class Resource Extends Rescom{
     
     
 
-    /*
+    /**
      * stores a url to a named existing group
      *
      * @param string $name
@@ -589,7 +684,7 @@ class Resource Extends Rescom{
     * @param string $name
     * @return Resource|null
     */
-    public static function name($name=null) : Resource | null{
+    public static function name(string $name = '') : Resource | null{
       self::$resourceName = $name; 
       if(!isset(self::$resources[$name])){
         self::$resources[$name] = [];
@@ -608,7 +703,7 @@ class Resource Extends Rescom{
       return $this;
     }    
 
-    /*
+    /**
      * returns the plain format of a url return type for viewing purpose
      *
      * @param string $url return format
@@ -626,7 +721,7 @@ class Resource Extends Rescom{
 
     }
 
-    /*
+    /**
      * Export data from inside storage (with colon + group name)
      *
      * @param args < 1, $usename becomes $dpath && $dpath becomes null
@@ -635,17 +730,17 @@ class Resource Extends Rescom{
      *  -- $usename as group name(s) to be exported (name(s) (array | string) of group(s) to be exported)
      * @return array
      */
-    public static function export($dpath = null, $usename = null){
+    public static function export($dpath = null, $usename = null) : array {
     	$values = ':lists';
     	if(count(func_get_args()) < 2){
     	  $usename  = $dpath;
     	  $dpath = null;
     	}
       self::import($dpath, $usename, $values);
-    	return $values;
+    	return (array) $values;
     }
     
-    /*
+    /**
      * applies a prefix on urls when importing
      * @return array|void
      */
@@ -669,7 +764,7 @@ class Resource Extends Rescom{
     	  	
     	  	$url = trim($resource);
     	    
-    	    if(!self::processUrl($url,$ext,$attrs)){ return false; /*import prefixing failed!!!*/ }
+    	    if(!self::processUrl($url,$ext,$attrs)){ return false; /**import prefixing failed!!!*/ }
 
     	    if(self::is_absolute($dpath) and is_dir($dpath) and !self::is_protocol($url)){
     	    	$dpath = rtrim($dpath,"/");
@@ -689,7 +784,7 @@ class Resource Extends Rescom{
     }
 
 
-    /*
+    /**
       * import stored urls
       */
     private static function importer($dpath=null,$usename=null,$execute = true){
@@ -729,13 +824,13 @@ class Resource Extends Rescom{
     	if(!empty($script)){ return $script; }
     } 
 
-    /*
+    /**
      * sets a parent root path to prepend on absolute urls
      *
      * @param boolean|string $path
      * @return void
      */
-    public static function parent($path = false){
+    public static function parent(string $path = ''){
     	self::$prepend = $path;
     }
 
@@ -749,9 +844,9 @@ class Resource Extends Rescom{
      */
     public static function import($dpath = null, $usename=null, &$imports=false){
 
-      	self::$resource_path  = null;
-      	self::$storeImports   = null;
-        self::$currentImports = null;  
+      	self::$resource_path  = '';
+      	self::$storeImports   = false;
+        self::$currentImports = [];  
 
         //call watchFile if parameters are (::watch | ::lock ) and watch is not on
         $watches = ['::watch', '::lock', '<<console'];
@@ -778,7 +873,7 @@ class Resource Extends Rescom{
       		}
       	}
 
-        if(self::$prepend != null and substr($dpath, 0,5) != "pre::"){ 
+        if(self::$prepend and substr($dpath, 0,5) != "pre::"){ 
            $dpath = $prep = "pre::".self::$prepend; 
         }
 
@@ -818,8 +913,8 @@ class Resource Extends Rescom{
 
       	$imports = self::$currentImports;
 
-      	self::$storeImports = null;
-        self::$currentImports = null; 
+      	self::$storeImports = false;
+        self::$currentImports = []; 
         $watchFile = '';
         $meta = '';
 
@@ -852,12 +947,13 @@ class Resource Extends Rescom{
 
         }
 
-        $imports = is_array($imports)? implode('',$imports): $imports;
+        $iports = is_array($imports)? implode('',$imports): $imports;
+        if(is_string($imports)) $imports  = (array) $imports;
 
-      	if(!$exec){ return $meta.$watchFile.$imports; } 
+      	if(!$exec){ return $meta.$watchFile.$iports; } 
     }
     
-    /*
+    /**
      * returns a json_encode format of all resources stored
      *
      * @return void
@@ -866,15 +962,17 @@ class Resource Extends Rescom{
       return json_encode(self::$resources);
     }
 
-    /*
+    /**
      * returns error found while importing resource urls
      *
-     * @param $point:
-     *  -- int return the error at index
-     *  -- 'html' print errors out as a string
-     *  -- null returns all errors as array format
+     * @param int|string $point:
+     *  - int return the error at index
+     *  - 'first' sets error index as zero. Same as supplying zero as integer.
+     *  - 'last' sets error index as as the last error index and returns the value.
+     *  - 'html' print errors out as a string
+     *  - null returns all errors as array format
      */
-    public static function error($point=null){
+    public static function error(string|int $point = null){
       $errorsCount = count(self::$error);
 
       if($point === 'first') $point = 0;
@@ -896,28 +994,32 @@ class Resource Extends Rescom{
       }   
     }
 
-    /*
+    /**
      * open resource in safe mode by only closing active name
      *
-     * @param [type] $param
+     * @param bool $reset when set as true will clear any previous declarations
      * @return void
      */
-    public static function open($param = null){
-        Resource::$resource_path = null; 
+    public static function open(bool $reset = false){
+        
+        Resource::$resource_path = ''; 
         
         if(Resource::active()) {
            Resource::close(false); 
-        }elseif($param === true){
+        }elseif($reset === true){
            Resource::close(true); 
         }
 
     }
 
-    /*
+    /**
      * performs the same function as open() but used only with chainable methods
      * since it is chained with name method, it can only come after a name is declared 
+     *
+     * @param bool $reset when set as true will clear any previous declarations
+     * @return void
      */
-    public function urlOpen(){
+    public function urlOpen(bool $reset = false){
       $args = func_get_args();
       //get current name
       $name = self::$resourceName;
@@ -925,9 +1027,14 @@ class Resource Extends Rescom{
       self::name($name);
     }
 
-    /*
-     * Helps to unset declarations or to entirely free memory
+    /**
+     * Helps to unset declarations or to entirely clears any previous declarations
      * @param string|bool $param
+     *  - A false or string value "*" peforms the same function as false value which 
+     *    if an active name is selected, unsets default values such as ignore, parent path and the selected name. 
+     *    This will not clear or reset stored urls. 
+     *  - A string value "/" unsets only the currently selected resource name (safe mode) 
+     *  - A true value resets the entire previously stored urls and default values. (strict mode)
      * @return void
      */
     public static function close($param = false){  
@@ -951,7 +1058,7 @@ class Resource Extends Rescom{
         //@param ('*' | false)
         //unsets ignore, parent path and selected name only if 
         //an active name (or selection) exists 
-        self::$resource_path = null;
+        self::$resource_path = '';
         self::$ignore = false;
         self::$resourceName = false;
 
@@ -959,7 +1066,7 @@ class Resource Extends Rescom{
       
     }
 
-    /*
+    /**
      * performs the same function as close() but used only with chainable methods
      */
     public function urlClose($param = '*'){
@@ -969,7 +1076,7 @@ class Resource Extends Rescom{
 
     }   
 
-    /*
+    /**
     * returns active resource if it exists else false
     *
     * @return [bool | string]
@@ -983,155 +1090,3 @@ class Resource Extends Rescom{
     }
 
 }
-
-/**
- *
- * RESOURCE METHODS
- *
- * UM (Url Methods)    => callFile(), addFile(), getFile()
- * CM (Control Methods) => Path(), name(), parent(), 
- * DM (Deploy Methods)  => import(), export()
- * OM (Other Methods)   => open(), close(), used(), active(), error(),
- *
- * CHM (chainable Methods) => url(), urlOpen(), urlClose();
- */
-/**
- * METHODS AND EXPLANATION
- *
- * A) Resource::open(true | false)  //safely prepares the Resource class {optional}
- *  	@param (default): false
- *  	@param true   : referesh all urls / clears storage
- *  	@param false  : (1) safely exit selected group, (2) open resource in safe mode
- * 
- * B) Resource::Path($url | null)  // intialiazes or unsets a new directory for urls
- * 	 	@property: sets a general path or domain url to be used as prefix for any of the file methods
- *            
- *  	@param (default) null  : unset $url
- *  	@param $url   : pointer directory or domain url
- *
- *  	Note:: 1) This property ignores its $url if $url parameter supplied in #FM is a domain url
- *  	Note:: 2) The general url set by this property is exited by import(), close() and open() methods but not close('/')
- *
- * C) Resource::name($name) // creates new or selects/activate an existing group 
- * 	 	@param $name: group name to be created or selected
- * 
- * D) Resource::callFile($url), :getFile($url,$store), :addFile($grpname,$url) //adds url to be exectuted
- * 	 	
- *		@property callFile: stores a $url into existing group
- * 	 	@property getFile: executes $url and/or stores depending on $store[true|false] 
- * 	 	@property addFile: stores $url into an existing $grpname            
- *
- *  	@param $url   : local url from root folder space or domain url
- *
- *  	Note:: 1) domain url with no extension can be added using three colons + script extension e.g ($url.':::js'), ($url.':::css')
- *
- * E) Resource::close(true | '\' | '*' ) // closes selected group / clears resource class
- *		@property: stores a $url into existing group
- * 	 	
- *		Resource::close(true): // clears resource class
- * 	 	Resource::close('\') : // safely exits a selected group(s). same as Resource::open();
- *		Resource::close(): (close('*'))  // if a group is selected use close('\') else close(true) 
- * 
- * F)  Resource::parent($url | (default))
- * 	 	
- *		@property: prepends / prefix $url to a stored url which is about to be imported
- *
- * 	 	@param (default): false => exits prefixing
- * 	 	@param $url: $url could be a pointer out of a directory or a domain url
- *
- *  	Note:: 1) any stored domain $url will be ignored during prefixing.
- *
- *
- * G)  Resource::import()  // imports urls stored in groups with their group name
- *		@method 1  :import($grpname) 			 		   => imports a group or lists of groups
- *
- * 	 	@method 2A  :import($prefixUrl,$grpname)           => import:storedUrl($prefixUrl.$url)
- * 	 			2B  :import("pre::".$prefixUrl,$grpname))  => import:($prefixUrl.storedUrl($url)) //same as using :parent() but is safely exited;
- *
- *           foreach $url found in $grpname:
- *
- *              2A  :imports ($prefixUrl + $url) as a single $newurl, where $newurl is validated
- *              2B  :imports $prefixUrl + (($url) as a single url), where $prefixUrl is only a prefix but only $url is validated
- *
- * 	 	@method = 3 (:import($prefixUrl,$grpname,$imports)) $url: $url could be a pointer out of a directory or a domain url
- *  	Note:: 1) any already stored domain $url will not be ignored during prefixing.
- *
- *
- * I)  Resource::export()  //  Takes similar parameters as Resource::import() and returns similar response in array format.
- * 
- * J) Resource::used()       // lists all stored urls
- * K) Resource::active()     // returns group name of any group currently selected else returns false
- * L) Resource::error() // returns errors found when url is being stored called  
- * 
- * 
- * M) Chainable methods are used along with name() static method
- */
-
-
-
-/*
-
-  A - RESOURCE SAMPLES 
-
-  NOTE: 
-  
-  host_protocol : means localhost protocol or server protocol depending on the environment.
-  tag(val)      : means url is validated and returns javascript or css tag 
-  tag(!val)     : means url is NOT validated and returns javascript or css tag
-  :::css        : means return css tag when extenstion is not supplied
-  :::js         : means return javascript tag when extenstion is not supplied
-
-  //ungrouped (no name declared)
-  Resource::open() //safely close any active name or settings.
-  Resource::callFile("core/assets/css/design.css");          # host_protocol/core/assets/css/design.css   : css tag ( val )
-  Resource::callFile("core/assets/css/colors.css");          # host_protocol/core/assets/css/colors.css   : css tag ( val )
-
-  //grouped (with name) - active
-  Resource::name('css'); 
-  Resource::callFile("core/assets/css/design.css");          # host_protocol/core/assets/css/design.css   : css tag ( val )
-  Resource::callFile("../core/assets/css/colors.css");       # host_protocol/upper_directory/core/assets/css/colors.css   : tag ( val )
-  Resource::callFile("https://www.url.com/item.css");        # https://www.url.com/item.css     : css tag ( !val ) 
-  Resource::callFile("https://www.url.com/item:::css");      # https://www.url.com/item         : css tag ( !val )
-
-  //grouped
-  Resource::name('js');  // javascript sample - active group
-  Resource::callFile("core/assets/jquery/anime.js");         # /fol/core/assets/jquery/anime.js  : js tag ( val )  
-
-  //unsets only the current selection
-  Resource::close('/') // (Note: any url stored after this line goes into ungrouped space)
-  
-  //removes all default settings except stored urls and errors
-  Resource::close(false);
-
-  //clears all data stored.
-  Resource::close(true);
-
-  Resource::import(":css");                // import urls stored inside css
-  Resource::import([":",":css"]);          // import urls stored in ungrouped, css respectively
-  Resource::import([":",":css",":js"]);    // import urls stored in ungrouped, css, js respectively
-  var_dump(Resource::export([":",":js"]))  // export urls stored in ungrouped & css respectively
-  
-  //url with protocols are exempted while the rest is prefixed with '../' and also validated when importing
-  Resource::import('../',[":",":css"]); 
-  Resource::import('pre::../',[":",":css"]);
-  
-  //set a general global default prefix '../'. All group imported will be affected afterward. 
-  Resource::parent("../") // unset this with Resource::parent() 
-  Resource::import([":",":css"]); //add ../ to relative urls, import  
-  Resource::import("http://url/",[":",":css"]); //first parameter will overide default set by parent.
-  Resource::import("pre::../",[":",":css"]); // when pre:: is used, no validation of prefix will be done
-  Resource::parent(); // unsets default prefix
-
-  B - AVOID CALLING RESOURCE EVERY TIME
-  
-  //Avoid calling Resource every time by using chainable methods
-    
-    Resource::name('some_name')
-            ->openUrl()             //same as Resource::open();
-            ->url('some_url')       //same as Resource::callFile('some_url'); 
-            ->url('some_other_url') //same as Resource::callFile('some_other_url');
-    Resource::name('new_name')
-            ->url('some_new_url')       //same as Resource::callFile('some_url'); 
-            ->url('some_other_url') //same as Resource::callFile('some_other_url');
-            ->urlClose();           //same as Resource::close();
-*/

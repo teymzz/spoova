@@ -10,61 +10,54 @@
         <section class="pxv-10 tutorial database bc-white">
             <div class="font-em-1d2">
 
-                @lay('build.co.links:tutor_pointer')
-
                 <div class="start font-em-d8">
+
+                    @lay('build.co.links:tutor_pointer') <br>
                     <div class="font-em-1d5 c-orange">Routing WMV</div> <br>
                     
                     <div class="db-connection">
-                        <div class="fb-6 c-olive">Introduction</div>
                         <div class="">
-                            The wmv is a term used for loading of web pages using web servers without starting the server manually from ports using php inbuilt server. 
-                            This may require local servers such as xampp or wamp or remote servers. Windows files are all loaded from the windows folder through the use of a standard logic. By default, when a url does not exist,
-                            spoova tries run its windows files from the windows (routes) folder. If the path does not exist spoova will return a 
-                            404 error response page depending on whether it is an api window or not. This is done by
-                            processing the <code>Index</code> class within the windows folder. The Index is then used to handle 
-                            incoming urls which if not handled will return a 404 error page. The architectural pattern flow is
-                            shown below.
+                            The wmv is a term used for loading of web pages using a 3-logic pattern. Routes can be loaded using in-built php server through ports or through external servers 
+                            such as xampp or wamp or remote servers. By default, Windows files are all loaded from the windows folder through the use of a standard logic which is one of the 3 logics supported. 
+                            The default behaviour is that spoova tries to load its routes from the <code>window/Routes</code> directory which is equivalent to the <code>spoova\mi\windows\Routes</code> namespace. 
+                            If the route file does not exist spoova will return a 404 error response which can be in form of a 404 error page or 404 json response. The behavior is shown below:
                             <br><br>
-                            <div class="font-menu  font-em-d85 bc-white-dd box-full rad-4 pxv-8">
-                                url > windows(route) -> index -> 404 error page
+                            <div class="  font-em-d85 bc-white-dd box-full rad-4 pxv-8">
+                                url > windows(route) -> 404 error page
                             </div>
                         </div> 
                     </div> <br>
 
                     <div class="db-operations">
-                        <div class="fb-6 c-olive">Setting up a new wmv route</div>
-                        <div class="font-menu font-em-1">
-                            All window files are loaded from the windows folder. These files
-                            can be extended to different Frames. Frames are binding structures that can be applied
-                            on window files. Their functions are to define basic structure or concepts a window
+                        <div class="fb-6 c-olive">Setting up a route using frame</div>
+                        <div class=" font-em-1 mvt-10">
+                            All window files are loaded from the <code>windows</code> directory while routes are loaded from <code>windows/Routes</code> directory. Route files
+                            can be extended to root <code>Window</code> class or <code>Frames</code>. Frames are binding structures that can be used as a parent group for different Routes. 
+                            Their functions are to define basic structure or concepts a route
                             can emulate. For example, Frame files can be used to separate or divide sessions which are
                             only recognized in some particular windows files. Hence, all window files extending to such 
-                            Frames will only derive their session values from their parent frame file. Windows files have a great 
-                            relationship with <code>Res</code> class. This makes it easier to call methods like <code>Res::load()</code> 
-                            using <code>self::load()</code> instead, which also searches for its template files from the rex folder.  Proceedures below 
-                            helps to explain the steps or stages involved in setting up a windows file.
+                            Frames will only derive their session values from their parent frame file. Proceedures below 
+                            helps to explain the steps or stages involved in setting up a new route.
                             <br><br>
 
-                            <div class="fb-6 mvb-10">Setup steps</div>
+                            <div class="fb-6 mvb-10 c-dry-blue">Setup steps</div>
                             <ol class="calibri">
-                                <li>Create a separate frame folder within the windows folder.</li>
-                                <li>In the frame folder, add a base group class frame file for the windows files that will share the same data.</li>
-                                <li>Create a windows' page by using the page's entry point name as a class in the <code>windows\Routes</code> namespace.</li>
-                                <li>Extend your windows file to your frame file</li>
-                                <li>Add a construct method within the windows file created in one above</li>
+                                <li>Create a separate <code class="bd-f">Frames</code> directory within the <code class="bd-f">windows</code> directory.</li>
+                                <li>In the <code class="bd-f">Frames</code> directory, add a class file that extends to the root <code>Window</code> class.</li>
+                                <li>Add a route class into the <code>windows/Routes</code> directory page by using the page's entry point name as the class name in the <code>spoova\mi\windows\Routes</code> namespace.</li>
+                                <li>Extend the route file to the frame file created earlier</li>
+                                <li>Lastly, add a <code>__construct()</code> method within the frame file which will control how data is shared</li>
                                 <li>These processes can be shortened by working with available cli commands designed for generating files.</li>
                                 <li>
-                                    Once this is done, when a user tries to access a page with the name of your windows file,
-                                    the windows file will be automatically loaded up from the windows folder. If the non-existing url is not handled
-                                    a 404 error is returned.
+                                    Once these setps are completed, when a user tries to access a page with the name of the route file,
+                                    the route file will be automatically be called. The benefit of the frame file is that it can serve as a parent class that distributes data to several routes, since multiple routes can be 
+                                    extended to that frame file.
                                 </li>
                             </ol>
                             
                         </div>
 
-                        <div class="font-em-d8">Step 1 & 2 above : This frame file should be added inside the Frames directory within the windows folder.</div> <br>     
-                        <div class="box-full font-menu  font-em-d85 bc-white-dd shadow flow-x">
+                        <div class="box-full font-em-d85 bc-white-dd shadow flow-x">
 <div class="pxv-10 bc-silver">File 1 - Frame file sample (UserFrame.php)</div>        
                     <pre class="pre-code">
   &lt;?php
@@ -87,7 +80,7 @@
                         </div> <br><br>     
 
                         <div class="font-em-d8">Step 3, 4 & 5 above</div> <br> 
-                        <div class="box-full font-menu font-em-d85 bc-white-dd shadow flow-x">
+                        <div class="box-full  font-em-d85 bc-white-dd shadow flow-x">
   <div class="pxv-10 bc-silver">File 2 - Windows file sample (Home.php)</div> <br>         
                     <pre class="pre-code">
   &lt;?php
@@ -115,7 +108,7 @@
                             Since the <code>Res::load()</code> can be applied on windows files, then we can say: <br>
                         </div> <br> 
 
-                        <div class="box-full font-menu  font-em-d85 bc-white-dd shadow flow-x"> 
+                        <div class="box-full   font-em-d85 bc-white-dd shadow flow-x"> 
                     <pre class="pre-code">
   &lt;?php
 
@@ -136,74 +129,31 @@
 
   ?&gt;
                     </pre>
-                        </div> <br> <br>
-
-                        In example above:
-                        <ol class="font-em-d9 mvt-10">
-                            <li>
-                                File 1 <code class="c-wine-dd">UserFrame.php</code> was added into the windows/Frame folder 
-                                and the UserFrame class was extended to the Windows.
-                            </li><br>
-                            <li>
-                            File 2 <code class="c-wine-dd">Home.php</code> must be a windows File. 
-                            Hence, it was extended to the Frame file <code>UserFrame.php</code>. 
-                            </li><br>
-                            <li>
-                                The last code section reveals how to use the resource load method <code>Res::load</code> within the windows File.
-                            </li>
-                        </ol>
+                        </div>
 
                         <div class="foot-note">
-                            <span class="head">Footnote:</span><br>
-
-                            <div class="">
-                                <ul>
-                                    <li>
-                                        It is important to note that file compiling, 
-                                        that is, the use of <code>compile()</code>. 
-                                        can only be done once. <br>
-                                    </li>
-                                    <li>
-                                        If multiple files will be compiled, then it is 
-                                        preferred to use the <code>view()</code> function. 
-                                        There are distinctive differences between <code>compile()</code> 
-                                        and <code>view()</code> . This is discussed under the helper compiler 
-                                        functions tutorial.
-                                    </li>
-                                </ul>
-    
-                                The last example below shows how <code>view()</code> can be used within classes
-                            </div>
+                            In example above:
+                            <ol class="font-em-d9 mvt-10">
+                                <li>
+                                    File 1 <code class="c-wine-dd">UserFrame.php</code> was added into the <code>windows/Frame</code> folder 
+                                    and the UserFrame class was extended to the <code class="bd-f">Window</code> root class.
+                                </li><br>
+                                <li>
+                                File 2 <code class="c-wine-dd">Home.php</code> which exists in the <code>windows/Routes</code> directory is expected to be 
+                                instance of the in-built <code>Window</code> object so as to become a route. Since the <code>UserFrame.php</code> extends to the root 
+                                <code>Window</code> class, the <code>Home.php</code> can inherit the properties of a window from the <code>UserFrame</code> 
+                                class it was extended to.
+                                </li><br>
+                                <li>
+                                    The <code>self::load()</code> is equivalent to <code>Res::load()</code> compiler method which loads the template file <code>index.rex.php</code> 
+                                    template file from the <code>windows/Rex</code> directory
+                                </li>
+                            </ol>
 
                         </div>
-                    </div> <br>
-                    
-                    <div class="box-full font-menu  font-em-d85 bc-white-dd shadow flow-x"> 
-    <pre class="pre-code">
-  &lt;?php
-  
-    namespace spoova\mi\windows;
 
-    use spoova\mi\windows\Frames\UserFrame;
-
-
-    class Home extend Userframe{
-
-        function __construct() {
-
-            $view1 = self::load( 'index', fn => view() );
-            $view2 = self::load( 'home', fn => view() );
-
-            echo $view1.$view2;
-
-        }
-
-    }
-  
-  ?&gt;
-    </pre>
-
-                        </div> <br> <br>  
+                    </div>
+ 
                     @lay('build.co.links:tutor_pointer')
                 </div>
             </div>

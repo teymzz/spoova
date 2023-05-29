@@ -10,9 +10,9 @@
     <section class="pxv-10 tutorial mails bc-white">
       <div class="font-em-1d2">
 
-        @lay('build.co.links:tutor_pointer')
-
         <div class="start font-em-d8">
+
+          @lay('build.co.links:tutor_pointer') <br>
 
           <div class="font-em-1d5 c-orange">Composer / Plugins</div> <br>  
           
@@ -31,7 +31,7 @@
           
           <div id="vendor" class=""> 
               <br>
-              <div class="font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
+              <div class=" fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
                 <div class="flex-full midv"> <span class="bi-folder-fill mxr-8 c-lime-dd"></span> Vendor Folder </div>
               </div> <br>
 
@@ -75,7 +75,7 @@
 
           <div id="core"> 
 
-              <div class="font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
+              <div class=" fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
                 <div class="flex-full midv"> <span class="bi-gear mxr-8 c-lime-dd"></span> Core Folder </div>
               </div> <br>
               

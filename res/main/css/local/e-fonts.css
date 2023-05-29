@@ -1,11 +1,64 @@
 /* @import url('https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,200;0,300;0,400;0,600;0,700;0,800;0,900;1,200;1,300;1,400;1,600;1,700;1,800;1,900&display=swap'); */
 
-
+/* @font: Nunito */
 @font-face {
     font-family: "Nunito";
     src: url(fonts/Nunito-ExtraBold.ttf);
 }
 
+/* @font: Boxigen */
+@font-face {
+    font-family: "Boxigen";
+    src: url(fonts/BOXIGEN.ttf);
+}
+
+/* @font: Firacode */
+@font-face {
+   font-family: "Firacode";
+   src: url(fonts/fira-code/fira-code-light-300.ttf);
+   font-weight: 300; 
+}
+@font-face {
+   font-family: "Firacode";
+   src: url(fonts/fira-code/fira-code-regular-400.ttf);
+   font-weight: 400;
+}
+@font-face {
+   font-family: "Firacode";
+   src: url(fonts/fira-code/fira-code-medium-500.ttf);
+   font-weight: 500;
+}
+@font-face {
+   font-family: "Firacode";
+   src: url(fonts/fira-code/fira-code-bold-700.ttf);
+   font-weight: 700;
+}
+@font-face {
+   font-family: "Firacode";
+   src: url(fonts/fira-code/fira-code-retina-450.ttf);
+}
+
+/* @font: Roboto */
+@font-face {
+   font-family: "Roboto";
+   src: url(fonts/roboto/roboto-bold.ttf);   
+   font-weight: 700; 
+}
+
+@font-face {
+   font-family: "Roboto";
+   src: url(fonts/roboto/roboto-regular.ttf);
+   font-weight: 300; 
+}
+
 .nunito{
     font-family: "Nunito", Calibri, sans-serif;
+}
+
+.boxigen{
+    font-family: "Boxigen", Calibri, sans-serif;
+}
+
+.fira{
+    font-family: "Firacode", Calibri, sans-serif;
 }

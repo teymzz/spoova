@@ -19,7 +19,8 @@ class Serve {
     static function standardlogic() {
 
         $map  = Router::map();
-        $win = window('root');
+
+        $win = window('root') ?: 'index';
         $winlow = strtolower($win);
         $wininv = "!".$winlow;
         $roots = $map[':root'] ?? [];

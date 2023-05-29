@@ -7,16 +7,17 @@ use Window;
 class Libraries extends Window {
 
    
-    function __construct()
+    function __construct($vars)
     {
         self::call($this, [
-            window(":libraries") => 'root'
+            window(":libraries") => 'root',
+            SELF::ARG => $vars
         ]);
     }
 
-    function root() {
+    function root($vars) {
 
-        self::load('docs.libraries.libraries', fn() => compile() );
+        self::load('docs.libraries.libraries', fn() => compile($vars) );
 
     }
 

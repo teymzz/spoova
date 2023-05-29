@@ -242,10 +242,10 @@
 	 *   - false returns stored meta
 	 */
 	public function dump(bool $type = false){
-		$contents = $this->contents;
+	   $contents = $this->contents;
 	   
 	   $metas = $contents? implode("\n", $contents) : '';
-	   if($type == true){
+	   if($type === true){
 		   print $metas;
 		   return;
 	   }

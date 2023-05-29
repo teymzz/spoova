@@ -57,9 +57,9 @@ class Docs extends Window {
 
     function root() {
         
-        $vars['title']  = 'tutorial';
+        $vars['title']  = 'Documentation';
 
-        self::load('about', fn() => compile($vars) );
+        self::load('docs', fn() => compile($vars) );
 
     }
 

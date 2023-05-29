@@ -6,10 +6,10 @@
     
         <section class="pxv-10 tutorial bc-white">
             <div class="font-em-1d2">
-
-                @lay('build.co.links:tutor_pointer')
-
                 <div class="start font-em-d8">
+
+                    @lay('build.co.links:tutor_pointer') <br>
+
 
                     <div class="font-em-1d5 c-orange">Window Models</div> <br>  
                     
@@ -26,12 +26,9 @@
                     
                     <div class=""> 
                         <br>
-                        <div class="font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
-                        <div class="flex-full midv"> Model Methods </div>
-                        <div class="flex mid">
-                            <span class="bi-chevron-double-right"></span>
+                        <div class=" fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
+                            <div class="flex-full midv"> Model Methods </div>
                         </div>
-                        </div> <br>
 
                         <div class="">
                             <ul class="mvt-10">
@@ -52,7 +49,7 @@
                             <div class="pxs-14">
                                 <span id="loadData"></span>
                                 <div class="">
-                                    <div class="font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
+                                    <div class=" fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
                                         <div class="flex-full midv"> <span class="bi-circle-fill mxr-8 c-lime-dd"></span> loadData </div>
                                     </div>
                                     <div class="desc mvt-10">
@@ -118,7 +115,7 @@
                             <div class="pxs-14">
                                 <span id="loadData"></span>
                                 <div class="">
-                                    <div class="font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
+                                    <div class=" fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
                                         <div class="flex-full midv"> <span class="bi-circle-fill mxr-8 c-lime-dd"></span> loadedData
                                      </div>
                                     </div>
@@ -133,7 +130,7 @@
                             <div id="rules" class="pxs-14">
                                 <span id="rules"></span>
                                 <div class="">
-                                    <div class="font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
+                                    <div class=" fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
                                         <div class="flex-full midv"> <span class="bi-circle-fill mxr-8 c-lime-dd"></span> rules </div>
                                     </div>
                                     <div class="desc mvt-10">
@@ -149,7 +146,7 @@
                             <div id="validated" class="pxs-14">
                                 <span id=""></span>
                                 <div class="">
-                                    <div class="font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
+                                    <div class=" fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
                                         <div class="flex-full midv"> <span class="bi-circle-fill mxr-8 c-lime-dd"></span> validated </div>
                                     </div>
                                     <div class="desc mvt-10">
@@ -207,7 +204,7 @@
                             <div class="pxs-14">
                                 <span id="error"></span>
                                 <div class="">
-                                    <div class="font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
+                                    <div class=" fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
                                         <div class="flex-full midv"> <span class="bi-circle-fill mxr-8 c-lime-dd"></span> error </div>
                                     </div>
                                     <div class="desc mvt-10">
@@ -222,7 +219,7 @@
                             <div class="pxs-14">
                                 <span id="seterror"></span>
                                 <div class="">
-                                    <div class="font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
+                                    <div class=" fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
                                         <div class="flex-full midv"> <span class="bi-circle-fill mxr-8 c-lime-dd"></span> setError </div>
                                     </div>
                                     <div class="desc mvt-10">
@@ -283,7 +280,7 @@
 
                             <div class="pxs-14">
                                 <span id="errorindex"></span>
-                                <div class="font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
+                                <div class=" fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
                                     <div class="flex-full midv"> <span class="bi-circle-fill mxr-8 c-lime-dd"></span> errorIndex </div>
                                 </div>
                                 <div class="">
@@ -295,7 +292,7 @@
 
                             <div class="pxs-14">
                                 <span id="formdata"></span>
-                                <div class="font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
+                                <div class=" fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
                                     <div class="flex-full midv"> <span class="bi-circle-fill mxr-8 c-lime-dd"></span> formdata </div>
                                 </div>
                                 <div class="">
@@ -310,7 +307,7 @@
 
                             <div class="pxs-14">
                                 <span id="dataupdate"></span>
-                                <div class="font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
+                                <div class=" fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
                                     <div class="flex-full midv"> <span class="bi-circle-fill mxr-8 c-lime-dd"></span> dataUpdate </div>
                                 </div>
                                 <div class="">
@@ -324,7 +321,7 @@
 
                             <div class="pxs-14">
                                 <span id="tablename"></span>
-                                <div class="font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
+                                <div class=" fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
                                     <div class="flex-full midv"> <span class="bi-circle-fill mxr-8 c-lime-dd"></span> tablename </div>
                                 </div>
                                 <div class="">
@@ -336,7 +333,7 @@
 
                             <div class="pxs-14">                        
                                 <span id="saved"></span>
-                                <div class="font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
+                                <div class=" fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
                                     <div class="flex-full midv"> <span class="bi-circle-fill mxr-8 c-lime-dd"></span> Saved </div>
                                 </div>
                                 <div class="">
@@ -350,7 +347,7 @@
 
                             <div class="pxs-14">                        
                                 <span id="isauthenticated"></span>
-                                <div class="font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
+                                <div class=" fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
                                     <div class="flex-full midv"> <span class="bi-circle-fill mxr-8 c-lime-dd"></span> isAuthenticated </div>
                                 </div>
                                 <div class="">
@@ -362,7 +359,7 @@
 
                             <div class="pxs-14">                        
                                 <span id="mapform"></span>
-                                <div class="font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
+                                <div class=" fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
                                     <div class="flex-full midv"> <span class="bi-circle-fill mxr-8 c-lime-dd"></span> mapform </div>
                                 </div>
                                 <div class="">

@@ -8,13 +8,13 @@
         <section class="pxv-10 tutorial bc-white">
             <div class="font-em-1d2">
 
-                <div class="c-black-ll">
-                    
-                    @lay('build.co.links:tutor_pointer')
-
-                    <div class="font-em-1d5 c-orange">Handling Database</div>
+                <div class="start">
                     
                     <div class="font-em-d8 mvt-10">
+                    
+                        @lay('build.co.links:tutor_pointer') <br>
+    
+                        <div class="font-em-1d5 c-orange">Handling Database</div> <br>
 
                         <div class="db-connection">
                             <div class="fb-6 c-olive">Database connection</div>
@@ -28,7 +28,7 @@
 
                         <div class="db-operations">
                             <div class="fb-6 c-olive">Setting up a new connection using Database (DB) Class</div>
-                            <div class="font-menu font-em-1">There are different ways of opening a new connection and we'll be looking at a few examples</div> <br>
+                            <div class=" font-em-1">There are different ways of opening a new connection and we'll be looking at a few examples</div> <br>
                             
                             <div class="pre-area shadow">
                                 <div class="pxv-10 bc-silver">Method 1</div>
@@ -84,7 +84,7 @@
                                         Top level connection parameters will only affect subsequent
                                         connection when strictly defined. This is further discussed under 
                                         <a href="@domUrl('docs/useraccounts#running-queries')">
-                                            <span class="c-blue foot-note-hyperlink calibri font-menu font-em-d9 fb-6">User Account Control</span>
+                                            <span class="c-blue foot-note-hyperlink calibri  font-em-d9 fb-6">User Account Control</span>
                                         </a>
                                     </li>
                                     <li>
@@ -149,11 +149,9 @@
   $db = (new DB)->openDB();
   
   if($db->table_exists('table_name')) {
-  
       <span class="comment no-select">
-          //run this code ...
+    //run this code ...
       </span>
-  
   }
                                                 </pre>
                                             </div>
@@ -162,18 +160,16 @@
 
                                         <li> 
                                             
-                                            <a href="@DomUrl('docs/database/insert')">column_exist()</a> <br>
+                                            <a>column_exist()</a> <br>
                                             <div class="c-black-ll pvs-10">This method returns true if a column exists in the database table name</div>
                                             <div class="pre-area">
                                                 <pre class="pre-code">
   $db = (new DB)->openDB();
   
   if($db->column_exists('table_name', 'column_name')) {
-  
       <span class="comment no-select">
-          //run this code ...
+    //run this code ...
       </span>
-  
   }
                                                 </pre>
                                             </div>   
@@ -182,7 +178,7 @@
 
                                         <li> 
                                             
-                                            <a href="@DomUrl('docs/database/insert')">addColumn()</a> <br>
+                                            <a>addColumn()</a> <br>
                                             <div class="c-black-ll pvs-10">This method adds a column to database table. The syntax is shown below:</div>
                                             <div class="pre-area">
                                                 <pre class="pre-code">
@@ -207,17 +203,16 @@
   </span>
   
   }
-  
-</pre>
-                                        </div>   
+ </pre>
+                                            </div>   
 
-<div class="pxv-10 foot-note">Note: The type (datetime) will set a default of <code>1970-01-01 00:00:00</code> as the default datetime which 
+<div class="foot-note">Note: The type (datetime) will set a default of <code>1970-01-01 00:00:00</code> as the default datetime which 
 still translates as zero.</div>
                                         </li>
 
                                         <li> 
                                             
-                                            <a href="@DomUrl('docs/database/insert')">drop()</a> <br>
+                                            <a>drop()</a> <br>
                                             <div class="c-black-ll pvs-10">This method drops a database, database field or column. Examples are shown below</div> 
 
                                             <div class="pre-area">
@@ -242,22 +237,24 @@ still translates as zero.</div>
   </span>
   }
   
-</pre>
-                                        </div>   
+                                                </pre>
+                                            </div>   
 
-<div class="pxv-10 foot-note">Note: The type (datetime) will set a default of <code>1970-01-01 00:00:00</code> as the default datetime which 
-still translates as zero.</div>
+                                        
                                         </li>
-
+                                    
                                     </ul>  
                                     
-                                    When using any of the helper methods, the DBHandler <code>error_exists()</code> and <code>error()</code> method must be supplied 
-                                    an argument of <code>true</code>  in order to function as expected. However <code>DBStatus::err()</code> will still return 
-                                    the last error encountered. Errors are discussed below.
-                                </div> <br>
+                                </div>
 
                                 <div class="pxs-10">
-                                    <div class="fb-6">Handling Errors:</div>          
+                                    <div class="fb-6 font-em-1d1 c-orange">Handling Errors:</div>          
+                                    
+                                    <div class="">
+                                        When using any of the helper methods, the DBHandler <code>error_exists()</code> and <code>error()</code> method must be supplied 
+                                        an argument of <code>true</code>  in order to function as expected. However <code>DBStatus::err()</code> will still return 
+                                        the last error encountered. Errors are discussed below.
+                                    </div>
                                     <div class="mvs-10">
                                         Spoova is a silent framework. Most errors are not displayed unless requested.
                                     </div> 

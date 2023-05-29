@@ -29,11 +29,11 @@ class Request
   
   
   /**
-   * 
+   * Initialize request class with enabled or disabled authentication
    */
-  public function __construct()
+  public function __construct(bool $auth = true)
   {
-    // code...
+    $this->auth = $auth;
   }
   
   public function getPath(){
@@ -83,13 +83,25 @@ class Request
 
   
   /**
-   * Return the current data of either get or post request
-   *  - When a key is supplied, returns the key value from 
-   *    the current request data if it exists else returns a bool of false
-   *  - when session csrf does not match returns false
+   * Returns the current data of either get or post request based on 
+   * argument and authentication (i.e Request::auth()) type. When enabled, 
+   * authentication is internally done using internally generated csrf token.
+   * 
+   * @param string $datakey An optional form datakey. If not supplied, 
+   * data returned will always be an array which may be filled or empty  
+   * based on authentication level and request data obtained,
+   *   - If supplied and authentication fails empty string is returned
+   *   - If supplied and authentication passes corresponding request data value is returned or false.
+   *     Note that authentication can also pass if auth() method is set as false. By default it is set as 
+   *     authentication is set as true.
+   * 
    * @return mixed
+   * 1. If Request::auth() is set as true and authentication fails, an empty string or array is returned depending on whether an argument (i.e $datakey) is supplied or NOT supplied respectively.
+   * 2. If Request::auth() is set as false : 
+   *    - If $datakey is supplied, the corresponding value is returned from request data if it exists else it returns false.
+   *    - If $datakey is not supplied, the array of request data is returned.
    */
-  public function data($datakey = true){
+  public function data(string $datakey = ''){
 
     $args = func_num_args();
 
@@ -111,7 +123,6 @@ class Request
     }
 
     if($this->isPost()){
-
       if(!Csrf::isReferred()){
 
         foreach ($_POST as $key => $value){
@@ -134,8 +145,8 @@ class Request
       if(!$isValid) $data = [];
     }
     
+    //return for data key
     if($args > 0) {
-
       if($this->auth){
         if(!$isValid) {
           $this->isValid = false;
@@ -145,6 +156,8 @@ class Request
       }
       return $this->data = $data[$datakey]?? false;
     }
+
+    //
     if($this->auth){
       if(!$isValid) { 
         $this->isValid = false;
@@ -155,6 +168,28 @@ class Request
     if($this->auth) return $data;
     return $this->data = $data; 
     
+  }
+
+  /**
+   * This method works similarly to data() method, However, 
+   * returns csrf token authentication are never applied
+   *
+   * @param string $datakey when supplied, corresponding value of 
+   * key supplied in request data is returned request data is 
+   *   - If $datakey is supplied, the corresponding value is returned from request data if it exists else it returns false.
+   *   - If $datakey is not supplied, an array of request data is returned.
+   *
+   * @return mixed data
+   */
+  public function prompt(string $datakey = '') {
+
+    $auth = $this->auth;
+    $this->auth = false;
+    $data = $this->data(...func_get_args());
+    $this->auth = $auth;
+
+    return $data;
+
   }
   
   /**
@@ -172,10 +207,10 @@ class Request
   /**
    * Check if current request data has a specific key
    * 
-   * @param $name request method's key name
+   * @param $key request method's key name
    * @param string $method optional [get|post]
    */
-  public function has(string $name = null, string $method = '') {
+  public function has(array|string $key = null, string $method = '') {
 
     $auth = $this->auth;
     $strict = $this->strict;
@@ -201,7 +236,16 @@ class Request
       Csrf::setError('invalid');
     }
 
-    return array_key_exists($name, $data);
+    if(is_array($key)){
+      foreach($key as $name){
+        if(!array_key_exists($name, $data)){
+          return false;
+        }
+      }
+      return true;
+    }
+
+    return array_key_exists($key, $data);
 
   }
 

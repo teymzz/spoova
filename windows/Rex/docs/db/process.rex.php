@@ -27,14 +27,14 @@
 
                             <br><br>
 
-                            <div class="box-full font-menu font-em-d85 bc-white-dd shadow">
+                            <div class="box-full  font-em-d85 bc-white-dd shadow">
 <div class="pxv-10 bc-silver">Example 1 : execute sql query (crud) </div>
                         <pre class="pre-code">
   $db->query('delete * from users')->process();
                         </pre>
                             </div> <br><br>
 
-                            <div class="box-full font-menu font-em-d85 bc-white-dd shadow">
+                            <div class="box-full  font-em-d85 bc-white-dd shadow">
 <div class="pxv-10 bc-silver">Example 2 : non-crud </div>
                         <pre class="pre-code">
   $db->query('CREATE DATABASE IF NOT EXISTS APP')->process();

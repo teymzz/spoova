@@ -8,14 +8,13 @@
     <section class="pxv-10 tutorial mails bc-white">
       <div class="font-em-1d2">
 
-        @lay('build.co.links:tutor_pointer')
+        @lay('build.co.links:tutor_pointer') <br>
 
         <div class="start font-em-d8">
 
           <div class="font-em-1d5 c-orange">Resource Commands</div> <br>  
           
           <div class="resource-intro">
-            <div class="fb-6">Introduction</div>
             <div class="">
               The <code>mkFile()</code> method is the main method that helps in creating files with 
               structurally predefined expected content code format. <br><br>
@@ -57,7 +56,7 @@
 
               </div>
             </div> 
-          </div> <br>
+          </div> 
 
           <div class="foot-note">
             <span class="head">Footnote 1:</span>

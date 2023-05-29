@@ -10,16 +10,16 @@
     <section class="pxv-10 tutorial mails bc-white">
       <div class="font-em-1d2">
 
-        @lay('build.co.links:tutor_pointer')
-
         <div class="start font-em-d8">
 
-          <div class="font-em-1d5 c-orange">Mails</div> <br>  
+          @lay('build.co.links:tutor_pointer') <br>
+
+          <div class="font-em-1d5 c-orange">Mails : authorized</div> <br>  
           
           <div class="mails-intro">
 
               <div class="fb-6">
-                  <div class="font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
+                  <div class=" fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
                   <div class="flex-full midv"> 
                       <span class="bi-check-square mxr-8 c-lime-dd"></span> 
                       checking authorized mails 
@@ -65,7 +65,7 @@
                 </div>
               </div>
 
-              <div class="font-menu font-em-d8 pvs-6">
+              <div class=" font-em-d8 pvs-6">
                   To see more details about its usage check the <a href="@domurl('docs/mails/authorize')"><span class="c-blue-1d">authorize</span></a> page
               </div>
 

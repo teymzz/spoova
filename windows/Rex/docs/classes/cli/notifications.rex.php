@@ -7,14 +7,13 @@
             <section class="pxv-10 tutorial bc-white">
                 <div class="font-em-1d2">
 
-                    @lay('build.co.links:tutor_pointer')
-
                     <div class="start font-em-d8">
+
+                        @lay('build.co.links:tutor_pointer') <br>
 
                         <div class="font-em-1d5 c-orange">Cli Notifications</div> <br>  
                         
                         <div class="helper-classes">
-                            <div class="fb-6">Introduction</div> <br>
                             <div class="">
 
                                 <div class="">
@@ -46,20 +45,20 @@
 
                         <div id="error" class="">
                             <div class="">
-                                <div class="font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
-                                    <div class="flex-full midv"> 
-                                        <span class=" mxr-8 c-lime-dd">
-                                            <span class="numb-box">1.</span>
+                                <div class=" fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
+                                    <div class="flex-full midv c-orange-dd"> 
+                                        <span class="mxr-8">
+                                            <span class="bi-circle-fill"></span>
                                         </span> Cli::error()
                                     </div>
-                                </div> <br>
+                                </div>
                                 <div class="">
                                     This method makes it easier to display error texts. It adds a prefix of "Error:" on any text supplied and returns the prefixed text.
                                     <br><br>
 
                                     <div class="pre-area">
                                         <div class="box-full">
-                                            <div class="pxv-6 bc-off-white"><code>Syntax: error</code></div>
+                                            <div class="pxv-6 bc-off-white">Syntax</div>
                                             <pre class="pre-code">
     Cli::error($text, $indent); 
     <span class="comment no-select">
@@ -77,20 +76,20 @@
 
                         <div id="warning" class="">
                             <div class="">
-                                <div class="font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
-                                    <div class="flex-full midv"> 
-                                        <span class=" mxr-8 c-lime-dd">
-                                            <span class="numb-box">2.</span>
+                                <div class=" fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
+                                    <div class="flex-full midv c-orange-dd"> 
+                                        <span class="mxr-8">
+                                            <span class="bi-circle-fill"></span>
                                         </span> Cli::warning()
                                     </div>
-                                </div> <br>
+                                </div>
                                 <div class="">
                                     This method makes it easier to display warning texts. It adds a prefix of "Warning:" on any text supplied and returns the prefixed text.
                                     <br><br>
 
                                     <div class="pre-area">
                                         <div class="box-full">
-                                            <div class="pxv-6 bc-off-white"><code>Syntax: warning</code></div>
+                                            <div class="pxv-6 bc-off-white">Syntax</div>
                                             <pre class="pre-code">
     Cli::warning($text, $indent); 
     <span class="comment no-select">
@@ -109,20 +108,20 @@
 
                         <div id="caution" class="">
                             <div class="">
-                                <div class="font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
-                                    <div class="flex-full midv"> 
-                                        <span class=" mxr-8 c-lime-dd">
-                                            <span class="numb-box">3.</span>
+                                <div class=" fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
+                                    <div class="flex-full midv c-orange-dd"> 
+                                        <span class="mxr-8">
+                                            <span class="bi-circle-fill"></span>
                                         </span> Cli::caution()
                                     </div>
-                                </div> <br>
+                                </div>
                                 <div class="">
                                     This method makes it easier to display caution texts. It adds a prefix of "CAUTION:" on any text supplied and returns the prefixed text.
                                     <br><br>
 
                                     <div class="pre-area">
                                         <div class="box-full">
-                                            <div class="pxv-6 bc-off-white"><code>Syntax: caution</code></div>
+                                            <div class="pxv-6 bc-off-white">Syntax</div>
                                             <pre class="pre-code">
     Cli::warning($text, $indent); 
     <span class="comment no-select">
@@ -141,20 +140,20 @@
 
                         <div id="notice" class="">
                             <div class="">
-                                <div class="font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
-                                    <div class="flex-full midv"> 
-                                        <span class=" mxr-8 c-lime-dd">
-                                            <span class="numb-box">4.</span>
+                                <div class=" fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
+                                    <div class="flex-full midv c-orange-dd"> 
+                                        <span class="mxr-8">
+                                            <span class="bi-circle-fill"></span>
                                         </span> Cli::notice()
                                     </div>
-                                </div> <br>
+                                </div>
                                 <div class="">
                                     This method makes it easier to display notice texts. It adds a prefix of "NOTICE:" on any text supplied and returns the prefixed text.
                                     <br><br>
 
                                     <div class="pre-area">
                                         <div class="box-full">
-                                            <div class="pxv-6 bc-off-white"><code>Syntax: notice</code></div>
+                                            <div class="pxv-6 bc-off-white">Syntax</div>
                                             <pre class="pre-code">
     Cli::warning($text, $indent); 
     <span class="comment no-select">
@@ -173,20 +172,20 @@
 
                         <div id="success" class="">
                             <div class="">
-                                <div class="font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
-                                    <div class="flex-full midv"> 
-                                        <span class=" mxr-8 c-lime-dd">
-                                            <span class="numb-box">5.</span>
+                                <div class=" fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
+                                    <div class="flex-full midv c-orange-dd"> 
+                                        <span class="mxr-8">
+                                            <span class="bi-circle-fill"></span>
                                         </span> Cli::success()
                                     </div>
-                                </div> <br>
+                                </div>
                                 <div class="">
                                     This method makes it easier to display notice texts. It adds a prefix of "Success:" on any text supplied and returns the prefixed text.
                                     <br><br>
 
                                     <div class="pre-area">
                                         <div class="box-full">
-                                            <div class="pxv-6 bc-off-white"><code>Syntax: success</code></div>
+                                            <div class="pxv-6 bc-off-white">Syntax</div>
                                             <pre class="pre-code">
     Cli::warning($text, $indent); 
     <span class="comment no-select">

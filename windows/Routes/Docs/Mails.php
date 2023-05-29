@@ -1,13 +1,13 @@
 <?php
 
- namespace spoova\mi\windows\Routes\Docs;
+namespace spoova\mi\windows\Routes\Docs;
 
- use spoova\mi\windows\Frames\UserFrame;
+use spoova\mi\windows\Frames\UserFrame;
 
  class Mails extends UserFrame {
      
      function __construct($vars) {
-            
+
             $subject = ucfirst(basename(self::wvm('path')));
             $path = url(window('path'))->first(2);
 

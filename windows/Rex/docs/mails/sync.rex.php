@@ -8,16 +8,16 @@
     <section class="pxv-10 tutorial mails bc-white">
       <div class="font-em-1d2">
 
-        @lay('build.co.links:tutor_pointer')
-
         <div class="start font-em-d8">
 
-          <div class="font-em-1d5 c-orange">Mails</div> <br>  
+          @lay('build.co.links:tutor_pointer') <br>
+
+          <div class="font-em-1d5 c-orange">Mails : sync</div> <br>  
           
           <div class="mails-intro">
 
               <div class="fb-6">
-                <div class="font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
+                <div class=" fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
                   <div class="flex-full midv"> 
                       <span class="bi-update mxr-8 c-lime-dd"></span> Synchronizing mail content 
                   </div>

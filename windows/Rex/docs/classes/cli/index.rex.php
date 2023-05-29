@@ -7,14 +7,13 @@
             <section class="pxv-10 tutorial bc-white">
                 <div class="font-em-1d2">
 
-                    @lay('build.co.links:tutor_pointer')
-
                     <div class="start font-em-d8">
+
+                        @lay('build.co.links:tutor_pointer') <br>
 
                         <div class="font-em-1d5 c-orange">Cli Class</div> <br>  
                         
                         <div class="helper-classes">
-                            <div class="fb-6">Introduction</div> <br>
                             <div class="">
 
                                 <div class="">
@@ -62,7 +61,7 @@
                                                 <li><a href="@route('::colors#bgDanger')" class="c-i">bgDanger</a></li>
                                                 <li><a href="@route('::colors#bgWarn')" class="c-i">bgWarn</a></li>
                                                 <li><a href="@route('::colors#bgAlert')" class="c-i">bgAlert</a></li>
-                                                <li><a href="@route('::colors#'bgValid)" class="c-i">bgValid</a></li>
+                                                <li><a href="@route('::colors#bgValid')" class="c-i">bgValid</a></li>
                                             </ul>
                                         </div>
                                     </div>

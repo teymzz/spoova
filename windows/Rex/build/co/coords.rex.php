@@ -13,7 +13,7 @@
                 </div>
             </a>
         </div>
-        <div class="no-wrap fb-6 c-blue-dd">{{ topic ?? 'SPOOVA FRAME' }}</div>
+        <div class="no-wrap fb-6 c-blue-dd">{{ $topic ?? 'SPOOVA FRAME' }}</div>
     </div>
 
     <div class="flex-full flex-r midv c-blue-dd hide"> 

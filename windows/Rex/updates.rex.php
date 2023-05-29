@@ -13,161 +13,166 @@
                <div class="start">
 
                     <div class="pvs-20">
-                        <div class=" c-orange font-em-2 fb-6 c-dodger-blue-d"> <span class="bi-recycle"></span> Spoova 1.5!</div>
+                        <div class=" c-orange font-em-2 fb-6 c-dry-blue-d"> <span class="bi-recycle font-em-d85"></span> <span class="c-deep-blue fb-9 verdana">S</span><span class="c-dry-blue-dd">poova 2.0!</span></div>
                     
                         <div class="font-em-d8">
-                            New features have been added to version 1.5.0 to improve security and fixing of bugs
+                            New features have been added to version 2.0.0 to improve security and code structure of the framework
                         </div> <br>
 
                         <div class="">
-                            <div class=" fb-9 font-em-1d2 calibri">What's new?</div>
+                            <div class=" fb-9 font-em-1d3 calibri">What's new?</div>
                         </div>
                     </div>
 
                     <div class="bc-white-dd rad-4 flow-hide">
-                        <div class="bc-dodger-blue-dd c-white-d pxv-10 font-em-d8">
+                        <div class="bc-dry-blue-dd c-white-d pxv-10 font-em-d8">
     
-                            <div class="bi"> <span class="bi-circle"></span> Ajax requests </div>  
+                            <div class="bi"> <span class="bi-circle"></span> Improved Resource class </div>  
     
                         </div>
                         <div class="pxv-20 pvb-1  font-em-d8">
 
                             <p>
-                                Special characters are now allowed in ajax urls. Prior to this version, when a request 
-                                data is sent to ajax urls having special characters, while the url may be accessed, there 
-                                could be a data loss due to a bug preventing post data from forwarding the request data. This bug only affected urls 
-                                that have special characters like underscore (_) and hyphen (-). In version 1.5.0, this has been fixed. 
-                                Special characters are now allowed in ajax urls.  
+                                Resource class is mainly used for importing static files through previously specified urls. 
+                                It is also capable of storing urls as groups which can be imported later using the resource 
+                                <code>import()</code> method or the <code>@(@res())@</code> directive. While a group can be easily 
+                                created for static urls, in cases where a file is required in different groups, it might be become harder 
+                                to manage a single url. A new addition makes this easier by setting unique names for each file which can be 
+                                required later. Learn more from <a href="@domurl('version/2.0/resource')">here</a>
+                            </p>
+                            
+                        </div>
+                    </div> <br> 
+
+                    <div class="bc-white-dd rad-4 flow-hide">
+                        <div class="bc-dry-blue-dd c-white-d pxv-10 font-em-d8">
+    
+                            <div class="bi"> <span class="bi-circle"></span> Live server improved! </div>  
+    
+                        </div>
+                        <div class="pxv-20 pvb-1  font-em-d8">
+
+                            <p>
+                                The integerated live server has been massively improved. Previously to version 2.0, live server uses a great amout of resources
+                                from the cpu. The effect of this is that the performace level of the device being used reduces in 
+                                a very short period of time and browsers could crash often. Version 2.0 addresses this issue and the live server is now very efficient within the framework. 
+                                With this new improvement, developers will now be able to run the live server for a longer period of time without being worried
+                                about perfomace issue. 
+                            </p>
+                            
+                        </div>
+                    </div> <br> 
+
+                    <div class="bc-white-dd rad-4 flow-hide">
+                        <div class="bc-dry-blue-dd c-white-d pxv-10 font-em-d8">
+    
+                            <div class="bi"> <span class="bi-circle"></span> Improved shutter controls </div>  
+    
+                        </div>
+                        <div class="pxv-20 pvb-1  font-em-d8">
+
+                            <p>
+                                Spoova has improved its window urls to support dotted strings which was not supported by the 
+                                shutter methods in the previous updates because dots were treated as slashes. The window function used by shutter methods have also been improved 
+                                reflect these changes. The effect of these updates results in an improved url structure and management. It also helps to reduce visual noise when 
+                                when working with shutter methods. Learn more from <a href="@domurl('version/2.0/urls')">here</a>
+                            </p>
+                            
+                        </div>
+                    </div> <br> 
+
+                    <div class="bc-white-dd rad-4 flow-hide">
+                        <div class="bc-dry-blue-dd c-white-d pxv-10 font-em-d8">
+    
+                            <div class="bi"> <span class="bi-circle"></span> Automatic Dependency injection Support </div>  
+    
+                        </div>
+                        <div class="pxv-20 pvb-1  font-em-d8">
+
+                            <p>
+                              In the previous updates, passing dependencies as arguments into window methods through shutters requires a more difficult approach. However, spoova has updated 
+                              its window methods to allow for automatic dependency injection. This new feature is added in order to reduce lines of code and to help sanitize the entire code 
+                              structure. More details are available <a href="@domurl('version/2.0/shutter-calls')">here</a> 
+                            </p>
+                            
+                        </div>
+                    </div> <br> 
+
+                    <div class="bc-white-dd rad-4 flow-hide">
+                        <div class="bc-dry-blue-dd c-white-d pxv-10 font-em-d8">
+    
+                            <div class="bi"> <span class="bi-circle"></span> Improved compiler engine </div>  
+    
+                        </div>
+                        <div class="pxv-20 pvb-1  font-em-d8">
+
+                            <p>
+                                The compiler function was handled as a detached component from the compiler engine in the previous versions of the frameworks. The effect of this detachment 
+                                is the function can only be used once within the application. However, this effect was greatly felt with the introduction of bond components which requires a 
+                                multiple use case for the compiler. In spoova version 2.0, the compiler function has been improved to allow for more use cases. The 2.0 version also introduces 
+                                more compiler functions that determines how templates are rendered. More details are provided 
+                                <a href="@domurl('version/2.0/compiler-engine')">here</a>
+                            </p>
+                            
+                        </div>
+                    </div> <br> 
+
+                    <div class="bc-white-dd rad-4 flow-hide">
+                        <div class="bc-dry-blue-dd c-white-d pxv-10 font-em-d8">
+    
+                            <div class="bi"> <span class="bi-circle"></span> Introduction of bond components </div>  
+    
+                        </div>
+                        <div class="pxv-20 pvb-1  font-em-d8">
+
+                            <p>
+                                Bond components are components that helps to render template engines on a live state. They are entirely different from the live server used in development. 
+                                These components are build upon existing template engine but they are injected as separate live templates into template files using live template directives. 
+                                The entire requests are handled with event handlers which determines how the template files are requested, rendered and managed. 
+                                Bond components are still on a beta phase and more information is provided <a href="@domurl('version/2.0/bond-components')">here</a>.  
                             </p>
                             
                         </div>
                     </div> <br>
 
-                    <div class="bc-white-dd rad-4 flow-hide">
-                        <div class="bc-dodger-blue-dd c-white-d pxv-10 font-em-d8">
-    
-                            <div class="bi"> <span class="bi-circle"></span> Map files </div>  
-    
-                        </div>
-                        <div class="pxv-20 pvb-1  font-em-d8">
-
-                            <div>
-                                Map files are used to protect route entry file names under a standard logic to ensure that entry files are not exposed to the public. 
-                                In version 1.5.0, the map file have been modified to allow two new features to further strengthen the security of these files.
-                                <br><br>
-                                <div class="list-free pxs-1">
-                                    <div class="mox bc-silver pxv-4 rad-5">
-                                        
-                                        <div class="pxv-10">
-                                           <span class="bi-lock"></span> File protection #1<br>
-                                        </div>
-                                    
-                                        <div class="pre-area">
-                                            <div class="pxv-10 bc-silver-d">windows/Routes/.map</div>
-                                            <pre class="pre-code">
-    {
-        "*": "Mi\\"
-    }
-                                            </pre>
-                                        </div>
-
-                                        <div class="foot-note pxv-10">
-                                            The addition of map files is to protect standard logic entry point names by selecting a custom subdirectory where route files are saved just by a single declaration. 
-                                            In the sample above, the <code>".map"</code> file will direct the standard logic to look for route files 
-                                            within the <code>windows/Routes/Mi</code> directory. For example, rather than for a url <code>http://localhost/home</code> to call the main route <code>"Home"</code>, 
-                                            from <code>windows/Routes</code> directory, it will be called from <code>windows/Routes/Mi</code> directory. This makes it easier to protect standard logic entry files path.
-                                            We can also fake file names if the double slash is not added to the value, that is "Mi" instead of "Mi\\".
-                                        </div>
-                                    </div> <br>
-                                </div>
-                                <div class="list-free pxs-1">
-                                    <div class="mox bc-silver pxv-4 rad-5">
-                                        
-                                        <div class="pxv-10">
-                                           <span class="bi-arrow-clockwise"></span> Entry inverse #2<br>
-                                        </div>
-                                    
-                                        <div class="pre-area">
-                                            <div class="pxv-10 bc-silver-d">windows/Routes/.map</div>
-                                            <pre class="pre-code">
-    {
-        ":root": {
-
-            "!home" => 'Home'
-
-        }
-    }
-                                            </pre>
-                                        </div>
-
-                                        <div class="foot-note pxv-10">
-                                            By default under standard logic, the url entry point "home" or "Home" means the same thing as they forward the url to a route file 
-                                            "windows/Routes/Home" file to call. This is because the lowercase or sentence case is accepted. However, when an entry point file name 
-                                            which does not follow this pattern is called (e.g "HOme", "hoMe") is called, a 404 response is returned. We can however lessen this 
-                                            strictness using a map file. In the code above, the ":root" defines a set of entry names and the route files they call. Using an inverse 
-                                            operator on the entry point name, if known, will ensure that such route allows the entry point to have any form of text cases (e.g uppercase, camelcase, etc.). 
-                                        </div>
-                                    </div> <br>
-                                </div>
-                            </div>
-                            
-                        </div>
-                    </div><br>
-
-                    <div class="bc-white-dd rad-4 flow-hide">
-                        <div class="bc-dodger-blue-dd c-white-d pxv-10 font-em-d8">
-    
-                            <div class="bi"> <span class="bi-circle"></span> Live server </div>  
-    
-                        </div>
-                        <div class="pxv-20 pvb-1  font-em-d8">
-
-                            <div>
-                                When writing codes on live development state with the use of live server, the error notifications 
-                                are sometimes glitchy. This effect was due to an entrace animation effect which has now been removed. 
-                                The live server glitchy error notification bug has been fixed which now make the error notices look more stable for developers.
-                            </div>
-                            
-                        </div> <br>
-                    </div> <br>
                     
                     <div class="bc-white-dd rad-4 flow-hide">
-                        <div class="bc-dodger-blue-dd c-white-d pxv-10 font-em-d8">
+                        <div class="bc-dry-blue-dd c-white-d pxv-10 font-em-d8">
     
-                            <div class="bi"> <span class="bi-grid"></span> Template on the go </div>  
+                            <div class="bi"> <span class="bi-circle"></span> Updated Model </div>  
     
                         </div>
                         <div class="pxv-20 pvb-1  font-em-d8">
 
                             <p>
-                                Template on the go was a feature added to make it easier to create template files easily with 
-                                integrated live server. When such rex templates are generated, they come with the basic <code>@(live)@</code> 
-                                directive which keeps them on a live state mode. Some bugs were removed when the template is generated. 
+                              New methods have been added to Model and Form classes to help improve database communication. 
+                              These methods are <code>Model->id()</code>, <code>Model->insertID()</code>, <code>Model->connection()</code>, 
+                              <code>Form::id()</code> and <code>Form::connection()</code>. Details of these methods and their functions are provided 
+                              <a href="@domurl('version/2.0/models')">here</a>.
                             </p>
                             
                         </div>
-                    </div> <br>
+                    </div> <br> 
 
+                    
                     <div class="bc-white-dd rad-4 flow-hide">
-                        <div class="bc-red-dd c-white-d pxv-10 font-em-d8">
+                        <div class="bc-dry-blue-dd c-white-d pxv-10 font-em-d8">
     
-                            <div class="bi"> <span class="bi-circle"></span> Deprecated! </div>  
+                            <div class="bi"> <span class="bi-circle"></span> Other updates </div>  
     
                         </div>
                         <div class="pxv-20 pvb-1  font-em-d8">
 
-                            <div>
-                                Prior to the intial release, some resource methods such as <code>Res::get()</code>, <code>Res::gett()</code>, 
-                                <code>Res::post()</code> and <code>Res::postt()</code> were used as test cases to render routes before the wvm 
-                                logics were introduced. With the <code>wvm</code> 
-                                logics, we find no use for this methods any more because routes are now being handled by a server file and the 
-                                entire route is being managed by a shutter system. It is advised to desist from the use of this methods as they 
-                                may be removed at any point in time.
-                            </div>
+                            <p>
+                              Some classes and helper functions have been remodified. You can learn more about this from <a href="@domurl('version/2.0/others')">here</a>. 
+                            </p>
                             
-                        </div> <br>
-                    </div> <br>
+                        </div>
+                    </div> <br> 
 
+                    <div class="font-em-d8 pvs-10">
+                        For more details on spoova versions, you can track the spoova version updates from <a href="@domurl('version')" class="c-olive ch-dodger-blue-d">here</a>.
+                    </div> <br> 
 
                 </div>
            </div>

@@ -37,7 +37,7 @@ class Ajax {
     
     if(func_num_args() > 0) {
       
-      if($request !== 'XMLHttpRequest'){
+      if(strtolower($request) !== 'xmlhttprequest'){
 
         $emessage = $emessage === true ? 'invalid request method' : $emessage;                         
         echo (self::response)($ecode, $emessage);
@@ -66,7 +66,7 @@ class Ajax {
       header('content-type:'.$type);
     }
 
-    return ($request === 'XMLHttpRequest');
+    return (strtolower($request) === 'xmlhttprequest');
   }
 
   /**

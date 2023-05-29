@@ -153,7 +153,7 @@ class ErrorHandler extends Exception{
 
         $res = '
             <script x-debug="res-js" src="'.Domurl("res/main/js/local/debug/debug.js").'"></script>      
-            <link x-debug="res-css" rel="stylesheet"  href="'.rtrim(Domurl("res/main/css/res.css")).'" />        
+            <link x-debug="res-css" rel="stylesheet"  href="'.rtrim(Domurl("res/main/css/local/debug/res.css")).'" />        
         ';
         if(self::$err_displayed == self::$err_displays) return;
         if(self::$addedRes) $res = '';

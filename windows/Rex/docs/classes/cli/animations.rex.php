@@ -7,21 +7,20 @@
             <section class="pxv-10 tutorial bc-white">
                 <div class="font-em-1d2">
 
-                    @lay('build.co.links:tutor_pointer')
-
                     <div class="start font-em-d8">
+
+                        @lay('build.co.links:tutor_pointer') <br>
 
                         <div class="font-em-1d5 c-orange">Cli Animations</div> <br>  
                         
                         <div class="helper-classes">
-                            <div class="fb-6">Introduction</div> <br>
                             <div class="">
 
                                 <div class="">
 
                                     <p>
-                                        Notifications are used to keep users aware of the current state of an executed command. They help users to have a clearer understanding 
-                                        pf what is going on. For example, there could be notifications for when a code successfully executes or when an error is encountered. 
+                                        Notifications are used to keep users aware of the current state of an executed command. They help users to have a clear understanding 
+                                        of what is going on. For example, there could be notifications for when a code successfully executes or when an error is encountered. 
                                         The Cli class provides some useful methods for setting responses. These method have a predefined text prefixes assigned to messages. The 
                                         text prefixes also use similarly related color codes to quickly call console users to awareness. The following are notification related methods. 
                                     </p>
@@ -46,17 +45,17 @@
                                     </div>
                                 
                             </div> 
-                        </div> <br>
+                        </div> 
 
                         <div id="textYield" class="">
                             <div class="">
-                                <div class="font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
-                                    <div class="flex-full midv"> 
-                                        <span class=" mxr-8 c-lime-dd">
-                                            <span class="numb-box">1.</span>
+                                <div class=" fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
+                                    <div class="flex-full midv c-orange-dd"> 
+                                        <span class="mxr-8">
+                                            <span class="bi-circle-fill"></span>
                                         </span> Cli::textYield()
                                     </div>
-                                </div> <br>
+                                </div>
                                 <div class="">
                                     This method is used to yield a particular text. Yielding here means that text will first be printed while 
                                     a loading animation will run after.
@@ -64,7 +63,7 @@
                                     
                                     <div class="pre-area">
                                         <div class="box-full">
-                                            <div class="pxv-6 bc-off-white"><code>Syntax: textYield</code></div>
+                                            <div class="pxv-6 bc-off-white">Syntax</div>
                                             <pre class="pre-code">
     Cli::textYield($text, $yield, $pause);
     <span>
@@ -86,20 +85,20 @@
 
                         <div id="play" class="">
                             <div class="">
-                                <div class="font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
-                                    <div class="flex-full midv"> 
-                                        <span class=" mxr-8 c-lime-dd">
-                                            <span class="numb-box">2.</span>
+                                <div class=" fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
+                                    <div class="flex-full midv c-orange-dd"> 
+                                        <span class="mxr-8">
+                                            <span class="bi-circle-fill"></span>
                                         </span> Cli::play()
                                     </div>
-                                </div> <br>
+                                </div>
                                 <div class="">
                                 This method is used to run animations
                                 <br><br>
 
                             <div class="pre-area">
                                 <div class="box-full">
-                                    <div class="pxv-6 bc-off-white"><code>Syntax: play</code></div>
+                                    <div class="pxv-6 bc-off-white">Syntax</div>
                                     <pre class="pre-code">
     Cli::play($yield, $indent, $message, $break, $pause); 
     <span class="comment no-select">
@@ -121,20 +120,20 @@
 
                         <div id="pause" class="">
                             <div class="">
-                                <div class="font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
-                                    <div class="flex-full midv"> 
-                                        <span class=" mxr-8 c-lime-dd">
-                                            <span class="numb-box">3.</span>
+                                <div class=" fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
+                                    <div class="flex-full midv c-orange-dd"> 
+                                        <span class="mxr-8">
+                                            <span class="bi-circle-fill"></span>
                                         </span> Cli::pause() or Cli::wait()
                                     </div>
-                                </div> <br>
+                                </div>
                                 <div class="">
                                 These method are used to set delay before an operation is executed.
                                 <br><br>
 
                             <div class="pre-area">
                                 <div class="box-full">
-                                    <div class="pxv-6 bc-off-white"><code>Syntax: pause</code></div>
+                                    <div class="pxv-6 bc-off-white">Syntax</div>
                                     <pre class="pre-code">
     Cli::pause($seconds); 
     <span class="comment no-select">
@@ -150,22 +149,22 @@
 
                         <div id="animeTest" class="">
                             <div class="">
-                                <div class="font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
-                                    <div class="flex-full midv"> 
-                                        <span class=" mxr-8 c-lime-dd">
-                                            <span class="numb-box">4.</span>
+                                <div class=" fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
+                                    <div class="flex-full midv c-orange-dd"> 
+                                        <span class="mxr-8">
+                                            <span class="bi-circle-fill"></span>
                                         </span> Cli::animeTest()
                                     </div>
-                                </div> <br>
+                                </div>
                                 <div class="">
                                 The <code>animeTest()</code> method is used to test the response of animations
                                 <br><br>
 
                             <div class="pre-area">
                                 <div class="box-full">
-                                    <div class="pxv-6 bc-off-white"><code>Example: animeTest</code></div>
+                                    <div class="pxv-6 bc-off-white">Example: animeTest</div>
                                     <pre class="pre-code">
-    yield from Cli::animeText(); <span class="comment no-select">//tries to run animation using a long (or heavy) loading strategy.</span>
+  yield from Cli::animeText(); <span class="comment no-select">//tries to run animation using a long (or heavy) loading strategy.</span>
                                     </pre>
                                 </div>
                             </div>  
@@ -176,20 +175,20 @@
 
                         <div id="animate" class="">
                             <div class="">
-                                <div class="font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
-                                    <div class="flex-full midv"> 
-                                        <span class=" mxr-8 c-lime-dd">
-                                            <span class="numb-box">5.</span>
+                                <div class=" fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
+                                    <div class="flex-full midv c-orange-dd"> 
+                                        <span class="mxr-8">
+                                            <span class="bi-circle-fill"></span>
                                         </span> Cli::animate()
                                     </div>
-                                </div> <br>
+                                </div>
                                 <div class="">
                                 The <code>animate()</code> method is used to view the different loading animations and their behaviour when used.
                                 <br><br>
 
                             <div class="pre-area">
                                 <div class="box-full">
-                                    <div class="pxv-6 bc-off-white"><code>Syntax: animeTest</code></div>
+                                    <div class="pxv-6 bc-off-white">Syntax</code></div>
                                     <pre class="pre-code">
     Cli::animate($yield, $delay); 
     <span class="comment no-select">
@@ -208,20 +207,20 @@
 
                         <div id="endAnime" class="">
                             <div class="">
-                                <div class="font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
-                                    <div class="flex-full midv"> 
-                                        <span class=" mxr-8 c-lime-dd">
-                                            <span class="numb-box">6.</span>
+                                <div class=" fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
+                                    <div class="flex-full midv c-orange-dd"> 
+                                        <span class="mxr-8">
+                                            <span class="bi-circle-fill"></span>
                                         </span> Cli::endAnime()
                                     </div>
-                                </div> <br>
+                                </div>
                                 <div class="">
                                 The <code>endAnime()</code> method is designed to print a text after animation is completed.
                                 <br><br>
 
                             <div class="pre-area">
                                 <div class="box-full">
-                                    <div class="pxv-6 bc-off-white"><code>Syntax: endAnime</code></div>
+                                    <div class="pxv-6 bc-off-white">Syntax</div>
                                     <pre class="pre-code">
     Cli::endAnime($pause, $break1, string $message, $break2, $indent); 
     <span class="comment no-select">
@@ -243,13 +242,13 @@
 
                         <div id="loadTime" class="">
                             <div class="">
-                                <div class="font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
-                                    <div class="flex-full midv"> 
-                                         <span class=" mxr-8 c-lime-dd">
-                                           <span class="numb-box">7.</span>
+                                <div class=" fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
+                                    <div class="flex-full midv c-orange-dd"> 
+                                         <span class="mxr-8">
+                                           <span class="bi-circle-fill"></span>
                                         </span> Cli::loadTime()
                                     </div>
-                                </div> <br>
+                                </div>
                                 <div class="">
                                 This method is designed to increase or decrease the amount of time needed for an animation to successfully complete. It can be 
                                 declared before the <code>Cli::runAnime()</code> method is called or at any point before a <code>yield</code> generator function is 
@@ -258,7 +257,7 @@
 
                             <div class="pre-area">
                                 <div class="box-full">
-                                    <div class="pxv-6 bc-off-white"><code>Syntax: loadTime</code></div>
+                                    <div class="pxv-6 bc-off-white">Syntax</code></div>
                                     <pre class="pre-code">
     Cli::loadTime($time); 
     <span class="comment no-select">
@@ -276,13 +275,13 @@
 
                         <div id="runAnime" class="">
                             <div class="">
-                                <div class="font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
-                                    <div class="flex-full midv"> 
-                                        <span class=" mxr-8 c-lime-dd">
-                                            <span class="numb-box">8.</span>
+                                <div class=" fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
+                                    <div class="flex-full midv c-orange-dd"> 
+                                        <span class="mxr-8">
+                                            <span class="bi-circle-fill"></span>
                                         </span> Cli::runAnime()
                                     </div>
-                                </div> <br>
+                                </div>
                                 <div class="">
                                 This method is specially designed to run animations based on whether a function or public method is iterable. It uses special 
                                 syntaxes to determine whether an iterable item is function related or object related, making it possible to run animations from functions 
@@ -291,7 +290,7 @@
 
                             <div class="pre-area">
                                 <div class="box-full">
-                                    <div class="pxv-6 bc-off-white"><code>Syntax: runAnime</code></div>
+                                    <div class="pxv-6 bc-off-white">Syntax</div>
                                     <pre class="pre-code">
     Cli::runAnime($function, $callback); 
     <span class="comment no-select">
@@ -306,7 +305,7 @@
 
                             <div class="pre-area">
                                 <div class="box-full">
-                                    <div class="pxv-6 bc-off-white"><code>Example: functions without arguments</code></div>
+                                    <div class="pxv-6 bc-off-white">Example: functions without arguments</div>
                                     <pre class="pre-code">
     function animate(){
 
@@ -321,7 +320,7 @@
 
                             <div class="pre-area">
                                 <div class="box-full">
-                                    <div class="pxv-6 bc-off-white"><code>Example: function with arguments</code></div>
+                                    <div class="pxv-6 bc-off-white">Example: function with arguments</div>
                                     <pre class="pre-code">
     function animate($text){
 
@@ -338,7 +337,7 @@
 
                             <div class="pre-area">
                                 <div class="box-full">
-                                    <div class="pxv-6 bc-off-white"><code>Example: Class without arguments</code></div>
+                                    <div class="pxv-6 bc-off-white">Example: Class without arguments</div>
                                     <pre class="pre-code">
     class Anime($text){
 
@@ -357,7 +356,7 @@
 
                             <div class="pre-area">
                                 <div class="box-full">
-                                    <div class="pxv-6 bc-off-white"><code>Example: Class with arguments</code></div>
+                                    <div class="pxv-6 bc-off-white">Example: Class with arguments</div>
                                     <pre class="pre-code">
     class Anime($text){
 
@@ -378,7 +377,7 @@
 
                             <div class="pre-area">
                                 <div class="box-full">
-                                    <div class="pxv-6 bc-off-white"><code>Example: Running animation in classes</code></div>
+                                    <div class="pxv-6 bc-off-white">Example: Running animation in classes</div>
                                     <pre class="pre-code">
     class Anime($text){
 
@@ -406,7 +405,7 @@
 
                             <div class="pre-area">
                                 <div class="box-full">
-                                    <div class="pxv-6 bc-off-white"><code>Example: Stopping animations</code></div>
+                                    <div class="pxv-6 bc-off-white">Example: Stopping animations</div>
                                     <pre class="pre-code">
     class Anime($text){
 
@@ -447,13 +446,13 @@
 
                         <div id="loadType" class="">
                             <div class="">
-                                <div class="font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
-                                    <div class="flex-full midv"> 
-                                         <span class=" mxr-8 c-lime-dd">
-                                           <span class="numb-box">9.</span>
+                                <div class=" fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
+                                    <div class="flex-full midv c-orange-dd"> 
+                                         <span class="mxr-8">
+                                           <span class="bi-circle-fill"></span>
                                         </span> Cli::loadType()
                                     </div>
-                                </div> <br>
+                                </div>
                                 <div class="">
                                 This method selects the type of animation to be used. In spoova Cli, there are currently 10 types of animations which includes 
                                 <code>normal</code>, <code>roller</code>, <code>dotted</code>, <code>arrows</code>, <code>forward</code>, <code>timer</code>, 
@@ -463,7 +462,7 @@
 
                             <div class="pre-area">
                                 <div class="box-full">
-                                    <div class="pxv-6 bc-off-white"><code>Syntax: loadType</code></div>
+                                    <div class="pxv-6 bc-off-white">Syntax</div>
                                     <pre class="pre-code">
     Cli::loadTime($type); 
     <span class="comment no-select">

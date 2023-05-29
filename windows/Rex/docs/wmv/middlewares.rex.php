@@ -9,9 +9,9 @@
         <section class="pxv-10 tutorial bc-white">
             <div class="font-em-1d2">
 
-                @lay('build.co.links:tutor_pointer')
+                <div class="start font-em-d87">
 
-                <div class="start font-em-d85">
+                    @lay('build.co.links:tutor_pointer') <br>
 
                     <div class="font-em-1d5 c-orange">Middlewares</div> <br>  
         
@@ -86,7 +86,7 @@
                                         </div>
                                     </div> <br>
 
-                                    <div class="font-menu mvt-10">
+                                    <div class=" mvt-10">
                                     Using the example above as reference, if the url <code>docs/user/settings</code> or 
                                     <code>docs/user/profiles</code> is visited, the text <code>"method applied"</code> 
                                     will be printed on the page before the content of the page itself is rendered. 
@@ -165,14 +165,14 @@
                                         },
                 ]);
 
-            SELF::CALL([
+            SELF::CALL($this, [
                 
                 'home/user/settings' => 'root',
                 'home/user/profiles' => 'profiles',
 
                 ], false);
 
-            SELF::BASECALL([
+            SELF::BASECALL($this, [
                 
                 'home/user' => 'user',
                 'home/room' => 'room',
@@ -236,7 +236,7 @@
                                         <div class="font-em-1d2">
                                             <div class="no-select bc-silver-d pxv-10">Sample:  SELF::ONCALL</div>
   <pre class="pre-code">
-  SELF::CALL([
+  SELF::CALL($this, [
     
     'home/user/profiles' => 'profiles',
     'home/user/settings' => 'settings',

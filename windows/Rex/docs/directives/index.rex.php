@@ -131,7 +131,7 @@
           
           <div id="meta" class=""> 
               <br>
-              <div class="font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
+              <div class=" fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
                 <div class="flex-full">1. @meta</div>
               </div> <br>
               
@@ -145,7 +145,7 @@
                 class from <a href="@domUrl('docs/classes/meta')">here</a>.
                 
                 <br><br>
-                <div class="font-menu mvb-6">The example below shows how the meta 
+                <div class=" mvb-6">The example below shows how the meta 
                 directive can be applied in template files</div>
 
                 <!-- code line started -->
@@ -165,7 +165,7 @@
           <!---------------------------- res -->
           <div id="res" class=""> 
               <br>
-              <div class="font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
+              <div class=" fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
                 <div class="flex-full">2. @(res)@</div>
               </div> <br>
               
@@ -180,7 +180,7 @@
                 The <code>@(Res::import)@</code> works similarly as the <code>Res::import()</code> method 
                 while the <code>@(Res())@</code> is used to resolve static files. 
 
-                <div class="font-menu mvb-6">The example below shows how the <code>@(Res())@</code> 
+                <div class=" mvb-6">The example below shows how the <code>@(Res())@</code> 
                 directive can be applied in template files</div>
 
                 <!-- code line started -->
@@ -202,7 +202,7 @@
           <!---------------------------- src -->
           <div id="src" class=""> 
               <br>
-              <div class="font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
+              <div class=" fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
                 <div class="flex-full">3. @(src)@ / @(ress)@</div>
               </div> <br>
               
@@ -229,7 +229,7 @@
           <!-------------------------------- import -->
           <div id="import" class=""> 
               <br>
-              <div class="font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
+              <div class=" fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
                 <div class="flex-full">4. @import</div>
               </div> <br>
               
@@ -242,7 +242,7 @@
                   <li>live server <code>@(import('::watch'))@</code></li>
                 </ul>
                 
-                <div class="font-menu mvb-6">The example below shows how the import 
+                <div class=" mvb-6">The example below shows how the import 
                 directive can be applied in template files</div>
 
                 <!-- code line started -->
@@ -265,7 +265,7 @@
           <!---------------------------------- live -->
           <div id="live" class=""> 
               <br>
-              <div class="font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
+              <div class=" fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
                 <div class="flex-full">5. @(live)@ / @(live())@</div>
               </div> <br>
               
@@ -280,7 +280,7 @@
           <!--------------------------------- domurl -->
           <div id="domurl" class=""> 
             <br>
-            <div class="font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
+            <div class=" fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
               <div class="flex-full">6. @(domurl)@</div>
             </div> <br>
             
@@ -294,7 +294,7 @@
                 <li>desktop - mobile device developments</li>
               </ul> 
               
-              <div class="font-menu mvb-6">The example below shows how the import 
+              <div class=" mvb-6">The example below shows how the import 
               directive can be applied in template files</div>
 
               <!-- code line started -->
@@ -318,7 +318,7 @@
           <!-------------------------------- placeholders -->
           <div id="placeholders" class=""> 
               <br>
-              <div class="font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
+              <div class=" fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
                 <div class="flex-full">7.placeholders @({{}})@ </div>
               </div> <br>
               
@@ -328,7 +328,7 @@
                two opening <code><span>{</span>{</code></code>  curly brackets and two closing curly barckets <code><span>}</span>}</code> 
               
              
-                <div class="font-menu mvb-6">
+                <div class=" mvb-6">
                   The example below shows how placeholders can be used. 
                   Returned data type can be ony within the range of integers, floats, strings or bool, which literally translates as 
                   integers or null. Returned data type cannot be arrays, functions or objects.
@@ -359,7 +359,7 @@
           <!-------------------------------- placeholders -->
           <div id="php" class=""> 
               <br>
-              <div class="font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
+              <div class=" fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
                 <div class="flex-full">8. @(php)@</div>
               </div> <br>
               
@@ -369,7 +369,7 @@
                a raw php code.
               
              
-                <div class="font-menu mvb-6">
+                <div class=" mvb-6">
                   The example below shows how the <code>@php:</code> directives can be used. 
                 </div>
 
@@ -396,7 +396,7 @@
           <!------------------------------- assets -->
           <div id="assets" class=""> 
             <br>
-            <div class="font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
+            <div class=" fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
               <div class="flex-full">9. @(assets)@</div>
             </div> <br>
             
@@ -406,7 +406,7 @@
               to load grouped static files just like the <code>@(Res())@</code> method.
               <br><br>
 
-              <div class="font-menu mvb-6">The example below shows how the directive can be applied in template files</div>
+              <div class=" mvb-6">The example below shows how the directive can be applied in template files</div>
 
               <!-- code line started -->
               <div class="pre-area shadow">
@@ -430,7 +430,7 @@
           <!------------------------------- mapp -->
           <div id="mapp" class=""> 
             <br>
-            <div class="font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
+            <div class=" fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
               <div class="flex-full">10. @(mapp)@</div>
             </div> <br>
             
@@ -439,7 +439,7 @@
               static resources main folder (i.e res/main) as its base path
               <br><br>
 
-              <div class="font-menu mvb-6">The example below shows how the directive can be applied in template files</div>
+              <div class=" mvb-6">The example below shows how the directive can be applied in template files</div>
 
               <!-- code line started -->
               <div class="pre-area shadow">
@@ -458,7 +458,7 @@
           <!------------------------------- mapp -->
           <div id="mass" class=""> 
             <br>
-            <div class="font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
+            <div class=" fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
               <div class="flex-full">11. @(mass)@</div>
             </div> <br>
             
@@ -467,7 +467,7 @@
               static resources main folder (i.e res/assets) as its base path
               <br><br>
 
-              <div class="font-menu mvb-6">The example below shows how the directive can be applied in template files</div>
+              <div class=" mvb-6">The example below shows how the directive can be applied in template files</div>
 
               <!-- code line started -->
               <div class="pre-area shadow">
@@ -486,7 +486,7 @@
           <!-------------------------------- images -->
           <div id="images" class=""> 
             <br>
-            <div class="font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
+            <div class=" fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
               <div class="flex-full">12. @(images)@</div>
             </div> <br>
             
@@ -497,7 +497,7 @@
               can also be applied.
               <br><br>
 
-              <div class="font-menu mvb-6">The example below shows how the directive can be applied in template files</div>
+              <div class=" mvb-6">The example below shows how the directive can be applied in template files</div>
 
               <!-- code line started -->
               <div class="pre-area shadow">
@@ -516,7 +516,7 @@
           <!---------------------------------- include -->
           <div id="include" class=""> 
               <br>
-              <div class="font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
+              <div class=" fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
                 <div class="flex-full">13. @(include)@</div>
               </div> <br>
               
@@ -526,7 +526,7 @@
                 then including that file will be as follows:
                 <br><br>
 
-                <div class="font-menu mvb-6">The example below shows how the directive can be applied in template files</div>
+                <div class=" mvb-6">The example below shows how the directive can be applied in template files</div>
 
                 <!-- code line started -->
                 <div class="pre-area shadow">
@@ -545,7 +545,7 @@
           <!-------------------------------- template -->
           <div id="template" class=""> 
             <br>
-            <div class="font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
+            <div class=" fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
               <div class="flex-full">14. @(template())@</div>
             </div> <br>
             
@@ -556,12 +556,12 @@
               directive. This is explained by using file1.rex.php and file2.rex.php below as examples.
               <br><br>
 
-              <div class="font-menu mvb-6">The example below shows how the <code>@(template)@</code> and <code>@(yield)@</code> directives can be applied in template files</div>
+              <div class=" mvb-6">The example below shows how the <code>@(template)@</code> and <code>@(yield)@</code> directives can be applied in template files</div>
 
               
               <!-- code line started -->
               <div class="pre-area shadow">
-                <div class="pxv-6 bc-silver font-menu mvb-6">file1.rex.php</div>
+                <div class="pxv-6 bc-silver  mvb-6">file1.rex.php</div>
                 <pre class="pre-code">
   <?= to_lgts(
     '
@@ -592,7 +592,7 @@
             
             <!-- code line started -->
             <div class="pre-area shadow">
-              <div class="pxv-6 bc-silver font-menu mvb-6">file2.rex.php</div>
+              <div class="pxv-6 bc-silver  mvb-6">file2.rex.php</div>
               
               <pre class="pre-code">
   <span class="comment no-select">// include "file.php" from the document root.</span>
@@ -606,7 +606,7 @@
             </div> <br>
             <!-- code line ended -->
 
-            <div class="font-menu mvt-10">file2.rex.php will be resolved to </div>
+            <div class=" mvt-10">file2.rex.php will be resolved to </div>
 
             <!-- code line started -->
             <div class="pre-area shadow mvt-10">
@@ -638,7 +638,7 @@
             <!-- code line ended -->
 
 
-            <div class="font-menu mvt-6">Note: when building template files, 
+            <div class=" mvt-6">Note: when building template files, 
               the template files should be separated from the real contents. Templates by 
               default are loaded from the <code>windows\Rex</code> folder. 
               It is advisable that the real content may be located within the
@@ -670,7 +670,7 @@
           <!-- title -->
           <div id="title" class=""> 
               <br>
-              <div class="font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
+              <div class=" fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
                 <div class="flex-full">15. @title</div>
               </div> <br>
               
@@ -681,7 +681,7 @@
                 it to the current page.
                 
                 <br><br>
-                <div class="font-menu mvb-6">The example below shows how the title 
+                <div class=" mvb-6">The example below shows how the title 
                 directive can be applied in template files</div>
 
                 <!-- code line started -->
@@ -706,13 +706,13 @@
           <!------------------------------- attr -->
           <div id="attr" class=""> 
             <br>
-            <div class="font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
+            <div class=" fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
               <div class="flex-full">16. @(attr())@</div>
             </div> <br>
             
             <div>
 
-              <div class="font-menu font-em-d9 helvetica">
+              <div class=" font-em-d9 helvetica">
                 The <code>@(attr:)@</code> directive is used to store a line of code within a template file. 
                 Once the line is stored, then it can be imported back within the template file. This directive works 
                 in pairs. While the <code>@(&lt;x-attr:/&gt; )@</code> directive is used to store the text, the 
@@ -722,12 +722,12 @@
               </div>
               <br>
 
-              <div class="font-menu mvb-6">The example below shows how the <code>@(attr:)@</code> and <code>&lt;x-attr: /&gt;</code> directives can be applied in template files</div>
+              <div class=" mvb-6">The example below shows how the <code>@(attr:)@</code> and <code>&lt;x-attr: /&gt;</code> directives can be applied in template files</div>
 
               
               <!-- code line started -->
               <div class="pre-area shadow">
-                <div class="pxv-6 bc-silver font-menu mvb-6">lay.rex.php</div>
+                <div class="pxv-6 bc-silver  mvb-6">lay.rex.php</div>
                 <pre class="pre-code">
     &lt;x-attr:book This is a book /&gt; <span class="no-select comment">// stores 'This is a book' </span>
    
@@ -742,7 +742,7 @@
             
             <!-- code line started -->
             <div class="pre-area shadow">
-              <div class="pxv-6 bc-silver font-menu mvb-6">page.rex.php</div>
+              <div class="pxv-6 bc-silver  mvb-6">page.rex.php</div>
               <pre class="pre-code">
   <?= to_lgts(
       '
@@ -776,7 +776,7 @@
             <!-- code line started -->
             
             <div class="pre-area shadow">
-              <div class="pxv-6 bc-silver font-menu mvb-6">page.rex.php will be resolve to </div>
+              <div class="pxv-6 bc-silver  mvb-6">page.rex.php will be resolve to </div>
 
               <pre class="pre-code">
   <?= to_lgts(
@@ -806,7 +806,7 @@
             </div>
             <!-- code line ended -->
 
-            <div class="font-menu mvb-6"> 
+            <div class=" mvb-6"> 
               <div class="pvs-8">Note: In the above,</div>
               <code>@(lay)@</code> is the directive for importing layouts <br>
               <code>lay</code> is the file name (or file path if within subdirectory) <br>
@@ -819,13 +819,13 @@
           <!------------------------------- layout -->
           <div id="layout" class=""> 
             <br>
-            <div class="font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
+            <div class=" fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
               <div class="flex-full">17. @(layout())@</div>
             </div> <br>
             
             <div>
 
-              <div class="font-menu font-em-d9 helvetica">
+              <div class=" font-em-d9 helvetica">
                 The <code>@(layout())@</code> function is similiar to the <code>@(template())@</code> directive.
                 While <code>@(template)@</code> loads a full layout from a file, the <code>@(layout)@</code> directive picks a 
                 layout from a group of layouts within a file. When grouping layouts, it is not advisable to put all eggs 
@@ -836,12 +836,12 @@
               </div>
               <br>
 
-              <div class="font-menu mvb-6">The example below shows how the <code>@(layout)@</code> and <code>@(lay)@</code> directives can be applied in template files</div>
+              <div class=" mvb-6">The example below shows how the <code>@(layout)@</code> and <code>@(lay)@</code> directives can be applied in template files</div>
 
               
               <!-- code line started -->
               <div class="pre-area shadow">
-                <div class="pxv-6 bc-silver font-menu mvb-6">lay.rex.php</div>
+                <div class="pxv-6 bc-silver  mvb-6">lay.rex.php</div>
                 <pre class="pre-code"><?= to_lgts(
     '
     @(layout:header)@
@@ -864,7 +864,7 @@
             
             <!-- code line started -->
             <div class="pre-area shadow">
-              <div class="pxv-6 bc-silver font-menu mvb-6">page.rex.php</div>
+              <div class="pxv-6 bc-silver  mvb-6">page.rex.php</div>
               <pre class="pre-code">
   <?= to_lgts(
       '
@@ -898,7 +898,7 @@
             <!-- code line started -->
             
             <div class="pre-area shadow">
-              <div class="pxv-6 bc-silver font-menu mvb-6">page.rex.php will be resolve to </div>
+              <div class="pxv-6 bc-silver  mvb-6">page.rex.php will be resolve to </div>
 
               <pre class="pre-code">
   <?= to_lgts(
@@ -928,7 +928,7 @@
             </div>
             <!-- code line ended -->
 
-            <div class="font-menu mvb-6"> 
+            <div class=" mvb-6"> 
               <div class="pvs-8">Note: In the above,</div>
               <code>@(lay)@</code> is the directive for importing layouts <br>
               <code>lay</code> is the file name (or file path if within subdirectory) <br>
@@ -942,13 +942,13 @@
           <!------------------------------- inpath -->
           <div id="inpath" class=""> 
               <br>
-              <div class="font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
+              <div class=" fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
                 <div class="flex-full">18. @(inPath)@</div>
               </div> <br>
               
               <div>
 
-                <div class="font-menu font-em-d9 helvetica">
+                <div class=" font-em-d9 helvetica">
                   The <code>@inPath</code> checks if the current request url has a parent address which is supplied 
                   within the <code>@(inPath())@</code> directive. If the parent address matches, the second argument 
                   supplied will be returned.
@@ -1012,13 +1012,13 @@
           <!------------------------------- inpath -->
           <div id="ispath" class=""> 
               <br>
-              <div class="font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
+              <div class=" fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
                 <div class="flex-full">19. @(isPath)@</div>
               </div> <br>
               
               <div>
 
-                <div class="font-menu font-em-d9 helvetica">
+                <div class=" font-em-d9 helvetica">
                   The <code>@isPath</code> works similary as <code>@inPath</code> directive except that the exact path 
                   must be the same. This means that unlike <code>@inPath</code> which uses parent url, <code>@inPath</code> 
                   matches only the exact url supplied
@@ -1057,13 +1057,13 @@
           <!------------------------------- style -->
           <div id="style" class=""> 
               <br>
-              <div class="font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
+              <div class=" fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
                 <div class="flex-full">20. @(style)@</div>
               </div> <br>
               
               <div>
 
-                <div class="font-menu font-em-d9 helvetica">
+                <div class=" font-em-d9 helvetica">
                   This is used to pull the contents of a rex css template file into an html template file. It works similarly as the  
                   layout method. The rex css template file is structured to contain multiple divisions of css codes. The <code>@style</code> 
                   is a directive that is structure to pull only specifically needed divisions of css codes from the css template file. 
@@ -1139,7 +1139,7 @@
           <!------------------------------- styles -->
           <div id="styles" class=""> 
               <br>
-              <div class="font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
+              <div class=" fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
                 <div class="flex-full">21. @(styles)@</div>
               </div> <br>
               
@@ -1200,13 +1200,13 @@
           <!------------------------------- script -->
           <div id="script" class=""> 
               <br>
-              <div class="font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
+              <div class=" fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
                 <div class="flex-full">22. @(script)@</div>
               </div> <br>
               
               <div>
 
-                <div class="font-menu font-em-d9 helvetica">
+                <div class=" font-em-d9 helvetica">
                   This is used to pull the contents of a rex css template file into an html template file. It works similarly as the  
                   layout method. The rex css template file is structured to contain multiple divisions of css codes. The <code>@style</code> 
                   is a directive that is structure to pull only specifically needed divisions of css codes from the css template file. 
@@ -1275,13 +1275,13 @@
           <!------------------------------- onscript -->
           <div id="onscript" class=""> 
               <br>
-              <div class="font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
+              <div class=" fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
                 <div class="flex-full">23. @(onscript)@</div>
               </div> <br>
               
               <div>
 
-                <div class="font-menu font-em-d9 helvetica">
+                <div class=" font-em-d9 helvetica">
                   This function works similary as the <code>@script</code>directive. The only major difference 
                   is the any script pulled by this directive will be pulled into javascript's <code>window.onload</code> 
                   function.
@@ -1294,13 +1294,13 @@
           <!------------------------------- onShow -->
           <div id="onshow" class=""> 
               <br>
-              <div class="font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
+              <div class=" fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
                 <div class="flex-full">24. @(onShow)@</div>
               </div> <br>
               
               <div>
 
-                <div class="font-menu font-em-d9 helvetica">
+                <div class=" font-em-d9 helvetica">
                   This function is specially built for html tag's attribute <code>"hidden"</code>. It is used to display a 
                   string value "hidden" when the returned value of a function is not an empty value. This means that when 
                   a non-empty value is returned by a function, then <code>@onShow</code> will return a string value <code>"hidden"</code>. 
@@ -1335,13 +1335,13 @@
           <!------------------------------- onShow -->
           <div id="onhide" class=""> 
               <br>
-              <div class="font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
+              <div class=" fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
                 <div class="flex-full">25. @(onHide)@</div>
               </div> <br>
               
               <div>
 
-                <div class="font-menu font-em-d9 helvetica">
+                <div class=" font-em-d9 helvetica">
                   This function is the inverse of <code>@onShow</code> directive. When a non-empty value is returned by 
                   a function, the <code>"hidden"</code> attribute will not be shown. However when an empty value is returned, 
                   then the <code>"hidden"</code> attribute will be returned.
@@ -1375,13 +1375,13 @@
           <!------------------------------- flash -->
           <div id="flash" class=""> 
               <br>
-              <div class="font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
+              <div class=" fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
                 <div class="flex-full">26. @(flash)@</div>
               </div> <br>
               
               <div>
 
-                <div class="font-menu font-em-d9 helvetica">
+                <div class=" font-em-d9 helvetica">
                   The <code>@flash</code> is a shorthand directive for <code>Res::flash</code> 
                   It is used to display a message or notification once. Every notice is defined by
                   a unique notice key which anchors the notice itself. When this key is called, the 
@@ -1391,7 +1391,7 @@
                 </div>
                 <br>
 
-                <div class="font-menu mvb-6">The example below shows how the <code>@(flash())@</code> directive can be applied in template files</div>
+                <div class=" mvb-6">The example below shows how the <code>@(flash())@</code> directive can be applied in template files</div>
 
                 <!-- code line started -->
                 <div class="pre-area shadow">
@@ -1410,7 +1410,7 @@
                 </div>
                 <!-- code line ended -->                
                 
-                <div class="font-menu pvs-20">
+                <div class=" pvs-20">
                   The <code>@(flash())@</code> directive can also be configured to give a different response message when an error occurs. 
                   This can be done by supplying a second argument on the directive.
                 </div>
@@ -1440,13 +1440,13 @@
           <!------------------------------- auth -->
           <div id="auth" class=""> 
               <br>
-              <div class="font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
+              <div class=" fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
                 <div class="flex-full">27. @(auth)@</div>
               </div> <br>
               
               <div>
 
-                <div class="font-menu font-em-d9 helvetica">
+                <div class=" font-em-d9 helvetica">
                   The <code>@(auth:)@</code> directive only displays a section of code within it when the 
                   user account is logged in or the current session is active. When the user is not 
                   logged in, the the block of code within it is never displayed. The closing directive is 
@@ -1454,7 +1454,7 @@
                 </div>
                 <br>
 
-                <div class="font-menu mvb-6">The example below shows how the <code>@(auth:)@</code> and <code>@(auth;)@</code> directive can be applied in template files</div>
+                <div class=" mvb-6">The example below shows how the <code>@(auth:)@</code> and <code>@(auth;)@</code> directive can be applied in template files</div>
 
                 <!-- code line started -->
                 <div class="pre-area shadow">
@@ -1475,13 +1475,13 @@
           <!------------------------------- guest -->
           <div id="guest" class=""> 
               <br>
-              <div class="font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
+              <div class=" fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
                 <div class="flex-full">28. @(guest)@</div>
               </div> <br>
               
               <div>
 
-                <div class="font-menu font-em-d9 helvetica">
+                <div class=" font-em-d9 helvetica">
                   Just like the <code>@(auth:)@</code> directive, the <code>@(guest:)@</code> directive only displays a section of code within it when the 
                   user account is NOT logged in or the current session is NOT active. When the user is 
                   logged in, the the block of code within it is never displayed. The equivalent closing directive is 
@@ -1489,7 +1489,7 @@
                 </div>
                 <br>
 
-                <div class="font-menu mvb-6">The example below shows how the <code>@(auth:)@</code> and <code>@(auth;)@</code> directive can be applied in template files</div>
+                <div class=" mvb-6">The example below shows how the <code>@(auth:)@</code> and <code>@(auth;)@</code> directive can be applied in template files</div>
 
                 <!-- code line started -->
                 <div class="pre-area shadow">
@@ -1510,19 +1510,19 @@
           <!------------------------------- authDirect -->
           <div id="authdirect" class=""> 
               <br>
-              <div class="font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
+              <div class=" fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
                 <div class="flex-full">29. @(authDirect)@</div>
               </div> <br>
               
               <div>
 
-                <div class="font-menu font-em-d9 helvetica">
+                <div class=" font-em-d9 helvetica">
                 The <code>@(authDirect())@</code> directive is used for redirecting users from a page 
                   when the session is active or user session is logged in.
                 </div>
                 <br>
 
-                <div class="font-menu mvb-6">The example below shows how the <code>@(authDirect())@</code> directive can be applied in template files</div>
+                <div class=" mvb-6">The example below shows how the <code>@(authDirect())@</code> directive can be applied in template files</div>
 
                 <!-- code line started -->
                 <div class="pre-area shadow">
@@ -1541,19 +1541,19 @@
           <!------------------------------- guestDirect -->
           <div id="guestdirect" class=""> 
               <br>
-              <div class="font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
+              <div class=" fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
                 <div class="flex-full">30. @(guestDirect)@</div>
               </div> <br>
               
               <div>
 
-                <div class="font-menu font-em-d9 helvetica">
+                <div class=" font-em-d9 helvetica">
                 The <code>@(guestDirect())@</code> directive is used for redirecting users from a page 
                   when session is not active or user session is logged out.
                 </div>
                 <br>
 
-                <div class="font-menu mvb-6">The example below shows how the <code>@(authDirect())@</code> directive can be applied in template files</div>
+                <div class=" mvb-6">The example below shows how the <code>@(authDirect())@</code> directive can be applied in template files</div>
 
                 <!-- code line started -->
                 <div class="pre-area shadow">
@@ -1571,13 +1571,13 @@
           <!------------------------------- btn -->
           <div id="btn" class=""> 
               <br>
-              <div class="font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
+              <div class=" fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
                 <div class="flex-full">31. @(btn)@</div>
               </div> <br>
               
               <div>
 
-                <div class="font-menu font-em-d9 helvetica">
+                <div class=" font-em-d9 helvetica">
                 The <code>@(btn())@</code> adding attributes into buttons. When working with submit buttons, we sometimes tend to 
                 add a value for form buttons. The <code>Request</code> class requires that all html input fields and button must have 
                 a name and a value set. The <code>@btn</code> takes a single parameter and uses it to specify the name and value of a 
@@ -1588,7 +1588,7 @@
                 
                 <!-- code line started -->
                 <div class="pre-area shadow">
-                  <div class="pxv-10 bc-silver font-menu mvb-6">Using @btn directive</code> </div>
+                  <div class="pxv-10 bc-silver  mvb-6">Using @btn directive</code> </div>
 
                   <pre class="pre-code">
   &lt;button @(btn('logout'))@&gt;&lt;/button&gt; <span class="comment no-select">&lt;button name="logout" value="logout"&gt;&lt;/button&gt;</span>
@@ -1603,13 +1603,13 @@
           <!------------------------------- get -->
           <div id="get" class=""> 
               <br>
-              <div class="font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
+              <div class=" fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
                 <div class="flex-full">32. @(get)@</div>
               </div> <br>
               
               <div>
 
-                <div class="font-menu font-em-d9 helvetica">
+                <div class=" font-em-d9 helvetica">
                 When forms are submitted using get request, the string data can be obtained within the template file using this directive.  
                 </div>
                 <br>
@@ -1617,7 +1617,7 @@
                 
                 <!-- code line started -->
                 <div class="pre-area shadow">
-                  <div class="pxv-10 bc-silver font-menu mvb-6">Using @(get)@ directive</code> </div>
+                  <div class="pxv-10 bc-silver  mvb-6">Using @(get)@ directive</code> </div>
 
                   <pre class="pre-code">
   &lt;form method="get"&gt;
@@ -1645,13 +1645,13 @@
           <!------------------------------- post -->
           <div id="post" class=""> 
               <br>
-              <div class="font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
+              <div class=" fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
                 <div class="flex-full">33. @(post)@</div>
               </div> <br>
               
               <div>
 
-                <div class="font-menu font-em-d9 helvetica">
+                <div class=" font-em-d9 helvetica">
                 When forms are submitted using post request, the string data can be obtained within the template file using the <code>post()</code> directive.  
                 </div>
                 <br>
@@ -1659,7 +1659,7 @@
                 
                 <!-- code line started -->
                 <div class="pre-area shadow">
-                  <div class="pxv-10 bc-silver font-menu mvb-6">Using @(post)@ directive</code> </div>
+                  <div class="pxv-10 bc-silver  mvb-6">Using @(post)@ directive</code> </div>
 
                   <pre class="pre-code">
   &lt;form method="get"&gt;
@@ -1688,13 +1688,13 @@
           <!------------------------------- old -->
           <div id="old" class=""> 
               <br>
-              <div class="font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
+              <div class=" fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
                 <div class="flex-full">34. @(old)@</div>
               </div> <br>
               
               <div>
 
-                <div class="font-menu font-em-d9 helvetica">
+                <div class=" font-em-d9 helvetica">
                 When forms are submitted using post request, just like the <code>@(post)@</code> and <code>@(get)@</code> directives, 
                 the <code>@(old)@</code> directive returns the old data submitted. This can be used as replacement for the <code>@(get)@</code> or 
                 <code>@(post)@</code> directive.
@@ -1704,7 +1704,7 @@
                 
                 <!-- code line started -->
                 <div class="pre-area shadow">
-                  <div class="pxv-10 bc-silver font-menu mvb-6">Using @(old)@ directive</code> </div>
+                  <div class="pxv-10 bc-silver  mvb-6">Using @(old)@ directive</code> </div>
 
                   <pre class="pre-code">
   &lt;form method="get"&gt;
@@ -1733,13 +1733,13 @@
           <!------------------------------- csrf -->
           <div id="csrf" class=""> 
               <br>
-              <div class="font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
+              <div class=" fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
                 <div class="flex-full">35. @(csrf)@</div>
               </div> <br>
               
               <div>
 
-                <div class="font-menu font-em-d9 helvetica">
+                <div class=" font-em-d9 helvetica">
                 Before a form's data can be successfully obtained by the <code>Request</code> class, 
                 it must contain a valid token forwarded as part of request which in turn is validated within the 
                 application. The failure to generate this token, forms will not submit forwarded data. The 
@@ -1752,7 +1752,7 @@
                 
                 <!-- code line started -->
                 <div class="pre-area shadow">
-                  <div class="pxv-10 bc-silver font-menu mvb-6">Using @(csrf)@ directive</code> </div>
+                  <div class="pxv-10 bc-silver  mvb-6">Using @(csrf)@ directive</code> </div>
 
                   <pre class="pre-code">
   &lt;form method="post"&gt;
@@ -1781,13 +1781,13 @@
           <!------------------------------- error -->
           <div id="error" class=""> 
               <br>
-              <div class="font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
+              <div class=" fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
                 <div class="flex-full">36. @(error)@</div>
               </div> <br>
               
               <div>
 
-                <div class="font-menu font-em-d9 helvetica">
+                <div class=" font-em-d9 helvetica">
                 The <code>@(error())@</code> directive is used to pull errors on <a href="@domurl('docs/forms#managing-errors')" class="font-em-1 fb-6 hyperlink"><span class="c-olive">Forms</span></a> 
                 which is returned from <code>Form::errors()</code> method.
                 </div>
@@ -1798,13 +1798,13 @@
           <!------------------------------- vdump -->
           <div id="vdump" class=""> 
               <br>
-              <div class="font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
+              <div class=" fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
                 <div class="flex-full">37. @(vdump)@</div>
               </div> <br>
               
               <div>
 
-                <div class="font-menu font-em-d9 helvetica">
+                <div class=" font-em-d9 helvetica">
                 The <code>@(vdump())@</code> is spoova's inbuilt directive for dumping data information. It is designed to use the php's <code>var_dump</code> method.
                 </div>
         
@@ -1814,10 +1814,10 @@
             <div id="conditionals" class="conditonals">
 
               <div class="font-em-1d5 c-orange">The Conditionals</div> <br> 
-              <div class="font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
+              <div class=" fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
                 <div class="flex-full">38. Conditionals</div>
               </div> <br>
-              <div class="font-menu font-em-d9 helvetica">
+              <div class=" font-em-d9 helvetica">
                 The conditonal directives are directives that follows php conditional operators.
                 They are listed below:
               </div>
@@ -1829,7 +1829,7 @@
                 <li><code>@while</code> <code>@do</code> and <code>@dowhile</code></li>
                 <li><code>@switch</code> and <code>@endswitch</code>
               </ul>   
-              <div class="font-menu mvb-6">Examples of their applications</div>            
+              <div class=" mvb-6">Examples of their applications</div>            
               <!-- code line started -->
               <div class="pre-area shadow">
                 <!-- conditionals: if -->
@@ -1891,7 +1891,7 @@
                 </pre>
 
               </div>
-              <div class="font-menu mvs-6">
+              <div class=" mvs-6">
                 Footnotes:
                 <ul class="pxl-20 mvt-4">
                   <li>Variables can be transferred as arguments from Router function or classes</li>

@@ -8,18 +8,8 @@ class Features extends Window {
     
     public function __construct(){
 
-        //your code here...
         self::call($this,
-            [
-                lastCall() => 'root',
-                // window(':other-features.javascript.core-functions') => 'coreJs',
-                // window(':other-features.javascript.loadimages').'.js' => 'loadImagesJs',
-                // window(':other-features.javascript.loadFile').'.js' => 'loadFileJs',
-                // window(':other-features.javascript.intersect').'.js' => 'intersectJs',
-                // window(':other-features.javascript.anime').'.js' => 'animeJs',
-                // window(':other-features.javascript.device').'.js' => 'deviceJs',
-                // window(':other-features.javascript.switcher').'.js' => 'switcherJs',
-            ], false
+            [ lastCall() => 'root'], false
         );
 
         self::basecall($this, [
@@ -41,18 +31,5 @@ class Features extends Window {
         self::load('docs.integerations.css.css', fn() => compile() );
         
     }
-
-    /**
-     * Add name of routes
-     *
-     * @return array
-     */
-    public static function addRoutes(array $array = []) : array {
-
-        return [
-            // 'routeName' => 'routePath'
-        ];
-
-    }
-
+    
 }

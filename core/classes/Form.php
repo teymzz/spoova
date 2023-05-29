@@ -1,11 +1,10 @@
 <?php
 
 use spoova\mi\core\classes\Csrf;
-use spoova\mi\core\classes\EInfo;
+use spoova\mi\core\classes\DB\DBHandler;
 use spoova\mi\core\classes\Model;
 use spoova\mi\core\classes\FormModel;
 use spoova\mi\core\classes\FormField;
-use spoova\mi\core\classes\Request;
 
 /**
  * This Form class is used to build form inputs
@@ -51,7 +50,6 @@ final class Form extends FormField{
     private static $indexed = '';
     private static $start;
     private static $usedClass;
-
     function __construct(){}
     
     /**
@@ -140,6 +138,10 @@ final class Form extends FormField{
         return self::$model->formdata();
     }
 
+    public static function id() {
+        return self::$model->id();
+    }
+
     /**
      * Return a key from validated form data if the key exists
      * 
@@ -158,6 +160,16 @@ final class Form extends FormField{
     public function autoload(){
         self::$render = true;
         return $this;
+    }
+
+    
+    /**
+     * Set and return database connection using user authetication
+     * @param DBHandler $dbh database connection handler
+     * @return DBHandler model's connection handler instance
+     */
+    public static function connection(DBHandler $dbh = null) : DBHandler {
+        return self::$model->connection(...func_get_args());
     }
 
     /**
@@ -551,62 +563,3 @@ final class Form extends FormField{
 
 
 }
-
-/* DOCUMENTATION
-
-    Form::Field(fieldType , fieldId, array attributes)
-        @param string fieldType -> type of field to be created
-        @param string fieldId -> id of field to be created
-        @param array attributes -> array attributes associated with current field
-    
-    Form::Group(tag , callback) -> groups a particular information with first parameteter
-        @param string tag : container or wrapper tagname along with attributes (if any)
-        @param callback : a string or callback function that should return a string data
-
-    Form::GroupEach(tag, callback)
-        groups each of 'Form::Group' or 'Form::Field' declared within it
-            @param string tag : container or wrapper tagname along with attributes (if any)
-            @param callback : a callback information that should return a string data
-            @notice:: Form::GroupEach() cannot be used within another Form::GroupEach()
-
-    other methods SHORTHANDS
-    shorthands can be used for Form::Field(). This is done by calling the input type directly. For example
-
-    Form::Range('id_name', ['data-attr'=>'attributes', ...]) 
-       The above translates to Form::Field('range','id_name', ['data-attr'=>'attributes', ...])
-       
-       Fields allowed 
-        [   'text', 'button','checkbox',
-            'color',  'email', 'file',
-            'hidden', 'image',  'number',
-            'password', 'radio', 'range', 'reset',
-            'search', 'submit', 'tel', 'text', 'time',
-            'date',  'dateLocal', 'week', 'month', 'year',
-        ]
-    
-    @Note : for a password field use "Pass" for static call and "password" Field method
-    @Note : for a date-local field use "dateLocal" for static call and "date-local" for Field methdd
-
-    SAMPLE STRUCTURE OF FORM
-
-    Form::Group('div class="box form-field pxv-20"', fn() =>
-        
-        //wraps both fields with a single div tag along with attributes declared)    
-        Form::Group('div class="i-flex-full even"', fn() =>
-            Form::Text( 'firstname', ['name'=>'firstname','placeholder'=> 'firstname'] )
-            .Form::Text( 'lastname', ['name'=>'lastname','placeholder'=> 'lastname'] )
-        )
-
-        //add div tag to each Form field (attributes may be supplied like above)
-        .Form::GroupEach('div', fn() =>
-        
-            Form::Text( 'firstname', ['name'=>'firstname','placeholder'=> 'firstname'] )
-            .Form::Text( 'lastname', ['name'=>'lastname','placeholder'=> 'lastname'] )
-        )
-        .
-        Form::Button('submit', ['text' => 'Register', 'addClass' => 'btn btn-primary p-3'])
-
-    )
-
-
-*/

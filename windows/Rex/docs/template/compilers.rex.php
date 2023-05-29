@@ -15,9 +15,9 @@
     <section class="pxv-10 tutorial database bc-white">
       <div class="font-em-1d2">
 
-        @lay('build.co.links:tutor_pointer')
-
         <div class="start font-em-d8">
+
+            @lay('build.co.links:tutor_pointer') <br>
 
             <div class="font-em-1d5 c-orange">Rex Compiler Functions</div> <br> 
 
@@ -77,9 +77,6 @@
                     <code>compile()</code> function which cannot be used more than once. However, though the <code>view()</code> 
                     method may be used this way, it is highly discouraged to do so. Also, the <code>view()</code> method may be dropped in 
                     future update to favor only the compile method.
-                  </p>
-
-                  <p>
                     It is important to note that the resource loader method <code>Res::load()</code> will not compile its main rex file declared within it. 
                     unless the <code>compile()</code> function is declared within it. Instead, the content of any string returned by the callback function will 
                     be returned back on the page. This is shown below:
@@ -143,14 +140,14 @@
 
             </div>
 
-            <div class="foot-note pvs-10">
+            <div class="foot-note">
               The sample rex file above will display the corresponding value of "name", that was passed across to it. Other available template directives can be found 
               <a href="@domurl('docs/template/directives')" class="c-olive-d">here</a> 
             </div>
 
           </div>
-          
-          
+
+          @lay('build.co.links:tutor_pointer')
 
         </div>
       </div>

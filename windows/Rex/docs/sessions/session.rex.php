@@ -9,9 +9,9 @@
     <section class="pxv-10 tutorial database bc-white">
         <div class="font-em-1d2">
 
-            @lay('build.co.links:tutor_pointer')
-
             <div class="start font-em-d8">
+
+                @lay('build.co.links:tutor_pointer') <br>
 
                 <div class="font-em-1d5 c-orange">Sessions</div> <br>
                 
@@ -39,18 +39,18 @@
                             </div>
 
                             <!-- code description -->
-                            <div class="font-em-d87">
+                            <div class="foot-note">
                                 The setup syntax above is used to explain the Session class control system 
 
                                 <div class="">
                                     <div class="flex mvs-6">
-                                        <div><code class="clip-130">USER_TABLE:</code> <span>This table is expected to be the user table where user data is stored.</span></div>                                     
+                                        <div><code class="">USER_TABLE:</code> <span>This table is expected to be the user table where user data is stored.</span></div>                                     
                                     </div>
                                     <div class="flex mvs-6">
-                                        <div><code class="clip-130">COOKIE_FIELDNAME:</code> <span>A database column in USER_TABLE where cookie hash is stored</span></div>
+                                        <div><code class="">COOKIE_FIELDNAME:</code> <span>A database column in USER_TABLE where cookie hash is stored</span></div>
                                     </div>
                                     <div class="flex mvs-6">
-                                        <div><code class="clip-130">USER_ID_FIELDNAME:</code> <span>A database column in USER_TABLE that contains the user unique id</span></div>
+                                        <div><code class="">USER_ID_FIELDNAME:</code> <span>A database column in USER_TABLE that contains the user unique id</span></div>
                                     </div>
                                 </div>
 
@@ -83,15 +83,14 @@
 
     $secure (optional) : defines if a session should be secured (true|false)
 
-
     
-    Note: For the purpose of this documentation 
+    <span class="c-dry-blue">Note: For the purpose of this documentation</span>
 
-    $session_key => session_key 
+    session_key => $session_key 
 
-    $cookie_key  => cookie_key 
+    cookie_key  => $cookie_key 
 
-    $secure      => secure
+    secure      => $secure
   </span>
                                         </pre>
                                     </div>
@@ -104,7 +103,7 @@
                                     </div> <br><br>
 
                                     <div class="">
-                                        <div class="">Session(session_key)</div>
+                                        <div class="c-orange">Session(session_key)</div>
 
                                         <div class="font-em-d87 mvt-10">
                                             The session_key defined during the instantiation of the session class is a key that is used to store user data inside 
@@ -120,7 +119,7 @@
                                     </div>
 
                                     <div class="">
-                                        <div class="">Session(cookie_key)</div>
+                                        <div class="c-orange">Session(cookie_key)</div>
 
                                         <div class="font-em-d87 mvt-10">
                                             Just like the session_key, the cookie_key is used by the <code>$_COOKIE</code> class to store a user cookie for rememberMe. 
@@ -142,7 +141,7 @@
                                     </div>
 
                                     <div class="">
-                                        <div class="">Session(secure)</div>
+                                        <div class="c-orange">Session(secure)</div>
 
                                         <div class="font-em-d87 mvt-10">
                                            A layer of security can be added to our session class which ensures that a fake id cannot create an active session. By setting  
@@ -194,8 +193,8 @@
 
                     <!-- stream -->
                     <div class="">
-                        <div class="mvs-4">stream()</div>
-                        <div class="font-menu font-em-d9">
+                        <div class="mvs-4 c-orange">stream()</div>
+                        <div class="font-em-d9">
 
                             <div class="mvs-10">
                                 This method returns the instance of the session class. Once a session is initialized be defining the session_key and cookie_key, accessing the current session 
@@ -221,8 +220,8 @@
 
                     <!-- sessionName, cookieName -->
                     <div class="">
-                        <div class="mvs-4">sessionName() and cookieName()</div>
-                        <div class="font-menu font-em-d9">
+                        <div class="mvs-4 c-orange">sessionName() and cookieName()</div>
+                        <div class=" font-em-d9">
 
                             <div class="mvs-10">
                                 The <code>Session::sessionName()</code> and <code>Session::cookieName()</code> methods are both methods that retrives the 
@@ -248,8 +247,8 @@
 
                     <!-- onauto -->
                     <div class="mvt-20">
-                        <div class="mvs-4">onauto()</div>
-                        <div class="font-menu font-em-d9">
+                        <div class="mvs-4 c-orange">onauto()</div>
+                        <div class=" font-em-d9">
                             The <code>Session::onauto()</code> method is an alias for <code>Session::stream()->auto()</code> method. It manages redirection of session class. It is used to perform redirection 
                             when a session is active or inactive to enforce a redirection. The syntax is shown below
                             <br><br>
@@ -275,7 +274,7 @@
                                 </div>
                             </div>
 
-                            <div class="font-em-d87 pvs-10 ">
+                            <div class="foot-note">
                                 As an example in relation to the code syntax above, redirection from a <code>user</code> page to an <code>index</code> page when account becomes inactive 
                                 or session is terminated will require that the user page should have a code syntax similar to <code>Session::onauto('logout', 'index')</code>. 
                                 By placing such code in the <code>user</code> page, the <code>user</code> page will redirect to the <code>index</code> 
@@ -289,13 +288,13 @@
                 </div>
 
                 <div>
-                    <div class="font-menu fb-6 c-olive bc-white-dd box-full rad-4 pxv-8">
+                    <div class=" fb-6 c-olive bc-white-dd box-full rad-4 pxv-8">
                         Session::userid()
                     </div> <br><br>
 
 
                     <div class="">
-                        <div class="font-menu font-em-d9">
+                        <div class=" font-em-d9">
                         The <code>Session::userid()</code> method returns an active session id. For the Session class to successfully return the userid, 
                         the data stored in the in the <code>$_SESSION</code> variable must contain a <code>userid</code> key, that is, 
                         <code>$_SESSION['session_key']['userid']</code>. The value of this is then returned by the <code>userid()</code> method. 

@@ -17,11 +17,11 @@
 
             @lay('build.co.links:tutor_pointer')
 
-            <div class="start font-em-d8">
+            <div class="start font-em-d8"> <br>
 
                 <div class="font-em-1d5 c-orange">Database : Migrations</div> <br>
 
-                <div class="pxs-6">
+                <div class="">
                     Migration files are files that enable us to create or modify our database table in the format that is  
                     desirable for our project applications. Spoova has a simple migration tool that makes it easy to perform 
                     tasks like table creation, alteration or modification. Migration files are usually generated from the command line 
@@ -54,32 +54,30 @@
                             a migration file will resemble the format below.
                         </div><br>
 
-                        <div class="box-full font-menu font-em-d85 bc-white-dd shadow">
+                        <div class="box-full  font-em-d85 bc-white-dd shadow">
 <div class="pxv-10 bc-silver">Example : Migration file sample</div>
                     <pre class="pre-code">
   &lt;?php 
 
     class M1673742992_file_name {
 
+       function up() {
+ 
+       } 
 
-        function up() {
+       function down() {
 
-        } 
-
-        function down() {
-
-        }
-
-        function tablename() : string {
-            return 'some_table';
-        }
-
+       }
+ 
+       function tablename() : string {
+          return 'some_table';
+       }
 
     }
                     </pre>
-                        </div> <br><br>
+                        </div> <br>
 
-                        <div class="d87">
+                        <div class="foot-note mvt-6">
                             The structure above resembles a full format of a migration file. While the <code>up()</code> 
                             and <code>down()</code> methods are essential, the <code>tablename()</code> method is is optional. 
                             However, by declaring the <code>tablename()</code> method, it makes it easier to manipulate our data in a 
@@ -92,7 +90,7 @@
 
                     <div class="migration-schema">
                         <div class="c-orange font-em-1d5">Migration Schema</div>
-                        <div class="d87 mvt-4">
+                        <div class="mvt-4">
                            The <code>DBSCHEMA</code> class is the only class that makes it easier to create manage tables successfully through the 
                            command line environment. Along with a <code>DRAFT</code> class, they can create, alter, modify, change or drop database 
                            tables. The <code>DBSCHEMA</code> class has only four main methods which are listed below: 
@@ -117,7 +115,7 @@
 
                     <div class="migration-draft">
                         <div class="c-olive">Migration Draft</div>
-                        <div class="d87 mvt-4">
+                        <div class="mvt-4">
                             <p class="">
                                 The <code>DRAFT</code> class defines the structure and format of a table. It contains database designs and modification 
                                 plans. This class uses methods to pivot how a table should be modififed or created. These methods are used to either define 
@@ -127,32 +125,30 @@
                                 There are lists of methods which can be applied 
                                 and we shall be taking a closer look to some of these methods:
                             </p>
-                            <div class="font-em-1d1">
+                            <div class="">
                                 <div class="pre-area">
         <pre class="pre-code">
   &lt;?php 
 
     class M1673742992_file_name {
 
+       function up() {
 
-        function up() {
+          DBSCHEMA::CREATE('tablename', function(DRAFT $DRAFT){
 
-            DBSCHEMA::CREATE('tablename', function(DRAFT $DRAFT){
+          });
 
-            });
+       } 
 
-        } 
+       function down() {
 
-        function down() {
+          DBSCHEMA::ALTER('tablename', function(DRAFT $DRAFT){
 
-            DBSCHEMA::ALTER('tablename', function(DRAFT $DRAFT){
+          });
 
-            });
-
-        }
+       }
 
     }  
-     
         </pre>
                                 </div> 
 
@@ -163,38 +159,36 @@
                                     below is also valid.
                                 </div>   
                                 
-                            <div class="font-em-1d1">
+                            <div class="">
                                 <div class="pre-area">
         <pre class="pre-code">
   &lt;?php 
 
     class M1673742992_file_name {
 
+       function up() {
 
-        function up() {
+          DBSCHEMA::CREATE($this, function(DRAFT $DRAFT){
 
-            DBSCHEMA::CREATE($this, function(DRAFT $DRAFT){
+          });
 
-            });
+       } 
 
-        } 
+       function down() {
 
-        function down() {
+          DBSCHEMA::ALTER($this, function(DRAFT $DRAFT){
 
-            DBSCHEMA::ALTER($this, function(DRAFT $DRAFT){
+          });
 
-            });
+       }
 
-        }
+       function tablename(){
 
-        function tablename(){
+          return 'table_name';
 
-            return 'table_name';
-
-        }
+       }
 
     }  
-     
         </pre>
                                 </div>                                
                             </div>
@@ -266,19 +260,17 @@
 
                                     <div class="pre-area">
     <pre class="pre-code">
-
     DBSCHEMA::ALTER($this, function(DRAFT $DRAFT){
 
-        $DRAFT::MODIFY( function($DRAFT) { 
+      $DRAFT::MODIFY( function($DRAFT) { 
             
-            $DRAFT::DATA_TYPE(); <span class="comment">// use any of the data type method here.</span>
+         $DRAFT::DATA_TYPE(); <span class="comment">// use any of the data type method here.</span>
 
-            return $DRAFT;
+         return $DRAFT;
         
-        } );
+      } );
 
     });
-
     </pre>
                                         <div class="c-grey pxs-20 font-em-d9">    
                                             The structure above defines the format which is used to modify a column's data type only. 
@@ -286,13 +278,11 @@
                                         </div>
 
     <pre class="pre-code">
-
     DBSCHEMA::ALTER($this, function(DRAFT $DRAFT){
 
-        <span class="c-sky-blue-dd">$DRAFT::MODIFY( fn() => $DRAFT::DATA_TYPE() );</span>
+      <span class="c-sky-blue-dd">$DRAFT::MODIFY( fn() => $DRAFT::DATA_TYPE() );</span>
 
     });
-
     </pre>
 
                                     </div> <br><br>
@@ -300,57 +290,48 @@
                                     <div class="pre-area">
                                         <div class="pxv-10 bc-silver">Example</div>
     <pre class="pre-code">
-
     DBSCHEMA::ALTER($this, function(DRAFT $DRAFT){
 
-        <span class="c-sky-blue-dd">$DRAFT::CHANGE( fn() => $DRAFT::INT('fieldname', 2) );</span>
+      <span class="c-sky-blue-dd">$DRAFT::CHANGE( fn() => $DRAFT::INT('fieldname', 2) );</span>
 
     });
-
     </pre>
-                                    </div> <br><br>
+                                    </div>
 
                                     <div class="foot-note">
-                                        <p class="">
-                                            <p>
-                                                In the example above, assuming the "fieldname" was a "VARCHAR" field before, the new data type "INT" will convert the field to an integer 
-                                                field using the supplied length. The second argument in this case which is the length, must be the argument accepted to be valid by the field. 
-                                            </p>
+                                        <p>
+                                            In the example above, assuming the "fieldname" was a "VARCHAR" field before, the new data type "INT" will convert the field to an integer 
+                                            field using the supplied length. The second argument in this case which is the length, must be the argument accepted to be valid by the field. 
+                                        </p>
 
-                                            <p>
-                                                The <code>DROP()</code> method drops a database table column or database table's index. 
-                                                It takes one or two arguments depending on what is expected to be dropped. If one argument is supplied, 
-                                                it is assumes that the migration table's field is expected to be dropped unless it is set as "PRIMARY KEY" which 
-                                                will drop the current table's primary key. However, if two arguments are supplied, then the first is assumed to be 
-                                                an index type (e.g UNIQUE) while second argument will be the index name that is expected to be dropped. An example is shown below:
-                                            </p>
-                                            
+                                        <p>
+                                            The <code>DROP()</code> method drops a database table column or database table's index. 
+                                            It takes one or two arguments depending on what is expected to be dropped. If one argument is supplied, 
+                                            it is assumes that the migration table's field is expected to be dropped unless it is set as "PRIMARY KEY" which 
+                                            will drop the current table's primary key. However, if two arguments are supplied, then the first is assumed to be 
+                                            an index type (e.g UNIQUE) while second argument will be the index name that is expected to be dropped. An example is shown below:
                                         </p>
                                     </div>
 
                                     <div class="pre-area">
     <pre class="pre-code">
-
     DBSCHEMA::ALTER($this, function(DRAFT $DRAFT){
 
-        <span class="c-sky-blue-dd">$DRAFT::DROP( 'address' );</span> <span class="comment">// drop current database table's field</span>
+      <span class="c-sky-blue-dd">$DRAFT::DROP( 'address' );</span> <span class="comment">// drop current database table's field</span>
 
     });
-
     </pre>
                                     </div> <br><br>
 
                                     <div class="pre-area">
     <pre class="pre-code">
-
     DBSCHEMA::ALTER($this, function(DRAFT $DRAFT){
 
-        <span class="c-sky-blue-dd">$DRAFT::DROP( 'UNIQUE', 'initials' );</span> <span class="comment">// drop unique index "initials" from current table</span>
+      <span class="c-sky-blue-dd">$DRAFT::DROP( 'UNIQUE', 'initials' );</span> <span class="comment">// drop unique index "initials" from current table</span>
 
     });
-
     </pre>
-                                    </div> <br><br>
+                                    </div> <br>
 
 
                                 </div>
@@ -360,7 +341,7 @@
 
                     <div class="defining-database">
                               <div class="c-olive">Setting column data type</div>
-                        <div class="d87">
+                        <div class="">
                             <div class="mvs-10">
                                 The data type methods above sets the data type of field. The first argument in most cases is the name of the field 
                                 to be altered or created. However the <code>INTFIELD()</code>, <code>TEXTFIELD()</code> and <code>BLOBFIELD()</code> takes the  
@@ -448,7 +429,7 @@
                                     Each of these arguments are explained below:
                                 </div>
 
-                                <div class="bc-white-dd pxv-4">
+                                <div class="bc-white-dd pxv-10">
                                     <code>$name</code> 
                                     <span>
                                         This is usually the first argument of any of the data type methods except in <code>INTFIELD()</code> 
@@ -460,7 +441,7 @@
                                     </span>
                                 </div> <br>
 
-                                <div class="bc-white-dd pxv-4">
+                                <div class="bc-white-dd pxv-10">
 
                                     <code>$type</code> 
                                     <span>
@@ -499,7 +480,7 @@
                                     </span>
                                 </div> <br>
 
-                                <div class="bc-white-dd pxv-4">
+                                <div class="bc-white-dd pxv-10">
                                     <code>$size</code> 
                                     <span>
                                         This defines the size of a table's column. Most but not all of the data type methods supports the 
@@ -512,7 +493,7 @@
                                     </span>
                                 </div> <br>
 
-                                <div class="bc-white-dd pxv-4">
+                                <div class="bc-white-dd pxv-10">
                                     <code>$option</code> 
                                     <span>
                                         This argument is only implemented by the <code>ENUM()</code> method which is an array that contains a list of 
@@ -520,7 +501,7 @@
                                     </span>
                                 </div> <br>
 
-                                <div class="bc-white-dd pxv-4">
+                                <div class="bc-white-dd pxv-10">
                                     <code>$precision</code> 
                                     <span>
                                         This argument is only used in time related methods such as <code>DATE</code>, 
@@ -529,15 +510,15 @@
                                     </span>
                                 </div> <br>
 
-                                <div class="bc-white-dd pxv-4">
+                                <div class="bc-white-dd pxv-10">
                                     <code>$default</code> 
                                     <span>
                                         In methods that implements this argument, the argument sets a default value for the field or column 
                                         to be created. This can also be added by using the <code>DEFAULT()</code> constriant method.
                                     </span>
-                                </div>
+                                </div> <br>
 
-                                <div class="bc-white-dd pxv-4">
+                                <div class="bc-white-dd pxv-10">
                                     <code>$comment</code> 
                                     <span>
                                         This argument is implemented by the <code>COMMENT()</code> method. It is used to set a comment on a particular 
@@ -558,7 +539,7 @@
                             the length of field from a minimum of 1 to a maximum of 255. The syntax is shown below: <br>
                             <br>
 
-                            <div class="bc-white-dd pxv-4">
+                            <div class="bc-white-dd pxv-10">
                                 <code class="bd-f">DRAFT::ID(<span class="c-grey">$size, $custom_name</span>);</code> <br>
                                 
                                 <div class="c-grey pxv-10 font-em-d85">
@@ -572,7 +553,7 @@
 
                     <div class="">
                         <div class="c-olive-dd">Setting database column constraints</div>
-                        <div class="d87">
+                        <div>
                             <div class="">
                                 Constraint methods are used to apply contraints on table columns. These constraint can be applied during table 
                                 creation or modification on tables or generated table columns. These methods <code>DEFAULT()</code>, 
@@ -680,29 +661,29 @@
     <pre class="pre-code">
     DBSCHEMA::CREATE('tablename', function(DRAFT $DRAFT){
 
-        $DRAFT::ID();
+      $DRAFT::ID();
 
-        $DRAFT::VARCHAR('firstname', 100)->NOT_NULL();
+      $DRAFT::VARCHAR('firstname', 100)->NOT_NULL();
 
-        $DRAFT::VARCHAR('lastname', 100)->NOT_NULL();
+      $DRAFT::VARCHAR('lastname', 100)->NOT_NULL();
 
-        $DRAFT::VARCHAR('username', 255)->NOT_NULL(); 
-        
-        $DRAFT::VARCHAR('password', 255)->NOT_NULL(); 
-        
-        $DRAFT::VARCHAR('email', 255)->NOT_NULL(); 
-        
-        $DRAFT::VARCHAR('address', 1000);
-        
-        $DRAFT::VARCHAR('phone', 20);
-        
-        $DRAFT::DATETIME('added_on', "(CURRENT_TIMESTAMP)");
-        
-        $DRAFT::DATETIME('updated_on')->DEFAULT("(CURRENT_TIMESTAMP)");
-        
-        $DRAFT::UNIQUE(['username', 'password']);
+      $DRAFT::VARCHAR('username', 255)->NOT_NULL(); 
+    
+      $DRAFT::VARCHAR('password', 255)->NOT_NULL(); 
+    
+      $DRAFT::VARCHAR('email', 255)->NOT_NULL(); 
+    
+      $DRAFT::VARCHAR('address', 1000);
+    
+      $DRAFT::VARCHAR('phone', 20);
+    
+      $DRAFT::DATETIME('added_on', "(CURRENT_TIMESTAMP)");
+    
+      $DRAFT::DATETIME('updated_on')->DEFAULT("(CURRENT_TIMESTAMP)");
+    
+      $DRAFT::UNIQUE(['username', 'password']);
 
-        return $DRAFT;
+      return $DRAFT;
 
     })        
     </pre>
@@ -727,10 +708,10 @@
     <pre class="pre-code">
     DBSCHEMA::ALTER('tablename', function(DRAFT $DRAFT){
 
-        $DRAFT::VARCHAR('fullname')->AFTER('username'); <span class="comment no-select">// add fullname field after username column</span>
-        $DRAFT::VARCHAR('address')->AFTER('firstname'); <span class="comment no-select">// add firstname field to the beginning of the table</span>
+      $DRAFT::VARCHAR('fullname')->AFTER('username'); <span class="comment no-select">// add fullname field after username column</span>
+      $DRAFT::VARCHAR('address')->AFTER('firstname'); <span class="comment no-select">// add firstname field to the beginning of the table</span>
 
-        return $DRAFT;
+      return $DRAFT;
 
     })        
     </pre>
@@ -748,17 +729,17 @@
     <pre class="pre-code">
     DBSCHEMA::ALTER('users', function(DRAFT $DRAFT){
 
-        $DRAFT::DROP('fullname'); <span class="comment no-select">// drop fullname column in users table</span>
-        
-        $DRAFT::DROP('PRIMARY KEY'); <span class="comment no-select">// drop the primary key from the table</span>
-        
-        $DRAFT::DROP('INDEX', 'unique1'); <span class="comment no-select">// drop the index name "unique1" from the table.</span>
-        
-        $DRAFT::DROP('UNIQUE', 'unique2'); <span class="comment no-select">// drop the unique name "unique2" from the table.</span>
-        
-        $DRAFT::DROP('FOREIGN KEY', 'unique3'); <span class="comment no-select">// drop the FOREIGN KEY name "unique3" from the table.</span>
+      $DRAFT::DROP('fullname'); <span class="comment no-select">// drop fullname column in users table</span>
+    
+      $DRAFT::DROP('PRIMARY KEY'); <span class="comment no-select">// drop the primary key from the table</span>
+    
+      $DRAFT::DROP('INDEX', 'unique1'); <span class="comment no-select">// drop the index name "unique1" from the table.</span>
+    
+      $DRAFT::DROP('UNIQUE', 'unique2'); <span class="comment no-select">// drop the unique name "unique2" from the table.</span>
+    
+      $DRAFT::DROP('FOREIGN KEY', 'unique3'); <span class="comment no-select">// drop the FOREIGN KEY name "unique3" from the table.</span>
 
-        return $DRAFT;
+      return $DRAFT;
 
     })        
     </pre>
@@ -793,9 +774,9 @@
     <pre class="pre-code">
     DBSCHEMA::ALTER('users', function(DRAFT $DRAFT){
 
-        $DRAFT::RENAME_TO('user_table'); <span class="comment no-select">// rename current table "users" to "user_table"</span>
+      $DRAFT::RENAME_TO('user_table'); <span class="comment no-select">// rename current table "users" to "user_table"</span>
 
-        return $DRAFT;
+      return $DRAFT;
         
     })        
     </pre>
@@ -815,13 +796,13 @@
 
         $DRAFT::CHANGE(function() use($DRAFT) {
 
-            $DRAFT::VARCHAR(['firstname' => 'fname']); <span class="comment no-select">// change firstname to fname of VARCHAR type</span>
-            
-            $DRAFT::VARCHAR(['lastname' => 'lname']);  <span class="comment no-select">// change lastname to lname of VARCHAR type</span>
-            
-            $DRAFT::INT(['serial_no' => 'serial']); <span class="comment no-select">// change serial_no to serial field of INT type</span>
+          $DRAFT::VARCHAR(['firstname' => 'fname']); <span class="comment no-select">// change firstname to fname of VARCHAR type</span>
+        
+          $DRAFT::VARCHAR(['lastname' => 'lname']);  <span class="comment no-select">// change lastname to lname of VARCHAR type</span>
+        
+          $DRAFT::INT(['serial_no' => 'serial']); <span class="comment no-select">// change serial_no to serial field of INT type</span>
 
-            return $DRAFT;
+          return $DRAFT;
 
         }); 
         
@@ -850,7 +831,7 @@
     <pre class="pre-code">
     DBSCHEMA::ALTER('users', function(DRAFT $DRAFT){
 
-        $DRAFT::CONVERT_TO('latin 1'); <span class="comment no-select">//set current table character type to latin</span>
+      $DRAFT::CONVERT_TO('latin 1'); <span class="comment no-select">//set current table character type to latin</span>
         
     })        
     </pre>
@@ -887,12 +868,12 @@
  <pre class="pre-code">
     DBSCHEMA::CREATE('tablename', function(DRAFT $DRAFT){
 
-        $DRAFT::PARTITION_BY('RANGE', function(DRAFT $DRAFT){
+      $DRAFT::PARTITION_BY('RANGE', function(DRAFT $DRAFT){
 
-            <span class="comment">//some code here</span>
-            return $DRAFT;
+        <span class="comment">//some code here</span>
+        return $DRAFT;
 
-        });
+      });
 
     })
  </pre>
@@ -919,7 +900,7 @@
  <pre class="pre-code">
     DBSCHEMA::CREATE('tablename', function(DRAFT $DRAFT){
 
-        $DRAFT::PARTITION_BY('RANGE', fn() => $DRAFT::COLUMN('col1') );
+      $DRAFT::PARTITION_BY('RANGE', fn() => $DRAFT::COLUMN('col1') );
 
     })
  </pre>
@@ -934,7 +915,7 @@
 
         $DRAFT::PARTITION_BY('RANGE', fn(DRAFT $DRAFT) =>
 
-            $DRAFT::COLUMN(['col1', 'col'])
+          $DRAFT::COLUMN(['col1', 'col'])
 
         );
 
@@ -951,9 +932,9 @@
 
         $DRAFT::PARTITION_BY('RANGE', function(DRAFT $DRAFT){
 
-            $DRAFT::COLUMN([['col1','col2'], ['col3','col4']]);
+          $DRAFT::COLUMN([['col1','col2'], ['col3','col4']]);
 
-            return $DRAFT;
+          return $DRAFT;
 
         });
 
@@ -988,9 +969,9 @@
 
         $DRAFT::PARTITION_BY('RANGE', fn() =>
 
-            $DRAFT::COLUMNS('col1')
+          $DRAFT::COLUMNS('col1')
 
-                ->PARTITION('p0','VALUES LESS THAN');
+               ->PARTITION('p0','VALUES LESS THAN');
 
         );
 
@@ -1016,15 +997,15 @@
  <pre class="pre-code">
     DBSCHEMA::CREATE('tablename', function(DRAFT $DRAFT){
 
-        $DRAFT::INT('number', '2')->NOT_NULL();
+      $DRAFT::INT('number', '2')->NOT_NULL();
 
-        $DRAFT::PARTITION_BY('RANGE', fn(DRAFT $DRAFT) =>
+      $DRAFT::PARTITION_BY('RANGE', fn(DRAFT $DRAFT) =>
 
-            $DRAFT::COLUMNS('number')
+        $DRAFT::COLUMNS('number')
 
-                ->PARTITION('p0','VALUES LESS THAN')->VALUE(500)
-                ->PARTITION('p1','VALUES LESS THAN')->VALUE(300)
-                ->PARTITION('p2','VALUES LESS THAN')->VALUE(200)
+            ->PARTITION('p0','VALUES LESS THAN')->VALUE(500)
+            ->PARTITION('p1','VALUES LESS THAN')->VALUE(300)
+            ->PARTITION('p2','VALUES LESS THAN')->VALUE(200)
 
         );
 
@@ -1040,18 +1021,18 @@
     <pre class="pre-code">
     DBSCHEMA::CREATE('tablename', function(DRAFT $DRAFT){
         
-        $DRAFT::INT('number', '2')->NOT_NULL();
+      $DRAFT::INT('number', '2')->NOT_NULL();
 
-        $DRAFT::DATETIME('date')->DEFAULT('(CURRENT_TIMESTAMP)');
+      $DRAFT::DATETIME('date')->DEFAULT('(CURRENT_TIMESTAMP)');
 
 
-        $DRAFT::PARTITION_BY('RANGE', fn(DRAFT $DRAFT) =>
+      $DRAFT::PARTITION_BY('RANGE', fn(DRAFT $DRAFT) =>
 
-            $DRAFT::COLUMNS('date')
+        $DRAFT::COLUMNS('date')
 
-                ->PARTITION('p0','VALUES LESS THAN')->VALUE(500)
-                ->PARTITION('p1','VALUES LESS THAN')->VALUE(300)
-                ->PARTITION('p2','VALUES LESS THAN')->VALUE(200)
+            ->PARTITION('p0','VALUES LESS THAN')->VALUE(500)
+            ->PARTITION('p1','VALUES LESS THAN')->VALUE(300)
+            ->PARTITION('p2','VALUES LESS THAN')->VALUE(200)
 
         );
 
@@ -1126,9 +1107,8 @@
                         </div>
 
                         <div class="foot-note mvs-10">
-                            The command above tries to fetch the migration status from the database reserved <span class="c-orange">migrations</span>. The status 
+                            The command above tries to fetch the migration status from the database reserved <span class="c-orange">migrations</span> table. The status 
                             table is only shown if the database connection is successful and the migrations table has been generated.
-                            table.
                         </div>
 
                     </div>

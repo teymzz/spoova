@@ -7,11 +7,11 @@
         <section class="pxv-10 tutorial bc-white">
             <div class="font-em-1d2">
 
-                @lay('build.co.links:tutor_pointer')
-
-                @layout:rex 
-
                 <div class="start font-em-d8">
+
+                    @lay('build.co.links:tutor_pointer') <br>
+
+                    @layout:rex 
 
                     <div class="font-em-1d5 c-orange">Window Rex</div> <br>  
                     
@@ -43,7 +43,7 @@
 
                         <div class="php-rex-files">
                             
-                            <div class="font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
+                            <div class=" fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
                                 <div class="flex-full midv"> PHP Rex Files </div>
                             </div>
                             <div class="">
@@ -87,7 +87,7 @@
 
                         <div class="css-rex-files">
                             
-                            <div class="font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
+                            <div class=" fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
                                 <div class="flex-full midv"> CSS Rex Files </div>
                             </div>
                             <div class="">
@@ -157,15 +157,15 @@
     &lt;/style&gt;
         </pre>
     </div>                                
-                                        <br><br>
-                                        <div class="foot-note">
-                                        The <code>rel</code> attribute helps to reveal the path of the css file as it can become difficult to locate stylesheet 
-                                        files when working on large projects. The path shown in the <code>rel</code> attribute is usually a path within the 
-                                        <code>windows/Rex</code> directory. In certain situations we can import multiple styles from a single css file. This
-                                        can be done by first defining the file path, then each style section is extracted by their unique names. The unique names 
-                                        in this case will be separated by columns. For example, the code below is an example of multiple style extraction from a single css 
-                                        file. Both the <code>footer</code> and <code>header</code> styles will be imported as the compiled data.
-                                        </div> <br>
+                   
+                                        <div class="foot-note pvs-10">
+                                            The <code>rel</code> attribute helps to reveal the path of the css file as it can become difficult to locate stylesheet 
+                                            files when working on large projects. The path shown in the <code>rel</code> attribute is usually a path within the 
+                                            <code>windows/Rex</code> directory. In certain situations we can import multiple styles from a single css file. This
+                                            can be done by first defining the file path, then each style section is extracted by their unique names. The unique names 
+                                            in this case will be separated by columns. For example, the code below is an example of multiple style extraction from a single css 
+                                            file. Both the <code>footer</code> and <code>header</code> styles will be imported as the compiled data.
+                                        </div>
     <div class="pre-area">
         <div class="pxv-10 bc-silver">somefile.rex.php</div>
         <pre class="pre-code">
@@ -180,7 +180,7 @@
 
                         <div class="js-rex-files">
                             
-                            <div class="font-menu fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
+                            <div class=" fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
                                 <div class="flex-full midv"> JS Rex Files </div>
                             </div>
                             <div class="">
@@ -205,20 +205,20 @@
     &#35;script;
         </pre>
     </div>
-                                        <br><br>
+                              
                                         <div class="foot-note">
                                             Assuming we have the rex file above to be within the <code class="">"windows/Rex/js/"</code> directory, then we can import the file as shown below:
-                                        </div> <br>
+                                        </div>
 
     <div class="pre-area">
         <div class="pxv-10 bc-silver">Sample 3b: PHP File (some.rex.php) to file</div>
         <pre class="pre-code">
     @(script('js.index:header'))@
         </pre>
-    </div>  <br><br>
+    </div>
                                         <div class="foot-note">
                                             The path supplied above is expected to be found at <code>windows/Rex/js/index.rex.php</code>. The data compiled from the file above will be as below:
-                                        </div> <br>                                        
+                                        </div>                                       
     <div class="pre-area">
         <div class="pxv-10 bc-silver">compiled data</div>
         <pre class="pre-code">

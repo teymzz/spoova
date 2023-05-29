@@ -28,7 +28,7 @@
 
                     </div>
 
-                    <div class="pxv-20 font-menu font-em-d85">
+                    <div class="pxv-20  font-em-d85">
                         The spoova window system can be likened to a real house. Every house has a door and a window. 
                         The standard WVM logic follows that there is only one main entry point which can either be active or passive depending on the 
                         availability of a root window entry points that leads to a view. All web Zpages are window pages. They 
@@ -51,7 +51,7 @@
 
                     </div>
 
-                    <div class="pxv-20 font-menu font-em-d85">
+                    <div class="pxv-20  font-em-d85">
                         Although great care has be taken to provide an environment for building secure applications, developers should trend 
                         carefully with form inputs. Great care must be taken to validate form inputs as improper 
                         validation may lead to undesired responses. <br><br>
@@ -63,7 +63,7 @@
 
                     </div>
 
-                    <div class="pxv-20 font-menu font-em-d85">
+                    <div class="pxv-20  font-em-d85">
                         Deploying project applications has never been this easy. Spoova provides lite frontend and backend tools that keep your application on a 
                         production-level state. This means that once a project application has been sucessfully deployed, 
                         it is automatically mapped to the online enviroment. The root htaccess file is a key feature in the functionality of this application, 
