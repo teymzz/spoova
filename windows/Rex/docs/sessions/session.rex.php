@@ -13,14 +13,14 @@
 
                 @lay('build.co.links:tutor_pointer') <br>
 
-                <div class="font-em-1d5 c-orange">Sessions</div> <br>
+                <div class="font-em-1d5 c-orange"> <i class="bi-person-fill"></i> Sessions</div> <br>
                 
                 <div class="resource-intro">
                     <div class="">
                         Sessions are controlled by the session class which includes some important helper methods. 
                         The session configuration is mainly handled by the <code>icore/init</code> file. This means that the 
                         init file and the Session class are both linked. For session to be properly managed, the <code>init</code> 
-                        file must be configured with valid parameteer. The code below reveals the syntax of the <code>init</code> 
+                        file must be configured with valid parameteer. The code below reveals the format of the <code>init</code> 
                         file.
                         <br>
 
@@ -32,8 +32,8 @@
                             </div>
                             <pre class="pre-code">
   USER_TABLE: users;
-  COOKIE_FIELDNAME: cookie;
   USER_ID_FIELDNAME: email;
+  COOKIE_FIELDNAME: cookie;
   ...                                         
                                 </pre>
                             </div>
@@ -47,10 +47,10 @@
                                         <div><code class="">USER_TABLE:</code> <span>This table is expected to be the user table where user data is stored.</span></div>                                     
                                     </div>
                                     <div class="flex mvs-6">
-                                        <div><code class="">COOKIE_FIELDNAME:</code> <span>A database column in USER_TABLE where cookie hash is stored</span></div>
+                                        <div><code class="">USER_ID_FIELDNAME:</code> <span>A database column in USER_TABLE that contains the user unique id</span></div>
                                     </div>
                                     <div class="flex mvs-6">
-                                        <div><code class="">USER_ID_FIELDNAME:</code> <span>A database column in USER_TABLE that contains the user unique id</span></div>
+                                        <div><code class="">COOKIE_FIELDNAME:</code> <span>A database column in USER_TABLE where cookie hash is stored</span></div>
                                     </div>
                                 </div>
 
@@ -62,7 +62,7 @@
                         
 
                         <div class="mvt-10">
-                            <div class="c-orange">Session Initialization</div>
+                            <div class="c-orange"> <i class="bi-lightning-fill"></i> Session Initialization</div>
                             <div class="mvt-10">
                                 The session class can be initialized using the format below<br><br>
 
@@ -103,7 +103,7 @@
                                     </div> <br><br>
 
                                     <div class="">
-                                        <div class="c-orange">Session(session_key)</div>
+                                        <div class="c-orange"> <i class="bi-person-add"></i> Session(session_key)</div>
 
                                         <div class="font-em-d87 mvt-10">
                                             The session_key defined during the instantiation of the session class is a key that is used to store user data inside 
@@ -119,7 +119,7 @@
                                     </div>
 
                                     <div class="">
-                                        <div class="c-orange">Session(cookie_key)</div>
+                                        <div class="c-orange"> <i class="bi-key box" style="transform:rotate(45deg)"></i> Session(cookie_key)</div>
 
                                         <div class="font-em-d87 mvt-10">
                                             Just like the session_key, the cookie_key is used by the <code>$_COOKIE</code> class to store a user cookie for rememberMe. 
@@ -141,13 +141,14 @@
                                     </div>
 
                                     <div class="">
-                                        <div class="c-orange">Session(secure)</div>
+                                        <div class="c-orange"><i class="bi-person-lock"></i> Session(secure)</div>
 
                                         <div class="font-em-d87 mvt-10">
                                            A layer of security can be added to our session class which ensures that a fake id cannot create an active session. By setting  
                                            <code>secure</code> as true, the Session class will validate the userid stored within the <code>$_SESSION[session_key]['userid']</code>. 
-                                           If the value does not exist in the <code>USER_ID_FIELDNAME</code> column defined in init file, the session will be nullified. The 
-                                           <code>Session::secure()</code> function can also enable this behaviour which also takes the argument of <code>true</code> or <code>false</code>. 
+                                           If the value does not exist in the <code>USER_ID_FIELDNAME</code> database column name defined in init file, the session will be nullified. The 
+                                           <code>Session::secure()</code> method can also be used to achieve the same effect and it takes the argument of <code>true</code> or <code>false</code>. 
+                                           For the <code>userid</code> of the current session user to be validated, the database connection must be active. 
 
                                         </div><br>
                                     </div>
@@ -193,7 +194,7 @@
 
                     <!-- stream -->
                     <div class="">
-                        <div class="mvs-4 c-orange">stream()</div>
+                        <div class="mvs-4 c-orange"> <i class="bi-repeat"></i> stream()</div>
                         <div class="font-em-d9">
 
                             <div class="mvs-10">
@@ -220,7 +221,7 @@
 
                     <!-- sessionName, cookieName -->
                     <div class="">
-                        <div class="mvs-4 c-orange">sessionName() and cookieName()</div>
+                        <div class="mvs-4 c-orange"> <i class="bi-image-alt"></i> sessionName() and cookieName()</div>
                         <div class=" font-em-d9">
 
                             <div class="mvs-10">
@@ -247,7 +248,7 @@
 
                     <!-- onauto -->
                     <div class="mvt-20">
-                        <div class="mvs-4 c-orange">onauto()</div>
+                        <div class="mvs-4 c-orange"> <i class="bi-reply-all"></i> onauto()</div>
                         <div class=" font-em-d9">
                             The <code>Session::onauto()</code> method is an alias for <code>Session::stream()->auto()</code> method. It manages redirection of session class. It is used to perform redirection 
                             when a session is active or inactive to enforce a redirection. The syntax is shown below

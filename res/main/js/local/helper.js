@@ -63,49 +63,92 @@ function popbox(element, bool, callBack) {
 }
 
 
-/**
- * This function helps to toggle an attribute's value within an element.
- * 
- * @param {*} elem element selector
- * @param {*} value value to be toggled
- * @param {*} attr attribute which value is expected to be toggled
- * @param {*} callBack a callback function executed with callFunc() which must be an array e.g ['function','param','param',...]
- */
-function toggleAttr(elem, value, attr, callBack) {
+function toSelectionObject(selector){
+    let element = typeof selector;
+    if(element === 'object'){
+        selector = selector
+    }else if(element === 'string'){
+        selector = document.querySelectorAll(selector)
+    }
+    if(selector){
+        if(!selector.length){
+            selector = [selector];
+        }else if(!Array.isArray(selector)){
+            let selects = [] 
+            console.log(selector)
+            for(const key in selector){
+                if(selector.hasOwnProperty(key)){
+                    if(selector[key].childNodes){
+                        selects.push(selector[key]);
+                    }
+                }
+            }
+            selector = selects;
+        }
+    }  
+    return selector;
+}
 
-    elem.addEventListener('click', function() {
-        if (attr == null) { attr = 'class'; }
+//This function helps to toggle an attribute's value within an element.
+//@param elem: element selector
+//@param value: value to be toggled
+//@param attr: attribute which value is expected to be toggled
+//@param callback: a callback function executed with callFunc() which must be an array e.g ['function','param','param',...]
+function toggleAttr(elem, value, attr, callBack) {
     
-        if (attr == 'class') {
-            var active = elem.classList.contains(value);
-            if (active == true) {
-                elem.classList.remove(value);
-            } else if (active == false) {
-                elem.classList.add(value)
-            }
-        } else {
-            var active = elem.getAttribute(attr);
-            if (active == value) {
-                elem.removeAttribute(attr);
-            } else if (active == false) {
-                elem.setAttribute(attr, value)
-            }
-        }
-    
-        if (Array.isArray(callBack)) {
-            const allparams = [...callBack];
-            var func = allparams.splice(0, 1);
-            func = func[0];
-            var isActive = (active) ? false : true;
-            var actv = [isActive];
-            var params = [...actv, ...allparams];
-    
-            var newCallBack = [func, params];
-            callFunc(newCallBack);
-        }
-    });
+    elem = toSelectionObject(elem);
+
+    if(elem){
+
+        elem.forEach(selection => {  
+
+            selection.addEventListener('click', function(){
+
+                if (attr == null) { attr = 'class'; }
+
+                if (attr == 'class') {
+                    var active = selection.classList.contains(value);
+                    if (active == true) {
+                        selection.classList.remove(value);
+                    } else if (active == false) {
+                        selection.classList.add(value)
+                    }
+                } else {
+                    var active = selection.getAttribute(attr);
+                    if (active == value) {
+                        selection.setAttribute(attr, '');
+                    } else if (active == false) {
+                        selection.setAttribute(attr, value);
+                    }
+                }
+
+                if (Array.isArray(callBack)) {
+                    const allparams = [...callBack];
+                    var func = allparams.splice(0, 1);
+                    func = func[0];
+                    var isActive = (active) ? false : true;
+                    var actv = [isActive];
+                    var params = [...actv, ...allparams];
+
+                    var newCallBack = [func, params];
+                    callFunc(newCallBack);
+                }
+                
+            })
+
+        })
+
+    }
 
 }
+// /**
+//  * This function helps to toggle an attribute's value within an element.
+//  * 
+//  * @param {*} elem element selector
+//  * @param {*} value value to be toggled
+//  * @param {*} attr attribute which value is expected to be toggled
+//  * @param {*} callBack a callback function executed with callFunc() which must be an array e.g ['function','param','param',...]
+//  */
 
 //This function is a typeWriter animation for texts
 function typeWrite(selector,settings){

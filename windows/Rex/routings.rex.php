@@ -13,7 +13,7 @@
 
                     @lay('build.co.links:tutor_pointer') <br>
 
-                    <div class="font-em-1d5 c-orange">Routing</div> <br>
+                    <div class="font-em-1d5 c-orange"> <i class="bi-router"></i> Routing</div> <br>
                     
                     <div class="routing-files">
                         <div class="">

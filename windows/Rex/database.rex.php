@@ -14,7 +14,7 @@
                     
                         @lay('build.co.links:tutor_pointer') <br>
     
-                        <div class="font-em-1d5 c-orange">Handling Database</div> <br>
+                        <div class="font-em-1d5 c-orange"> <i class="bi-database-fill-gear"></i> Handling Database</div> <br>
 
                         <div class="db-connection">
                             <div class="fb-6 c-olive">Database connection</div>

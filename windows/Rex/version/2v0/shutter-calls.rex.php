@@ -47,7 +47,7 @@ class Home extends Window {
                 
                 SELF::ARG => [$Ajax, $myArray]
             ]
-        )
+        );
 
     }
 
@@ -105,7 +105,7 @@ class Home extend Window {
 
                 self::ARG => $myArray
             ]
-        )
+        );
 
     }
 

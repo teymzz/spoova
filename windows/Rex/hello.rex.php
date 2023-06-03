@@ -1,12 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
+    @meta('dump')
     @Res(':headers')
-    @Res('res/assets/css/animate.min.css')
-    <?= Res::getFile('res/main/css/local/fonts/Nunito-Black.ttf::css') ?>
-    <link rel="import" href="component.html">
-    <title>{{ $title ?? 'Hello!'}}</title>
+    @load('animate')
+    @head($title ?? 'Hello!')
     @live
     <style> 
         :root {

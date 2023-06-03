@@ -41,18 +41,20 @@ class Backup extends Entry{
         //save to directory...        
         if ($option == 'project') {
 
-            Cli::textView(Cli::alert('Please input your backup folder name: '), 2, "1|");
+            Cli::textView(Cli::warn('Backups are stored in "backup/" directory: '), 2, "1|");
 
-            $folder = Cli::prompt([], null, true);
+            $folder = 'backup';
+            // $folder = Cli::prompt([], null, true);
 
-            if(!preg_match('~[a-zA-Z0-9_]+?~', $folder)){
-                Cli::clearUp();
-                Cli::textView(Cli::error('invalid folder name supplied.'), 2, "|1");
-                Cli::textView(Cli::error('backup aborted due to invalid folder name.'), 2, "|2");
-                return false;
-            }
+            // if(!preg_match('~[a-zA-Z0-9_]+?~', $folder)){
+            //     Cli::clearUp();
+            //     Cli::textView(Cli::error('invalid folder name supplied.'), 2, "|1");
+            //     Cli::textView(Cli::error('backup aborted due to invalid folder name.'), 2, "|2");
+            //     return false;
+            // }
 
-            Cli::clearUp(2);
+            // Cli::clearUp();
+            Cli::break();
             Cli::textView(Cli::alert('Please input your backup file name: '), 2, "1|");
 
             $filename = Cli::prompt([], null, true);

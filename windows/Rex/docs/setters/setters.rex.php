@@ -14,7 +14,7 @@
                     @lay('build.co.links:tutor_pointer') <br>
 
 
-                    <div class="font-em-1d5 c-orange">Setters and Getters</div> <br>  
+                    <div class="font-em-1d5 c-orange"><i class="bi-toggles"></i> Setters and Getters</div> <br>  
                     
                     <div class="setters-intro">
                         <div class="">

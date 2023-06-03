@@ -13,7 +13,7 @@
             <br>
             <div class="start helvetica font-em-d87"> 
 
-                <div class="c-orange font-em-1d5">Handling Users</div> <br>
+                <div class="c-orange font-em-1d5"> <i class="bi-person-gear"></i> Handling Users</div> <br>
                 
                 <div class="resource-intro">
                     <div class="">

@@ -6,7 +6,7 @@ use Window;
 
 class Features extends Window {
     
-    public function __construct(){
+    public function __construct($vars){
 
         self::call($this,
             [ lastCall() => 'root'], false
@@ -16,6 +16,7 @@ class Features extends Window {
             lastCall('/css') => 'win:Routes\Docs\Features\Css',
             window(':other-features.javascript') => 'win:Routes\Docs\Features\Javascript',
             lastCall('/javascript/ajax')  => 'win:Routes\Docs\Features\FormValidator',
+            SELF::ARG => $vars
         ]);
 
     }

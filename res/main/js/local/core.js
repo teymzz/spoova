@@ -4,8 +4,6 @@
  */
 
 
-
-
 /**
  * This function allows safe loading of function
  * functions that does not exists can be loaded without
@@ -287,19 +285,13 @@ function inRange($value, $min, $max){
  * @param {*} attr name of attribute to be checked
  */
 function hasAttr(elem, attr) {
-    let selected = document.querySelector(elem);
-    
-    if(selected) {
-        let attrValue = selected.getAttribute(attr);
-        
-        if (typeof attrValue !== 'undefined' && attrValue !== false) {
-          return true;
-        } else {
-          return false;
-        }
-    }
 
-    return false;
+    elem = toSelectionObject(elem);
+
+    if(elem) {
+        elem = elem[0];
+        return elem.hasAttribute(attr)
+    }
 
 }
 

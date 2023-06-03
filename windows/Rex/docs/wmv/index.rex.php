@@ -95,9 +95,9 @@
                                 <div class="index-logic">
                                     <div class="subject c-olive"><i class="bi-circle-fill"></i> Index Logic</div>
                                     <div class="desc mvt-10">
-                                        Index logic is built upon the basic logic. In this logic, the <code class="calibri">windows/Routes/Index.php</code>
-                                        file takes the full ownership and control of how urls are handled. When an index page 
-                                        (e.g <code class="calibri">http://host_name/</code> or <code class="calibri">http://host_name/index</code>) is visited, index class will resolve 
+                                        Index logic is built upon the basic logic. In this logic, the <code class="calibri">windows\Routes\Index</code>
+                                        namespaced class takes the full ownership and control of how urls are handled. When an index page 
+                                        (e.g <code class="calibri">http://host_name/</code> or <code class="calibri">http://host_name/index</code>) is visited, the namespaced index class will resolve 
                                         the index page by calling its <code class="calibri">root()</code> method. However when other urls whose entry names are not index are called, 
                                         then spoova will try to resolve the urls by looking for a file with the root name within the <code class="calibri">windows/Routes</code> directory.
                                         If the file does not exist, then spoova will return a 404 error page. The structure below is an example of how to set up an index logic. 
@@ -153,19 +153,32 @@
                                                 <code>Server::run('index')</code>, the application will try to call the <code>windows\Routes\Index.php</code>. 
                                                 If the file exists and the currently requested url is an index page, the <code>windows\Routes\Index.php</code>file will in turn call its <code>root()</code> method 
                                                 using the shutter method <code>call()</code>.
-                                                However, if a different url is called whose entry point name is not "index", rather than call the <code>root()</code> method, 
+                                                However, if a different url is called whose entry point name is not <code class="bd-f">"index"</code>, rather than call the <code>root()</code> method, 
                                                 spoova will check if the route file exists first within the <code class="calibri">windows\Routes</code> directory and try to use the class to 
                                                 resolve the url. The <code>self::callRoute()</code> method ensures that 
                                                 the window tries to load every page using a class entry window name that exists within the <code class="calibri">windows\Routes</code> directory. If the url handler or window router file 
-                                                does not exist, then a 404 reponse is returned through the <code>self::close()</code> method. 
+                                                does not exist, then a 404 reponse is returned through the <code>self::close()</code> method. To further explain this, let's take a look at two sample urls below: 
+                                                
+                                                <div class="pre-area">
+                                                    <pre class="pre-code">
+  http://localhost/app/home <span class="comment">window('root') => home</span>
+  http://somesite.com/home  <span class="comment">window('root') => home</span>
+                                                    </pre>
+                                                </div>
+
+                                                In the two sample urls above, spoova internally determines the url's entry point as <code>"home"</code>. The <code>self::callRoute()</code> will try to see if the <code>Home</code> route 
+                                                class exists in the <code>windows/Routes</code> directly and automatically load it. If the file does not exist, it will return a false value which will trigger the <code>self::close()</code> 
+                                                method that returns a 404 error page.
+                                                
+                                                into assuming we have a localhost url 
+                                                <code>http://localhost/app/home</code>, then the <code>window('root')</code> of the url will be <code>"home"</code>. 
                                             </p>
 
                                             <p>
-                                                In any given url, an entry name returned by <code>window('root')</code> or <code>window(':')</code> 
-                                                is always the name that comes after the domain url. In localhost, it is the name that comes after the project folder name. In the code 
-                                                above, assuming the project folder name is <code>app</code>, then a url "http://localhost/app/" and "http://localhost/app/index" will run successfully because the 
-                                                <code>call()</code> method was used and both urls still refer to the index page. In situations where we need to handle more paths on the index page, for example 
-                                                "http://localhost/app/localhost/more_path" then <code>self::basecall()</code> may be preferred instead while noting that unwanted urls must be filtered out through some validation logic.
+                                                As seen above, in any given url, an entry name returned by <code>window('root')</code> or <code>window(':')</code> 
+                                                is always the name that comes after the domain url. In localhost, it is the path name that comes after the project folder name. In the first url sample 
+                                                above, the project folder name is <code>app</code>, hence the window root is <code>"home"</code>. However, in the second url since <code>somesite.com</code> 
+                                                will most likely be the domain url, then the first path that follows becomes the window root. If there is no path found after these urls, this will be assumed as the index page.
                                             </p>
                                          
                                         </div>
@@ -180,12 +193,12 @@
                                 <div class="standard-logic">
                                     <div class="subject c-olive"><i class="bi-circle-fill"></i> Standard Logic</div>
                                     <div class="desc mvt-10">
-                                        Unlike other logics, standard logic suggests that all urls must have a window entry point corresponsing to a server entry file that takes ownership of its 
+                                        Unlike other logics, standard logic suggests that all urls must have a window entry point corresponsing to a server or route entry file that takes ownership of its 
                                         relative sub-urls. When a url is visited, standard logic will split the url into divisions to obtain an entry point name. The entry point name of that url must have a correspoing 
                                         controller class that determines how the url is loaded. This means that a url <code>http://localhost/home</code> and <code>http://localhost/home/user/...</code> for example, will be handled 
-                                        by a root window file <code>"Home"</code>. This <code>Home</code> window class within the <code class="calibri">windows/Routes</code>
-                                        directory will determine how its relative sub-paths are resolved. If the root window file does not exist, then a 404 error page is returned. 
-                                        In any given url there is always a window or entry point as explained <a href="@route('::about_wmv')"><span class="c-olive hyperlink">here</span></a>. In order to define a standard logic, 
+                                        by a route file <code>"Home"</code>. This <code>Home</code> file must be an extension of <code>Window</code> class within the <code class="calibri">windows/Routes</code>
+                                        directory and it will determine how its relative sub-paths are resolved. If the required route file does not exist, then a 404 error page is returned. 
+                                        Futher explanation is given on window entry point <a href="@route('::about_wmv')"><span class="c-olive hyperlink">here</span></a>. In order to define a standard logic, 
                                         the <code>Server::run()</code> code in root config file <code>index.php</code> must have no arguments. 
                                         <br>
 
@@ -301,8 +314,8 @@
                                 <div class="bc-silver pxv-10 rad-r"> <span class="bi-lock"></span> Standard Logic Inverse</div>
                                 <div class="mvt-6">
                                     Inverse is the way to reduce the strict level of standard logic. By default, the standard login assumes that 
-                                    window roots are have controller files within the <code>windows/Routes</code> directory and that the file name 
-                                    starts with an uppercase character while other characters are in lower case. This make it important that when a root <code>"docs/"</code> 
+                                    window roots have controller files within the <code>windows/Routes</code> directory and that the file name 
+                                    starts with an uppercase character while other characters are in lower case. This make it important that when a window root <code>"docs"</code> 
                                     is accessed, then the route <code>Docs</code> is called. However, if the root "doCs" is called instead, this will fail because the 
                                     route file "doCs" or "DoCs" does not exist but what we have is <code>"Docs"</code>. In other to remove the default strictness behaviour to 
                                     ensure that window roots accepts any lower case character, we need to add a non-strict level directive into the map file. This 

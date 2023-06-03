@@ -45,7 +45,7 @@
       &lt;input name="field1" type="text"&gt;
       &lt;input name="field2" type="text"&gt;
 
-      &lt;button bond:action="push"&gt; bond:click="save" submit &lt;/button&gt;
+      &lt;button bond:action="push" bond:click="save"&gt; submit &lt;/button&gt;
 
     &lt;/form&gt;
 

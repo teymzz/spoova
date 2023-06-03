@@ -1,12 +1,10 @@
 ### SPOOVA FRAME
-Spoova is a PHP Framework that uses a Window-View-Model (WVM) pattern that 
-is built upon MVC arcitecture. It uses a 3-Logic pattern to determine how routes 
-are controlled or managed. Other features include inbuilt live server, inbuilt template engine, Reusable components, Static Resource Handler, ORM (beta) and FileManager tool.  
+Spoova is a PHP Framework that uses a Window-View-Model (WVM) pattern that is built upon MVC architecture. It uses a 3-Logic pattern to determine how routes are controlled or managed. Other features include inbuilt live server, inbuilt template engine, Reusable components, Static Resource Handler, ORM (beta) and FileManager tool.  
 
 ##### INSTALLATION
 
    ###### Direct Installation
-   If you are downloading spoova project pack dicrectly from the source pack, clone or download the spoova frame project package to your device web server root and rename extracted pack to `spoova`
+   If you are downloading spoova project pack directly from the source pack, clone or download the spoova frame project package to your device web server root and rename extracted pack to `spoova`
 
    ###### Installation from composer #1
    Run the following command in your local web server root to generate the project pack
@@ -28,7 +26,7 @@ are controlled or managed. Other features include inbuilt live server, inbuilt t
     spoova\mi\core\Spv::init();
    ```
 
-   > Add the _composer.json_ file with the following json sample syntax and using the spoova version required
+   > Add the _composer.json_ file with the following json sample syntax along with the spoova version required
 
    ```json
    {    

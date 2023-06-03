@@ -7,6 +7,13 @@ use spoova\mi\core\classes\Request;
 use spoova\mi\core\classes\Slicer;
 
 class Rexit {
+
+    static function head($title) {
+
+        return "<title>". $title . "</title>";
+
+    }
+
    /**
      * Authenticated user redirection
      *

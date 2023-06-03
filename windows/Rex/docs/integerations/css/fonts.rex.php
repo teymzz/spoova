@@ -121,7 +121,13 @@
             <div class="font-em-d85">
                 The font family utility classes that come with the local css font library includes:<br>
 
-                <code>Calibri</code> <code>Verdana</code> <code>Helvetica</code> <br><br>
+                <code>Calibri</code> 
+                <code>Verdana</code> 
+                <code>Helvetica</code> 
+                <code>Nunito</code> 
+                <code>Fira</code> 
+                <code>Boxigen</code> 
+                <br><br>
 
                 <div class="box pxv-10 bc-silver font-em-d85" style="width:100%">
                     <div class="pxv-10 bc-silver-d">Example: font family verdana</div>

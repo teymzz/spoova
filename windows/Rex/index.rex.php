@@ -1,7 +1,7 @@
 @template('template.t-html')
 
     @title('Spoova')
-  
+    
     <!-- add css -->
     @res('res/assets/css/index.css') 
     @style('build.css.inc:t-doc')
@@ -9,7 +9,7 @@
     
     <!-- script -->
     @script('build.js.inc:index')
-
+    
     <section>
 
         <div class="maincover">          

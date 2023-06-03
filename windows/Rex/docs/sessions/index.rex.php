@@ -13,7 +13,7 @@
 
                     @lay('build.co.links:tutor_pointer') <br>
 
-                    <div class="font-em-1d5 c-orange">Sessions</div> <br>
+                    <div class="font-em-1d5 c-orange"> <i class="bi-person-fill"></i> Sessions</div> <br>
                     
                     <div class="resource-intro">
                         <div class="">
@@ -37,26 +37,37 @@
                             1. Init File setup
                         </div> <br><br>
 
-
                         <div class="">
                             <div class=" font-em-d9">
-                            The init file <code>icore/init</code> contains few configurations that helps the 
-                            Session class to properly map itself to the database. In the init file, the following must be configured
+                            The init file <code>icore/init</code> contains few configurations keys and values pairs 
+                            that help the Session class to properly map itself to the database. These keys are listed and 
+                            discussed below:
                             <br><br>
                             <ul>
                                 <li>USERS_TABLE
                                     <div class="mvt-6">The user's main table in database containing user details</div>
                                 </li> <br>
-                                <li>USERS_FIELD_ID
+                                <li>USER_ID_FIELDNAME
                                     <div class="mvt-6">The user's main table user id field in database containing user details</div>
                                 </li> <br>
-                                <li>COOKIE_FIELD_NAME
+                                <li>COOKIE_FIELDNAME
                                     <div class="mvt-6">A user cookie field where remember me cookie can be stored.</div>
                                 </li>
                             </ul>
-                            </div> <br>
+                            </div>
+                            <div class="foot-note">
+                                The configuration keys are usually handled automatically from the command-line using the <code>config</code> 
+                                command. The format below defines a sample format of how the configuration keys are expected to be defined.
+                            </div>
+                            <div class="pre-area">
+                                <pre class="pre-code">
+  USERS_TABLE: users;
+  USER_ID_FIELDNAME: email;
+  COOKIE_FIELDNAME: cookie;
+                                </pre>
+                            </div>
                         </div>        
-                    </div>
+                    </div> <br>
 
                     <div>
                         <div class=" fb-6 c-olive bc-white-dd box-full rad-4 pxv-8">

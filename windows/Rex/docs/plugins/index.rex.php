@@ -14,18 +14,17 @@
 
           @lay('build.co.links:tutor_pointer') <br>
 
-          <div class="font-em-1d5 c-orange">Composer / Plugins</div> <br>  
+          <div class="font-em-1d5 c-orange"> <i class="bi-plug"></i> Composer / Plugins</div> <br>  
           
           <div class="resource-intro">
               <div class="">
-                  The spoova project packages are stored in the root <code>vendor/</code> folder. 
-                  Although the composer <code>vendor</code> folder is placed at the root of the project application, spoova 
-                  suggests that the vendor folder which is a core aspect of the application, should be placed in the <code>core/</code> directory.
-                  Since spoova is a very flexible framework, developers are allowed to move the <code>vendor</code> folder into the <code>core/</code>
-                  if needed. However, note that the <code>core/</code> directory is a strictly protected directory which means that no file will 
-                  become accessible if placed within this directory including static files. If static files will be imported to the vendor folder which 
-                  are required to be accessible, then it is better to leave the vendor folder out of this directory. The vendor folder can be moved to 
-                  core directory by following the processes below:
+                  The spoova project packages are stored in the root <code>vendor/</code> folder where they become 
+                  accessible by the entire framework. Although the composer <code>vendor</code> folder is placed at the root of the project application, 
+                  it is suggested that the vendor folder which is a core aspect of the application, should be placed in the <code>core/</code> directory 
+                  to further strengthen its security. Since spoova is a very flexible framework, developers are allowed to move the <code>vendor</code> folder into the <code>core/</code>
+                  if needed. However, note that the <code>core/</code> directory is a strictly protected directory meant strictly for backend php files or classes. This means that the 
+                  files in this directory is only accessible internally and this behaviour will prevent static files from loading. If static files will be imported to the vendor folder 
+                  which are required to be accessible, then it is better to leave the vendor folder out of this directory.
               </div> 
           </div>
           
@@ -33,10 +32,12 @@
               <br>
               <div class=" fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
                 <div class="flex-full midv"> <span class="bi-folder-fill mxr-8 c-lime-dd"></span> Vendor Folder </div>
-              </div> <br>
+              </div>
 
               <div class="">
-                <div class="">The composer vendor folder can be moved to <code>core/</code> directory by applying the following processes</div>
+                <div class="">This folder contains all loaded packages from the <code>Composer</code> package installer. The folder can be found at the root of the project application which makes 
+                it easier to run composer commands easily. Although this folder is placed at the root, it can be moved to the <code>core/</code>if required. This can be done by applying the following 
+                processes:</div>
                 <br>
 
                 <div class="">
@@ -76,11 +77,13 @@
           <div id="core"> 
 
               <div class=" fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
-                <div class="flex-full midv"> <span class="bi-gear mxr-8 c-lime-dd"></span> Core Folder </div>
-              </div> <br>
+                <div class="flex-full midv"> <span class="bi-gear mxr-8 c-lime-dd"></span> Core Directory </div>
+              </div> 
               
               <div>
-                  Developers should avoid tampering with the core files in the core folder. If new classes will be created, custom folders may be used for classes. 
+                  This directory contains the core classes of the framework. Developers should avoid tampering with the core files within the <code>core/</code> directory. 
+                  If new classes will be created, 
+                  custom folders may be used for classes. 
                   The root namespace follow the pattern of <code>{{ rtrim(scheme('',false),'\\') }}</code>.  This means that custom classes should also apply this namespacing rule. 
               </div> <br>
         

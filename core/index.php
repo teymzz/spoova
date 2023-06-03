@@ -7,8 +7,7 @@ require_once 'basics.php';
  <html>
  	<head>
 		<title>Secure Message</title>
-		<link href="<?= domurl('res/main/css/bootstrap/css/bootstrap.min.css') ?>" rel="stylesheet" media="all" type="text/css">
-		<link href="<?= domurl('res/main/css/local/spi.css') ?>" rel="stylesheet" media="all" type="text/css">
+		<?= Res::local() ?>
 		<style>
 			body{
 			 background-color: #4e4e4e;

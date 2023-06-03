@@ -1,17 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="icon" type="image/png" href="@mapp('images/icons/favicon.png')">
-    <title>{{ title? }}</title>
     @meta('dump')
+    @head($title?)
     @load('headers')
-    @styles
+    @Styles
     @style('build.css.tutorial:root')
     @style('build.css.headers:tutorial')
-    @res('res/main/js/local/switcher.js')
+    @load('switcherJS')
     <!-- @live -->
 </head>
 <body class="--theme-dark">

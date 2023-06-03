@@ -19,7 +19,7 @@
 
             <div class="start font-em-d8"> <br>
 
-                <div class="font-em-1d5 c-orange">Database : Migrations</div> <br>
+                <div class="font-em-1d5 c-orange"> <i class="bi-database-fill-up"></i> Database : Migrations</div> <br>
 
                 <div class="">
                     Migration files are files that enable us to create or modify our database table in the format that is  
