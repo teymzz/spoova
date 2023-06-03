@@ -2,6 +2,7 @@
 
 namespace spoova\mi\core\classes;
 
+use PDO;
 use Reflection;
 use ReflectionClass;
 use ReflectionMethod;
@@ -107,7 +108,6 @@ class Slicer extends Directives{
       * @return string|void
       */
      private static function process($body, $return){ 
-        static $count = 0;
 
         if($body){
           self::sort_comments($body);
@@ -115,6 +115,8 @@ class Slicer extends Directives{
           self::sort_excludes($body);
           
           self::sort_placeholders($body);
+
+          self::check_styles($body);
 
           //remove unauthorized sections off the grid
           self::sort_auth($body);
@@ -130,8 +132,6 @@ class Slicer extends Directives{
           self::sort_styles($body);
 
           self::sort_conditions($body);
-
-          // self::unsort_comments($body);
 
         }
 
@@ -328,8 +328,26 @@ class Slicer extends Directives{
       
     }
 
+
+
     /**
-     * Sort directive patterns using the directives class
+     * Check directive patterns related to styles
+     *
+     * @param string $body referenced body template
+     * @return void
+     */
+    public static function check_styles(&$body){    
+
+      if(stripos($body, '@styles') !== false) {
+        SELF::$PULLSTYLES = true;
+      }
+        
+      return $body;
+      
+    }
+
+    /**
+     * Sort directive patterns related to styles
      *
      * @param string $body referenced body template
      * @return void
@@ -337,7 +355,7 @@ class Slicer extends Directives{
     private static function sort_styles(&$body){    
 
       if(SETTER::EXISTS(':STYLES')) {
-        $body = str_ireplace('@styles', GET(':STYLES', '#1234'), $body);
+       $body = str_ireplace('@styles', GET(':STYLES', '#1234'), $body);
       }else{
         $body = str_ireplace('@styles', '', $body);
       }
@@ -372,11 +390,10 @@ class Slicer extends Directives{
         }
       }
 
-      array_map(function($directive) use(&$body, $staticMethods) {
+      array_map(function($directive) use(&$body) {
 
         if(stripos($body, '@'.$directive) !== false){
-          //handle other directives
-          //$handle = "directives".ltrim( $directive, '@');
+
           $handle = "directives".$directive;
           $handle = str_replace('-','_', $handle);
           
@@ -389,7 +406,7 @@ class Slicer extends Directives{
       }, $directives);
       
 
-      array_map(function($directive) use(&$body, $staticMethods) {
+      array_map(function($directive) use(&$body) {
 
         if(stripos($body, '@'.$directive) !== false){
 

@@ -9,7 +9,7 @@
            <div class="font-em-1d2">
 
                <div class="start font-em-d85">
-
+             
                    @lay('build.co.links:tutor_pointer') <br>
 
                    <div class="font-em-1d5 c-orange">Installation</div>
@@ -24,7 +24,7 @@
 
                    <div class="calibri bc-white-dd">
                        <div class="c-olive pxv-10 bc-silver">Application config</div>
-    
+
                        <div class="pxv-10">
        
                            <ul class="list-square pxl-20">

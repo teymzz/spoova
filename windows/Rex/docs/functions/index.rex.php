@@ -13,7 +13,7 @@
 
         <div class="start font-em-d82"> <br>
 
-          <div class="font-em-1d5 c-orange">Functions</div> <br>  
+          <div class="font-em-1d5 c-orange"> <i class="bi-filetype-php"></i> Functions</div> <br>  
           
           <div class="resource-intro">
               <div class="">

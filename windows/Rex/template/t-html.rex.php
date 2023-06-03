@@ -8,6 +8,7 @@
     <title>{{ $title?? '' }}</title>
     <!-- @meta('dump') -->
     @Res(':headers')
+    @styles
 </head>
 <body>
 

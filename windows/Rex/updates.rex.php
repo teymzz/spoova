@@ -1,7 +1,5 @@
 @template('template.t-tut')
 
-<!-- @lay('build.co.coords:header') -->
-
 @lay('build.co.navbars:left-nav')
 
    <div class="box-full pxl-2 bc-white pull-right">
@@ -13,158 +11,147 @@
                <div class="start">
 
                     <div class="pvs-20">
-                        <div class=" c-orange font-em-2 fb-6 c-dry-blue-d"> <span class="bi-recycle font-em-d85"></span> <span class="c-deep-blue fb-9 verdana">S</span><span class="c-dry-blue-dd">poova 2.0!</span></div>
+                        <div class=" c-orange font-em-2 fb-6 c-dry-blue-d"> 
+                          <span class="bi-wrench-adjustable-circle font-em-d85"></span>
+                          <span class="c-deep-blue fb-9 fira">S</span><span class="c-dry-blue-dd boxigen">poova 2.1!</span>
+                        </div>
                     
                         <div class="font-em-d8">
-                            New features have been added to version 2.0.0 to improve security and code structure of the framework
+                            This version release is focused on improving some code syntaxes and fixing some minor bugs 
+                            in the previous release. This is coming as a step towards reaching a stable version release in 
+                            the upcoming <code class="">version 2.5.0</code>. The improvements on this version are discussed below:
                         </div> <br>
-
-                        <div class="">
-                            <div class=" fb-9 font-em-1d3 calibri">What's new?</div>
-                        </div>
                     </div>
 
                     <div class="bc-white-dd rad-4 flow-hide">
                         <div class="bc-dry-blue-dd c-white-d pxv-10 font-em-d8">
     
-                            <div class="bi"> <span class="bi-circle"></span> Improved Resource class </div>  
+                            <div class="bi"> <span class="bi-speedometer"></span> Live server update </div>  
     
                         </div>
                         <div class="pxv-20 pvb-1  font-em-d8">
 
                             <p>
-                                Resource class is mainly used for importing static files through previously specified urls. 
-                                It is also capable of storing urls as groups which can be imported later using the resource 
-                                <code>import()</code> method or the <code>@(@res())@</code> directive. While a group can be easily 
-                                created for static urls, in cases where a file is required in different groups, it might be become harder 
-                                to manage a single url. A new addition makes this easier by setting unique names for each file which can be 
-                                required later. Learn more from <a href="@domurl('version/2.0/resource')">here</a>
-                            </p>
-                            
-                        </div>
-                    </div> <br> 
-
-                    <div class="bc-white-dd rad-4 flow-hide">
-                        <div class="bc-dry-blue-dd c-white-d pxv-10 font-em-d8">
-    
-                            <div class="bi"> <span class="bi-circle"></span> Live server improved! </div>  
-    
-                        </div>
-                        <div class="pxv-20 pvb-1  font-em-d8">
-
-                            <p>
-                                The integerated live server has been massively improved. Previously to version 2.0, live server uses a great amout of resources
-                                from the cpu. The effect of this is that the performace level of the device being used reduces in 
-                                a very short period of time and browsers could crash often. Version 2.0 addresses this issue and the live server is now very efficient within the framework. 
-                                With this new improvement, developers will now be able to run the live server for a longer period of time without being worried
-                                about perfomace issue. 
-                            </p>
-                            
-                        </div>
-                    </div> <br> 
-
-                    <div class="bc-white-dd rad-4 flow-hide">
-                        <div class="bc-dry-blue-dd c-white-d pxv-10 font-em-d8">
-    
-                            <div class="bi"> <span class="bi-circle"></span> Improved shutter controls </div>  
-    
-                        </div>
-                        <div class="pxv-20 pvb-1  font-em-d8">
-
-                            <p>
-                                Spoova has improved its window urls to support dotted strings which was not supported by the 
-                                shutter methods in the previous updates because dots were treated as slashes. The window function used by shutter methods have also been improved 
-                                reflect these changes. The effect of these updates results in an improved url structure and management. It also helps to reduce visual noise when 
-                                when working with shutter methods. Learn more from <a href="@domurl('version/2.0/urls')">here</a>
-                            </p>
-                            
-                        </div>
-                    </div> <br> 
-
-                    <div class="bc-white-dd rad-4 flow-hide">
-                        <div class="bc-dry-blue-dd c-white-d pxv-10 font-em-d8">
-    
-                            <div class="bi"> <span class="bi-circle"></span> Automatic Dependency injection Support </div>  
-    
-                        </div>
-                        <div class="pxv-20 pvb-1  font-em-d8">
-
-                            <p>
-                              In the previous updates, passing dependencies as arguments into window methods through shutters requires a more difficult approach. However, spoova has updated 
-                              its window methods to allow for automatic dependency injection. This new feature is added in order to reduce lines of code and to help sanitize the entire code 
-                              structure. More details are available <a href="@domurl('version/2.0/shutter-calls')">here</a> 
-                            </p>
-                            
-                        </div>
-                    </div> <br> 
-
-                    <div class="bc-white-dd rad-4 flow-hide">
-                        <div class="bc-dry-blue-dd c-white-d pxv-10 font-em-d8">
-    
-                            <div class="bi"> <span class="bi-circle"></span> Improved compiler engine </div>  
-    
-                        </div>
-                        <div class="pxv-20 pvb-1  font-em-d8">
-
-                            <p>
-                                The compiler function was handled as a detached component from the compiler engine in the previous versions of the frameworks. The effect of this detachment 
-                                is the function can only be used once within the application. However, this effect was greatly felt with the introduction of bond components which requires a 
-                                multiple use case for the compiler. In spoova version 2.0, the compiler function has been improved to allow for more use cases. The 2.0 version also introduces 
-                                more compiler functions that determines how templates are rendered. More details are provided 
-                                <a href="@domurl('version/2.0/compiler-engine')">here</a>
-                            </p>
-                            
-                        </div>
-                    </div> <br> 
-
-                    <div class="bc-white-dd rad-4 flow-hide">
-                        <div class="bc-dry-blue-dd c-white-d pxv-10 font-em-d8">
-    
-                            <div class="bi"> <span class="bi-circle"></span> Introduction of bond components </div>  
-    
-                        </div>
-                        <div class="pxv-20 pvb-1  font-em-d8">
-
-                            <p>
-                                Bond components are components that helps to render template engines on a live state. They are entirely different from the live server used in development. 
-                                These components are build upon existing template engine but they are injected as separate live templates into template files using live template directives. 
-                                The entire requests are handled with event handlers which determines how the template files are requested, rendered and managed. 
-                                Bond components are still on a beta phase and more information is provided <a href="@domurl('version/2.0/bond-components')">here</a>.  
+                                Countdown was introduced to spoova's live server in the <code class="">version 2.0.0</code>  
+                                of the framework. However, it was noticed that an error was returned after the live server terminates 
+                                when a resource it not found and the countdown is reached. This error has been fixed in the current version.
                             </p>
                             
                         </div>
                     </div> <br>
-
                     
                     <div class="bc-white-dd rad-4 flow-hide">
                         <div class="bc-dry-blue-dd c-white-d pxv-10 font-em-d8">
     
-                            <div class="bi"> <span class="bi-circle"></span> Updated Model </div>  
+                            <div class="bi"> <span class="bi-terminal"></span> Command-line Backup </div>  
     
                         </div>
                         <div class="pxv-20 pvb-1  font-em-d8">
 
                             <p>
-                              New methods have been added to Model and Form classes to help improve database communication. 
-                              These methods are <code>Model->id()</code>, <code>Model->insertID()</code>, <code>Model->connection()</code>, 
-                              <code>Form::id()</code> and <code>Form::connection()</code>. Details of these methods and their functions are provided 
-                              <a href="@domurl('version/2.0/models')">here</a>.
+                                The command-line <code>php mi backup</code> command was used to create project backups. In the previous version, 
+                                it requires specifying the backup folder where the backup files are stored at every instance when a backup 
+                                is to be created. Since naturally, the <code>backup/</code> directory is reserved for backups, the cli has now 
+                                been updated to use only that directory when storing or clearing backups. This means that developers will not be required 
+                                to specify their backup directory any longer when running this command. 
+                            </p>
+                            
+                        </div>
+                    </div> <br>  
+
+                    <div class="bc-white-dd rad-4 flow-hide">
+                        <div class="bc-dry-blue-dd c-white-d pxv-10 font-em-d8">
+    
+                            <div class="bi"> <span class="bi-plugin"></span> Intersect.js </div>  
+    
+                        </div>
+                        <div class="pxv-20 pvb-1  font-em-d8">
+
+                            <p>
+                                The <code>IntersectJS</code> plugin documentation was missing in the previous version. 
+                                This version sees to it that the documentation is added while the 
+                                javascript plugin have also been improved. However, note that the documentation does not provide any information on the improved changes
+                                but it only provides required information on the newly improved version. You can find the documentation 
+                                <a href="@domurl('docs/other-features/javascript/intersect.js')">here</a>.
                             </p>
                             
                         </div>
                     </div> <br> 
 
-                    
                     <div class="bc-white-dd rad-4 flow-hide">
                         <div class="bc-dry-blue-dd c-white-d pxv-10 font-em-d8">
     
-                            <div class="bi"> <span class="bi-circle"></span> Other updates </div>  
+                            <div class="bi"> <span class="bi-layers"></span> Template Directive : @(@styles)@ </div>  
+    
+                        </div>
+
+                        <div class="pxv-20 pvb-1  font-em-d8">
+                            <div class="bc-white">
+                                <div class="pxv-10 bc-silver">@(@styles)@</div>
+                                <div class="pxv-10">
+                                    The template directive <code>@(@styles)@</code> is used to pull css layout template files to a specific position of the html content of 
+                                    a web page usually the top of the page. A bug was found in the previous version that affects styles loaded from external php layout files through the 
+                                    <code>@(@lay())@</code> directive which prevented the styles from the imported layout from being pulled to the declared postion 
+                                    of the html content. This bug has been addressed in this version which means that all styles loaded from styles layout will 
+                                    now be pulled to the position where <code>@(@styles)@</code> is declared.
+                                </div>
+                            </div> <br>
+                            <div class="bc-white">
+                                <div class="pxv-10 bc-silver">@(@head())@</div>
+                                <div class="pxv-10">
+                                    The new directive <code>@(@head())@</code> is a newly introduced directive. 
+                                    It ensures that the title of a page can be set in a main template file which 
+                                    can later be updated in child templates using the <code>@(@title())@</code> directive. 
+                                    Assuming we have a main template file as shown below 
+                                    <div class="pre-area">
+                                        <pre class="pre-code">
+  &lt;html&gt;
+
+    &lt;head&gt;
+        &#64;head('default page title')
+    &lt;/head&gt;
+
+    &lt;body&gt;
+        &#64;yield()
+    &lt;/body&gt;
+
+  &lt;/html&gt;
+                                        </pre>
+                                    </div>
+                                    <div class="pvs-10">
+                                        Using <code>main.rex.php</code> as the sample name of the template file above, we can easily rename the page 
+                                        with the <code>@(@title())@</code> directive as shown below: 
+                                    </div>
+                                    <div class="pre-area">
+                                        <pre class="pre-code">
+  &#64;template('main')
+
+    &#64;title('new page title')
+
+  &#64;template;
+                                        </pre>
+                                    </div>
+                                    <div class="pvs-10">
+                                        The child template will remember to overide the default name set in the main template file. For more template directives 
+                                        visit  <a href="@domurl('docs/template/directives')" class="rule-dotted c-olive ch-olive-dd">here</a>
+                                    </div>                                    
+                                </div>
+                            </div> <br>
+                        </div>
+                    </div> <br> 
+
+                    <div class="bc-white-dd rad-4 flow-hide">
+                        <div class="bc-dry-blue-dd c-white-d pxv-10 font-em-d8">
+    
+                            <div class="bi"> <span class="bi-exclamation-circle"></span> Boostrap Icons </div>  
     
                         </div>
                         <div class="pxv-20 pvb-1  font-em-d8">
 
                             <p>
-                              Some classes and helper functions have been remodified. You can learn more about this from <a href="@domurl('version/2.0/others')">here</a>. 
+                                After the release of the previous version, it was noticed that the bootstrap icons were missing 
+                                due to an accidental removal from the previous release. These icons have not only been added back into the framework 
+                                but they have been updated. Check <a href="@domurl('features')" class="c-dodger-blue c-dodger-blue-dd">features</a> to see the new version.
                             </p>
                             
                         </div>

@@ -11,7 +11,7 @@
 
                     @lay('build.co.links:tutor_pointer')<br>
 
-                    <div class="font-em-1d5 c-orange">Handling Forms</div> <br>  
+                    <div class="font-em-1d5 c-orange"> <i class="bi-person-vcard"></i> Handling Forms</div> <br>  
                     
                     <div class="pulling-data">
                         <div>

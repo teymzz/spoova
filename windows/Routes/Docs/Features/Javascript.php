@@ -7,7 +7,7 @@ use Window;
 
 class Javascript extends Window {
     
-    public function __construct(){
+    public function __construct($vars){
 
         self::call($this, 
             [
@@ -20,20 +20,22 @@ class Javascript extends Window {
 
                 /* ajax api url */
                 window(':features/javascript/formvalidator') => 'ajax',
+                self::ARG => $vars
             ], 
             
             false);
 
         self::basecall($this, 
             [ 
-                LASTCALL('/formvalidator') => 'formValidator', 
+                LASTCALL('/formvalidator') => 'formValidator',                
+                self::ARG => $vars 
             ]);
 
     }
 
-    function root() {
+    function root($vars) {
 
-        self::load('docs.integerations.javascript.javascript', fn() => compile() );
+        self::load('docs.integerations.javascript.javascript', fn() => compile($vars) );
         
     }
 
@@ -71,7 +73,7 @@ class Javascript extends Window {
     function loadFormvalidator($path){
 
         $path = str_replace('.html','', $path);
-        self::load('docs.integerations.javascript.formvalidator'.$path, fn() => compile() );        
+        self::load('docs.integerations.javascript.formvalidator'.$path, fn() => compile($vars) );        
     }
 
     function ajax() {
@@ -124,51 +126,51 @@ class Javascript extends Window {
     }
 
     
-    function helperJs() {
+    function helperJs($vars) {
 
-        self::load('docs.features.javascript.helperjs', fn() => compile() );
+        self::load('docs.features.javascript.helperjs', fn() => compile($vars) );
         
     }
 
-    function loadImagesJs() {
+    function loadImagesJs($vars) {
 
-        self::load('docs.features.javascript.loadImage', fn() => compile() );
+        self::load('docs.features.javascript.loadImage', fn() => compile($vars) );
         
     }
 
-    function loadFileJs() {
+    function loadFileJs($vars) {
 
-        self::load('docs.features.javascript.loadFile', fn() => compile() );
+        self::load('docs.features.javascript.loadFile', fn() => compile($vars) );
         
     }
 
-    function intersectJs() {
+    function intersectJs($vars) {
 
-        self::load('docs.features.javascript.intersect', fn() => compile() );
+        self::load('docs.features.javascript.intersect', fn() => compile($vars) );
         
     }
 
-    function animeJs() {
+    function animeJs($vars) {
 
-        self::load('docs.features.javascript.anime', fn() => compile() );
+        self::load('docs.features.javascript.anime', fn() => compile($vars) );
         
     }
 
-    function deviceJs() {
+    function deviceJs($vars) {
 
-        self::load('docs.features.javascript.device', fn() => compile() );
+        self::load('docs.features.javascript.device', fn() => compile($vars) );
         
     }
 
-    function formValidatorJs() {
+    function formValidatorJs($vars) {
 
-        self::load('docs.integerations.formvalidator.index', fn() => compile() );
+        self::load('docs.integerations.formvalidator.index', fn() => compile($vars) );
         
     }
 
-    function switcherJs() {
+    function switcherJs($vars) {
 
-        self::load('docs.features.javascript.switcher', fn() => compile() );
+        self::load('docs.features.javascript.switcher', fn() => compile($vars) );
         
     }
 

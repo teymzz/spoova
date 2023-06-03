@@ -539,6 +539,16 @@ class Resource Extends Rescom{
     }
 
     /**
+     * Load all local css files
+     *
+     * @return void
+     */
+    public static function local(){
+      self::new('res/main/')->name('local-css')->url('css/local/spi.css')->named('local-css')->urlClose();
+      return recall('local-css');
+    }
+
+    /**
      * This is use to bind named files together into a new unique group name
      * @param String[] $names names of named files
      * @return Resource

@@ -42,7 +42,9 @@
   }
 
   xhttp.open("GET", url + params, true);
+  xhttp.setHeaders('X-Requested-With', 'xmlHttpRequest');
   xhttp.send();
+  
 
 &lt;/script&gt;
     </pre>
@@ -50,7 +52,7 @@
                                 In the example above, when request parameters for post or get method are forwarded to the server, the parameters are not forwarded 
                                 due to a bug in the url structure that prevent urls that have special characters from forwarding parameters 
                                 supplied. This means that we have to change the url "some-url" to "someUrl" or alphabets only in order to be able to forward the 
-                                request parameters. This bug also affects commonly used underscore (_) character. In version 1.5.0, this bug has been resolved and ajax urls can now receive request paramaters from urls as long as the url is of a valid structure. 
+                                request parameters. This also affects commonly used underscore <code>"_"</code> character. In version 1.5.0, this bug has been resolved and ajax urls can now receive request paramaters from urls as long as the url is of a valid structure. 
                             </p>
                             
                         </div>

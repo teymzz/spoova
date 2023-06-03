@@ -45,8 +45,11 @@
 
                         <div class="css-libraries bc-white-dd pxv-10 shadow-2-strong rad-4">
                             <div class="fb-6 c-olive mvb-6"><span class="bi-circle-fill c-silver-d"></span> Css Libraries</div>
-                            Although spoova has its own internal css files, yet it uses some of the features of mdb5 bootstrap css library for its project application. 
-                            Other libraries may be added locally into the <code>res/css</code> directory. The local path or cdn links of the libraries can be 
+                            Although spoova has its own local css files, yet it uses some external css libraries. These libraries include 
+                            <code>MD5 Bootstrap</code>, <code>Bootstrap icons</code> and <code>Css animate</code> libraries. These libraries can be 
+                            found in their designated folders within the <code>res/main/css</code> directory.
+                            Other libraries may be added locally into the <code>res/css</code> directory. However, ensure to use custom folders to separate 
+                            the external libraries. The local path or cdn links of the libraries can also be 
                             included globally within the <code>res/res.php</code> file.
                         </div> <br>
 

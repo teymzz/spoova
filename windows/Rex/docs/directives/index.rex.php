@@ -1,8 +1,6 @@
 
 @template('template.t-tut')
 
-  <!-- @lay('build.co.coords:header') -->
-
   @lay('build.co.navbars:left-nav')
 
   <style>
@@ -208,7 +206,7 @@
               
               <div>
                 The <code>@src</code> directive returns resources from the <code>res/</code> directory. If the path 
-                of file supplied exists within the res folder, an equivalent http address of the static file is returned<br>
+                of file supplied exists within the res folder, an equivalent http address of the static file is returned<br><br>
 
                 <!-- code line started -->
                 <div class="pre-area shadow">

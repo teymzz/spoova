@@ -12,6 +12,7 @@ Res::new('res/main/')
         # javascript headers
         ->url("js/jquery/jquery-3.6.0.js")->named('jquery')
         ->url("js/jquery/jquery.mousewheel.js")->named('mousewheel')
+        ->url("css/bootstrap/js/bootstrap.min.js")
         ->url("css/mdb5/css/mdb.min.css")->named('mdb')
     
         # local javascript files
@@ -23,8 +24,8 @@ Res::new('res/main/')
         # javascript headers - optional 
         ->url("js/local/loadImages.js")->named('load-images')
         ->url("js/local/formValidator.js")->named('formvalidator')
-        ->url("js/local/helper.js")->named('helperJs')
-        ->url("js/local/init.js")->named('initJs')
+        ->url("js/local/helper.js")->named('helperJS')
+        ->url("js/local/init.js")->named('initJS')
 
         ->bindTo('headers')
    
@@ -41,6 +42,10 @@ Res::new('res/main/')
         # javascript footers
         ->url("js/local/bond.js")->named('bond')
 
-    /* All resources in this folder are core static files */
+    ->name('') #unamed global storage space
+        ->url('js/local/switcher.js')->named('switcherJS')
+        ->url('js/local/intersect.js')->named('intersectJS')
+        ->url('css/animations/animate.min.css')->named('animate')
 
-    ->urlClose();
+    ->urlClose()
+    ;
