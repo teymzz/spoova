@@ -28,11 +28,12 @@
 
     # Secure and Re-Route resource folder php files only  
     RewriteRule ^(res/(.*\.php)?)$ index.php [NC,L]  
+    RewriteRule ^(mi) index.php [NC,L]
+    RewriteRule ^(composer\.json) index.php [NC,L]
 
     # Ignore public folder and other file extensions
     RewriteRule ^(res)($|//) - [L]
     RewriteRule ^(\*\.!(php))($|//) - [L]
-    RewriteRule ^(mine.php) - [L]
     
     # Secure specific core directories and its entire contents
     RewriteRule ^((core|icore|windows)(//.*?)?) index.php [NC,L]

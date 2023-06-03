@@ -90,7 +90,7 @@
 	 *             
 	 * @return void
 	 */
- 	public function link(string $rel,string $href, $attrs){
+ 	public function link(string $rel, string $href, $attrs){
  		$this->meta_on = false;
 
 		if(is_string($attrs)){
@@ -154,10 +154,10 @@
 	 * @param string $content content attribute of the meta tag
 	 * @return void
 	 */
- 	public function equiv($name,$content){
+ 	public function equiv($name, $content){
 
 		$this->meta_on = false;
-		$this->add($name,$content,'http-equiv');
+		$this->add($name, $content,'http-equiv');
 		        
  	}
 

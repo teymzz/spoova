@@ -45,7 +45,7 @@ function LoadImages(options) {
         })
 
 
-    })
+    }, 200)
 
         
 }

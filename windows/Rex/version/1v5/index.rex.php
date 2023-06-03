@@ -1,8 +1,6 @@
 @template('template.t-tut')
 
-<!-- @lay('build.co.coords:header') -->
-
-@lay('build.co.navbars:left-nav')
+    @lay('build.co.navbars:left-nav')
 
    <div class="box-full pxl-2 bc-white pull-right">
        <section class="pxs-10 tutorial bc-white">
@@ -37,7 +35,7 @@
                                 data is sent to ajax urls having special characters, while the url may be accessed, there 
                                 could be a data loss due to a bug preventing post data from forwarding the request data. This bug only affected urls 
                                 that have special characters like underscore (_) and hyphen (-). In version 1.5.0, this has been fixed. 
-                                Special characters are now allowed in ajax urls.  
+                                Special characters are now allowed in ajax urls. More information on this update can be found <a href="@domurl('version/1.5/ajax-requests')">here</a>. 
                             </p>
                             
                         </div>
@@ -49,68 +47,13 @@
                             <div class="bi"> <span class="bi-circle"></span> Map files </div>  
     
                         </div>
-                        <div class="pxv-20 pvb-1  font-em-d8">
+                        <div class="pxv-20 pvb-1 font-em-d8">
 
-                            <div>
-                                Map files are used to protect route entry file names under a standard logic to ensure that entry files are not exposed to the public. 
-                                In version 1.5.0, the map file have been modified to allow two new features to further strengthen the security of these files.
-                                <br><br>
-                                <div class="list-free pxs-1">
-                                    <div class="mox bc-silver pxv-4 rad-5">
-                                        
-                                        <div class="pxv-10">
-                                           <span class="bi-lock"></span> File protection #1<br>
-                                        </div>
-                                    
-                                        <div class="pre-area">
-                                            <div class="pxv-10 bc-silver-d">windows/Routes/.map</div>
-                                            <pre class="pre-code">
-    {
-        "*": "Mi\\"
-    }
-                                            </pre>
-                                        </div>
-
-                                        <div class="foot-note pxv-10">
-                                            The addition of map files is to protect standard logic entry point names by selecting a custom subdirectory where route files are saved just by a single declaration. 
-                                            In the sample above, the <code>".map"</code> file will direct the standard logic to look for route files 
-                                            within the <code>windows/Routes/Mi</code> directory. For example, rather than for a url <code>http://localhost/home</code> to call the main route <code>"Home"</code>, 
-                                            from <code>windows/Routes</code> directory, it will be called from <code>windows/Routes/Mi</code> directory. This makes it easier to protect standard logic entry files path.
-                                            We can also fake file names if the double slash is not added to the value, that is "Mi" instead of "Mi\\".
-                                        </div>
-                                    </div> <br>
-                                </div>
-                                <div class="list-free pxs-1">
-                                    <div class="mox bc-silver pxv-4 rad-5">
-                                        
-                                        <div class="pxv-10">
-                                           <span class="bi-arrow-clockwise"></span> Entry inverse #2<br>
-                                        </div>
-                                    
-                                        <div class="pre-area">
-                                            <div class="pxv-10 bc-silver-d">windows/Routes/.map</div>
-                                            <pre class="pre-code">
-    {
-        ":root": {
-
-            "!home" => 'Home'
-
-        }
-    }
-                                            </pre>
-                                        </div>
-
-                                        <div class="foot-note pxv-10">
-                                            By default under standard logic, the url entry point "home" or "Home" means the same thing as they forward the url to a route file 
-                                            "windows/Routes/Home" file to call. This is because the lowercase or sentence case is accepted. However, when an entry point file name 
-                                            which does not follow this pattern is called (e.g "HOme", "hoMe") is called, a 404 response is returned. We can however lessen this 
-                                            strictness using a map file. In the code above, the ":root" defines a set of entry names and the route files they call. Using an inverse 
-                                            operator on the entry point name, if known, will ensure that such route allows the entry point to have any form of text cases (e.g uppercase, camelcase, etc.). 
-                                        </div>
-                                    </div> <br>
-                                </div>
-                            </div>
-                            
+                            Map files are used to protect route entry file names under a standard logic to ensure that entry files are not exposed to the public. 
+                            In version 1.5.0, the map file have been modified to allow two new features. These features 
+                            include file protection used for securing entry point names and the other is entry inverse used to modify the strictness of entry point names.
+                            Find more information on this <a href="@domurl('version/1.5/map-file')">here</a>.
+                            <br><br>
                         </div>
                     </div><br>
 
@@ -141,8 +84,9 @@
 
                             <p>
                                 Template on the go was a feature added to make it easier to create template files easily with 
-                                integrated live server. When such rex templates are generated, they come with the basic <code>@(live)@</code> 
-                                directive which keeps them on a live state mode. Some bugs were removed when the template is generated. 
+                                integrated live server. When such rex templates are generated, they come with the basic <code>@(@live)@</code> 
+                                directive which keeps them on a live state mode. Some bugs were removed when the template is generated. Learn more 
+                                from <a href="@domurl('version/1.5/live-template')">here</a>.
                             </p>
                             
                         </div>
@@ -162,7 +106,8 @@
                                 logics were introduced. With the <code>wvm</code> 
                                 logics, we find no use for this methods any more because routes are now being handled by a server file and the 
                                 entire route is being managed by a shutter system. It is advised to desist from the use of this methods as they 
-                                may be removed at any point in time.
+                                may be removed at any point in time. Learn more 
+                                from <a href="@domurl('version/1.5/deprecations')">here</a>.
                             </div>
                             
                         </div> <br>

@@ -383,7 +383,6 @@ if(typeof Res === 'undefined'){
                 if(!mobi.loading){
 
                     rex.xhttp(url + params, function(response){
-                        
                         status = rex.status(response);
                
                         mobi.started = true;
@@ -409,7 +408,7 @@ if(typeof Res === 'undefined'){
                                         rex.clear(function(){
                                             rex.error('Live server (terminated) >> failed to fetch resource');
                                         })
-                                        mobi.clearinterval(rex.live);
+                                        rex.defaults.stopServer(rex.live);
                                         return ;                  
                                     }
                                     
@@ -707,7 +706,7 @@ if(typeof Res === 'undefined'){
 
                                                 })
                                             }
-
+                                            
                                             setTimeout(() => {
                                                 rex.clearDebugs();
                                                 rex.clear().info('Live server (mode) >> online')
@@ -844,11 +843,15 @@ if(typeof Res === 'undefined'){
                                 }
                             }  
 
-                            rex.mobi.startServer(() => {
-                                
-                                rex.stream(base)
+                            if(!rex.mobi.terminated){
 
-                            }, 1000)                            
+                                rex.mobi.startServer(() => {
+                                    
+                                    rex.stream(base)
+    
+                                }, 1000)                            
+
+                            }
                             
                         }
 
@@ -873,8 +876,7 @@ if(typeof Res === 'undefined'){
             if(!mobi.loading){
                 xhttp.open("GET", url, true);
                 xhttp.send();
-                //flag request status
-                mobi.loading = true; 
+                mobi.loading = true;
             }
             
 

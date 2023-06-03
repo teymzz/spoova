@@ -37,15 +37,53 @@ body.--theme-dark{
     background-color : rgba(21, 15, 39);
 }
 
-body.--theme-dark .lacier{
-    background-color : rgba(21, 15, 39);
+body.--theme-dark .c-teal{
+    color: rgb(2, 145, 145);
+}
+
+body.--theme-dark .bc-blue.c-white{
+    background-color : rgb(35, 25, 66);;
     box-shadow: none;
     color: #8c8cb5;
+    margin-bottom: 8px;
+}
+
+body.--theme-dark .nav-left ul a{
+    color: rgb(129, 125, 120);
+}
+
+body.--theme-dark pre.pre-code:not([class*="c-"]) {
+    color: #6b76ce;
+  }
+
+body.--theme-dark .directives code{
+    background-color: #2f7a29;
+    color: white;
+}
+
+body.--theme-dark code{
+    color: #ff45a2;
+}
+
+body.--theme-dark .lacier{
+    background-color : rgb(35, 25, 66);;
+    box-shadow: none;
+    color: #8c8cb5;
+    margin-bottom: 8px;
 }
 
 body.--theme-dark .lacier.active > *{
     color: #8c8cb5;
 }
 
+.animated-header .ico-spin{
+    background-image: url("@mapp('images/icons/favicon.png')");
+}
 
+body.--theme-dark .animated-header .ico-spin{
+    background-image: url("@mapp('images/icons/favicon-white.png')");
+}
+body.--theme-dark .animated-header .c-blue-dd{
+    color:white;
+}
 #style;

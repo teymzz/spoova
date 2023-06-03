@@ -20,7 +20,8 @@ class Version extends Window {
         self::basecall($this,
             [
                 window(':1.5', true) => 'version1d5',
-                window(':2.0', true) => 'version2d0'
+                window(':2.0', true) => 'version2d0',
+                window(':2.1', true) => 'version2d1',
             ]
         );
 
@@ -35,11 +36,13 @@ class Version extends Window {
     function version1d5(Request $Request) {
 
         //manage all 1.5 routes
+        $lastUrl = lastCall();
 
         $lastCall = lastCall().'/';
         $windowUrl= window('base');
-        self::addRex();
+
         $controller = [ 
+            $lastUrl .'' => 'version.1v5.index',
             $lastCall.'ajax-requests' => 'version.1v5.ajax',
             $lastCall.'map-file'      => 'version.1v5.map-file',
             $lastCall.'live-notice'   => 'version.1v5.live-notice',
@@ -60,11 +63,12 @@ class Version extends Window {
     function version2d0() {
 
         //manage all 2.0 routes
+        $lastUrl = lastCall();
 
-        $lastCall = lastCall().'/';
+        $lastCall = $lastUrl.'/';
         $windowUrl= window('base');
-
         $controller = [ 
+            $lastUrl .'' => 'version.2v0.index',
             $lastCall.'urls' => 'version.2v0.urls',
             $lastCall.'window-functions'      => 'version.2v0.window-functions',
             $lastCall.'shutter-calls'   => 'version.2v0.shutter-calls',
@@ -77,7 +81,7 @@ class Version extends Window {
 
         if(array_key_exists($windowUrl, $controller)){
 
-            self::load($controller[$windowUrl], fn() => compile(['soft'=>'boy']));
+            self::load($controller[$windowUrl], fn() => compile());
 
         } else {
 
@@ -91,17 +95,37 @@ class Version extends Window {
         
     }
 
-    /**
-     * Add name of routes
-     *
-     * @return array
-     */
-    public static function addRoutes(array $array = []) : array {
+    function version2d1() {
 
-        return [
-            // 'routeName' => 'routePath'
+        //manage all 2.1 routes
+        self::addRex();
+        $lastUrl = lastCall();
+
+        $lastCall = $lastUrl.'/';
+        $windowUrl= window('base');
+        $version  = "version.2v1";
+
+        $controller = [ 
+            $lastUrl .'' => $version.'.index',
+            $lastCall.'intersect.js' => $version.'.intersectjs',
+            $lastCall.'template-styles' => $version.'.template-styles',
+            $lastCall.'live.js' => $version.'.livejs',
         ];
 
+        if(array_key_exists($windowUrl, $controller)){
+
+            self::load($controller[$windowUrl], fn() => compile());
+
+        } else {
+
+            self::basecall($this, [
+
+                lastCall() => 'win:Routes\Docs\V2\BondComponents'
+
+            ]);
+
+        }
+        
     }
 
 }

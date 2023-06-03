@@ -252,7 +252,7 @@
                         <div class="box next">
                           <div class="box" hidden>Next</div>
                           <div class="box">
-                              <a href="@domurl('version/2.0/bond-components/life-events')" class="flex-btn rad-r bc-dodger-blue-dd font-em-d85 mid" style="color:white"></span>Life events<span class="bi-arrow-right"></a>
+                              <a href="@domurl('version/2.0/bond-components/life-events')" class="flex-btn rad-r bc-dodger-blue-dd font-em-d85 mid" style="color:white"></span>Live events<span class="bi-arrow-right"></a>
                           </div>
                         </div>
                     </div><br>

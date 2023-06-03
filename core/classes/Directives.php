@@ -28,18 +28,19 @@ abstract class Directives{
         'import'      => "~(<@import\s|@import\()\s?\'?(http(s)?:\/\/)?[A-Za-z_\/]+(.[A-Za-z]+)\'?\s?(\)|\/>)~i", //import (local or remote file) css / js files
 
         //Handle live server
-        //'live'        => '~@live(\((\'(console|pop|uiconsole|[0-9])?\')?\))?~i', 
+        'live'        => '~@live(\((\'(console|pop|uiconsole|[0-9])?\')?\))?~i', 
 
         // Handles layout templating
         'styles'      => '~@styles~i', //set a layout a layout file
         'style'       => '~@style\(\s?\'[A-zA-Z0-9_\\.-]{2,}(:[A-zA-Z_0-9.\-_]*?)*?\'\s?\)~i', //set a layout a layout file
         'script'      => '~@script\(\s?\'[A-zA-Z0-9_\\.-]{2,}(:[A-zA-Z_0-9.\-_]*?)*?\'\s?\)~i', //set a layout a layout file
         'onscript'    => '~@onscript\(\s?\'[A-zA-Z0-9_\\.-]{2,}(:[A-zA-Z_0-9.\-_]*?)*?\'\s?\)~i', //set a layout a layout file
-        'lay'         => '~@lay\(\s?\'[A-zA-Z0-9_\\.-]{2,}:[A-zA-Z_0-9.\-_]*?\'\s?\)~i', //set a layout a layout file
-        'layout'      => '~@layout:[A-Za-z_-0-9.]{2,}\.@layout;~i', //set a layout a layout file
         
         // Handle template injecting
         'template'    => '~@template\(\s?\'[-\w+\\.]+?(:off)?\'\s?\)~i',
+        'lay'         => '~@lay\(\s?\'[A-zA-Z0-9_\\.-]{2,}:[A-zA-Z_0-9.\-_]*?\'\s?\)~i', //set a layout a layout file
+        'layout'      => '~@layout:[A-Za-z_-0-9.]{2,}\.@layout;~i', //set a layout a layout file
+    
         'php'         => "~@php:.*?@php;~is",
         'attr'        => "~@((attr:[\w+-]+)|(attr\(\s?'.*?'\s?\)))~is",
         
@@ -59,7 +60,7 @@ abstract class Directives{
     */
     protected static $layComments = [];
 
-    private static $PULLSTYLES = false;
+    protected static $PULLSTYLES = false;
 
     /**
      * template extensions
@@ -80,13 +81,17 @@ abstract class Directives{
         preg_match($pattern1, $body, $matches);
 
         if($matches) {
-            $body = preg_replace($pattern1, '<?= Rexit::'.$directive.'($1); ?>', $body);
+
+            //if(strtolower($directive) === 'head' && (strpos('??', $name) === false)) $name = " ?? ''";
+            $body = preg_replace("~@$directive\((.*?)?\?\s*?\)~i", '<?= Rexit::'.$directive.'($1 ?? \'\') ?>', $body);
+            $body = preg_replace($pattern1, '<?= Rexit::'.$directive.'($1) ?>', $body);
+        
         }else{
 
             preg_match($pattern2, $body, $matches);
 
             if($matches) {
-                $body = preg_replace($pattern2, '<?= Rexit::'.$directive.'(); ?>', $body);
+                $body = preg_replace($pattern2, '<?= Rexit::'.$directive.'() ?>', $body);
             }else{
 
                 //request pattern - 1
@@ -105,7 +110,7 @@ abstract class Directives{
         
                         $name = str_replace(['][','[',']'], ['\',\'','[\'','\']'], $name);
 
-                        $body = preg_replace($pattern3, '<?= Rexit::'.$directive.'('.$name.'); ?>', $body);
+                        $body = preg_replace($pattern3, '<?= Rexit::'.$directive.'('.$name.') ?>', $body);
 
                     }   
 
@@ -144,6 +149,7 @@ abstract class Directives{
                 //replace directive with null
                 $body = str_replace($matchValue, '', $body);
 
+                $body = preg_replace('~<\?= Rexit::head(.*?) \?>~', $title, $body);
                 $body = preg_replace('~<title>.*?</title>~', $title, $body);
 
             }
@@ -266,7 +272,7 @@ abstract class Directives{
      * @return string
      */
     protected static function directivesLive($body): string {
-    
+ 
         //get pattern
         self::getMatches('live', $body, $matches);
         $counter = 0;
@@ -362,6 +368,7 @@ abstract class Directives{
 
                 //make replacement in the body
                 $newSlice =  Slicer::slice($replacement)->data();
+
                 //self::sort_lay_comments($newSlice);
                 $data = preg_replace("~@lay\(\s?'{$value}'\s?\)~i",$newSlice, $body);
 
@@ -393,14 +400,6 @@ abstract class Directives{
         }
 
         return $body;
-    }
-
-    protected static function directivesStyles($body): string {
-        
-        if(stripos($body, '@styles') !== false) self::$PULLSTYLES = true;
-        
-        return $body;
-
     }
     
     /**
@@ -486,7 +485,6 @@ abstract class Directives{
                     if(SELF::$PULLSTYLES){
                         $styles = (SETTER::EXISTS(':STYLES'))? GET(':STYLES', '#1234') : ''; 
                         $styles .= $replacement;
-    
                         SET(':STYLES', $styles, '#1234');
                         $data = preg_replace("~@style\(\s?'{$value}'\s?\)~i", '', $body);
                     }else{

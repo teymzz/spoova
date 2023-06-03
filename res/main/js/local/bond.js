@@ -142,15 +142,6 @@ class Bond {
             }
         });
 
-        //console.log(formData);
-        // data = {
-        //     state: 'live',
-        //     mode: 'bond',
-        //     id: Math.random(),
-        //     method: method,
-        //     item: item
-        // };
-
         defaults.mode  = 'bond';
         defaults.state = 'live';
         defaults.event = 'click';

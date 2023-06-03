@@ -14,7 +14,7 @@
                     
                     @lay('build.co.links:tutor_pointer') <br>
 
-                    <div class="font-em-1d5 c-orange">Database : Data Model</div> <br>
+                    <div class="font-em-1d5 c-orange"> <i class="bi-database"></i> Database : Data Model</div> <br>
 
                     <div class="">
                         Models are structures built to have a direct relationship with database. Hence,

@@ -12,7 +12,7 @@
 
           @lay('build.co.links:tutor_pointer') <br>
 
-          <div class="font-em-1d5 c-orange">Helper Classes</div> <br>  
+          <div class="font-em-1d5 c-orange"> <i class="bi-filetype-php"></i> Helper Classes</div> <br>  
           
           <div class="helper-classes">
             <div class="">
