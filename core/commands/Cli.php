@@ -617,8 +617,8 @@ class Cli
    *
    * @param array $options Valid options to be tested
    * @param \Closure $callback callback function to be applied on option
-   * @param $terminate terminate prompt (in number of times) if option is not valid
-   * @param $new determines if a new prompt is called. Default value should not be manually modified
+   * @param bool|int $terminate terminate prompt (in number of times) if option is not valid
+   * @param bool $new determines if a new prompt is called. Default value should not be manually modified
    *    - True terminates once
    *    - Integers determines the number of acceptable error times 
    * @return string
@@ -692,17 +692,14 @@ class Cli
     }
     
   /**
-   * Cli prompt
+   * Cli iprompt
    *
-   * @param array $options Valid options to be tested
-   * @param \Closure $callback callback function to be applied on option
-   * @param $terminate terminate prompt (in number of times) if option is not valid
-   * @param $new determines if a new prompt is called. Default value should not be manually modified
-   *    - True terminates once
-   *    - Integers determines the number of acceptable error times 
+   * @param string $input returned value
+   * @param \Closure $callback callback function to be tested
+   * 
    * @return string
    */
-   public static function iprompt($input = '',  \Closure $callback = null): string {
+   public static function iprompt(string $input = '',  \Closure $callback = null): string {
 
         $contents = '';
         $handle = fopen('php://stdin',"r");

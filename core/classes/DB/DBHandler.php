@@ -164,29 +164,31 @@ class DBHandler Implements DBHelpers{
     $con = $db;
 
     if(is_object($con)){
-        $ncon = (array) $con;
-        if(is_array($ncon)){
-      foreach ($ncon
-          as $key => $value) {
 
-        if(is_object($value)){
-          $value = (array) $value;
+        $ncon = (array) $con;
+
+        if(is_array($ncon)){
+        
+          foreach ($ncon as $key => $value) {
+
+          if(is_object($value)){
+            $value = (array) $value;
+          }
+          $n[$key] = $value;
         }
-      $n[$key] = $value;
-        }
-          MyIsset($n);
-          $n = !is_array($n)? array() : $n;
+
+        $n = $n ?? '';
+        $n = !is_array($n)? array() : $n;
 
         foreach($n as $x => $r){
-        if(is_array($r)){
-          $p[] = $r;
-        }
+          if(is_array($r)){
+            $p[] = $r;
+          }
         }
       
       if(isset($p[0])){
         $this->array_pick($p, 0);
         if(array_key_exists("client_info",$p)){
-          //pop('yes');
           $x = true;
         }else{
           $x = false;
@@ -470,7 +472,7 @@ trait DBSelect {
        //check if connection data return is not false (or empty)
          //if false check if there is error
             //if error is found return the error log
-       if(($array = $this->conn->fetch_array($sql))!==false){
+       if(($array = $this->conn->fetch_array($sql)) !== false){
            $this->numrows = $this->conn->num_rows();
            $this->limit   = $this->buildLimit(false);
            $this->results = $array;
@@ -800,10 +802,10 @@ trait DBInsert{
   /**
    * Connection insert id
    *
-   * @return null|int
+   * @return string|int
    */
   public function insertID(){
-    return $this->connID;
+    return $this->connID ?? '';
   }	
 
 }
@@ -1544,8 +1546,9 @@ trait DBState{
   }
   
   /**
-   * @param $statename undefined unsets the current state name
-   * @param $statename defined, removes a state from saved queryStates 
+   * @param string $statename 
+   *   - If NOT defined, the method will unset the current state name
+   *   - If defined, it removes the $stateName key from saved queryStates 
    * 
    * @return void
   */
@@ -1578,12 +1581,12 @@ trait DBState{
    *  Hence it is always good to check if a state exists. stateSet will return an instance of the class 
    *  only if the state name supplied exists. If it doesn't exist, statename returns false. 
    * 
-   * @param $statename name of state
+   * @param string $statename name of state
    * $param $statemod , a new set of binded parameters with equal number of existing binded parameters.
    *        -note : statemod will not overide the default binded parameters. 
    * @return bool|DBHandler checks if a state already exists to return a boolean of true | false
   */
-  public function stateSet($statename = null, array $statemod = []) {
+  public function stateSet(string $statename = '', array $statemod = []) {
 
     if(substr($statename, 0, 1) == ':'){
       

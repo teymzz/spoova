@@ -1,5 +1,424 @@
-/* boxes .............................................. */
+/*customs inline boxes ................................................*/
 
+.box{
+    display: inline-block;
+}
+
+[class*="box-"]{
+    display: inline-block;
+}
+
+:where(.box, [class*="box-"]){
+    height: auto;
+    line-height: 1.42857143;
+    box-sizing: border-box;
+    transition: width .2s ease-in-out, 
+                padding .2s ease-in-out,
+                margin .2s ease-in-out,;
+}
+
+
+/* responsive paddings..................................................*/
+
+/* responsive boxes @screen size < 500px*/
+
+.box-1{
+    padding-left: 0;
+    padding-right: 0;
+    width:100%;
+}
+
+.box-1s{
+    padding-left: 2%;
+    padding-right: 2%;
+    width:100%;
+}
+
+.box-2{
+    padding-left: 0;
+    padding-right: 0;
+    width:100%;
+}
+
+.box-2s{
+    padding-left: 2%;
+    padding-right: 2%;
+    width:100%;
+}
+
+.box-3{
+    padding-left: 0;
+    padding-right: 0;
+    width:100%;
+}
+
+.box-3s{
+    padding-left: 2%;
+    padding-right: 2%;
+    width:100%;
+} 
+
+.box-4{
+    padding-left: 0;
+    padding-right: 0;
+    width:100%;
+}
+
+.box-4s{
+    padding-left: 2%;
+    padding-right: 2%;
+    width:100%;
+} 
+
+.xs-1{
+    padding-left: 0;
+    padding-right: 0;
+    transition: all .2s ease-in-out;
+}
+
+.xs-1s{
+    padding-left: 2%;
+    padding-right: 2%;
+    transition: all .2s ease-in-out;
+}
+
+.xs-2{
+    padding-left: 0;
+    padding-right: 0;
+    transition: all .2s ease-in-out;
+}
+
+.xs-2s{
+    padding-left: 2%;
+    padding-right: 2%;
+    transition: all .2s ease-in-out;
+}
+
+.xs-3{
+    padding-left: 0;
+    padding-right: 0;
+    transition: all .2s ease-in-out;
+}
+
+.xs-3s{
+    padding-left: 2%;
+    padding-right: 2%;
+    transition: all .2s ease-in-out;
+}
+
+.xs-4{
+    padding-left: 0;
+    padding-right: 0;
+    transition: all .2s ease-in-out;
+}
+
+.xs-4s{
+    padding-left: 2%;
+    padding-right: 2%;
+    transition: all .2s ease-in-out;
+}
+
+/* fluid responsive paddings @screen size >= 500px < 800px................................................ */
+
+@media (min-width: 500px) {
+
+    .box-1{
+        padding-left: 0;
+        padding-right: 0;
+    }
+
+    .box-1s{
+        padding-left: 2%;
+        padding-right: 2%;
+    }
+
+    .box-2{
+        padding-left: 0;
+        padding-right: 0;
+    }
+    
+    .box-2s{
+        padding-left: 2%;
+        padding-right: 2%;
+    }
+
+    .box-3{
+        padding-left: 0;
+        padding-right: 0;
+    }
+
+    .box-3s{
+        padding-left: 2%;
+        padding-right: 2%;
+    }
+
+    .box-4{
+        padding-left: 0;
+        padding-right: 0;
+    }
+
+    .box-4s{
+        padding-left: 2%;
+        padding-right: 2%;
+    }
+
+    .xs-1{
+        padding-left: 0;
+        padding-right: 0;
+    }
+
+    .xs-1s{
+        padding-left: 2%;
+        padding-right: 2%;
+    }
+
+    .xs-2{
+        padding-left: 0;
+        padding-right: 0;
+    }
+
+    .xs-2s{
+        padding-left: 2%;
+        padding-right: 2%;
+    }
+
+    .xs-3{
+        padding-left: 0;
+        padding-right: 0;
+    }
+
+    .xs-3s{
+        padding-left: 2%;
+        padding-right: 2%;
+    }
+
+    .xs-4{
+        padding-left: 0;
+        padding-right: 0;
+    }
+
+    .xs-4s{
+        padding-left: 2%;
+        padding-right: 2%;
+    }
+    
+}
+
+/* fluid responsive paddings @screen size >= 800px < 950px................................................ */
+@media (min-width: 800px) {
+
+    .box-1{
+        padding-left: 5%;
+        padding-right: 5%;
+    }
+
+    .box-1s{
+        padding-left: 5%;
+        padding-right: 5%;
+    }
+
+    .box-2{
+        padding-left: 10%;
+        padding-right: 10%;
+    }
+
+    .box-2s{
+        padding-left: 10%;
+        padding-right: 10%;
+    }
+
+    .box-3{
+        padding-left: 10%;
+        padding-right: 10%;
+    }
+
+    .box-3s{
+        padding-left: 10%;
+        padding-right: 10%;
+    }
+
+    .box-4{
+        padding-left: 12.5%;
+        padding-right: 12.5%;
+    }
+
+    .box-4s{
+        padding-left: 12.5%;
+        padding-right: 12.5%;
+    }
+
+    .xs-1{
+        padding-left: 5%;
+        padding-right: 5%;
+    }
+
+    .xs-1s{
+        padding-left: 5%;
+        padding-right: 5%;
+    }
+
+    .xs-2{
+        padding-left: 10%;
+        padding-right: 10%;
+    }
+
+    .xs-2s{
+        padding-left: 10%;
+        padding-right: 10%;
+    }
+
+    .xs-3{
+        padding-left: 10%;
+        padding-right: 10%;
+    }
+
+    .xs-3s{
+        padding-left: 10%;
+        padding-right: 10%;
+    }
+
+    .xs-4{
+        padding-left: 12.5%;
+        padding-right: 12.5%;
+    }
+
+    .xs-4s{
+        padding-left: 12.5%;
+        padding-right: 12.5%;
+    }
+}
+
+/* fluid responsive paddings @screen size >= 950px < 1025px................................................ */
+@media (min-width: 950px) {
+    
+    .box-1{
+        padding-left:  10%;
+        padding-right: 10%;
+    }
+
+    .box-1s{
+        padding-left:  10%;
+        padding-right: 10%;
+    }
+
+    .box-2{  
+        padding-left: 10%;
+        padding-right: 10%;
+    }
+
+    .box-2s{  
+        padding-left: 10%;
+        padding-right: 10%;
+    }
+
+    .box-3{ 
+        padding-left: 10%;
+        padding-right: 10%;
+    }
+
+    .box-3s{ 
+        padding-left: 10%;
+        padding-right: 10%;
+    }
+
+    .box-4{ 
+        padding-left: 12.5%;
+        padding-right: 12.5%;
+    }
+
+    .box-4s{ 
+        padding-left: 12.5%;
+        padding-right: 12.5%;
+    }
+
+    .xs-1{
+        padding-left: 10%;
+        padding-right: 10%;
+    }
+
+    .xs-1s{
+        padding-left: 10%;
+        padding-right: 10%;
+    }
+
+    .xs-2{
+        padding-left: 10%;
+        padding-right: 10%;
+    }
+
+    .xs-2s{
+        padding-left: 10%;
+        padding-right: 10%;
+    }
+
+    .xs-3{
+        padding-left: 10%;
+        padding-right: 10%;
+    }
+
+    .xs-3s{
+        padding-left: 10%;
+        padding-right: 10%;
+    }
+
+    .xs-4{
+        padding-left: 12.5%;
+        padding-right: 12.5%;
+    }
+
+    .xs-4s{
+        padding-left: 12.5%;
+        padding-right: 12.5%;
+    }
+
+}
+
+/* fluid responsive paddings @screen size >= 1025px................................................ */
+@media (min-width: 1025px) {
+
+    .box-3{ 
+        padding-left: 20%;
+        padding-right: 20%;
+    }
+
+    .box-3s{ 
+        padding-left: 20%;
+        padding-right: 20%;
+    }
+
+    .box-4{ 
+        padding-left: 25%;
+        padding-right: 25%;
+    }
+
+    .box-4s{ 
+        padding-left: 25%;
+        padding-right: 25%;
+    }
+
+    .xs-3{
+        padding-left: 20%;
+        padding-right: 20%;
+    }
+
+    .xs-3s{
+        padding-left: 20%;
+        padding-right: 20%;
+    }
+
+    .xs-4{
+        padding-left: 25%;
+        padding-right: 25%;
+    }
+
+    .xs-4s{
+        padding-left: 25%;
+        padding-right: 25%;
+    }
+
+}
+
+/* square boxes .............................................. */
 .px-10 {
     width: 10px;
     height: 10px;
@@ -110,24 +529,7 @@
     height: 450px;
 }
 
-/*customs inline boxes ................................................*/
-
-.box{
-    display: inline-block;
-}
-
-[class*="box-"]{
-    display: inline-block;
-}
-
-:where(.box, [class*="box-"]){
-    height: auto;
-    line-height: 1.42857143;
-    box-sizing: border-box;
-    transition: width .2s ease-in-out, 
-                padding .2s ease-in-out,
-                margin .2s ease-in-out,;
-}
+/* responsive boxes */
 
 .i-trans{
     transition: initial;

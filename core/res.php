@@ -12,8 +12,8 @@ Res::new('res/main/')
         # javascript headers
         ->url("js/jquery/jquery-3.6.0.js")->named('jquery')
         ->url("js/jquery/jquery.mousewheel.js")->named('mousewheel')
-        ->url("css/bootstrap/js/bootstrap.min.js")
-        ->url("css/mdb5/css/mdb.min.css")->named('mdb')
+        ->url("css/bootstrap/js/bootstrap.min.js")->named('bootstrapJS')
+        ->url("css/mdb5/css/mdb.min.css")->named('mdbCSS')
     
         # local javascript files
         ->url("js/local/core.js")->named('core')
@@ -23,7 +23,6 @@ Res::new('res/main/')
 
         # javascript headers - optional 
         ->url("js/local/loadImages.js")->named('load-images')
-        ->url("js/local/formValidator.js")->named('formvalidator')
         ->url("js/local/helper.js")->named('helperJS')
         ->url("js/local/init.js")->named('initJS')
 
@@ -45,7 +44,13 @@ Res::new('res/main/')
     ->name('') #unamed global storage space
         ->url('js/local/switcher.js')->named('switcherJS')
         ->url('js/local/intersect.js')->named('intersectJS')
-        ->url('css/animations/animate.min.css')->named('animate')
+        ->url('js/local/ajax.js')->named('ajaxJS')
+        ->url('js/local/anime.js')->named('animeJS')
+        ->url('js/local/scrollSlider.js')->named('scrollSliderJS')
+        ->url("js/local/formValidator.js")->named('formvalidatorJS')
+
+        // css urls
+        ->url('css/animations/animate.min.css')->named('animateCSS')
 
     ->urlClose()
     ;

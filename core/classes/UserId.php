@@ -7,6 +7,8 @@ use Session;
 use User;
 
 final class UserId extends User{
+    
+    private static $userid;
 
     /** prevent parent call */
     public function __construct(){}
@@ -22,7 +24,7 @@ final class UserId extends User{
 
     /**
      * Return primary id of a user field in database 
-     * This function can only be used if user primary key field name is set as id
+     * This function can only be used if user primary key field name is set as "id"
      *
      * @return string|bool(false)
      */
@@ -52,23 +54,25 @@ final class UserId extends User{
     }
 
     public function main() {
-        if(isset($_SESSION[self::$sessionName])){
-            if(empty($_SESSION[self::$sessionName]['userid'])) {
-               self::logout(false);
-               return '';
-            }else{
+        if(isset(self::$userid) && self::$userid) return self::$userid;
 
-                if(Session::secure()){
-                    if(!User::hasUserData()){ 
-                        self::authenticate_session($_SESSION[self::$sessionName]['userid']); 
-                    }
-                    if(array_key_exists(self::$sessionName, $_SESSION)){
-                        return ($_SESSION[self::$sessionName]['userid'])?: '';  
-                    }
+        if(Session::has(SELF::$sessionName, 'userid')){
+
+            $userid = Session::value(SELF::$sessionName, 'userid');
+
+            // validate user id
+            if(Session::secure()){
+                if(!User::hasUserData()){ 
+                   self::authenticate_session($userid); 
                 }
+                return Session::value(SELF::$sessionName, 'userid');               
             }
+
+
         }
+
         return '';        
+           
     }
 
 }

@@ -2,22 +2,28 @@
 
 namespace spoova\mi\windows\Frames;
 
+use Form;
 use spoova\mi\windows\Models\Access\AccessModel;
 use User;
 
 class UserFrame extends AccessFrame {
 
-    static function super() : void {
+    static function frame() : void {
 
-      parent::super();
+      if(in_array(window('base'), ['signup','login'])){     
 
-      if(window('base') !== 'signup' && window('base') !== 'login'){     
+        // session entry auto redirection
+        User::onauto('login', 'home');
+        
+      } elseif(window('@root') !== 'index') {
 
-         User::onauto('logout', 'login');
-         
+        // session exit auto redirection
+        User::onauto('logout', 'index');
+
       }
-
-      AccessModel::onSubmit('logout');
+  
+      //use model only when a post request is sent
+      Form::onpost(fn() => AccessModel::onSubmit());
 
     }
 

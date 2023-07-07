@@ -1,0 +1,1476 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <?= Rexit::meta('dump') ?>
+    <title>Cli commands</title>
+    <?= Rexit::load('headers') ?>
+    <style rel="build.css.tutorial"> 
+
+     body{
+          color: rgb(111, 110, 110);
+          background-color : rgba(var(--white-dd));
+          font-family: "Poppins", "Roboto", sans-serif;
+     }
+
+     .tutorial{
+          min-height:100vh;
+          font-family: "Poppins";
+     }
+
+     .pre-area{
+          font-size: .85em;
+          display: inline-block;
+          width:100%;
+      }
+
+     .pre-area:not([class*="bc-"]){
+          background-color : rgba(var(--white-dd));
+      }
+  
+     .pre-area.fix {
+         font-size: 1em;
+    }
+     
+     pre.pre-code {
+          overflow: auto hidden;
+          font-size: .95em; 
+          margin-bottom:0;
+          padding-top:1.5em;
+          font-family: "Firacode";
+     } 
+     
+     pre.pre-code:not([class*="c-"]) {
+          color: #4f58a0;
+     } 
+     
+     pre .comment {
+          color: #909090;
+     }
+  
+     .lacier.active {
+          background-color: #0c947b;
+          color: white;
+     }
+  
+     .lacier.active > *{
+          color: white;
+     }  
+
+     ul > li > a{
+          color:inherit;
+     }   
+
+     ul > li > a:hover{
+          color:inherit;
+     }  
+
+     [class*="foot-note"] {
+         color: rgb(32, 130, 130);
+         margin-top: 10px;
+         margin-bottom: 10px;
+     }
+
+     :where(.d85){
+          font-size: .85em;
+     }
+     :where(.d87){
+          font-size: .87em;
+     }
+     :where([class*="foot-note"]){
+          font-size: .95em;
+     }
+     :where([class*="foot-note"] .head){
+          font-weight: 600;
+     }
+
+     [class*="rule-dashed"] {
+          border-bottom: dashed .1em;
+     }   
+   
+     
+     [class*="hyperlink"] {
+          border-bottom: dashed .1em;
+     }
+
+     [class*="rule-dotted"] {
+          border-bottom: dotted .1em;
+     }
+
+     .olist {
+          font-family: calibri;
+          color:#9d6216;
+     }
+
+     .control{
+          right: 10px;
+          top: 10px;
+          opacity: 1;
+          display: inline-block;
+          transition: opacity .8s ease-in-out;
+          z-index: 10;
+      }
+
+      .control .controller.fade-out{
+          transition: transform .2s ease-in-out, opacity .3s ease-in-out ;
+          transform: rotate(360deg);
+      }
+
+      .control .controller:not(.bi-x).fade-out{
+          opacity: 0;
+      }
+      
+      .blurry{
+          z-index: 0;
+      }
+
+      @media (min-width: 1001px){
+
+          .control{
+               display: none;
+          }
+
+          .nav-left{
+               left: 0;
+          }
+
+          .tutorial{
+               width: calc(100% - 300px);
+               float:right;
+          }
+          .blurry{
+               display: none !important;
+           }
+     }
+
+
+ </style>
+<style rel="build.css.headers"> 
+.--theme-dark > * {
+   --white-dd: 11, 10, 28;
+   --white:  21, 15, 39;
+   --off-white: 22, 23, 62;
+   --black-ll: 179, 179, 179; 
+   --silver: 23, 28, 56;       
+   --silver-d: 21, 25, 49;       
+   --silver-dd: 23, 28, 56;       
+}
+
+.--theme-dark .--theme-esc{
+   --white-dd: 240, 240, 240;
+   --white:  255, 255, 255;
+   --black-ll: 79, 79, 79;
+}
+
+.--theme-dark .bc-white-d.--theme-esc{
+    --white-d: 21, 24, 51;
+    --white-dd: 23, 28, 56;
+    --silver-d: var(--white-dd);
+    color: rgb(203, 198, 198);
+}
+
+.--theme-dark .bc-white-d.--theme-esc .flex-full > *{
+    --white: 255, 255, 255;
+    --white-d: 250, 250, 250;
+    --white-dd: 240, 240, 240;
+    --black-ll: 79, 79, 79;
+    --silver: 230, 230, 230;
+    --silver-d: 220, 220, 220;
+    --silver-dd: 200, 200, 200;
+}
+
+body.--theme-dark{
+    color: rgb(173, 171, 171);
+    background-color : rgba(21, 15, 39);
+}
+
+body.--theme-dark .c-teal{
+    color: rgb(2, 145, 145);
+}
+
+body.--theme-dark .bc-sea-blue{
+    background-color: rgb(29, 34, 59);
+    color: rgb(164, 160, 160);
+}
+
+body.--theme-dark .bc-blue.c-white{
+    background-color : rgb(35, 25, 66);;
+    box-shadow: none;
+    color: #8c8cb5;
+    margin-bottom: 8px;
+}
+
+body.--theme-dark .nav-left .theme-btn .fav-ico{
+    background-image: url("<?= Rexit::mapp('images/icons/favicon-white.png') ?>");
+}
+
+body.--theme-dark .nav-left .ico-pane{
+    color:white;
+    background-color: rgb(29, 35, 68);
+}
+
+body.--theme-dark .nav-left ul a{
+    color: rgb(129, 125, 120);
+}
+
+body.--theme-dark .nav-left ul a.active{
+    color: orange;
+}
+
+body.--theme-dark pre.pre-code:not([class*="c-"]) {
+    color: #6b76ce;
+  }
+
+body.--theme-dark .directives code{
+    background-color: #2f7a29;
+    color: white;
+}
+
+body.--theme-dark code{
+    color: #ff45a2;
+}
+
+body.--theme-dark .lacier{
+    background-color : rgb(35, 25, 66);;
+    box-shadow: none;
+    color: #8c8cb5;
+    margin-bottom: 8px;
+}
+
+body.--theme-dark .lacier.active > *{
+    color: #8c8cb5;
+}
+
+body.--theme-dark :is([class^="i-flex"]){
+    background-color: #43435e;
+    color:white;
+}
+body.--theme-dark :where([class^="i-flex"]) .flex-ico{
+    background-color: #4d4d6f;
+    color: #c0c5d0;
+}
+
+body.--theme-dark :where([class^="i-flex"]) .c-orange.line{
+    color: #55557c;
+}
+
+.animated-header .ico-spin{
+    background-image: url("<?= Rexit::mapp('images/icons/favicon.png') ?>");
+}
+
+body.--theme-dark .animated-header .ico-spin{
+    background-image: url("<?= Rexit::mapp('images/icons/favicon-white.png') ?>");
+}
+body.--theme-dark .animated-header .c-blue-dd{
+    color:white;
+}
+ </style>
+<style rel="build.css.navbars"> 
+
+     .nav-left{
+          min-height: 100vh;
+          width: 300px;
+          background-color: rgba(var(--white-dd));
+          display: inline-block;
+          left: -300px;
+          transition: left .2s ease-in-out;
+          z-index: 1;
+     }
+
+     .nav-left.in{
+          left: 0;
+     }
+
+     .nav-left .theme-btn .fav-ico{
+          background-image: url("<?= Rexit::mapp('images/icons/favicon.png') ?>");
+     }
+
+     body .nav-left .ico-pane {
+          color: #4853db;
+     }
+
+     .nav-left ul > li:hover{
+          color: var(--orange-dd);
+          cursor:pointer;
+     }
+
+     .nav-left ul a{
+         color: rgb(114, 110, 105);
+         list-style: none; 
+     }
+
+     .nav-left ul li {
+         list-style: none;
+         margin: .2em 0em;
+     }
+
+     .nav-left ul li:hover .ico:before {
+         content: "◈";
+         display: inline-block;
+         padding: 4px;
+         color: #bebebe;
+     }
+
+     .nav-left ul li a.active {
+          color: orange;
+     }
+
+     .tutorial{
+          width: 100%;
+          transition: width .2s ease-in-out;
+     }
+
+     @media (min-width: 1001px){
+
+          .nav-left{
+               left: 0 !important;
+          }
+
+          .tutorial{
+               width: calc(100% - 300px);
+               float:right;
+          }
+     }
+ </style>
+
+    
+    
+    <?= Rexit::load('switcherJS') ?>
+    <?= Res::live() ?>
+</head>
+<body class="--theme-dark">
+
+    <script>
+        $(document).ready(function(){
+            $('.control').click(function(){
+                $btn = $(this).find('.controller')
+                $isActive = $btn.hasClass('active');
+
+                $btn.toggleClass('fade-out')
+                $('.nav-left').toggleClass('in');
+                $('.blurry').fadeToggle(function(){
+                    if(!$isActive) { 
+                        $btn.removeClass('bi-list').addClass('active bi-x') 
+                    }else{
+                        $btn.removeClass('active bi-x').addClass('bi-list') 
+                    }
+                });
+            }) 
+            $('.blurry').click(function(){
+                $btn = $('.controller')
+                $btn.toggleClass('fade-out')
+                $('.nav-left').toggleClass('in');
+                $('.blurry').fadeToggle(function(){
+                    $btn.removeClass('active bi-x').addClass('bi-list')
+                });
+            });
+
+            function runHash() {
+                setTimeout(() => {
+                    let hash = hashRunner(':get')
+                    $('.lacier').removeClass('active');
+                    $('#'+hash+' .lacier').addClass('active')  
+                });                 
+            }
+            runHash();
+            setTimeout(() => {
+
+                $(window).bind('hashchange', function() {
+                   runHash()
+                })
+
+            });
+
+        })
+    </script>
+    
+    <script rel="build.js.theme"> 
+window.onload = function() {
+    
+
+    let switchBox = new Switcher;
+
+    let themeBtn = document.querySelectorAll('.theme-btn');
+    let body = document.querySelector('body');
+
+    themeBtn.forEach(btn => {
+
+        btn.addEventListener('click', () => {
+
+            body.classList.toggle('--theme-dark');
+    
+            if(body.classList.contains('--theme-dark')){
+                switchBox.set('spoovaTheme', '--theme-dark');
+            }else{
+                switchBox.set('spoovaTheme', '');
+            }
+
+        })
+
+    })
+
+    switchBox.bind('spoovaTheme', function(value){ 
+       if(!value) body.classList.remove('--theme-dark')
+    })
+
+ 
+}
+</script>
+
+    <section class="font-menu font-em-1d1">
+        <div class="control font-em-2 fixed c-orange box">
+            <div class="flex px-40 mid rad-r shadow anc-btn-link bc-white">
+                <span class="bi-list controller flex"></span>
+            </div>
+        </div>
+         
+
+  
+
+   
+
+     
+
+     <nav class="nav-left fixed">
+
+          <div class="flex ico-pane pxv-10">
+               <div class="flex-icon theme-btn navtheme bd bd-silver rad-r anc-btn-link flow-hide bc-silver ripple relative" style="transition: none">
+                    <div class="px-40 b-cover ico-spin fav-ico" style="transition: none;"></div>
+                    <div class="font-em-1d2 fav-text px-40 flex mid overlay fb-2 fira" style="top:-1.1px; left:.4px; z-index: 1;">
+                         s 
+                    </div>
+               </div>
+               <a href="<?= Rexit::domurl() ?>" class="flex inherit">
+                    <div class="flex midv mxl-8 fb-9  font-em-1d2">POOVA</div>
+               </a>
+          </div> <br>
+
+          <ul class="list-square calibri">
+               <li> <a href="<?= Rexit::domurl('docs/installation') ?>" class="<?= Rexit::inPath('active') ?>"><span class="ico ico-spin"></span>Installation</a> </li>
+               <li> <a href="<?= Rexit::domurl('docs/wmv') ?>" class="<?= Rexit::inPath('active') ?>" ><span class="ico ico-spin"></span><span class="fb-6 pointer" title="Windows Models View">WMV</span> PATTERN</a></li>
+               <li> <a href="<?= Rexit::domurl('docs/live-server') ?>" class="<?= Rexit::inPath('active') ?>"><span class="ico ico-spin"></span>Live Server</a></li>
+               <li> <a href="<?= Rexit::domurl('docs/database') ?>" class="<?= Rexit::inPath('active') ?>"><span class="ico ico-spin"></span>Database</a> </li>
+               <li> <a href="<?= Rexit::domurl('docs/resource') ?>" class="<?= Rexit::inPath('active') ?>"><span class="ico ico-spin"></span>Resource class</a> </li>
+               <li> <a href="<?= Rexit::domurl('docs/routings') ?>" class="<?= Rexit::inPath('active') ?>"><span class="ico ico-spin"></span>Routing System</a> </li>
+               <li> <a href="<?= Rexit::domurl('docs/sessions') ?>" class="<?= Rexit::inPath('active') ?>"><span class="ico ico-spin"></span>Handling Sessions</a> </li>
+               <li> <a href="<?= Rexit::domurl('docs/forms') ?>" class="<?= Rexit::inPath('active') ?>"><span class="ico ico-spin"></span>Handling Forms</a> </li>
+               <li> <a href="<?= Rexit::domurl('docs/useraccounts') ?>" class="<?= Rexit::inPath('active') ?>"><span class="ico ico-spin"></span>Handling Users</a> </li>
+               <li> <a href="<?= Rexit::domurl('docs/database/data-model') ?>" class="<?= Rexit::inPath('active') ?>"><span class="ico ico-spin"></span>Handling DBModels</a> </li>
+               <li> <a href="<?= Rexit::domurl('docs/database/migrations') ?>" class="<?= Rexit::inPath('active') ?>"><span class="ico ico-spin"></span>Handling Migrations</a> </li>
+               <li> <a href="<?= Rexit::domurl('docs/classes') ?>" class="<?= Rexit::inPath('active') ?>"><span class="ico ico-spin"></span>Helper Classes</a> </li>
+               <li> <a href="<?= Rexit::domurl('docs/functions') ?>" class="<?= Rexit::inPath('active') ?>"><span class="ico ico-spin"></span>Helper Functions</a> </li>
+               <li> <a href="<?= Rexit::domurl('docs/template') ?>" class="<?= Rexit::inPath('active') ?>"><span class="ico ico-spin"></span>Template Engine</a> </li>
+               <li> <a href="<?= Rexit::domurl('docs/setters') ?>" class="<?= Rexit::inPath('active') ?>"><span class="ico ico-spin"></span>Global Setters</a> </li>
+               <li> <a href="<?= Rexit::domurl('docs/mails') ?>" class="<?= Rexit::inPath('active') ?>"><span class="ico ico-spin"></span>Handling Mails</a> </li>
+               <li> <a href="<?= Rexit::domurl('docs/cli') ?>" class="<?= Rexit::inPath('active') ?>"><span class="ico ico-spin"></span>Cli Commands</a> </li>         
+               <li> <a href="<?= Rexit::domurl('docs/plugins') ?>" class="<?= Rexit::inPath('active') ?>"><span class="ico ico-spin"></span>Composer and Plugins</a></li>
+               <li> <a href="<?= Rexit::domurl('docs/libraries') ?>" class="<?= Rexit::inPath('active') ?>"><span class="ico ico-spin"></span>Third-Party Libraries</a> </li>
+               <li> <a href="<?= Rexit::domurl('docs/other-features') ?>" class="<?= Rexit::inPath('active') ?>"><span class="ico ico-spin"></span>Other Features</a> </li>
+               <li> <a href="<?= Rexit::domurl('updates') ?>" class="<?= Rexit::inPath('active') ?>"><span class="bi-recycle c-dry-blue"></span> Updates</a> </li>
+          </ul>
+      
+     </nav>
+
+
+
+  <div class="box-full pxl-2 bc-white-dd pull-right">
+    
+    <section class="pxv-10 tutorial mails bc-white">
+      <div class="font-em-1d2">
+
+        
+ <div class="font-em-d8 pvs-4"> <?= $pointer ?? '' ?>  </div>
+
+
+        <div class="start font-em-d8">
+
+          <div class="font-em-1d5 c-orange"> <span class="bi-terminal"> </span>Cli Commands</div> <br>  
+          
+          <div class="resource-intro">
+            <div class="">
+              The spoova framework uses a terminal command <code>mi</code> which is an helpful command to modify or update
+              the developers' project app. This command can also be used for generating classes or files needed within the application. 
+              In this page, we will learn about some useful cli commands that can make the development of project applications easier.
+            </div> 
+          </div>
+          
+          <div id="core" class="core-helpers"> 
+            <br>
+            <div class=" fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
+              <div class="flex-full midv"> <span class="bi-folder mxr-8 c-lime-dd"></span> Commands </div>
+
+            </div> <br>
+            
+            <div>
+                A list of helpful cli <code>mi</code> commands are listed below with their descriptions
+            </div> <br>
+          </div>  
+
+          <div class="">
+            <ul>
+              <li><a href="#add">add</a></li>
+              <li><a href="#add-window">add:window</a></li>
+              <li><a href="#add-model">add:model</a></li>
+              <li><a href="#add-frame">add:frame</a></li>
+              <li><a href="#add-route">add:route</a></li>
+              <li><a href="#add-api">add:api</a></li>
+              <li><a href="#add-migrator">add:migrator</a></li>
+              <li><a href="#add-rex">add:rex</a></li> 
+              <li><a href="#backup-project">backup project</a></li> 
+              <li><a href="#backup-clear">backup :clear</a></li> 
+              <li><a href="#clean-storage">clean storage</a></li> 
+              <li><a href="#config-all">config:all</a></li>
+              <li><a href="#config-dbonline">config:dbonline</a></li>
+              <li><a href="#config-dbonline">config:dboffline</a></li>
+              <li><a href="#config-env">config:env</a></li>
+              <li><a href="#config-usersTable">config:usersTable</a></li>
+              <li><a href="#config-cookieField">config:cookieField</a></li>
+              <li><a href="#config-idField">config:idField</a></li>
+              <li><a href="#config-meta">config:meta</a></li>
+              <li><a href="#cli">cli</a></li>
+              <li><a href="#features">features</a></li>
+              <li><a href="#info">info</a></li>
+              <li><a href="#install">install</a></li>
+              <li><a href="#migrate">migrate</a></li>
+              <li><a href="#project">project &lt;project_name&gt;</a></li>
+              <li><a href="#support">support</a></li>
+              <li><a href="#version">version</a></li>
+              <li><a href="#watch">watch</a></li>
+              <li><a href="#wiz">:wiz</a></li>
+            </ul>
+          </div>
+          
+          <div id="add"> 
+            <br>
+            <div class=" fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
+              <div class="flex-full midv"> <span class="bi-terminal mxr-8 c-lime-dd"></span> add</div>
+
+            </div>
+            
+            <div>
+
+                <div class="pvs-10">
+                  The "add" directive is being used to add a new file. List of files that can be added are:
+                </div>
+
+                <ul>
+                  <li>windows</li>
+                  <li>frames</li>
+                  <li>routes</li>
+                  <li>apis</li>
+                  <li>models</li>
+                  <li>rex (template file)</li>
+                </ul>
+            </div> 
+          </div>          
+          
+          <div id="add-window"> 
+            <br>
+            <div class=" fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
+              <div class="flex-full midv"> <span class="bi-terminal mxr-8 c-lime-dd"></span> add:window </div>
+
+            </div>
+            
+            <div>
+
+              <div class="pvs-10">
+                This command is used to create a window file into the window directory or subdirectory. If such path does not exist, the folder 
+                will automatically be generated as a subdirectory of the window directory. Path supplied 
+                can be in form of slashes or dots. When the path is not supplied, the file will be added directly into the window directory.
+              </div>
+              <div class="pre-area shadow">
+                <div class="pxv-6 bc-silver">Syntax</div>
+                <pre class="pre-code">
+  php mi add:window &lt;dir?&gt;&lt;windowName&gt; &lt;extends?&gt; [-O?];
+  <span class="comment">
+    where: 
+
+        name => name of controller file
+        path => optional path to contoller file
+    
+        
+    Ex1: <span class="c-orange-dd">php mi add:window Info</span>   <span class="no-select">//add class <span class="c-teal">windows\Info</span>. </span>
+    Ex2: <span class="c-orange-dd">php mi add:window Info.User</span> <span class="no-select">//add class <span class="c-teal">windows\Info\User</span>. </span>
+    Ex3: <span class="c-orange-dd">php mi add:window Info.User UserFrame</span> <span class="no-select">//add class <span class="c-teal">windows\Info\User<span class="comment">, extend to <span class="c-dodger-blue">Frames\UserFrame</span>.</span> </span> </span>
+    Ex4: <span class="c-orange-dd">php mi add:window Info UserFrame -O</span> <span class="no-select">//add class <span class="c-teal">windows\Info<span class="comment">, extend to <span class="c-dodger-blue">Frames\UserFrame</span>, overwrite any previous file.</span> </span> </span>
+                </span>
+                </pre>
+
+              </div>
+            </div> 
+          </div> 
+          
+          <div id="add-frame"> 
+            <br>
+            <div class=" fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
+              <div class="flex-full midv"> <span class="bi-terminal mxr-8 c-lime-dd"></span> add:frame </div>
+
+            </div>
+            
+            <div>
+
+              <div class="pvs-10">
+                This "frame" command is used to create a frame file into a "windows/frames" directory which is a subdirectory of the windows folder (directory).
+              </div>
+
+              <div class="pre-area shadow">
+                <div class="pxv-6 bc-silver">Syntax</div>
+                <pre class="pre-code">
+  php mi add:frame &lt;path&gt; [-O?]
+  <span class="comment">
+    where: 
+
+        path => path to frame file within Frames directory
+        [-O] => overwrite old file (optional)
+        
+    Ex1: <span class="c-orange-dd">php mi add:frame Info</span>   <span class="no-select">//add <span class="c-teal">windows/Frames/Info.php</span>. </span>
+    Ex2: <span class="c-orange-dd">php mi add:frame Info.UserFrame</span> <span class="no-select">//add <span class="c-teal">windows/Frames/Info/UserFrame.php </span>. </span>
+    Ex3: <span class="c-orange-dd">php mi add:frame Info.UserFrame -O</span> <span class="no-select">//add <span class="c-teal">windows/Info/UserFrame.php <span class="comment"> overwrite any previous file.</span> </span> </span>
+
+  </span>
+                </pre>
+              </div>
+            </div> 
+          </div> 
+
+          <div id="add-route"> 
+            <br>
+            <div class=" fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
+              <div class="flex-full midv"> <span class="bi-terminal mxr-8 c-lime-dd"></span> add:route </div>
+            </div>
+            
+            <div>
+                <div class="pvs-10">
+                  This "route" command is used to create a route entry point file into a "windows/Routes" directory which is a subdirectory of the windows folder (directory).
+                </div>
+
+              <div class="pre-area shadow">
+                <div class="pxv-6 bc-silver">Syntax</div>
+                <pre class="pre-code">
+  php mi add:route &lt;path&gt; &lt;extends?&gt; [-O?]
+  <span class="comment">
+    where: 
+
+        path => path of route file within window/Routes directory
+        extends => extend to frame file
+        -O => Overwrite any existing file.
+            
+    Ex1: <span class="c-orange-dd">php mi add:route MyRoute</span>   <span class="no-select">//add <span class="c-teal">windows/Routes/MyRoute.php</span>. </span>
+    Ex2: <span class="c-orange-dd">php mi add:route Loc.MyRoute</span> <span class="no-select">//add <span class="c-teal">windows/Routes/Loc/MyRoute.php. </span>
+    Ex3: <span class="c-orange-dd">php mi add:route Loc.MyRoute UserFrame</span> <span class="no-select">//add <span class="c-teal">windows/Routes/Loc/MyRoute.php <span class="comment">extend to <span class="c-dodger-blue">Frames\UserFrame</span>.</span> </span> </span>
+    Ex4: <span class="c-orange-dd">php mi add:route Loc.MyRoute UserFrame -O</span> <span class="no-select">//add <span class="c-teal">windows/Routes/Loc/MyRoute.php <span class="comment">extend to <span class="c-dodger-blue">Frames\UserFrame</span> overwrite any previous file.</span> </span> </span>
+  </span>
+                </pre>
+              </div>
+            </div> 
+          </div> 
+
+          <div id="add-api"> 
+            <br>
+            <div class=" fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
+              <div class="flex-full midv"> <span class="bi-terminal mxr-8 c-lime-dd"></span> add:api </div>
+
+            </div>
+            
+            <div>
+              <div class="pvs-10">
+                The "api" command is used to create a routed api files into a "windows/API" directory which is a subdirectory of the windows folder (directory).
+              </div>
+
+              <div class="pre-area shadow">
+                <div class="pxv-6 bc-silver">Syntax</div>
+                <pre class="pre-code">
+  php mi add:api [name] [extends?] [\Dir?] [-O?]
+  <span class="comment">
+    where: 
+
+        name => name of api route
+        extends? => extend to a frame class
+        \Dir => directory of api route 
+        -O   => overwrite any previous file   
+    
+    Ex1: <span class="c-orange-dd">php mi add:api Info</span>   <span class="no-select">//add <span class="c-teal">windows/Routes/Info.php</span>. </span>
+    Ex2: <span class="c-orange-dd">php mi add:api Info \Loc</span> <span class="no-select">//add <span class="c-teal">windows/Routes/Info.php, <span class="comment">add</span> windows/Routes/Loc/InfoAPI.php</span>. </span>
+    Ex3: <span class="c-orange-dd">php mi add:api Info UserFrame</span> <span class="no-select">//add <span class="c-teal">windows/Routes/Info.php <span class="comment">extend to <span class="c-dodger-blue">Frames\UserFrame</span>.</span> </span> </span>
+    Ex4: <span class="c-orange-dd">php mi add:api Info UserFrame -O</span> <span class="no-select">//add <span class="c-teal">windows/Routes/Info.php <span class="comment">extend to <span class="c-dodger-blue">Frames\UserFrame</span> overwrite any previous file.</span> </span> </span>
+    Ex5: <span class="c-orange-dd">php mi add:api Info UserFrame \Loc -O</span> <span class="no-select">//add <span class="c-teal">windows/Routes/Info.php <span class="comment">extend to <span class="c-dodger-blue">Frames\UserFrame</span>, add <span class="c-teal">windows/Routes/Loc/InfoAPI.php</span>, overwrite any previous file.</span> </span> </span>
+
+  </span>
+                </pre>
+              </div>
+            </div>
+
+          </div> 
+
+          <div id="add-migrator"> 
+            <br>
+            <div class=" fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
+              <div class="flex-full midv"> <span class="bi-terminal mxr-8 c-lime-dd"></span> add:migrator </div>
+
+            </div>
+            
+            <div>
+              <div class="pvs-10">
+                This command is used to add a migration file. Migratrion files are added based on specific naming syntaxes. Migration files that starts with 
+                the identifier name <code>"create_"</code>  are assumed to be for creating tables while those with starting <code>"alter_"</code> are assumed to be for altering tables. 
+                All migration files are generated and added directly to the <code>migrations/</code> directory. The migration file name is also used as the class name. This means that 
+                only names accepted for naming classes should be used. 
+              </div>
+
+              <div class="pre-area shadow">
+                <div class="pxv-6 bc-silver">Syntax</div>
+                <pre class="pre-code">
+  php mi add:migrator name
+  <span class="comment">
+    where: 
+
+        name => name of migration file  
+  </span>
+                </pre>
+              </div>
+            </div>
+
+          </div> 
+          
+          <div id="add-model"> 
+            <br>
+            <div class=" fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
+              <div class="flex-full midv"> <span class="bi-terminal mxr-8 c-lime-dd"></span> add:model </div>
+
+            </div>
+            
+            <div>
+
+              <div class="pvs-10">
+                This model command is used to create a model file into a models directory which is a subdirectory of the windows folder (directory).
+              </div>
+
+              <div class="pre-area shadow">
+                <div class="pxv-6 bc-silver">Syntax</div>
+                <pre class="pre-code">
+  php mi add:model &lt;path&gt; [-O?]
+  <span class="comment">
+    where: 
+
+      path => path to model file within the windows/Models directory.
+      -O => overwrite any previous file.
+
+    Ex1: <span class="c-orange-dd">php mi add:model UserModel</span>            <span class="no-select">//add <span class="c-teal">windows/Models/UserModel.php</span> </span>
+    Ex2: <span class="c-orange-dd">php mi add:model Access.UserModel</span>     <span class="no-select">//add <span class="c-teal">windows/Models/Access/UserModel.php</span> </span>
+    Ex3: <span class="c-orange-dd">php mi add:model Access.UserModel -O</span>  <span class="no-select">//add <span class="c-teal">windows/Models/Access/UserModel.php</span>, overwrite previous file </span>
+
+  </span>
+                </pre>
+              </div>
+            </div> 
+          </div> 
+          
+          <div id="add-rex"> 
+            <br>
+            <div class=" fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
+              <div class="flex-full midv"> <span class="bi-terminal mxr-8 c-lime-dd"></span> add:rex </div>
+
+            </div>
+            
+            <div>
+
+              <div class="pvs-10">
+                This command is used to create a template rex file into the <code>windows/Rex</code> directory.
+                Path supplied can be in form of dots or slashes. When adding the file name,
+                only name should be added without any file extension. The type of rex file can be supplied 
+                using the column directive. However if no type is defined, then the rex file will assume a default 
+                extension of <code>php</code>.
+              </div>
+
+              <div class="pre-area shadow">
+                <div class="pxv-6 bc-silver">Syntax</div>
+                <pre class="pre-code">
+  php mi add:rex  &lt;pathname&gt;.&lt;filename&gt;&lt;:ext?&gt;
+  <span class="comment">
+    where: 
+
+      filename => name of rex file
+      pathname => optional path to contoller file
+      :ext     => options [:css|:js|:php]
+
+
+    Ex1: <span class="c-orange-dd">php mi add:rex index</span>            <span class="no-select">//add <span class="c-teal">windows/Rex/index.rex.php</span> </span>
+    Ex2: <span class="c-orange-dd">php mi add:rex index:css</span>        <span class="no-select">//add <span class="c-teal">windows/Rex/index.rex.css</span> </span>
+    Ex3: <span class="c-orange-dd">php mi add:rex index:js</span>         <span class="no-select">//add <span class="c-teal">windows/Rex/index.rex.js</span> </span>
+    Ex4: <span class="c-orange-dd">php mi add:rex build.index:css</span>  <span class="no-select">//add <span class="c-teal">windows/Rex/build/index.rex.css</span> </span>
+  </span>
+                </pre>
+              </div>
+            </div> 
+          </div> 
+          
+          <div id="backup-project"> 
+            <br>
+            <div class=" fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
+              <div class="flex-full midv"> <span class="bi-terminal mxr-8 c-lime-dd"></span> backup project </div>
+
+            </div>
+            
+            <div>
+
+              <div class="pvs-10">
+                This command is used to storage backups. It uses interactive console steps to determine how best to generate project backups. 
+                The default backup folder name is "backup". 
+              </div>
+
+              <div class="pre-area shadow">
+                <div class="pxv-6 bc-silver">Syntax</div>
+                <pre class="pre-code">
+  php mi backup project
+                </pre>
+              </div>
+            </div> 
+          </div> 
+          
+          <div id="backup-clear"> 
+            <br>
+            <div class=" fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
+              <div class="flex-full midv"> <span class="bi-terminal mxr-8 c-lime-dd"></span> backup :clear </div>                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               
+            </div>
+            
+            <div>
+
+              <div class="pvs-10">
+                This command is used to delete the entire project backups from the <code class="">backup/</code> directory that 
+                is reserved for backups. It is essential to trend carefully when applying this command since all the backups removed 
+                cannot be recovered.
+              </div>
+
+              <div class="pre-area shadow">
+                <div class="pxv-6 bc-silver">Syntax</div>
+                <pre class="pre-code">
+  php mi backup <span class="c-orange-dd">:clear</span>
+                </pre>
+              </div>
+            </div> 
+          </div> 
+
+          <div id="clean-storage"> 
+            <br>
+            <div class=" fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
+              <div class="flex-full midv"> <span class="bi-terminal mxr-8 c-lime-dd"></span> clean storage </div>
+
+            </div>
+            
+            <div>
+
+              <div class="pvs-10">
+                This command is used to clean storage files. When executed, this will remove all storage files from the storage path.
+              </div>
+
+              <div class="pre-area shadow">
+                <div class="pxv-6 bc-silver">Syntax</div>
+                <pre class="pre-code">
+  php mi clean storage
+                </pre>
+              </div>
+            </div> 
+          </div> 
+          
+          <div id="config-all"> 
+            <br>
+            <div class=" fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
+              <div class="flex-full midv"> <span class="bi-gear mxr-8 c-lime-dd"></span> config:all </div>
+
+            </div>
+            
+            <div>
+
+              <div class="pvs-10">
+                This is an interactive console guide to set up all required essential configuration parameters.
+              </div>
+
+              <div class="pre-area shadow">
+                <div class="pxv-6 bc-silver">Syntax</div>
+                <pre class="pre-code">
+  php mi config:all
+
+  <span class="comment">Note: database connection parameters must always be wrapped within quotes.</span>
+                </pre>
+
+</div>
+            </div> 
+          </div> 
+          
+          <div id="config-dbonline"> 
+            <br>
+            <div class=" fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
+              <div class="flex-full midv"> <span class="bi-gear mxr-8 c-lime-dd"></span> config:dbonline </div>
+
+            </div>
+            
+            <div>
+
+              <div class="pvs-10">
+                This configures the online database connection parameters. Online parameters 
+                are used when working on live environment.
+              </div>
+
+              <div class="pre-area shadow">
+                <div class="pxv-6 bc-silver">Syntax</div>
+                <pre class="pre-code">
+  php mi config:dbonline "dbname dbuser dbpass dbserver dbport dbsocket"
+  <span class="comment">
+    where: 
+
+        <span class="c-orange">dbname</span> => database name
+        <span class="c-orange">dbuser</span> => database username
+        <span class="c-orange">dbpass</span> => database password 
+        <span class="c-orange">dbserver</span> => database server
+        <span class="c-orange">dbport</span> => database port 
+        <span class="c-orange">dbsocket</span> => database socket
+
+        NOTE: Empty values are replaced with dash (i.e "-")
+
+        Ex: <span class="c-orange-dd">php mi config:dbonline "tester root - localhost 3306" </span>  <span class="no-select">//set online database connection parameters </span>
+  </span>
+                </pre>
+
+</div>
+            </div> 
+          </div> 
+          
+          <div id="config-dboffline"> 
+            <br>
+            <div class=" fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
+              <div class="flex-full midv"> <span class="bi-gear mxr-8 c-lime-dd"></span> config:dboffline </div>
+
+            </div>
+            
+            <div>
+
+                <div class="pvs-10">
+                  Similarly to <code>dbonline</code>, the <code>dboffline</code> is used to configures the online database 
+                  connection parameters. The offline connection parameters are also triggered to be used to connect to database 
+                  locally.
+                </div>
+
+              <div class="pre-area shadow">
+                <div class="pxv-6 bc-silver">Syntax</div>
+                <pre class="pre-code">
+  php mi config:dboffline "dbname dbuser dbpass dbserver dbport dbsocket"
+  <span class="comment">
+    where: 
+
+        <span class="c-orange">dbname</span> => database name
+        <span class="c-orange">dbuser</span> => database username
+        <span class="c-orange">dbpass</span> => database password 
+        <span class="c-orange">dbserver</span> => database server
+        <span class="c-orange">dbport</span> => database port 
+        <span class="c-orange">dbsocket</span> => database socket
+
+        NOTE: Empty values are replaced with dash (i.e "-")
+
+        Ex: <span class="c-orange-dd">php mi config:dboffline "tester root - localhost 3306" </span>  <span class="no-select">//set offline database connection parameters </span>
+</span>
+                </pre>
+
+              </div>
+
+              <div class="pre-area shadow">
+                <div class="bc-silver pxv-6">Example</div>
+                <pre class="pre-code">
+  <span class="c-lime-dd">php mi</span> <span class="c-orange-dd">config:dboffline</span><span class="c-violet-dd"> "<abbr title="">mydatabase</abbr> <abbr title="">root</abbr> <abbr title="">-</abbr> <abbr title="">localhost</abbr> <abbr title="">3307</abbr> <abbr title="">-</abbr>"</span>
+  <span class="comment">
+    where: 
+
+      mydatabase => database name
+      root       => database username
+      -          => database password (empty) 
+      localhost  => database server
+      3307       => database port 
+      -          => socket (empty)
+  </span>
+                </pre>
+
+              </div>
+            </div> 
+          </div> 
+                  
+          <div id="config-env"> 
+            <br>
+            <div class=" fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
+              <div class="flex-full midv"> <span class="bi-gear mxr-8 c-lime-dd"></span> config:env </div>
+
+            </div>
+            
+            <div>
+
+              <div class="pvs-10">
+                This configures the <code>icore/.env</code> environment keys.
+              </div>
+
+              <div class="pre-area shadow">
+                <div class="pxv-6 bc-silver">Syntax</div>
+                <pre class="pre-code">
+  php mi config:env key value
+  <span class="comment">
+    where: 
+
+      key   : key to be configured
+
+      value : value of key
+
+      Ex: <span class="c-orange-dd">php mi config:env API_KEY some_value</span>
+  </span>
+                </pre>
+
+              </div>
+
+            </div> 
+          </div> 
+
+          <div id="config-userstable"> 
+            <br>
+            <div class=" fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
+              <div class="flex-full midv"> <span class="bi-gear mxr-8 c-lime-dd"></span> config:usersTable </div>
+
+            </div>
+            
+            <div>
+
+              <div class="pvs-10">
+                This configures the users table name in a given database. This table is expected to contain the user information 
+                such as user id or unique id field that can be used to trace a user.
+              </div>
+
+              <div class="pre-area shadow">
+                <div class="pxv-6 bc-silver">Syntax</div>
+                <pre class="pre-code">
+  php mi config:usersTable tablename
+  <span class="comment">
+    where: 
+
+      tablename => name of database table
+
+      Ex: <span class="c-orange-dd">php mi config:userTable users</span>  <span class="no-select">//set database user info table</span>
+  </span>
+                </pre>
+
+              </div>
+            </div> 
+          </div> 
+                  
+          <div id="config-cookiefield"> 
+            <br>
+            <div class=" fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
+              <div class="flex-full midv"> <span class="bi-gear mxr-8 c-lime-dd"></span> config:cookieField </div>
+
+            </div>
+            
+            <div>
+
+              <div class="pvs-10">
+                In most login-logout system, users tend to keep records such as "rememberMe" which enables users to be able 
+                to login without difficulty. The cookie field can be used to store a cookie token than can be retrieved for 
+                logging in. Although it is not a neccesity to have a cookie field in the database user's table, yet, it is
+                important to have a structure in place that supports this. Hence spoova suggests that for every project application, 
+                a cookie field should exist in the selected database user's table. The name of this cookie field should be supplied 
+                for use when logging in or out of an application.  
+              </div>
+
+              <div class="pre-area shadow">
+                <div class="pxv-6 bc-silver">Syntax</div>
+                <pre class="pre-code">
+  php mi config:cookieField tablename
+  <span class="comment">
+    where: 
+
+      tablename => name of database table
+
+      Ex: <span class="c-orange-dd">php mi config:cookieField cookie </span>  <span class="no-select">//set cookie column in user info table </span>
+  </span>
+                </pre>
+              </div>
+            </div> 
+          </div> 
+                  
+          <div id="config-idField"> 
+            <br>
+            <div class=" fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
+              <div class="flex-full midv"> <span class="bi-gear mxr-8 c-lime-dd"></span> config:idField </div>
+
+            </div>
+            
+            <div>
+
+                <div class="pvs-10">
+                  Every login-logout system, requires that a user should have an identification number or string. Spoova naturally 
+                  do not assume the user id column (or field) name is usually an integer field or usually named "id". Instead, a name 
+                  must be supplied which helps spoova to locate the user id column from the user table already set. The id field used may 
+                  be a unique field (e.g email, id, phone. e.t.c) 
+                </div>
+
+              <div class="pre-area shadow">
+                <div class="pxv-6 bc-silver">Syntax</div>
+                <pre class="pre-code">
+  php mi config:idField column
+  <span class="comment">
+    where: 
+
+      column => name id column
+
+      Ex: <span class="c-orange-dd">php mi config:idField email</span>  <span class="no-select">//set user id column name in user table</span>
+  </span>
+                </pre>
+
+              </div>
+            </div> 
+          </div> 
+                  
+          <div id="config-meta"> 
+            <br>
+            <div class=" fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
+              <div class="flex-full midv"> <span class="bi-gear mxr-8 c-lime-dd"></span> config:meta </div>
+
+            </div>
+            
+            <div>
+
+                <div class="pvs-10">
+                  If meta tags are configured by default to be loaded by the resource class automatically, when importing static files using any of the resource 
+                  importer function, method or directives (e.g <code>&lt;?= Res::import() &gt;</code>, <code>Res()</code>), the resource class
+                  will build meta tags using the configuration set in <code>icore/filemeta.php</code> file and the predefined meta tags will be added only once to the webpage. 
+                </div>
+
+              <div class="pre-area shadow">
+                <div class="pxv-6 bc-silver">Syntax</div>
+                <pre class="pre-code">
+  php mi config:meta [on|off]
+  <span class="comment">
+    where: 
+
+      on  => switches automatic importation on 
+      off => switches automatic importation off
+
+      Ex: <span class="c-orange-dd">php mi config:meta on</span>  <span class="no-select">//set meta tags autoloading from <span class="c-teal">icore/filemeta.php</span> configuration on </span>
+  </span>
+                </pre>
+
+              </div>
+            </div> 
+          </div> 
+                  
+          <div id="cli"> 
+            <br>
+            <div class=" fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
+              <div class="flex-full midv"> <span class="bi-terminal mxr-8 c-lime-dd"></span> cli </div>
+
+            </div> <br>
+            
+            <div>
+                The <code>cli</code> directive shows a list of available cli commands. When the <code>-lists</code> 
+                directive is applied, more details of cli commands are displayed.
+
+              <div class="pre-area shadow">
+                <div class="pxv-6 bc-silver">Syntax</div>
+                <pre class="pre-code">
+  php mi cli [-lists]
+  <span class="comment">
+    where: 
+
+      -list  => optional directive to display more information on cli commands
+
+      Ex: <span class="c-orange-dd">php mi cli -lists </span>
+  </span>
+                </pre>
+
+              </div>
+            </div> 
+          </div> 
+                  
+          <div id="features"> 
+            <br>
+            <div class=" fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
+              <div class="flex-full midv"> <span class="bi-terminal mxr-8 c-lime-dd"></span> features </div>
+
+            </div>
+            
+            <div>
+
+                <div class="pvs-10">
+                  This command shows a list of spoova features
+                </div>
+
+              <div class="pre-area shadow">
+                <div class="pxv-6 bc-silver">Syntax</div>
+                <pre class="pre-code">
+  php mi features
+  <span class="comment">
+    where: 
+
+      features  => shows a list of available features
+  </span>
+                </pre>
+              </div>
+            </div> 
+          </div> 
+
+          <div id="info"> 
+            <br>
+            <div class=" fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
+              <div class="flex-full midv"> <span class="bi-info-circle mxr-8 c-lime-dd"></span> info </div>
+
+            </div>
+            
+            <div>
+
+              <div class="pvs-10">
+                The <code>info</code> command is used to show a description of a particular command.
+              </div>
+
+              <div class="pre-area shadow">
+                <div class="pxv-6 bc-silver">Syntax</div>
+                <pre class="pre-code">
+  php mi info &lt;command&gt;
+  <span class="comment">
+    where: 
+
+      command  => cli command name (e.g add:window)
+
+      Ex1: <span class="c-orange-dd">php mi info add:window</span>  <span class="no-select">//displays description for "add:window" command</span>
+      Ex2: <span class="c-orange-dd">php mi info add:routes</span>  <span class="no-select">//displays description for "add:routes" command</span>
+      Ex3: <span class="c-orange-dd">php mi info "watch status"</span>  <span class="no-select">//displays description for "watch status" command</span>
+  </span>
+      <span class="c-teal"><span class="bi-circle-fill"></span> You can view a list of available commands using <code>php mi cli -lists</code></span>
+               </pre>
+
+
+              </div>
+            </div> 
+          </div> 
+
+          <div id="install"> 
+            <br>
+            <div class=" fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
+              <div class="flex-full midv"> <span class="bi-download mxr-8 c-lime-dd"></span> Install </div>
+            </div>
+            
+            <div>
+
+                <div class="pvs-10">
+                  This command installs the entire spoova application by testing all configuration parameters supplied for database
+                  and the entire application. It also creates neccessary database if the selected database name does not exist 
+                  as long as the database connection parameters have been properly set. When no option is supplied, then the entire 
+                  application is installed. Specific options performs their relative functions as shown below.
+                </div>
+
+
+              <div class="pre-area shadow">
+                <div class="pxv-6 bc-silver">Syntax</div>
+                <pre class="pre-code">
+  php mi install [db|dbname] [folder?]
+  <span class="comment">
+    where: 
+
+      db     => test the database connection parameters defined in "icore/dbconfig.php" file 
+      dbname => creates default database name supplied in "icore/dbconfig.php" file using the defined connection parameters
+      folder => refers to an optional custom folder name in project root that contains an "icore/dbconfig.php" file with connection parameters.
+  </span>
+                </pre>
+
+              </div>
+            </div> 
+          </div> <br>
+
+          <div id="migrate"> 
+            <br>
+            <div class=" fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
+              <div class="flex-full midv"> <span class="bi-server mxr-8 c-lime-dd"></span> Migrate </div>
+            </div>
+            
+            <div>
+
+                <div class="pvs-10">
+                  The "migrate" command is used to step up, step down or get migration status.
+                </div>
+
+
+              <div class="pre-area shadow">
+                <div class="pxv-6 bc-silver">Syntax</div>
+                <pre class="pre-code">
+  php mi migrate [up|down|status]
+  <span class="comment">
+    where: 
+
+      up     => step up the migration files
+      down   => step down the migration files
+      status => fetches the migration status table.
+  </span>
+                </pre>
+
+              </div>
+              <div class="foot-note pvs-6">
+                Note that when running migrations down, the number of times to run migrations down can be specified. This is done by supplying the number of  
+                down migrations after the "migrate down" command. For example, <code>mi migrate down 4</code> will step down the migration files in four times. 
+                This means that only the last 4 recent migration files will be affected while others will be ignored.
+              </div>
+            </div> 
+          </div> <br>
+
+          <div id="project"> 
+              <div class=" fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
+                <div class="flex-full midv"> <span class="bi-folder mxr-8 c-lime-dd"></span> project  </div>
+                <div class="flex mid">
+                  <span class="bi-chevron-double-right"></span>
+                </div>
+              </div> 
+              
+              <div>
+
+                  <div class="pvs-10">
+                    This command is used to create a new separate project application. This should be done from the 
+                    spoova project pack directory. When a new project file is created using the cli, all essential mapping 
+                    of file to the current enviroment is done. It is highly suggested to create a new project app 
+                    using the cli which ensures that the new project app is essentially ready for configuration.
+                  </div>
+
+
+                <div class="pre-area shadow">
+                  <div class="pxv-6 bc-silver">Syntax</div>
+                  <pre class="pre-code">
+  php mi project &lt;project_name&gt;
+  <span class="comment">
+    where: 
+
+      project_name => name of new project application
+
+      Ex: <span class="c-orange-dd">php mi project lumen</span>  <span class="no-select">//create separate project name "lumen"</span>
+  </span>
+                  </pre>
+
+                </div>
+              </div> 
+          </div> <br>
+
+          <div id="support"> 
+            <div class=" fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
+              <div class="flex-full midv"> <span class="bi-terminal mxr-8 c-lime-dd"></span> support </div>
+
+            </div>
+            
+            <div>
+
+                <div class="pvs-10">
+                  This command displays the current support of spoova frame in terms of php version, mysql server,
+                  web servers and other essential informations.
+                </div>
+
+
+              <div class="pre-area shadow">
+                <div class="pxv-6 bc-silver">Syntax</div>
+                <pre class="pre-code">
+  php mi support
+                </pre>
+              </div>
+            </div> 
+          </div> 
+
+          <div id="version"> 
+            <br>
+            <div class=" fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
+              <div class="flex-full midv"> <span class="bi-terminal mxr-8 c-lime-dd"></span> version </div>
+            </div>
+            
+            <div>
+
+                <div class="pvs-10">
+                  This command displays the current version of spoova frame
+                </div>
+
+              <div class="pre-area shadow">
+                <div class="pxv-6 bc-silver">Syntax</div>
+                <pre class="pre-code">
+  php mi version
+                </pre>
+              </div>
+            </div> 
+          </div> 
+                  
+          <div id="watch"> 
+            <br>
+            <div class=" fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
+              <div class="flex-full midv"> <span class="bi-clock mxr-8 c-lime-dd"></span> watch </div>
+
+            </div>
+            
+            <div>
+
+                <div class="pvs-10">
+                  Watch is the inbuilt spoova live server system. This system can be switched to online or offline or disabled mode. 
+                </div>
+            
+
+              <div class="pre-area shadow">
+                <div class="pxv-6 bc-silver">Syntax</div>
+                <pre class="pre-code">
+  php mi watch [online|offline|disabled|status]
+  <span class="comment">
+    where: 
+
+      online    => sets watch for both offline and online environments
+      offline   => sets watch for offline environment only
+      disabled  => disables the watch entirely for both environments
+      status    => get the current configuration status of watch
+
+      Ex1: <span class="c-orange-dd">php mi watch online  </span>  <span class="no-select">//set watch to online and offline environments </span>
+      Ex2: <span class="c-orange-dd">php mi watch offline </span>  <span class="no-select">//set watch to offline environment </span>
+      Ex3: <span class="c-orange-dd">php mi watch disabled</span>  <span class="no-select">//set watch to disabled mode </span>
+      Ex4: <span class="c-orange-dd">php mi watch status</span>    <span class="no-select">//get current watch status.</span>
+  </span>
+                </pre>
+
+              </div>
+            </div> 
+          </div> 
+                  
+          <div id="wiz"> 
+            <br>
+            <div class=" fb-6 bc-white-dd flex-full rad-4 pxv-8 lacier">
+              <div class="flex-full midv"> <span class="helvetica mxr-6"><span class="bi-magic"></span></span> <span>wiz</span> </div>
+
+            </div>
+            
+            <div>
+
+                <div class="pvs-10">
+                  This command starts a wizard that is capable of running php codes in the command line in the offline environment. The <code>wiz</code> 
+                  also allows pasting of code lines on the command line. In order to execute commands, developer must end code with a newline followed by 
+                  semicolon delimiter and then an enter. This tells the wiz to run or process the code. If the delimiter is not added on a separate line, 
+                  the wiz will just assume that the delimiter is part of the code and will not execute it.
+                </div>
+            
+
+                <div class="pre-area shadow">
+                  <div class="pxv-6 bc-silver">Syntax</div>
+                  <pre class="pre-code">
+  php mi :wiz
+                  </pre>
+                </div>
+
+                <div class="foot-note pvs-10">
+                  When working with wiz, all important namespaces must be fully defined in a way that it becomes accessible.
+                </div>
+
+            </div> 
+          </div> 
+          
+        </div>
+      </div>
+    </section>
+
+  </div>
+
+  
+
+
+         <div class="blurry page-overlay ov-d5 hide"></div>
+    </section>
+
+</body>
+</html>

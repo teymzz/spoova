@@ -2,8 +2,6 @@
 
 namespace spoova\mi\core\classes\DB;
 
-use spoova\mi\core\classes\FileManager;
-
 /**
  * @author Akinola Saheed <github teymzz>
  * 
@@ -22,48 +20,117 @@ class DBConfig{
     private static $message;
     
     /**
-     * Load the entire contents of the init file
+     * Load the entire contents of the dbconfig file
      *
-     * @param string $url init file url
+     * @param string $file dbconfig file path
      * @param array $data referenced variable to contain
      * @return bool
      */
-    static function load(string $url, &$data) : bool{
+    static function load(string $file, &$data) : bool{
 
-        $FileManager = new FileManager;
+        self::$message = null;
+        $online  = self::online($file);
+        $offline = self::offline($file);
 
-        if(!$FileManager->openFile('', $url)){
-            self::$message = 'file cannot be accessed';
-            return false;
-        } 
-
-        $contents = FileManager::load($url, "=");
-        $config = [];
-        
-        foreach($contents as $configKey => $value){
-
-            $key = str_replace(['$_DBCONFIG[', "'",'"', "]"], '', $configKey);
-
-            $exp = explode(":", rtrim($value, "; "), 2);
-
-            $exp1 = $exp[0]?? '';
-            $exp2 = $exp[1]?? '';
-
-            $online = str_replace(['(online)?',"'"], '', $exp1);
-            $offline = str_replace(['(online)?',"'"], '', $exp2);
-
-            $config['online'][$key] = $online;
-            $config['offline'][$key] = $offline;
-
-        }
+        $config['online'] = $online;
+        $config['offline'] = $offline;
 
         $data = $config;
-        return true;
+        return !isset(self::$message);
     }
 
+    /**
+     * Returns error message, if any.
+     *
+     * @return void
+     */
     static function response() {
         return self::$message;
     }
 
+    /**
+     * Return offline database parameters from init file 
+     *
+     * @param string $file dbconfig file path
+     * @return array
+     */
+    static function offline(string $file) : array {
+        if(is_file($file)){
+            $status = !($_ENV['online'] ?? false);
+            $_ENV['online'] = false;
+            include ($file);
+            $config = $_DBCONFIG ?? [];
+            $_ENV['online'] = $status;
+            return $config;
+        }else{
+            self::$message = 'file cannot be accessed';
+        }
+        return [];
+    }
+
+    /**
+     * Get offline settings from init file
+     *
+     * @param string $file dbconfig file path
+     * @return array
+     */
+    static function online(string $file){
+        if(is_file($file)){
+            $status = $_ENV['online'] ?? false;
+            $_ENV['online'] = true;
+            include_once($file);
+            $config = $_DBCONFIG ?? [];
+            $_ENV['online'] = $status;
+            return $config;
+        }else{
+            self::$message = 'file cannot be accessed';
+        }
+        return [];
+    }
+
+    /**
+     * Generate a dbconfig build type. 
+     *  -    Array values serial order [NAME, USER, PASS, SERVER, PORT, SOCKET] 
+     *
+     * @param string $type  optional [icore|core]
+     * @param array $online offline database parameters
+     * @param array $offline online database parameters
+     * @return string
+     */
+    static function build(string $type, array $online, array $offline) : string {
+
+        if($type === 'icore'){
+            return <<<CONFIG
+            <?php
+            
+             // custom db configuration files for online and offline  
+
+             \$_DBCONFIG['SOCKET']  = \$_ENV['online']? '$online[5]' : '$offline[5]';
+             \$_DBCONFIG['PORT']    = \$_ENV['online']? '$online[4]' : '$offline[4]';
+             \$_DBCONFIG['SERVER']  = \$_ENV['online']? '$online[3]' : '$offline[3]';
+             \$_DBCONFIG['USER']    = \$_ENV['online']? '$online[1]' : '$offline[1]';
+             \$_DBCONFIG['PASS']    = \$_ENV['online']? '$online[2]' : '$offline[2]';	
+             \$_DBCONFIG['NAME']    = \$_ENV['online']? '$online[0]' : '$offline[0]';
+            CONFIG;
+        }elseif($type === 'core'){
+            return <<<CONFIG
+            <?php
+
+             require_once \'secure.php\'; //secure file
+            
+             // default db configuration files for online and offline  
+
+             \$_DBSOCKET  = \$_ENV['online']? '$online[5]' : '$offline[5]';
+             \$_DBPORT    = \$_ENV['online']? '$online[4]' : '$offline[4]';
+             \$_DBSERVER  = \$_ENV['online']? '$online[3]' : '$offline[3]';
+             \$_DBUSER    = \$_ENV['online']? '$online[1]' : '$offline[1]';
+             \$_DBPASS    = \$_ENV['online']? '$online[2]' : '$offline[2]';	
+             \$_DBNAME    = \$_ENV['online']? '$online[0]' : '$offline[0]';
+
+             // NOTE: This file should not be edited or used for connection, override with custom dbconfig in "icore" directory.           
+            CONFIG;
+        }
+
+    }
 
 }

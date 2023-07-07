@@ -33,7 +33,7 @@ class Root extends Entry{
      */
     function version() {
 
-       Cli::textView(Cli::alert(Cli::emos('hot', 1).'SPOOVA VERSION').Cli::warn(SP_VERSION, 1). ' (Beta)', 0, '1|2');
+       Cli::textView(Cli::alert(Cli::emos('hot', 1).'SPOOVA VERSION').Cli::warn(SP_VERSION, 1). ' (Stable)', 0, '1|2');
 
     }
 
@@ -115,9 +115,9 @@ class Root extends Entry{
             'SESSION CONTROL'     => 'Built in structure for handling sessions',
             'META TAGS CONTROL'   => 'Designed structure for managing meta tags setup and importation.',
             'DATABASE CONTROL'    => 'Simple Handlers for running mysql queries on mysql database',
-            'DATABASE MIGRATION'  => 'Cli commands for generating and running migration files (beta)',
+            'DATABASE MIGRATION'  => 'Cli commands for generating and running migration files',
             'INTERACTIVE CLI'     => 'An interactive console assistant',
-            'WVM(WMV) PATTERN'    => 'A development structure built on MVC pattern',
+            'WVM(WMV) PATTERN'    => 'A development structure built on MVC architecture',
         ];
         
         Cli::textView(Cli::color(Cli::emos('diamond', 1).'FEATURES','yellow'), 0, "1|1");
@@ -136,18 +136,18 @@ class Root extends Entry{
      */
     public function repack(){
 
-        Cli::textView(Cli::color(Cli::emos('hot', 1),'blue').'spoova build ... ');
-
-        yield 1; //stage 1
-
         // Handle environmental directive
         if(!is_file(_core.'custom/app')){
-            $this->addError('invalid command "app"');
+            Cli::textView(Cli::danger(Cli::emo('point-list').' repack '));
+            Cli::break(2);
+            Cli::textView(Cli::error('invalid command '.Cli::warn('"repack"')));
+            Cli::break(2);
             yield false; //stop here
-            return false;
         }
 
-        yield 2; //stage 2
+        Cli::textView(Cli::color(Cli::emos('hot', 1),'blue').'spoova build ... ');
+
+        yield 3; //stage 1 & 2
 
         // Import FileManager
         $Filemanager = new FileManager;
@@ -155,6 +155,7 @@ class Root extends Entry{
         // Set crest file variables
         $crest_name = self::crest;
         $crest_path = _core.'custom/';
+        $crest_spac = _core.'custom/'.self::crest;
         $crest_file = _core.'custom/'.self::crest.'.re';
         $crest_root = '';
         
@@ -169,20 +170,20 @@ class Root extends Entry{
             yield 4; //stage 4
 
             //unlink any spack file
-            if(is_file(domroot('core/custom/'.self::crest)))
+            if(is_file($crest_spac))
             {
 
                 Cli::textView(Cli::emos('checkmark'), 2, 2);
 
                 Cli::textView('initializing compiler ... ', 0, 0);
 
-                unlink(domroot('core/custom/'.self::crest));
+                unlink($crest_spac);
             }
 
             yield 5; //stage 5
             
             $Filemanager->setUrl(docroot);
-            $Filemanager->zipUrl(_core.'custom/spoove', ['.git']);      
+            $Filemanager->zipUrl(_core.'custom/spv', ['backup','.git']);      
               
             yield 6; //stage 6
 

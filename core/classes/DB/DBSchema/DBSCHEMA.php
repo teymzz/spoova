@@ -148,7 +148,7 @@ class DBSCHEMA {
         //proceed to get the draft structure
         if(func_num_args() > 1){
             if(!($STRUCTURE instanceof DRAFT)){
-                return DRAFT::callError(Cli::error(('Schema function must return be a draft object'), 0, '|2'));
+                return DRAFT::callError(Cli::error(('Schema function must return a draft object'), 0, '|2'));
             }
         }
 

@@ -40,7 +40,7 @@ class DB implements DBHelpers{
    * This method takes the database root 
    * query handler class name (MiSQL, MiPDO, ...)
    *
-   * @param $conName name of connector class
+   * @param string $conName name of connector class
    * @return object of the connection
    */
   public function open(string $conName = null){
@@ -250,36 +250,33 @@ class DB implements DBHelpers{
 
      }
     
-     $conn = new $conClass(...$params);  
+     $conn = new $conClass(...$params); 
 
      return $this->dbh = $this->selfUpdate($conn);
            
   }
 
   /**
-   * This method is only used to connect when no database name is supplied
+   * This method is used to connect to database in absence of a selected database name.
    *
-   * @param string|array $dbname
+   * @param string|array $dbuser The database user or database array list. When set as array, must either be indexed array or must have least 4 keys in the order below:
+   *      
+   *        -  (array) => [
+   *        - - -     [0|USER|DBUSER] => (string) DB USER. (Required)
+   *        - - -     [1|PASS|DBPASS] => (string) DB PASS. (Required)
+   *        - - -     [2|SERVER|DBSERVER] => (string) DB SERVER. (Required)
+   *        - - -     [3|PORT| DBPORT] => (string) DB SERVER. (Required if using port)
+   *        - - -     [4|SOCKET|DBSOCKET] => (string) DB SOCKET. Optional
+   *        - -   ]
+   *      
    * 
-   *    @param array $dbname: (indexed array must have least 4 keys in the order below)
-   *      <pre>
-   *         (array) => [
-   *                     '[ 0 | USER   | DBUSER ]'     => (string) DB USER. Required
-   *                     '[ 1 | PASS   | DBPASS ]'     => (string) DB PASS. Required
-   *                     '[ 2 | SERVER | DBSERVER ]'   => (string) DB SERVER. Required
-   *                     '[ 3 | PORT   | DBPORT ]'     => (string) DB SERVER. Required (if using port)
-   *                     '[ 4 | SOCKET | DBSOCKET ]'   => (string) DB SOCKET. Optional
-   *               ]
-   *      </pre>
-   * 
-   * @param string $dbuser    Required
-   * @param string $dbpass    Required
-   * @param string $dbserver  Required
-   * @param string $dbport    Required (if using port)
+   * @param string $dbpass    Optional but Required if $dbuser is string
+   * @param string $dbserver  Optional but Required if $dbuser is string
+   * @param string $dbport    Optional but Required if $dbuser is string and uses port. 
    * @param string $dbsocket  Optional
-   * @return void|DBHandler
+   * @return null|DBHandler
    */
-  public function openTool($dbuser = '', $dbpass = '', $dbserver = '', $dbport = '', $dbsocket = ''){
+  public function openTool(string|array $dbuser = '', string $dbpass = '', string $dbserver = '', string $dbport = '', string $dbsocket = ''){
 
     if(isset($this->newState)){
       $conName = in_array($this->reloadName($this->newState), self::conNames, true) ? $this->newState : DBCON;

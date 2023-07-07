@@ -2,9 +2,7 @@
 
 use spoova\mi\core\classes\Bond;
 use spoova\mi\core\classes\Csrf;
-use spoova\mi\core\classes\Directives;
 use spoova\mi\core\classes\Request;
-use spoova\mi\core\classes\Slicer;
 
 class Rexit {
 
@@ -37,14 +35,11 @@ class Rexit {
     static function meta($option = '') {
 
         if($option){
-            return appenv('meta')->$option();
+            $appenv = (appenv('meta'));
+            if($appenv) return $appenv->$option();
         }else{
             return '';
         }
-
-    }
-
-    static function import() {
 
     }
 
@@ -93,7 +88,7 @@ class Rexit {
 
     static function flash($args) {
 
-        return Res::flash(...$args);
+        return Res::flash(...func_get_args());
 
     }
 
@@ -265,9 +260,12 @@ class Rexit {
      * @return string rendered $body
      */
     static function csrf() {
+        static $count = 0;
+        $count++;
 
+        $token = ($count > 1)? Csrf::old() : Csrf::token();
         $token = Csrf::token();
-        '<input type="hidden" value="'.$token.'" name="CSRF_TOKEN">';
+        return '<input type="hidden" value="'.$token.'" name="CSRF_TOKEN">';
 
     }
 
@@ -356,6 +354,7 @@ class Rexit {
 
         return $values? $method : '';
     }
+
     /**
      * Converts all error index directives to executable function
      *
@@ -365,12 +364,17 @@ class Rexit {
         return error(...func_get_args());
     }
 
-    static function vdump() {
-        return vdump(...func_get_args());
+    /**
+     * Returns saved form validation error
+     *
+     * @return string
+     */
+    static function formerror($args = '') {
+        return formerror(...func_get_args());
     }
 
-    static function attr() {
-
+    static function vdump() {
+        return vdump(...func_get_args());
     }
 
     static function bond() {

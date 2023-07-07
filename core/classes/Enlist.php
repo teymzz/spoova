@@ -15,6 +15,7 @@ class Enlist{
 	private $action = '';
 	private string $url = '';
 	private string $prefix = '';
+	private bool $strictPrefix = false;
     private bool|int $debug;
 	private bool $active = false;
 	private mixed $error = '';
@@ -75,6 +76,7 @@ class Enlist{
 	 *
 	 * @param string source $url
 	 * @param array|string source $ext
+     *  - Note that the character string '*' is used to denote all extensions.
 	 * @return Enlist
 	 */
 	public function source($url, array|string $ext = '*') : Enlist {
@@ -114,11 +116,14 @@ class Enlist{
 	/**
 	 * Add a prefix to a naming convention
 	 *
-	 * @param string $prefix
+	 * @param string $prefix string which is prepended to file name. This should not contain invalid file characters or slashes.
+     * @param bool $strict By default, prefix is only added when the old file path is different from the 
+     * final resolved file path. Setting this as true ensures that a prefix is always added even when no such difference is encountered 
 	 * @return Enlist
 	 */
-	public function prefix($prefix) : Enlist {
+	public function prefix($prefix, bool $strict = false) : Enlist {
 		$this->prefix = $prefix;
+        $this->strictPrefix = $strict;
         return $this;
 	}
 
@@ -173,7 +178,7 @@ class Enlist{
 	/**
 	 * Resolve Enlist::rename() mode to return files only without any active renaming process
 	 *
-	 * @param string $type
+	 * @param bool $bool Setting this as true ensures that no active renaming is done.
 	 * @return Enlist
 	 */
 	public function view(bool $bool = true) : Enlist {
@@ -252,6 +257,7 @@ class Enlist{
         $ext  = $this->ext;
         $counter = $this->counter;
         $prefix = $this->prefix;
+        $strictPrefix = $this->strictPrefix;
         $action = $this->action;
         $espace = $this->espace;
         $reNumber = $this->reNumber;
@@ -269,7 +275,7 @@ class Enlist{
 
 
         if($isHidden){
-            //only hidden
+            //only hidden files (starting with dots)
             $hiddenFiles = array_filter(glob($url.'/.*') ?? [], 'is_file');
 
             $counti = 0;
@@ -318,7 +324,8 @@ class Enlist{
                     $newfile =  $prefix.$counter; 
                 }else{
                     $newfile = str_replace($dir."/", '', $file);
-                    $newfile = pathinfo($newfile,PATHINFO_FILENAME);
+                    $newfile = pathinfo($newfile, PATHINFO_FILENAME);
+                    if($strictPrefix) $newfile = $prefix.$newfile;
                 }
 
                 $newfile = ($espace)? preg_replace("/\s+/", $espace, $newfile) : $newfile;
@@ -354,7 +361,9 @@ class Enlist{
 
                 if($action != 'view'){
                     if(strtolower($file) !== strtolower($newfile)){
-                        if(isset($this->session_name))$_SESSION[$this->session_name][$file] = $newfile;
+                        if(isset($this->session_name)){
+                            $_SESSION[$this->session_name][$file] = $newfile;
+                        }
                         rename($file, $newfile);
                     }
                 }

@@ -82,13 +82,15 @@ class Info extends Entry{
  ,
 
             #---------------------           
-            'add:rex'        => 'Adds a new rex file into the rex template folder
+            'add:rex'        => 'Adds a new template file into the rex template directory
             
- Syntax : '.Cli::danger('add:rex').' [path?].<filename>
+ Syntax : '.Cli::danger('add:rex').' '.Cli::warn('[path?]').Cli::alert('[filename]').'[:ext?]
  
- '.Cli::alert('Note 1 :').' Path when supplied should be a subdirectory of the rex template directory
+ '.Cli::alert('Note 1 :').' Path when supplied, will be a subdirectory of the rex template directory.
 
- '.Cli::alert('Note 2 :').' Paths can be supplied using dots while the last name is assumed to be file name',
+ '.Cli::alert('Note 2 :').' Paths can be supplied using dots while the last name is assumed to be file name.
+
+ '.Cli::alert('Note 3 :').' Supported file extensions are php, css or js while default is php.',
 
             #---------------------           
             'add:route'      => 'Adds a new route file into the "window/Routes" directory

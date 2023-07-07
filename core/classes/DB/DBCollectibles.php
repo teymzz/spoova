@@ -81,7 +81,7 @@ class DBCollectibles implements DBOperators {
     }
 
     /**
-     * Undocumented function
+     * defines an sql query required to collect data from database
      *
      * @param Model $model
      * @param string $className

@@ -3,8 +3,6 @@
 namespace spoova\mi\windows\Models\Access;
 
 use Form;
-use spoova\mi\core\classes\Model;
-use spoova\mi\core\classes\Request;
 use spoova\mi\windows\Models\Access\AccessModel;
 use User;
 
@@ -21,7 +19,7 @@ class Login extends AccessModel     {
     public function rules(): array {
 
         return [
-            'user' => [SELF::RULE_REQUIRED],
+            'user' => [SELF::RULE_REQUIRED, SELF::RULE_EMAIL],
             'pass' => [SELF::RULE_REQUIRED, SELF::RULE_MIN => 2]
         ];
 
@@ -35,7 +33,7 @@ class Login extends AccessModel     {
     public static function tablename(): string {
 
         //default table name
-        return \User::config('USER_TABLE');
+        return User::config('USER_TABLE');
 
     }
 
@@ -47,7 +45,7 @@ class Login extends AccessModel     {
     public static function mapform(): array {
 
         return [
-            'user' => 'username',
+            'user' => 'email',
             'pass' => 'password'
         ];
 
@@ -56,11 +54,11 @@ class Login extends AccessModel     {
     public function isAuthenticated(): bool
     {
 
-        if($db = (User::auth())->dbh() ) {
+        if($db = (User::auth())->dbh()) {
 
-            $data = Form::Data();
+            $data = Form::data();
     
-            $params =  [$data['email'], $data['username']];
+            $params =  [$data['email']];
     
             $db->query('select * from '.User::tableName().' where email = ?', $params)->read();
     

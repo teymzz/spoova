@@ -1,7 +1,6 @@
 <?php
 
 /* Custom stand-alone core functions. Do not Remove*/
-
 use spoova\mi\core\classes\Dumper;
 
 /**
@@ -90,18 +89,18 @@ function setVar( &$value, $custom = '', $replace = false ){
 /**
  * 1. Prepares / Initiaizes a non existing variable
  * 2. Trims string variables supplied
- * 3. Returns @param $return if $param not initially defined && $return is not empty
+ * 3. Returnn $return if $param not initially defined && $return is not empty
  * 4. similar to setvar function but with little differences
  * 
  * @param mixed $param
- * @param  $return
- * @return void|array|string|bool|int
+ * @param mixed $return alternate value returned if $param no defined
+ * @return mixed
  */
 function myIsset( &$param, $return = null ){
   if(isset($param)){
-    return is_array($param)? $param : trim($param);
+    return is_string($param)? trim($param) : $param;
   }elseif(!empty($return)){
-    return is_array($return)? $return : trim($return);
+    return is_string($return)? trim($return) : $return;
   }
 }
 
@@ -694,16 +693,26 @@ function array_delete(array $array, $value){
  *
  * @param array  $array
  * @param string $value
+ * @param bool $series
+ *  - If set as true and $value is array, $value will be assumed
+ *    to be a container of values expected to be removed. This is useful when 
+ *    removing multiple values from $array
  * @return array
  */
-function array_unset($array,$value){
-  //unsets all indices of $value in $array  
-  if(!is_array($array)){ return false; }  
+function array_unset(array $array, $value, bool $series = false) : array {
 
-  foreach ($array as $key => $val) {
-    if($val == $value){
-      unset($array[$key]);
+  if(is_array($value) && $series){
+    foreach ($array as $key => $val) {
+      if(in_array($val, $value)){
+        unset($array[$key]);
+      }
     }
+  }else{
+    foreach ($array as $key => $val) {
+      if($val === $value){
+        unset($array[$key]);
+      }
+    }    
   }
   return $array;  
 }   
@@ -729,7 +738,7 @@ function combine($array, array &$array2){
  * For testing purposes
  * javascript alert. To be used within html body
  *
- * @param array|string 
+ * @param array|string $value
  * @return string
  */
 function alert( $value = '' ){

@@ -8,11 +8,10 @@ class Index extends Window{
 
   function __construct(){
     
-    //load index page
+
     self::call($this, [
 
-      window(':') => 'root',
-      window(':wmv.calls') => 'root',
+      window(':') => 'root' //call index page
       
     ]); 
 
@@ -24,22 +23,4 @@ class Index extends Window{
 
   }
 
-  public static function addRoutes(array $array = []) : array {
-
-    return [
-     'about' => DomUrl('about')
-    ];
-
-  }
-
 }
-
-function turing($x){
-
-  return function ($y) use ($x) {
-      return str_repeat($y, $x);
-  };
-
-} 
-
-

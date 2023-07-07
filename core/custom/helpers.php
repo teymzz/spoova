@@ -7,52 +7,18 @@ use spoova\mi\core\classes\EInfo;
 use spoova\mi\core\classes\DomUrl;
 use spoova\mi\core\classes\SETTER;
 use spoova\mi\core\classes\Spoova;
-use spoova\mi\core\classes\UserDB;
 use spoova\mi\core\classes\Collection;
-use spoova\mi\core\classes\FileManager;
 use spoova\mi\core\classes\Collectibles;
 use spoova\mi\core\classes\ModelOptimizer;
-
-if(!function_exists('env')){
-  /**
-   * Reads the last data obtained from Filemanager::loadEnv() method
-   * @param $key an access key
-   * @param $super defines environment where data should be pulled.
-   *  - When $super is not defined or set as false, data returned may be from global scope and if not found, from Filemanager::env_data() 
-   *  - When $super is set as true, $key must exist as a global key only or empty value is returned.
-   *  - When $super is set as a string, $key must be a subkey of $super or empty value is returned.
-   * @return array|string
-   */
-  function env(string $key, bool|string $super = false) : array|string {
-
-    if((func_num_args() === 1) | ($super === false)){
-      $data = FileManager::env_data();
-      return $_ENV[$key] ?? $data[$key] ?? '';
-    }else{
-      if($super === true){
-        return $_ENV[$key] ?? '';
-      }else{
-
-        if(isset($_ENV[$super])){
-          return $_ENV[$super][$key] ?? '';
-        }
-
-        return '';
-      }
-    }
-    
-    
-  }
-}
 
 if(!function_exists('scheme')){
   /**
    * Converts Path supplied to app's namespace prefixed or non-prefixed with a backslash
-   * @param $classPath path to class
-   * @param $prefix true adds a backslash prefix to returned value 
+   * @param string $classPath path to class
+   * @param bool $prefix true adds a backslash prefix to returned value 
    * @return string
    */
-  function scheme(string $classPath, $prefixed = true) : string {
+  function scheme(string $classPath, bool $prefixed = true) : string {
     $appbase = $prefixed? scheme : ltrim(scheme, ' \\');
 
     $classPath = str_replace('/','\\',$classPath);
@@ -63,7 +29,7 @@ if(!function_exists('scheme')){
 
 if(!function_exists('domlink')){
 
-  function domlink($link, bool $modified = true){
+  function domlink(string $link, bool $modified = true){
 
      $link = str_replace(['\\','.'], '/', $link);
 
@@ -129,8 +95,6 @@ if(!function_exists('GET')){
     return;
   }
 }
-
-
 
 if(!function_exists('webClass')){
   /**
@@ -233,8 +197,8 @@ if(!function_exists('windowIncludes')){
    * Checks if the current window url exists within the list of specified urls
    *
    * @param array|string $url url base paths to be tested
-   *  - Note: This will NOT convert dots to slashes.
-   *  - Note2: a single forward slash "/" can be used to denote index page
+   *  - This will NOT convert dots to slashes.
+   *  - A single forward slash "/" can be used to denote index page
    * 
    * @return string
    */
@@ -349,24 +313,9 @@ if(!function_exists('isUser')){
    * @return bool
    */
   function isUser(){
-    return User::id()? true : false;
+    return ((string) User::id())? true : false;
   }
 }
-
-// if(!function_exists('user')){
-//   /**
-//    * This function returns the userDB class.
-//    * It Handles only queries specific to the current user session id
-//    * 
-//    * @param $tableName database user relational table
-//    *    - default uses the user default table name
-//    * @return UserDB
-//    */
-//   function user($tableName = ''){
-//     if(!$tableName) $tableName = User::tableName();
-//     return new UserDB($tableName);
-//   }
-// }
 
 if(!function_exists('url')){
   /**
@@ -398,7 +347,6 @@ if(!function_exists('inPath')){
     if($path === ':dom-path'){
       $path = GET(DomUrl::Name(), DomUrl::Hash());
     }
-
     $path = rtrim(ltrim(to_frontslash($path, true), '/'), '/');
     $pathSlashes = substr_count($path, '/');
     $paths = $pathSlashes + 1;
@@ -459,13 +407,13 @@ if(!function_exists('authDirect')){
 
 if(!function_exists('setFlash')){
   /**
-   * Handle urls by using the Url class
+   * Sets a flash using the Res::flash() class
    * 
-   * @param $url
+   * @param string $key flash key
+   * @param string $message flash message
    */  
-  function setFlash(){
-    $args = func_get_args();
-    \Res::setFlash(...$args);
+  function setFlash(string $key, $message){
+    Res::setFlash(...func_get_args());
   }   
 }
 
@@ -504,6 +452,9 @@ if(!function_exists('onHide')) {
    * Returns a hidden attribute on html element 
    * only when a function returns an mon-empty result
    *
+   * @param string $name - function name
+   * @param string $args - function argument
+   *  - Each argument should be declared separately not as an array
    * @return string
    */
   function onHide(string $name, $args = null) : string {
@@ -530,6 +481,9 @@ if(!function_exists('onShow')) {
    * Returns a hidden attribute on html element
    * only when a function returns an empty result
    *
+   * @param string $name - function name
+   * @param string $args - function argument
+   *  - Each argument should be declared separately not as an array
    * @return string
    */
   function onShow(string $name, $args = null) : string {
@@ -551,24 +505,34 @@ if(!function_exists('onShow')) {
 if(!function_exists('error')) {
   
   /**
-   * Returns first encountered error for form inputs
+   * Returns the first validation error of specified input fields or specfied from 
    *
-   * @param $error error or input name (or key)
-   * @param $subkey subkey of $error
+   * @param string $error form error access key name (or input field name)
+   * @param mixed $subkey subkey of $error or a message 
+   *  - If $subkey is a string starting with a colon, $subkey will be the returned string 
+   *  - If $subkey is a string that does not start with a colon, $subkey is assumed to be a subkey of $error
    * @return array|string
    */
-  function error($error, $subkey = '') : array|string {
+  function error(string $error, $subkey = '') : array|string {
     
     $formErrors = Form::errors();
 
     if(isset($formErrors[$error])) {
       if(func_num_args() > 1){
-        if(isset($formErrors[$error][$subkey])){
+        if(substr($subkey, 0, 1) === ':'){
+          if(isset($formErrors[$error])){
+            $error = substr($subkey, 1, strlen($subkey));        
+          }else{
+            $error = '';
+          }          
+        } else if(isset($formErrors[$error][$subkey])){
           if(substr($error, 0, 1) == ':'){
             $error = $formErrors[$error][$subkey] ?? '';
           }else{
             $error = $formErrors[$error][$subkey][0] ?? '';
           }          
+        }else{
+          $error = '';
         }
       }else{
 
@@ -582,22 +546,43 @@ if(!function_exists('error')) {
       $error = '';
     }
     return $error;
-    
   }
 
 }
 
+if(!function_exists('formerror')) {
+  
+  /**
+   * Returns form casted errors which are defined through the Form::castError() method 
+   *
+   * @param string $castedName access key name used to store error through Form::castError
+   * @param string $errorKey key may be form input name or within specified options below 
+   *   - - "csrf:title" - returns the csrf error title
+   *   - - "csrf:info" - returns the csrf error info
+   *   - - "flash:[name]" - returns the specified flash key notice
+   *   - - "flash:user-error" - returns the user error usually defined when a session is forcefully ended due to invalid session id
+   *   
+   * @return string
+   */
+  function formerror(string $castedName, string $errorKey) : array|string {
+    
+    return Form::castedError($castedName, $errorKey);
+
+  }
+
+}
 
 if(!function_exists('flash')) {
   
   /**
-   * Displays flash notice errors
+   * Displays flash notice error using the specified key. 
    *
-   * @param $error key to fetch error 
-   * @param $message custom message if error is displayed
+   * @param string $error key to fetch error 
+   * @param string $message custom message if error is displayed
    * @return string
+   *  - If the supplied error key does not exist, an empty string is returned
    */
-  function flash($key, $message = '') : string {
+  function flash(string $key, $message = '') : string {
 
     return Res::flash(...func_get_args());
     
@@ -647,8 +632,6 @@ if(!function_exists('redirect')){
             $eUrl = domUrl($url);
 
             $headers = @get_headers($eUrl);
-
-            //if(strpos($headers[0], '404')){ return false;}
           }
 
       }
@@ -809,7 +792,6 @@ if(!function_exists('HTERDOC')) {
    * @return string  $filepath path of error file in rex folder
    */
   function HTERDOC(string $name, string $filepath = ''){
-    //Res::off();
     Res::ignore();
     Res::name($name)
 		->url('res/main/js/config.js')

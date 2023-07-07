@@ -19,7 +19,7 @@ class UserHandler {
     }
 
     /**
-     * Undocumented function
+     * Selects some specific fields from database.
      *
      * @param array|string $arg1 
      *      -When argument supplied is one and $arg1 is integer, sets data limit

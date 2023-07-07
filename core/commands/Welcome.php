@@ -95,7 +95,6 @@ class Welcome {
             }
         
         }
-                
 
         CONTENT;
     }
@@ -112,9 +111,8 @@ class Welcome {
         <head>
             <meta charset="UTF-8">
             @meta('dump')
-            @Res(':headers')
-            @Res('res/assets/css/animate.min.css')
-            <link rel="import" href="component.html">
+            @load('headers')
+            @load('animateCSS')
             <title>{{ \$title ?? 'Hello!'}}</title>
             @live
             <style> 
@@ -156,8 +154,8 @@ class Welcome {
                         <div class="animate__animated animate__rubberBand flex-icon mxs-10 mid pxv-10 theme-btn box bd bd-silver rad-r anc-btn-link flow-hide bc-deeper bc-deeper-blue ripple relative">
                                 <div class="flex px-80 bc-deeper-blue-dd rad-r">
                                     <div class="rad-r px-full bc-deeper-blue-dd b-cover ico-spin" data-src="@mapp('images/icons/favicon-white-full.png')"></div>
-                                    <div class="font-em-1d2 flex mid px-full center overlay fb-9 nunito fb-9">
-                                        <span class="relative" style="top:-.12em">S</span>
+                                    <div class="overlay flex mid">
+                                        <div class="px-30 b-fluid" data-src="@mapp('images/icons/S.png')"></div>
                                     </div>
                                 </div>
                         </div>
@@ -170,10 +168,51 @@ class Welcome {
             </div>
         </body>
         </html>
-
         CONTENT;
 
         return $content;
+
+    }
+
+    function e404() : string{
+
+        return <<<CONTENT
+        <!DOCTYPE html>
+        <html>
+             <head> 
+                   @load('headers') <!-- load only 404 resources -->
+                <title>404 Error Page</title>
+                <link rel="shortcut icon" href="@mapp('images/icons/favicon.png')" type="image/x-icon">
+                <style>
+                    body{
+                     background-color: #431670;
+                    }
+                    img{
+                        transition: width .5s ease-in-out, height .5s ease-in-out;
+                    }
+                    .grid-center{
+                        display: grid;
+                        place-items:center;
+                    }
+                    @media (min-width: 1025px){
+                        img{
+                            width: 70%;
+                            height: 100%;
+                        }
+                    }
+                </style>
+            </head> 
+            <body>
+                <div class="box-full">
+                    <div class="grid-center vh-full">
+                        <div class="inner grid-center rad-2" style="min-width:320px; color: black;">
+                            <img src="@mapp('images/404.png') ?>" height="100%" width="100%" alt="404 error">
+                        </div>
+                    </div>
+                 </div>  
+            </body>
+        </html>
+        CONTENT;
 
     }
 
@@ -218,6 +257,7 @@ class Welcome {
         $indexContent = $this->window($entryFile, $baseLogic);
 
         $tempContent = $this->template();
+        $errorContent = $this->e404();
         $installer = $options['installer'];
         $installer   = $installer ? $this->installer() : '';
 
@@ -231,8 +271,24 @@ class Welcome {
             foreach($removals as $removal) {
 
                 $path = $ProjectPath.'/windows//'.$removal;
-                if( is_dir($path) )  $Filemanager->deleteFile($path);
-                $Filemanager->addDir($path);
+                if( is_dir($path) )  {
+                    $Filemanager->deleteFile($path); // delete file or entire directory
+                    $Filemanager->addDir($path);
+                }
+
+            }
+
+            $resRemovals = ['css','images','video'];
+            
+            foreach($resRemovals as $removal){
+    
+                $path = $ProjectPath.'/res/assets/'.$removal;
+
+                if(is_dir($path)){
+                    if($Filemanager->deleteFile($path) && ($removal !== 'video')){
+                        $Filemanager->addDir($path);
+                    }
+                }
 
             }
 
@@ -240,8 +296,9 @@ class Welcome {
             $indexPath = $ProjectPath.'/windows/Routes/'."$entryFile.php";
             $installPath = $ProjectPath.'/windows/Routes/'.'Install.php';
             $tempPath = $ProjectPath.'/windows/Rex/'.'index.rex.php';
+            $errorPath = $ProjectPath.'/windows/Rex/errors/'.'404.rex.php';
 
-            $openFiles = [$indexPath, $tempPath];
+            $openFiles = [$indexPath, $tempPath, $errorPath];
             if($installer) $openFiles[] = $installPath; //add installer file
 
             if($Filemanager->openFiles($openFiles)) {
@@ -251,6 +308,9 @@ class Welcome {
                 
                 //create a new index rex template file
                 file_put_contents($tempPath, $tempContent);
+
+                //add a 404 error rex template file
+                file_put_contents($errorPath, $errorContent);
 
             }
 

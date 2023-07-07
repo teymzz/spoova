@@ -36,7 +36,7 @@ class ContainerClass {
 
                 }
 
-                $args = array_merge($args1, $arguments);
+                $args = array_merge($args1, $arguments ?? []);
 
             } else {
 

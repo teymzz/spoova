@@ -12,7 +12,7 @@ class Serve {
 
     /**
      * Standard logic for running application (recommended)
-     * Note :: Entire logic is managed by framework
+     *  - Note: This logic is managed and controlled by framework
      * 
      * @return void
      */
@@ -53,8 +53,8 @@ class Serve {
 
     /**
      * Base logic for running application
-     * Note 1:: This can only be applied within the Server::start() method
-     * Note 2:: Entire logic is managed by developer
+     *  - This can only be applied within the Server::start() method
+     *  - This logic is controlled by specified root route controller file
      * @return void
      */
     static function baselogic(string $name = 'index') {
@@ -65,8 +65,8 @@ class Serve {
 
     /**
      * This logic can only be applied within the server file page
-     * Note 1:: Server must be replaced with "self"
-     * Note 2:: Entire logic is managed by developer
+     *  - Server must be replaced with "self"
+     *  - Entire logic is controlled by an Index file.
      * 
      * @param string $name route file name
      * @return void
