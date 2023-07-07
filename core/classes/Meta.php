@@ -390,7 +390,6 @@
 					['rel'=>'EditURI','href'=>'application/rsd+xml" title="RSD" href="http://smallbiztrends.com/xmlrpc.php?rsd'],
 					['rel'=>'pingback','href'=>'http://smallbiztrends.com/xmlrpc.php'],  			
 					['rel'=>'stylesheet','href'=>'http://wordpress.org/style/iphone.css" type="text/css'],
-					//['rel'=>'','href'=>''], //media
 				]		
 			], 				
 
@@ -428,24 +427,5 @@
 	}
  }
 
- /* 
-   SAMPLE
 
-   $meta = new \core\classes\Meta;
-
-   $meta->name('viewport', 'width=device-width, initial-scale=.9, maximum-scale=1.0, user-scalable=1');
-   $meta->name('description', 'website_description');
-   $meta->prop('og:title', 'website_name');
-   $meta->prop('og:image', '//website_icon_url');
-   $meta->prop('og:type', 'website');
-   $meta->link('icon', 'https://www.website.com/path_to_icon","image/png');
-
-   //print out saved meta
-   $meta->dump(); //prints meta
-   $meta->dump(true); //returns meta
-    
-   $meta->view(); //display meta tags
-   $meta->view(true); //displays meta array list
- */
- 
 ?>

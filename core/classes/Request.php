@@ -207,7 +207,7 @@ class Request
   /**
    * Check if current request data has a specific key
    * 
-   * @param $key request method's key name
+   * @param array|string $key request method's key name
    * @param string $method optional [get|post]
    */
   public function has(array|string $key = null, string $method = '') {

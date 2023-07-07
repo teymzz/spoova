@@ -1,80 +1,60 @@
-@template('template.t-html')
-
-    @title('Spoova')
-    
-    <!-- add css -->
-    @res('res/assets/css/index.css') 
-    @style('build.css.inc:t-doc')
-    @style('build.css.inc:index')
-    
-    <!-- script -->
-    @script('build.js.inc:index')
-    
-    <section>
-
-        <div class="maincover">          
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    @meta('dump')
+    @load('headers')
+    @load('animateCSS')
+    <link rel="import" href="component.html">
+    <title>Spoova Pack</title>
+    <style> 
+        :root {
+            --em-2 : 2em;
+        }           
+        body{
+            font-size: 10px;
+            transition: font .2s;
+        }
+        .overlay{
+            z-index: 1; 
+            color:#202dd5; 
+            color:white; 
+        }
+        .px-80 {
+            width: var(--em-2);
+            height: var(--em-2);
+        }
+        .ct-1{
+            color:847b95;
+        }
+        @media (min-width:1000px) {
+            body{
+                font-size: initial;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="centre vhm-full bc-deeper-blue-dd fb-6 font-em-3 c-white">
         
-        <div class="spv-nav">
-            <div class="menu flex" style="padding-left:1em">
-            <h3 class="logo flex-full midv">  
-            <div class="in-flex midv mxr-6">
-                <div class="flex midv rad-r" style="background-color:rgba(255, 255, 255, 0.27)">
-                    <div class="px-40 b-cover ico-spin" data-src="@DomUrl('res/main/images/icons/favicon-white.png')"></div>
+        <div class="in-flex pxv-10 no-select">
+            <div class="in-flex midv">
+                <div class="animate__animated animate__rubberBand flex-icon mxs-10 mid pxv-10 theme-btn box bd bd-silver rad-r anc-btn-link flow-hide bc-deeper bc-deeper-blue ripple relative">
+                        <div class="flex px-80 bc-deeper-blue-dd rad-r">
+                            <div class="rad-r px-full bc-deeper-blue-dd b-cover ico-spin" data-src="@mapp('images/icons/favicon-white-full.png')"></div>
+                            <div class="overlay flex mid">
+                                <div class="px-30 b-fluid" data-src="@mapp('images/icons/S.png')"></div>
+                            </div>
+                        </div>
+                </div>
+                <div href="@Domurl()" class="in-flex f-col mxr-4">
+                    <div class="flex midv fb-9 font-menu font-em-1d2 {{ spoovaLoaded('c-sea-blue','ct-1') }}">POOVA</div>
+                </div>
+                <div class="flex mid font-em-d75">
+                    <span class="c-orange">PACK</span>
                 </div>
             </div>
-            <div class="flex-full">
-                {{ $site_name ?? 'spoova' }} 
-                <span> {{ $site_name2 ?? 'frame' }} </span>
-            </div>
-                <div class="hamburger-menu flex midv">
-                <div class="bar"></div>
-                </div>
-            </h3>
-            </div>
         </div>
-        
-      
-        <div class="links">
-            <ul id="ul">
-            <li>
-                <a href="@domurl('')" style="--i: 0.05s;">Home</a>
-            </li>
-            <li>
-                <a href="@domurl('docs')" style="--i: 0.1s;">Documentation</a>
-            </li>
-            <li>
-                <a href="@domurl('docs/installation')" style="--i: 0.15s;">Installation</a>
-            </li>
-            <li>
-                <a href="@domurl('features')" style="--i: 0.15s;"> <span class="bi-vinyl"></span> Features </a>
-            </li>
-            <li>
-                <a href="@domurl('about')" style="--i: 0.2s;">About</a>
-            </li>
-            </ul>
-        </div>
-
-        <div class="main-container">
-            <div class="main">
-            <header data-src="@domurl('res/assets/images/bkg.jpg')">
-                <div class="overlay">
-                <div class="inner">
-                    <h2 class="title"> {{ $site_name ?? 'spoova' }} </h2>
-                    <p>
-                    An environmental friendly, simple and light php framework for fast web development
-                    </p>
-                    <a href="@route('about')" class="i-btns"><button class="btn">Learn more</button></a>
-                </div>
-                </div>
-            </header>
-            </div>
-
-            <div class="shadow one"></div>
-            <div class="shadow two"></div>
-        </div>
-
-        </div>
-
-    </section>
-
-@template;
+    </div>
+</body>
+</html>

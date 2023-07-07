@@ -60,7 +60,7 @@ class DBMigrator
             foreach ($newMigrations as $migration){
 
                 $migration = pathinfo($migration, PATHINFO_FILENAME);
-                $migrationClass = $migrationSpace.$migration;
+                $migrationClass = $migrationSpace.'\\'.$migration;
 
                 // instantiate migration file
                 $migrator = new $migrationClass;

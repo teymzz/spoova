@@ -3,7 +3,7 @@ class HorizontalSlider {
       this.slider = document.getElementById(sliderId);
       this.slides = this.slider.getElementsByClassName(slideClassName);
       this.currentSlideIndex = 0;
-  
+  console.log(slider)
       this.createSwitchButtons();
     }
   

@@ -99,20 +99,18 @@ class Config extends Entry{
                 //get connection parameters;
                 $config = docroot."/icore/dbconfig.php";
                 DBConfig::load($config, $configs);
-                $oconfigs = $configs['offline']??[];
+                $oconfigs = $configs['offline'] ?? [];
                 array_trim($oconfigs);
-                $dbname = ($oconfigs['NAME'] ?? '');
 
+                //values ........
+                $dbname = ($oconfigs['NAME']   ?? '');
                 unset($oconfigs['NAME']);
-                $configs = array_keys($oconfigs);
 
                 $dbc= new DB();
 
-                if($db = $dbc->openTool()){
+                if($db = $dbc->openTool($oconfigs)){
                     
                     if($dbname) {
-
-                        $configs[0] = $dbname;
 
                         $oconfigs['NAME'] = $dbname;
 
@@ -220,51 +218,65 @@ class Config extends Entry{
         //Generate First migration file 
         if($useridTable && ($useridField || $cookie) ) {
 
-            $db = (new DB)->openDB();
+            $options = $configs[online? 'online' : 'offline'] ?? [];
 
-            if(!$db->table_exists($useridTable)) {
-
-                Cli::textView(Cli::warn("Notice: ").("table \"$useridTable\" is required by session class but does not exist in database."), 0, "|2");
-
-                $options = ['y', 'n'];
-                
-                Cli::save(1, function() use($options) {
-                    
-                    Cli::textView(Cli::alert("Create migration file? [Y/N] "));
-
-                }, true);
-
-                $response = Cli::q($options, fn() => 
-
-                    [
-                        'test' => fn($input) => 
-                            in_array(strtolower($input), $options),
-
-                        'failed' => function($input, $options, $counter){
-
-                            if($counter == 1){
-                              Cli::clearUp();
-                              Cli::textView(Cli::danger('Error: ').'invalid option will abort this process', 0, "|2");
-                              Cli::fn(1);
-                              return true;
-                            }                          
-
-                        } 
-                    ]
-                
-                );
-
-                if(strtolower($response) === 'y') {
-
-                    Cli::runAnime([[$this, 'create_migration'], [$useridTable, $useridField, $cookie] ]);
-
-                }else{
-
-                    Cli::textView(Cli::warn("skipping migration file generation..."), "0", "1");
-
-                }
-
+            if(isset($configs)){
+                $db = (new DB)->openDB($options);
+            }else{
+                $db = (new DB)->openDB();
             }
+
+            if($db){
+
+                if(!$db->table_exists($useridTable)) {
+
+                    Cli::textView(Cli::warn("Notice: ").("table \"$useridTable\" is required by session class but does not exist in database."), 0, "|2");
+
+                    $options = ['y', 'n'];
+                    
+                    Cli::save(1, function() use($options) {
+                        
+                        Cli::textView(Cli::alert("Create migration file? [Y/N] "));
+
+                    }, true);
+
+                    $response = Cli::q($options, fn() => 
+
+                        [
+                            'test' => fn($input) => 
+                                in_array(strtolower($input), $options),
+
+                            'failed' => function($input, $options, $counter){
+
+                                if($counter == 1){
+                                Cli::clearUp();
+                                Cli::textView(Cli::danger('Error: ').'invalid option will abort this process', 0, "|2");
+                                Cli::fn(1);
+                                return true;
+                                }                          
+
+                            } 
+                        ]
+                    
+                    );
+
+                    if(strtolower($response) === 'y') {
+
+                        Cli::runAnime([[$this, 'create_migration'], [$useridTable, $useridField, $cookie] ]);
+
+                    }else{
+
+                        Cli::textView(Cli::warn("skipping migration file generation..."), "0", "1");
+
+                    }
+
+                }                
+            } else {
+
+                Cli::textView(Cli::danger('Error: ').'database connection failed due to invalid parameters format.', 0, "|2");
+                return;
+            }
+
         }
 
 
@@ -696,30 +708,17 @@ class Config extends Entry{
 
         }
 
-        //trim spaces in environment arrays containing database parameters
-        array_trim($online);
-        array_trim($offline);
+        //use self::DBCONSTANTS order
+        $onvals = array_values($online);
+        $ofvals = array_values($offline);
 
-        $newconfig = 
-        '<?php
-        
-        // custom db configuration files for online and offline
-        
-        $_DBCONFIG[\'SOCKET\']  = (online)? \''.$online['SOCKET'].'\' : \''.$offline['SOCKET'].'\';
-        $_DBCONFIG[\'PORT\']    = (online)? \''.$online['PORT'].'\' : \''.$offline['PORT'].'\';
-        $_DBCONFIG[\'SERVER\']  = (online)? \''.$online['SERVER'].'\' : \''.$offline['SERVER'].'\';	
-        $_DBCONFIG[\'USER\']    = (online)? \''.$online['USER'].'\' : \''.$offline['USER'].'\';	
-        $_DBCONFIG[\'PASS\']    = (online)? \''.$online['PASS'].'\' : \''.$offline['PASS'].'\';	
-        $_DBCONFIG[\'NAME\']    = (online)? \''.$online['NAME'].'\' : \''.$offline['NAME'].'\';
-        
-        // NOTE:
-        // 1: This file should not be edited or used for connection, create a new copy instead, then include that copy in your project which will automatically update this
-        // 2: Example of a copy dbconfig.php file is the dbconfig file located created in the root “icore” folder
-        ';
+        $icoreDBConfig = DBConfig::build('icore', $onvals, $ofvals);
 
-        //configure used
+        $newconfig = $icoreDBConfig;
+
+        //add or update new config
         $fp2 = fopen($url, 'w');
-        fwrite($fp2, preg_replace('/[[:blank:]]+/',' ',$newconfig));
+        fwrite($fp2, $newconfig);
         fclose($fp2);  
         if(self::$all) Cli::clearUp(1); 
         Cli::textView(Cli::success($environment." setup configuration successful"), 0, '|2');

@@ -1,7 +1,7 @@
 <?php
 
 use spoova\mi\core\classes\DB;
-
+use spoova\mi\core\classes\DB\DBConfig;
 use spoova\mi\core\classes\Filemanager;
 
 class Installer{
@@ -298,45 +298,29 @@ class Installer{
           
         } 
 
+        $onvals = [$dbname_on, $dbuser_on, $dbpass_on, $dbserver_on, $dbport_on, $dbsock_on, $dbsock_on];
+        $ofvals = [$dbname_off, $dbuser_off, $dbpass_off, $dbserver_off, $dbport_off, $dbsock_off, $dbsock_off];
         
-        $dbText =  (
-        '<?php
-            
-            require_once \'secure.php\'; //secure file
-            
-            //online means live server, not online means on local server (e.g wamp, xamp ...)
-            $_DBSOCKET = (online)? \''.$dbsock_on.'\' : \''.$dbsock_on.'\';
-            $_DBPORT   = (online)? \''.$dbport_on.'\' : \''.$dbport_off.'\';
-            $_DBSERVER = (online)? \''.$dbserver_on.'\' : \''.$dbserver_off.'\';	
-            $_DBUSER   = (online)? \''.$dbuser_on.'\' : \''.$dbuser_off.'\';	
-            $_DBPASS   = (online)? \''.$dbpass_on.'\' : \''.$dbpass_off.'\';	
-            $_DBNAME   = (online)? \''.$dbname_on.'\' : \''.$dbname_off.'\';
-            
-            // NOTE:
-            // 1: This file should not be edited or used for connection, create a new copy instead, then include that copy in your project which will automatically update this
-            // 2: Example of a copy dbconfig.php file is the dbconfig file located created in the root “icore” folder
-            '
-        );
+        $coreDBConfig = DBConfig::build('core', $onvals, $ofvals);
+
+        $dbText =  ($coreDBConfig);
 
         //configure default
         
         if(isset($_POST['use_dbconfig']) || $arg === 'refresh'){
             sleep(1); 
-            $dbText2 = 
-            '<?php
+            
+            $onvals = [$dbname_on, $dbuser_on, $dbpass_on, $dbserver_on, $dbport_on, $dbsock_on, $dbsock_on];
+            $ofvals = [$dbname_off, $dbuser_off, $dbpass_off, $dbserver_off, $dbport_off, $dbsock_off, $dbsock_off];
+            
+            $icoreDBConfig = DBConfig::build('icore', $onvals, $ofvals);
 
-            // custom db connection file for online and offline environments
-
-            $_DBCONFIG[\'SOCKET\']   = (online)? \''.$dbsock_on.'\' : \''.$dbsock_off.'\';
-            $_DBCONFIG[\'PORT\']     = (online)? \''.$dbport_on.'\' : \''.$dbport_off.'\';
-            $_DBCONFIG[\'SERVER\']   = (online)? \''.$dbserver_on.'\' : \''.$dbserver_off.'\';
-            $_DBCONFIG[\'USER\']     = (online)? \''.$dbuser_on.'\' : \''.$dbuser_off.'\';
-            $_DBCONFIG[\'PASS\']     = (online)? \''.$dbpass_on.'\' : \''.$dbpass_off.'\';	
-            $_DBCONFIG[\'NAME\']     = (online)?  \''.$dbname_on.'\' : \''.$dbname_off.'\'; ';
+            $dbText2 = $icoreDBConfig;
+            $dbText2 = $icoreDBConfig;
             
             //configure used
             $fp2 = fopen(getDefined('_icore').'dbconfig.php', 'w');
-            fwrite($fp2, preg_replace('/[[:blank:]]+/',' ',$dbText2));
+            fwrite($fp2, $dbText2);
             fclose($fp2);
         }
         

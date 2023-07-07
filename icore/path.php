@@ -63,7 +63,7 @@ if(!defined('basefolder') || empty($_SERVER['DOCUMENT_ROOT'])){
 
 
 if(function_exists('domroot')){
-/* Re-caliberate Evironment */
+  /* Re-caliberate Evironment */
   function htCaliber(bool $load = false, $loader = ''){
    
     if(!defined('online')){

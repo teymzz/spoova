@@ -23,8 +23,9 @@ class Benchmark {
         $name = self::$name;
         $start = self::$start;
         $stop = microtime(true);
-        $diff = number_format($stop - $start, 3);
-
+        $diff = $stop - $start;
+        $diff = number_format($diff, 4);
+ 
         self::$tests[$name]['start'] = $start;
         self::$tests[$name]['stop']  = $stop;
         self::$tests[$name]['diff']  = $diff;
@@ -103,7 +104,6 @@ class Benchmark {
             print_r(self::$tests);
 
             print "</pre>";
-            //print a benchmark table
 
         }
 

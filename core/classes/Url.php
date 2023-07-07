@@ -95,40 +95,17 @@ class Url{
     return implode('/', $paths);
   }
   
-  // /**
-  //  * matches urls that follows a single base path
-  //  * 
-  //  * @param string $rootpath root url name (must be a single base name)
-  //  * @param bool $strict false lowers the testing level (case insensitive)
-  //  * 
-  //  * @return bool
-  //  */
-  // function follows($rootpath = '', bool $strict = true) : bool {
-  //  // index follows index => true 
-  //  // index/profile follows index => true
-  //  // index/profile follows profile => false 
-  //  $url = $this->url;
-  //  if(!$strict) {
-  //   $url = strtolower($url);
-  //   $rootpath = strtolower($rootpath);
-  //  }
-  //  $url  = explode( '/', trim($url, '/ ') )[0] ?? ''; //url address
-  //  $path = explode( '/', trim($rootpath, '/ ') )[0] ?? '';
-
-  //  return ($url == $path);
-  // }
-  
   /**
    * matches urls that matches base (supplied) path structure
    * 
-   * @param $basepath base url structure on which supplied defined path is tested
+   * @param string $basepath base url structure on which supplied defined path is tested
    * @param bool $strict false lowers the testing level (case insensitive)
    *  - Ex1: For a path abc/def/ghi, a basepath of abc, abc/def, abc/def/ghi will return true.
    *  - Ex2: For a path abc/def/ghi, a basepath of abc/def/ghi/xyz will return false.
    *  - Note: This returns true if the base path or full path (structure) of a url defined matches $basepath supplied
    * @return bool
    */    
-  function isLike($basepath = '', bool $strict = true) : bool {
+  function isLike(string $basepath = '', bool $strict = true) : bool {
     $testpath = $this->url; //url address 
     $basepath = $basepath; //url address 
     if(!$strict) {

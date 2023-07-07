@@ -19,7 +19,7 @@ abstract class SharedInfo{
   protected static ?DB $dbc = null;
   protected static ?DBHandler $dbh = null;
   protected static $dbe;
-  protected static $init = [];
+  protected static array $init = [];
   protected static $init_base;
   protected $fileManager;
   public $dbtable;
@@ -34,7 +34,7 @@ abstract class SharedInfo{
     if($conn === true) {
     
       $dbcon = new DB;
-      
+
       if($dbh = $dbcon->openDB()){
         if($dbcon->active()){
           self::$dbc = $dbcon;
@@ -79,14 +79,16 @@ abstract class SharedInfo{
             $fileManager->setUrl($icore."init");
             $fileManager->openFile($icore."init");
               
-            $initData = $fileManager->readFile(['USER_TABLE','COOKIE_FIELDNAME','USER_ID_FIELDNAME']);     
+            $initData = $fileManager->readFile(['USER_TABLE','COOKIE_FIELDNAME','USER_ID_FIELDNAME', 'SESSION_STORAGE_KEY']);     
             $userTable = $initData['USER_TABLE'];
             $cookieField = $initData['COOKIE_FIELDNAME'];
             $useridField = $initData['USER_ID_FIELDNAME'];
+            $sesskey = $initData['SESSION_STORAGE_KEY'];
             
             $init['USER_TABLE'] = $this->dbtable = !empty($userTable)? trim($userTable) : 'users';
             $init['COOKIE_FIELDNAME'] = !empty($cookieField)? trim($cookieField) : 'cookie';
             $init['USER_ID_FIELDNAME'] = !empty($useridField)? trim($useridField) : 'email';
+            $init['SESSION_STORAGE_KEY'] = !empty($sesskey)? trim($sesskey) : docBase;
             self::$init = $init;
 
         } else {
@@ -197,6 +199,12 @@ abstract class SharedInfo{
    */
   protected static function getDefined(string $core){
      if(defined($core)) return constant($core);
+  }
+
+  public static function init() : array {
+
+    return self::$init;
+
   }
   
 }

@@ -10,6 +10,14 @@
 namespace spoova\mi\core\commands;
 
 use spoova\mi\core\classes\FileManager;
+use spoova\mi\core\commands\Welcome;
+
+use spoova\mi\core\commands\Map;
+
+use spoova\mi\core\commands\Entry;
+
+use spoova\mi\core\commands\Install;
+
 
 class Project extends Entry{
 
@@ -34,6 +42,31 @@ class Project extends Entry{
         if(!$this->validate_arguments($args)) {     
             yield false;
             return false;
+        }
+        
+        // Handle environmental directive
+        if(!is_file(_core.'custom/app')){        
+            //write text, delay 2 seconds, break 2 lines
+            Cli::textView(
+                Cli::danger(Cli::emos('hot', 1).'Spoova:')
+                .Cli::warn(''), 1, [1, 2]
+            );
+            Cli::textView(Cli::error('invalid command "'.Cli::warn('project').'"', 1));
+            Cli::break(2);
+            yield false;
+        }
+        
+        // Create a new spack file if missing
+        if (!is_file(SP_SPACK) || $this->recompile) {
+            Cli::textView(
+                Cli::danger(Cli::emos('hot', 1).'Spoova Project:')
+                .Cli::warn(''), 1, [1, 2]
+            );
+            Cli::textView(Cli::error('missing project compiler!'), 1, "|2");
+            Cli::textView(Cli::alert('Fix:', 1).(' try running - ').'"'.Cli::warn('php mi repack').'" first.', 0, "|2");
+            yield false;
+        } else {
+            Cli::break(2);
         }
 
         //default options
@@ -211,19 +244,6 @@ class Project extends Entry{
             $addInstaller = (strtolower($response2) === 'y');
         }
 
-        // Handle environmental directive
-        if(!is_file(_core.'custom/app')){        
-            //write text, delay 2 seconds, break 2 lines
-            Cli::textView(
-                Cli::danger(Cli::emos('hot', 1).'Spoova:')
-                .Cli::warn(''), 1, [1, 2]
-            );
-            Cli::textView(Cli::error('invalid command "'.Cli::warn('project').'"', 2));
-            Cli::break(2);
-            yield false;
-            return false;
-        }
-
         //set the project name
         $project_name = $args[0];
 
@@ -242,24 +262,8 @@ class Project extends Entry{
 
         Cli::loadTime(100000);
 
-        // Create a new spack file if missing
-        if (!is_file(_core.'custom/'.self::crest) || $this->recompile) {
- 
-            if($this->recompile && is_file(SP_SPACK)) {
-                unlink(SP_SPACK);
-                Cli::break(1);
-                new Root('repack');
-                Cli::clearUp(2);
-            }
-            if (!(new Install('app'))) {
-                return false;
-            }
-            Cli::break();
-        } else {
-            Cli::break(2);
-        }
-
         # Load configurations ---------------------------------
+        Cli::break(2);
         
         Cli::textView('loading configurations', 4);
         
@@ -297,7 +301,7 @@ class Project extends Entry{
         
         # Create project -----------------------------------------
  
-        //Remove unecessary files from new folder
+        //Remove unnecessary files from new folder
         $project_path = dirname(docroot).DS.$project_name;
         $removables = ['core/custom/app','core/custom/'.$app_name];
 

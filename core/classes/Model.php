@@ -4,6 +4,7 @@ namespace spoova\mi\core\classes;
 
 use User;
 use DBStatus;
+use Form;
 use spoova\mi\core\classes\DB\DBHandler;
 use spoova\mi\core\classes\DB\DBModel;
 use spoova\mi\core\tools\Input;
@@ -18,6 +19,7 @@ use spoova\mi\core\tools\Input;
     public const RULE_MIN = 'min';
     public const RULE_MAX = 'max';
     public const RULE_MATCH = 'match';
+    public const RULE_ISOLATED = 'isolated';
     public const RULE_TEXT = 'text';
     public const RULE_PATTERN = 'pattern';
     public const RULE_PHONE = 'number'; //may not be entirely true for some data
@@ -279,6 +281,26 @@ use spoova\mi\core\tools\Input;
 
                 }   
 
+                /* set isolated fields */
+                if($ruleName === self::RULE_ISOLATED && $rule[1]){
+
+                    $data = Form::model()->loadedData();
+
+                    if($data){
+
+                        unset($data[$attribute]);
+
+                        $data = array_map(fn($val) => substr($val, 0, 4), $data);
+
+                        $input = substr($value, 0, 4);
+
+                        if($field = array_search($input, $data)){
+                            $this->addError([$attribute, $field], $ruleName);
+                        }
+                    }
+
+                }   
+
                 /* prevent duplicate entries on unique fields */ 
                 if($ruleName === self::RULE_UNIQUE) {
 
@@ -290,20 +312,18 @@ use spoova\mi\core\tools\Input;
 
                     /* select from database table where field (or $attribute) has $value */
                     $uniqueAttr = $rule[1]['fields']?? $attribute;
+                    $auth = User::auth();
                     
                     if(is_string($uniqueAttr)){
-                        $auth = User::auth();
                         $auth->table($tableName)->where([
                             $uniqueAttr => $value 
                         ]);                        
                     }elseif(is_array($uniqueAttr)){
-                        $auth = User::auth();
                         $values = array_fill_keys($uniqueAttr, $value);
                         $auth->table($tableName)->where(
                             $values
                         );                        
                     }
-
 
                     if($auth->find()) $this->addError($attribute, $ruleName);
 
@@ -384,14 +404,14 @@ use spoova\mi\core\tools\Input;
     }
 
     /**
-     * Formdata returns the loaded data only if
+     * This returns the loaded request data only if
      * the data key exists as a property
      * within the model class. The data returned by 
      * this method will only be available for validation 
      *
      * @return array
      */
-    final public function formdata(){
+    final public function formdata() : array {
         $modeldata = $this->MODEL_FormData;
 
         $formdata = []; $iformdata = [];
@@ -444,9 +464,10 @@ use spoova\mi\core\tools\Input;
      *
      * @return array
      */
-    final public function loadedData(){
+    final public function loadedData() : array {
         return $this->MODEL_FormData;
     }
+
 
     /**
      * Saves data into defined database table using 
@@ -471,24 +492,30 @@ use spoova\mi\core\tools\Input;
 
             $dbh = isset($this->conn)? $this->conn : $this->connection();
             
-            $dbh->insert_into(static::table(), $data);
-            $insert = $dbh->insert();
-            self::$insertID = $dbh->insertID();
-
-            if(!$insert){
-                if($show_error) return EInfo::view(DBStatus::err());
-                return false;
+            if($dbh){
+                $dbh->insert_into(static::table(), $data);
+                $insert = $dbh->insert();
+                self::$insertID = $dbh->insertID();
+    
+                if(!$insert){
+                    if($show_error) return EInfo::view(DBStatus::err());
+                    Form::setError(DBStatus::err());
+                    return false;
+                }
+    
+                if(isset($data[User::idField()])){
+                    $this->id = $data[User::idField()];
+                }else{
+                    $this->id = self::$insertID;
+                }    
+                return true;
             }
 
-            if(isset($data[User::idField()])){
-                $this->id = $data[User::idField()];
-            }else{
-                $this->id = self::$insertID;
-            }    
-
-            return true;
+            return false;
 
         }
+
+        return false;
 
     }
 
@@ -512,6 +539,7 @@ use spoova\mi\core\tools\Input;
             self::RULE_UNLIKE => '%s cannot be like as %s', //tested with another field
             self::RULE_NOSPACE => '%s cannot contain spaces',
             self::RULE_NOT_CHARS => '%s cannot contain "%s" character',
+            self::RULE_ISOLATED => '%s cannot match "%s" character',
         ];
         return $messages[$rule]?? '';
     }
@@ -545,17 +573,20 @@ use spoova\mi\core\tools\Input;
     /**
      * Set and return database connection using user authetication
      * @param DBHandler $dbh database connection handler
-     * @return DBHandler
+     * @return DBHandler|null
      */
-    final function connection(DBHandler $dbh = null) : DBHandler{
+    final function connection(DBHandler $dbh = null) : DBHandler|null{
         $this->id = '';
         if(func_num_args() < 1){
             if(isset($this->conn)) return $this->conn;
             if($dbh = (User::auth())->dbh()){
                 return $this->conn = $dbh;      
+            }else{
+                Form::setError('database connection failed!');
             }     
         }
-        return $this->conn = $dbh;
+        if($dbh) $this->conn = $dbh;
+        return isset($this->conn)? $this->conn : $dbh;
     }
 
  }

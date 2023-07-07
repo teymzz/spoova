@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
  	<head> 
- 	  	@Res(':headers') <!-- load only 404 resources -->
+ 	  	@load('headers') <!-- load only 404 resources -->
 		<title>404 Error Page</title>
 		<link rel="shortcut icon" href="@mapp('images/icons/favicon.png')" type="image/x-icon">
 		<style>

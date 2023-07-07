@@ -36,8 +36,17 @@ class TimeClass{
     $this->type  = $type;
 
   }
-   
-  public function getdifference($difference){
+  
+  /**
+   * Gets the difference between two time frames and returns the difference based on 
+   * year, month, day, hour, minutes or seconds
+   *
+   * @param string $difference [year|month|day|hour|minutes|seconds|all]
+   *  - When difference is set as "all", all the differences are returned
+   * 
+   * @return integer|false
+   */
+  public function getdifference(string $difference){
     
     $this->setdifference();
     if($this->all_set == false) return false;
@@ -66,9 +75,18 @@ class TimeClass{
           break;
     }
 
+    return false;
+
   }
 
-  public function valid_minute($num){
+  /**
+   * This is used to determine if the time range between two date times does not exceed the number of 
+   * minutes supplied.
+   *
+   * @param integer $num minutes from range of 1-59
+   * @return void
+   */
+  public function valid_minute($minute){
 
     $time_arr = $this->all;
     $year  = $time_arr['year'];
@@ -78,11 +96,11 @@ class TimeClass{
     $min   = $time_arr['min'];
     $sec   = $time_arr['sec'];
     
-    if($year > 0 || $month >0 || $day > 0 || $hour >0 || $min > $num){
+    if($year > 0 || $month > 0 || $day > 0 || $hour > 0 || $min > $minute){
         return false;
-    }else{
-        return true;
     }
+
+    return true;
 
   }
 
@@ -135,7 +153,14 @@ class TimeClass{
   }
 
 
-  public function convert_time(&$date){
+  /**
+   * Subtracts the date supplied from the current time and returns the difference 
+   * as year, month, hour, minutes or seconds ago.
+   *
+   * @param string $date date supplied to be converted
+   * @return string
+   */
+  public function convert_time(&$date) : string{
    
     $cur     = date("Y-m-d H:i:s");
     $now     = new \DateTime($cur);
@@ -176,10 +201,11 @@ class TimeClass{
       }
        return $time;
     }
+    return '';
   }
 
   /**
-   * Undocumented function
+   * Determines the plural form of time units based on its value as less than or above one(1).
    *
    * @param integer $value integer value of time
    * @param string $name 

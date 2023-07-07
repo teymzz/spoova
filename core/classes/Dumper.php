@@ -21,7 +21,6 @@ class Dumper{
 
         print '<style>'.self::style().'</style>';   
 
-        // print "<pre>";
         foreach(func_get_args() as $args){
 
             print '<details class="main">';
@@ -31,7 +30,6 @@ class Dumper{
             print '</details>';   
 
         }
-        // print "</pre>";
 
         return new self;
 
@@ -107,10 +105,7 @@ class Dumper{
             $openHTML = $closeHTML = '';
             $summary = '<details><summary><span>%s</span></summary><div class="padd-16 dump">%s</div></details>';
 
-            if(!is_object($value)){
-                // $openHTML = '<details><summary><span>'.$items.$traversable.'</span></summary>';
-                // $closeHTML= '</details>';
-            }else{
+            if(is_object($value)){
                 $traversable = ($value instanceof \Traversable)? ' (Traversable)' : '';
                 $openHTML = '<details><summary><span>class'.$traversable.'</span></summary>';
                 $closeHTML= '</details>';
@@ -145,7 +140,7 @@ class Dumper{
 
                 }
 
-                printf($summary, 'methods', $build);
+                if($build) printf($summary, 'methods', $build);
 
             }
 
@@ -185,6 +180,9 @@ class Dumper{
                 margin-top: 1em;
                 border-radius: 10px;
                 padding-top: 10px;
+            }
+
+            details[open] > .dump > pre {
                 padding-bottom: 12px;
             }
 

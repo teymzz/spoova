@@ -27,9 +27,11 @@ class AccessModel extends Model {
                 if($Request->has('login')) {
                     $Model = Login::class; 
                     $userid = 'email';
+                    $castName = 'login';
                 }elseif($Request->has('signup')){
                     $Model = Signup::class;
                     $userid = 'email';
+                    $castName = 'signup';
                 } 
     
                 if($Model??''){
@@ -40,6 +42,8 @@ class AccessModel extends Model {
                     if(Form::isAuthenticated()) {
                         User::login(['userid' => Form::datakey($userid)], 'home');   
                     }
+
+                    Form::castError($castName);
     
                 }
 

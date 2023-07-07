@@ -24,7 +24,11 @@ class Server extends Base{
       static::bindFormData();
       static::loadBase(uri);
       response(200, 'found', true);
+
       static::start($type);
+
+      Session::control();
+
   }
     
   final static function run($type = '') {
@@ -51,9 +55,6 @@ class Server extends Base{
       Serve::baselogic(ucfirst($type));
     }
 
-    //Authenticate all sessions
-    User::auth()->id()->main();
-
   }
 
   /** runs at initialization */
@@ -73,5 +74,7 @@ class Server extends Base{
     ';
    
   }
+
+  function __destruct(){}
    
 }

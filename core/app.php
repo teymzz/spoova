@@ -9,11 +9,8 @@ if(!defined('approot')) define('approot', dirname(docroot));
 !defined('DS')? define('DS', '/') : '';
 
 //define app details
-!defined('SP_VERSION')? define('SP_VERSION', '2.1.0') : '';
+!defined('SP_VERSION')? define('SP_VERSION', '2.5.0') : '';
 !defined('SP_SPOOVA')? define('SP_SPOOVA', approot.DS.'spoova'.DS) : '';
 
 //define spack file path
 !defined('SP_SPACK')? define('SP_SPACK', approot.DS.'spoova'.DS.'core/custom/spack_'.SP_VERSION) : '';
-
-//WIN_REX files inclusion
-!defined('WIN_REX')? define('WIN_REX', 'windows/Rex'.DS) : '';

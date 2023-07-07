@@ -2,10 +2,10 @@
 
 /* Set custom static resources url */
 
-Res::new('assets/')
+Res::new('assets/') //base directory
     
-    ->url('css/animate.min.css')->named('animate') //add your resources
+    ->url('your-file-path')->named('unique-name') //add your resources
 
-    ->bindTo('headers', ['animate'])
+    ->bindTo('headers', ['animateCSS'])
     
     ->urlClose(); //close resource

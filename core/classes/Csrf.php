@@ -4,6 +4,7 @@ namespace spoova\mi\core\classes;
 
 use Form;
 use Res;
+use Session;
 use spoova\mi\core\classes\Hasher;
 use Window;
 
@@ -24,6 +25,7 @@ class Csrf {
      private static $strict = false;
      private static $isExpired = false;
      private static $isReferred = false;
+     private static $generated = false;
      private static $emessage = [
       'default' => [
          'title'=>'invalid form submission',
@@ -65,18 +67,20 @@ class Csrf {
      */
     public static function token(string $type = 'new') : string {
 
+        self::$generated = true;
         if(strtolower($type) === 'new') {
             $Hasher = new Hasher;
-
             $hash = $Hasher->randomHash(20);
 
-            $_SESSION['CSRF_TOKEN'] = $hash;
-            $_SESSION['CSRF_TIME'] = time();
-        }
+            $csrf['TOKEN'] = $hash;
+            $csrf['TIME'] = time();
+
+            Session::base()->save('CSRF', $csrf);
+          }
 
         if(in_array($type, ['old','session', 'new'])){
                
-          return $_SESSION['CSRF_TOKEN'] ?? '';
+          return Session::base()->value('CSRF','TOKEN');
         
         }
 
@@ -87,10 +91,19 @@ class Csrf {
     /**
      * Returns an old token only without generating a new one
      *
-     * @return string old token if it exists
+     * @return string old token if it exists else returns an empty string
      */
     public static function old() : string {
-        return $_SESSION['CSRF_TOKEN'] ?? '';
+      return Session::base()->value('CSRF','TOKEN');
+    }
+
+    /**
+     * Returns true if at least one token is generated
+     *
+     * @return string old token if it exists else returns an empty string
+     */
+    public static function generated() : bool {
+        return self::$generated;
     }
 
     /**
@@ -101,7 +114,7 @@ class Csrf {
      * @return void
      */
     public static function matches(string $csrf) : bool{
-        return ($csrf === ($_SESSION['CSRF_TOKEN'] ?? ''));
+      return ($csrf === (Session::base()->value('CSRF','TOKEN')));
     }
     
     /**
@@ -126,7 +139,7 @@ class Csrf {
        if(!self::$expires) return false;
 
         //time generated
-        $time = $_SESSION['CSRF_TIME'] ?? '';
+        $time = Session::base()->value('CSRF','TIME');
 
         if(self::isReferred()){
           $time = self::ref()->time;

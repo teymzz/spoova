@@ -1,12 +1,71 @@
+
+/**
+ * Checks if a string supplied is in json format
+ * 
+ * @param {string} textString a defined string 
+ * @return {boolean}
+ */
+function isJSON(string) {
+    let is_json = true;
+    try {
+        JSON.parse(string);
+    } catch (err) {
+        is_json = false;
+    }
+    return is_json;
+}
+
+/**
+ * check if a value is in range of two numbers
+ * 
+ * @param {number} $value test value
+ * @param {number} $min minimum value
+ * @param {number} $max maximum value
+ * 
+ * @returns {boolean}
+ */
+function inRange($value, $min, $max){
+    return (($min <= $value) && ($value <= $max)); 
+}
+
+
+
+//CLASS FUNCTIONS: THESE FUNCTIONS DEPENDS ON USE OF ATTRIBUTES SELECTOR TO MANIPULATE DOM ELEMENTS
+        
+/**
+ * Check if an element has an attribute
+ * 
+ * @param {string} elem element selector
+ * @param {string} attr name of attribute to be checked
+ * 
+ * @returns {boolean}
+ */
+function hasAttr(elem, attr) {
+
+    elem = toSelectionObject(elem);
+
+    if(elem) {
+        elem = elem[0];
+        return elem.hasAttribute(attr)
+    }
+
+    return false;
+
+}
+
+
 /**
  * converts plain css format to an object format
- * adds style to selector element
- * @param {*} arg1 css text string (or element selector when arg2 is supplied)
- * @param {*} arg2 css text string when both arguments are supplied
+ * adds style to selector element.
+ * 
+ * @param {string} arg1 css text string or selector 
+ *  - If arg1 only is supplied used as element selector
+ *  - If arg2 is supplied arg1 is used as element selector
+ * @param {string} arg2 css text string when both arguments are supplied
  */
 function cssFormat(arg1, arg2){
 
-    let cssText = (arg2 === undefined)? arg1 : arg2;
+    let csqsText = (arg2 === undefined)? arg1 : arg2;
     
     let cssObj = cssText.split(";");
     let css = {};
@@ -30,73 +89,115 @@ function cssFormat(arg1, arg2){
     if(css) return css;
 }
 
-/*The following custom functions are important functions for manipulating some dom elements*/
+/**
+ * Redirects a page to another 
+ * 
+ * @param {string} param optional [:this|url]
+ *          - ':this' => redirect to the current page
+ *          - 'url'  => redirect to a custom url
+ *          - undefined => use current page url
+ * @param {number} delay timeout to execution
+ */
+function rdPage(param, delay = 0) {
 
-//This function helps to close a form.
-//@param element: element selector
-//@param bool 'false': close element
-//@param bool 'true': show element 
-function popbox(element, bool, callBack) {
-    if (bool === true || bool === "true") {
-      element.style.display = "block";
-      var opacity = 0;
-      var interval = setInterval(function() {
-        opacity += 0.1;
-        element.style.opacity = opacity;
-        if (opacity >= 1) {
-          clearInterval(interval);
-          callFunc(callBack);
+    calltime = (delay == null) ? 0 : delay;
+
+    setTimeout(function() {
+        if (param == ":this" || param == undefined || param == null) {
+            window.location.reload();
+        } else {
+
+            window.location.href = param;
+
         }
-      }, 50);
+    }, delay);
+
+}
+
+/**
+ * 
+ * @param {string} id id of element to be copied
+ * @param {function} callback 
+ */
+function copy(id, callback) {  
+    const field = document.getElementById(id);
+  
+    if (!navigator.clipboard) {
+      // fallback for browsers that don't support clipboard API
+      const range = document.createRange();
+      range.selectNode(field);
+      window.getSelection().removeAllRanges();
+      window.getSelection().addRange(range);
+      document.execCommand('copy');
+      window.getSelection().removeAllRanges();
     } else {
-      var opacity = 1;
-      var interval = setInterval(function() {
-        opacity -= 0.1;
-        element.style.opacity = opacity;
-        if (opacity <= 0) {
-          element.style.display = "none";
-          clearInterval(interval);
-          callFunc(callBack);
-        }
-      }, 50);
+      navigator.clipboard.writeText(field.value);
+    }
+    
+    if (typeof callback === 'function') {
+      callback(field);
     }
 }
 
+/**
+ * This function depends on attribute selector. 
+ * It either fetches the current url's hash value or 
+ * performs a click event on an element that contains a value 
+ * that is equivalent to the current url's hash value
+ * 
+ * 
+ * @param {boolean|string} $type defines the value returned
+ * 
+ *   - When set as true or ":get", it returns the current hash value. 
+ *   - When an attribute name is supplied, it performs click event on any element having such 
+ *     attribute and a value that is equialent to the current url's hash value.
+ * @param {function} $callback if defined the callback will overide the default click event
+ * @returns 
+ */
+ function hashRunner($type, $callback) {
 
-function toSelectionObject(selector){
-    let element = typeof selector;
-    if(element === 'object'){
-        selector = selector
-    }else if(element === 'string'){
-        selector = document.querySelectorAll(selector)
-    }
-    if(selector){
-        if(!selector.length){
-            selector = [selector];
-        }else if(!Array.isArray(selector)){
-            let selects = [] 
-            console.log(selector)
-            for(const key in selector){
-                if(selector.hasOwnProperty(key)){
-                    if(selector[key].childNodes){
-                        selects.push(selector[key]);
+    if (window.location.hash) {
+
+        let $selector;
+        let hashItem = window.location.hash.substring(1);
+
+        if ($type === ":get" || $type === true) {
+            
+            return hashItem;
+            
+        } else {
+            $selector = '[' + $type + '~="' + hashItem + '"]';
+
+            setTimeout(() => { 
+
+                let selections = document.querySelectorAll($selector);
+
+                selections.forEach(selection => {
+                    if($callback){
+                        if(typeof $callback === 'function'){
+                            $callback()
+                        }
+                    } else {
+                        selection.click();
                     }
-                }
-            }
-            selector = selects;
+                })
+
+            });
         }
-    }  
-    return selector;
+    }
+
 }
 
-//This function helps to toggle an attribute's value within an element.
-//@param elem: element selector
-//@param value: value to be toggled
-//@param attr: attribute which value is expected to be toggled
-//@param callback: a callback function executed with callFunc() which must be an array e.g ['function','param','param',...]
+/**
+ * This function helps to toggle an attribute's value within an element.
+ * @param {string} elem element selector
+ * @param {string} value value to be toggeled
+ * @param {attr} attr attribute which value is expected to be toggled
+ * @param {function} callBack a callback function executed with callFunc() which must be an array e.g ['function','param','param',...] 
+ */
 function toggleAttr(elem, value, attr, callBack) {
     
-    elem = toSelectionObject(elem);
+    elem = toSelectionArray(elem);
 
     if(elem){
 
@@ -141,102 +242,15 @@ function toggleAttr(elem, value, attr, callBack) {
     }
 
 }
-// /**
-//  * This function helps to toggle an attribute's value within an element.
-//  * 
-//  * @param {*} elem element selector
-//  * @param {*} value value to be toggled
-//  * @param {*} attr attribute which value is expected to be toggled
-//  * @param {*} callBack a callback function executed with callFunc() which must be an array e.g ['function','param','param',...]
-//  */
-
-//This function is a typeWriter animation for texts
-function typeWrite(selector,settings){
-        
-    let i = 0;
-    let field = document.querySelector(selector);
-    let txt = field.innerHTML;
-    field.innerHTML = "";
-    let speed, attributes, init, final;
-    let styleAttr = "";
-
-    if(typeof settings === "object"){
-        speed = settings.speed;
-        init = settings.init || 0;
-        final = settings.final  || txt.length
-        if(final >= txt.length) final = txt.length - 1; 
-
-        delete settings.speed;
-        delete settings.init;
-        delete settings.final;
-
-        let color = settings.color;
-        let bgcolor = settings.bgcolor;
-        let style = settings.style;
-
-        if(style == undefined){
-            if(color != undefined || bgcolor != undefined){
-                if(color != undefined){
-                    styleAttr += "color:"+color+";"
-                }
-                if(bgcolor != undefined){
-                    styleAttr += "background-color:"+bgcolor+";"
-                }                   
-            }
-        }else{
-            styleAttr = style;
-        }
-
-        if(styleAttr != ""){
-            styleAttr = " style=\""+styleAttr+"\" "; 
-        }
-
-        //other attributes
-        if(settings.color) delete settings.color;
-        if(settings.bgcolor) delete settings.bgcolor;
-        if(settings.style) delete settings.style;
-        
-        for(let [key, value] of Object.entries(settings)){
-            attributes += " "+key+"=\""+value+"\""
-        }
-
-        attributes += styleAttr;
-        
-
-    }
-
-    speed = speed || 50;
-    let item = "";
-    
-    function type() { 
-      
-      if (i < txt.length) {
-        if(attributes != undefined){
-          if(init === i){
-            item += "<span "+attributes+">"; 
-          }
-        }
-        item += txt.charAt(i);
-
-        if(attributes != undefined){
-            field.innerHTML += "</span>"; 
-        }
-
-        field.innerHTML  = item;      
-
-        i++;
-        setTimeout(type, speed);
-      }
-    }
-
-    type();
-  
-}
 
 
 /**
  * Show device width or height in console on browser resize
- * @param {*} type (options: all | width | height)
+ * 
+ * @param {string} type optional [all|width|height)
+ *  - all: displays both the width and height
+ *  - width: displays only the width
+ *  - height: displays only the height
  */
 function devMedia(type) {
     type = type || 'width'
@@ -260,81 +274,22 @@ function devMedia(type) {
 }
 
 /**
- * Works with attribute ('[data-view="morelink"]'). Helps to contract or expand texts
- * The attribute disp-text declares the number of text visible at once e.g disp-text="200";
- * This class is used directly with the text's immediate parent element
+ * This function returns the date
+ * 
+ * @param {string} type optional [year|month|day|hour|min|sec|milli|full]
+ *  - If type is not defined, it returns the full date 
  */
-function readmore() {
-    let ellipsestext = "...";
-    let moretext = "more";
-    let lesstext = "less";
-    let hiderBtn = document.querySelectorAll('.hide-more');
-    let moreLink = document.querySelectorAll('[data-view="morelink"]');
+function getDate(type) {
+    var ref = new Date();
     
-    hiderBtn.forEach(function(el) {
-        var content = el.innerHTML;
-        var showChar = el.getAttribute("disp-text");
-        if (content.length > showChar) {
-            var c = content.substring(0, showChar);
-            var h = content.substring(showChar, content.length - showChar);
-            var html = c + '<span class="moreellipses">' + ellipsestext + '&nbsp;</span><span class="morecontent"><span>' + h + '</span>&nbsp;&nbsp;<a href="" class="morelink">' + moretext + '</a></span>';
-            el.innerHTML = html;
-        }
-    });
-    
-    moreLink.querySelectorAll('[data-view="morelink"]').forEach(function(el) {
-        el.addEventListener('click', function(e) {
-            e.preventDefault();
-            if (el.classList.contains("less")) {
-                el.classList.remove("less");
-                el.innerHTML = moretext;
-            } else {
-                el.classList.add("less");
-                el.innerHTML = lesstext;
-            }
-            el.parentNode.previousElementSibling.style.display = 'block';
-            el.previousElementSibling.style.display = 'none';
-        });
-    });
-    
-}
-
-/**
- * VANILLA JS: loops an array of texts supplied into a target element
- * @param {*} element target element selector
- * @param {*} texts array of texts
- * @param {*} interval loop interval
- * @param {*} callBack callback when loop finishes
- */
-function animeText(element, texts, interval, callBack) {
-    var counter = 0;
-    var texts = (texts == undefined) ? [] : texts;
-    
-
-    if (element.length != false) {
-        
-        element = document.querySelector(element);
-        if(element.length > 0){
-            animeTextWord = setInterval(function() {
-                
-                element.html(texts[counter]);
-                console.log(texts[counter]);
-                counter++;
-                if (counter === (texts.length)) {
-                    clearInterval(animeTextWord);
-
-                    setTimeout(() => {
-                        callFunc(callBack);
-                    }, interval)
-
-                }
-            }, interval);
-        }else{
-            console.log("no element found for selector: " + element);
-        }
-
-    } else {
-        clearInterval(animeTextWord);
-    }
-
+    if (type == 'ref') { return ref; } 
+    if (type == 'year') { return ref.getFullYear() }
+    if (type == 'month') { return ref.getMonth() }
+    if (type == 'day') { return ref.getDay() }
+    if (type == 'date') { return ref.getDate() }
+    if (type == 'hour') { return ref.getHours() }
+    if (type == 'min') { return ref.getMinutes() }
+    if (type == 'sec') { return ref.getSeconds() }
+    if (type == 'milli') { return ref.getMilliseconds() }
+    if (type == 'full' || type == null) { return Math.floor(ref.getTime() / 1000) }
 }

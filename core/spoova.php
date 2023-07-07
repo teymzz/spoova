@@ -1,8 +1,5 @@
 <?php
 
-//secure file access
-if(!is_file('icore/filebase')) header('location:../');
-
 //include core framework
 include_once 'icore/filebase.php';
 

@@ -164,9 +164,6 @@ class UserAuth extends SharedInfo{
   /**
    * counts information from database table field(s) supplied
    * 
-   * @param $method processing method 
-   * @param $columns array|string
-   *  
    */
   private function counter(){
 
@@ -187,8 +184,8 @@ class UserAuth extends SharedInfo{
   /**
    * finds information from database table field(s) supplied
    * 
-   * @param $method processing method - options [find, findAll] 
-   * @param $columns array|string
+   * @param string $method processing method - options [find, findAll] 
+   * @param array|string $columns
    * @param array|int $limit
    * @return array|string|false depending on data supplied or response obtained
    */
@@ -356,8 +353,9 @@ class UserAuth extends SharedInfo{
   /**
    * sets query order that is fetched
    *
-   * @param $column string $array
-   * @return $order - optional options [desc | asc]
+   * @param string $column 
+   * @param string $order Determines the sort order. Optional [desc|asc]
+   * @return UserAuth
    */
   public function order(string $column, string $order = ''){
     $stmt = ' ORDER BY '. $column;

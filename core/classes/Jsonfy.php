@@ -93,8 +93,8 @@ class Jsonfy{
 	 *  	- sets array key or parent key whose value is to be replaced
 	 * 
 	 * @param string|array $value
-	 * 		- @args count = 2, set value of @var $data[@param $key] = @param $value
-	 *  	- @args count = 3, set value of @var $data[@param $key][@param $value] = @param $subval
+	 *   - @args count = 2, set value of @var $data[@param $key] = @param $value
+	 *   -- @args count = 3, set value of @var $data[@param $key][@param $value] = @param $subval
 	 * @return void
 	 */
     public function update($key, $value = null, $subval = null){
@@ -163,10 +163,10 @@ class Jsonfy{
 	 * @param string $type 
 	 * 
 	 * @return mixed
-	 *   @param $type ==  null	   : @return @var array $data
-	 * 	 @param $type == 'source'  : @return @var $sourcedata
-	 * 	 @param $type == 'json'    : @return string json of @var $data
-	 * 	 @param $type == 'count'   : @return int count of @var $data
+	 *   - $type ==  null	  : return value of property $data (array)
+	 * 	 - $type == 'source'  : return value of property $sourcedata
+	 * 	 - $type == 'json'    : return json string of property $data
+	 * 	 - $type == 'count'   : return integer count of property $data
 	 * 
 	 */
     public function data($type = null){

@@ -1,5 +1,5 @@
 ### SPOOVA FRAME
-Spoova is a PHP Framework that uses a Window-View-Model (WVM) pattern that is built upon MVC architecture. It uses a 3-Logic pattern to determine how routes are controlled or managed. Other features include inbuilt live server, inbuilt template engine, Reusable components, Static Resource Handler, ORM (beta) and FileManager tool.  
+Spoova is a PHP Framework that uses a Window-View-Model (WVM) pattern that is built upon MVC architecture. The WVM is a 3-Logic pattern that determine how routes are resolved. Other features include inbuilt live server, inbuilt template engine, Reusable components, Static Resource Handler, ORM (beta) and FileManager tool.  
 
 ##### INSTALLATION
 
@@ -31,11 +31,11 @@ Spoova is a PHP Framework that uses a Window-View-Model (WVM) pattern that is bu
    ```json
    {    
         "description": "Spoova Framework",
-        "keywords": ["framework", "spoova"],
+        "keywords": ["php framework", "framework", "spoova"],
         "type": "project",
         "license": "MIT",
         "require": {
-            "spoova/mi": "^1.0"
+            "spoova/mi": "^2.5"
         },
         "require-dev": {
             "phpunit/phpunit": "^9.5"
@@ -79,7 +79,7 @@ Spoova is a PHP Framework that uses a Window-View-Model (WVM) pattern that is bu
    ```
    > To use spoova for development on mobile devices once the configuration is done, transfer your new project folder to the root of your local mobile web server (e.g KSWeb).
 
-   Visit the offline project pack documentation to learn more on how to install the framework and other cli commands.
+   Visit the offline or online project pack documentation as the case may be to learn more on how to install the framework and other cli commands.
 
 ##### PROJECT DEPLOYMENT
 Deploying a production-ready application requires the use of specially designed functions that help to localize the static resource files such as image, css and javascript files to their current environment. 
@@ -89,8 +89,8 @@ Deploying a production-ready application requires the use of specially designed 
 
 ##### CONFIGURATION FILES
 
-1. The database configuration files are automatically configured by the ```php mi config:all``` command but can be manually configured at _icore/dbconfig.php_ file. Database connection parameters are also loaded by default from this file. Remember to remove your connection paramaters when submitting project to a public environment by running ```php mi config:dboffline``` and also remove the online parameters if previously defined also by running the  ```php mi config:dbonline``` with the parameters set as dash (i.e - ). This can also be done manually from the configuration file itself.
-2. Other configuration files can be found within the same directory (i.e _icore/_).
+1. The database configuration files are automatically configured by the ```php mi config:all``` command but can be manually configured at _icore/dbconfig.php_ file. Database connection parameters are also loaded by default from this file. Remember to remove your connection paramaters when submitting project to a public environment by running ```php mi config:dboffline``` and also remove the online parameters if previously defined also by running the ```php mi config:dbonline``` with the parameters set as dash (i.e "-") in the command-line. This can also be done manually from the database connection configuration file  _icore/init_.
+2. Other configuration files can be found within the same _icore/_ directory.
 3. The _icore/init_ file is used to initialize the state of the application.
 4. The _.env_ file should also be added to the same directory, if needed. This will enable the _env()_ function to load the defined keys automatically if needed.
 
@@ -108,4 +108,4 @@ Deploying a production-ready application requires the use of specially designed 
 
 ##### NOTICE
 
-1. The spoova main project pack contains an offline documentation designed to guide developers on how to use the framework.
+1. The earlier spoova main project pack versions previously contained offline documentation. Starting from version 2.5, The documentation is now available on [spoova.com](https://www.spoova.com)

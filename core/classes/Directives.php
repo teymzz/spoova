@@ -95,24 +95,28 @@ abstract class Directives{
             }else{
 
                 //request pattern - 1
-                preg_match($pattern3, $body, $matches);
+                preg_match_all($pattern3, $body, $matches);
+                $matches = $matches[0] ?? [];
 
                 if($matches){
-                    $name = str_ireplace(["@$directive."],'', $matches[0]);
 
-                    $expNames = explode('[', $name, 2);
-                    if($name){
-                        $name = '['.$expNames[0].']'; 
+                    foreach($matches as $match){
+                        $name = str_ireplace(["@$directive."],'', $match);
+
+                        $expNames = explode('[', $name, 2);
+                        if($name){
+                            $name = '['.$expNames[0].']'; 
+            
+                            if(count($expNames) > 1){
+                                $name .= '['.$expNames[1];
+                            }
+            
+                            $name = str_replace(['][','[',']'], ['\',\'','[\'','\']'], $name);
+
+                            $body = str_replace($match, '<?= Rexit::'.$directive.'('.$name.') ?>', $body);
         
-                        if(count($expNames) > 1){
-                            $name .= '['.$expNames[1];
-                        }
-        
-                        $name = str_replace(['][','[',']'], ['\',\'','[\'','\']'], $name);
-
-                        $body = preg_replace($pattern3, '<?= Rexit::'.$directive.'('.$name.') ?>', $body);
-
-                    }   
+                        }   
+                    }
 
                 }
                
@@ -272,11 +276,14 @@ abstract class Directives{
      * @return string
      */
     protected static function directivesLive($body): string {
- 
+    
+        if(preg_match('~@csrf\s~is', $body, $csrf)){
+            $body = preg_replace('~@live(\((\'(console|pop|uiconsole|[0-9])?\')?\))?~i', '', $body);
+        }
+
         //get pattern
         self::getMatches('live', $body, $matches);
         $counter = 0;
-        
         foreach($matches as $match) {
 
             $match = trim($match);
@@ -286,7 +293,6 @@ abstract class Directives{
                 $params = str_replace(['@live(', '\'', ')'], '', $match);
                 $params = str_replace(['@live'], '', $params);
                 $params = explode(',', $params);
-                //$body = str_replace($match, Res::import('::watch'), $body);
                 $body = str_replace($match, '<?= Res::live() ?>', $body);
             } 
             $body = str_replace($match, '', $body);
@@ -331,7 +337,7 @@ abstract class Directives{
 
 
                 //load layoutId's supplied template url
-                $path =  docroot.DS.WIN_REX.ltrim($url, '/');
+                $path =  docroot.DS.to_frontslash(WIN_REX).ltrim($url, '/');
 
                 if(!is_file($path)){
 
@@ -435,7 +441,7 @@ abstract class Directives{
                 }
 
                 //load layoutId's supplied template url
-                $path =  docroot.DS.WIN_REX.ltrim($url, '/');
+                $path =  docroot.DS.to_frontslash(WIN_REX).ltrim($url, '/');
                 
                 if(!is_file($path)){
 
@@ -538,7 +544,7 @@ abstract class Directives{
                 }
 
                 //load layoutId's supplied template url
-                $path =  docroot.DS.WIN_REX.ltrim($url, '/');
+                $path =  docroot.DS.to_frontslash(WIN_REX).ltrim($url, '/');
                 
 
                 if(!is_file($path)){
@@ -638,7 +644,7 @@ abstract class Directives{
                 }
 
                 //load layoutId's supplied template url
-                $path =  docroot.DS.WIN_REX.ltrim($url, '/');
+                $path =  docroot.DS.to_frontslash(WIN_REX).ltrim($url, '/');
 
                 if(!is_file($path)){
                     print self::directivesMapError([
@@ -735,7 +741,7 @@ abstract class Directives{
             $off = (substr($url, -4) === ':off');
             
             $urx = explode(':off', $url);
-            $rex = WIN_REX.ltrim($urx[0], '/');
+            $rex = to_frontslash(WIN_REX).ltrim($urx[0], '/');
             $url = docroot.DS.$rex;
 
             //get url extension
@@ -810,7 +816,7 @@ abstract class Directives{
             $url = str_replace(['.','\\'], '/', $tempUrl);    
             
             //load template's supplied url
-            $url =  docroot.DS.WIN_REX.ltrim($url, '/');
+            $url =  docroot.DS.to_frontslash(WIN_REX).ltrim($url, '/');
    
             //get url extension
             if (pathinfo($url, PATHINFO_EXTENSION) === '') {

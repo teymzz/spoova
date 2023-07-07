@@ -9,7 +9,7 @@ use spoova\mi\core\classes\UserId;
 class User extends Session{
 
     private static array $data = [];
-
+    protected static $initConfig;
     
     function __construct(){
         $args = func_get_args();
@@ -22,7 +22,7 @@ class User extends Session{
      * {@see UserAuth::__construct()}
      * @return UserAuth
      */
-    public static function auth(DB $dbc = null, DBHandler $dbh = null){
+    public static function auth(DB $dbc = null, DBHandler $dbh = null): UserAuth {
         
         return new UserAuth(...func_get_args());
     
@@ -30,12 +30,15 @@ class User extends Session{
 
     /**
      * Retrieves the current user session id value from session data (i.e ['userid'=>some_id])
-     *
+     * @param bool $string true ensures that a user id string is always returned instead of a UserId object that may 
+     * later be converted to string
+     * 
      * @return string|UserId
      *   - string returns current user id relative to user database configuration id field
      */
-    public static function id(): string|UserId {
+    public static function id(bool $string = false): string|UserId {
 
+        if($string) return (string) new UserId;
         return (new UserId);
 
     }
@@ -59,21 +62,22 @@ class User extends Session{
      * @return [array | string]  
      */
     public static function config(string $param = ''){
-        $init = self::$init;
-        $init['DBNAME'] = isset(self::$dbh)? self::$dbh->currentDB() : '';
-        if(self::id()){
-            $init['ID'] = self::id() ;
-        }
         
-        $auth = new static("::instance", "::init");
+        $init = static::$init;
+        
+        $init['DBNAME'] = isset(self::$dbh)? self::$dbh->currentDB() : '';
+        
+        if($auth = Session::stream()){
+            $init['SESSION_NAME'] = $auth->sessionName();
+            $init['COOKIE_NAME']  = $auth->cookieName();
+        }else{
+            $init['SESSION_NAME'] = '';
+            $init['COOKIE_NAME']  = '';
+        }  
 
-        $init['SESSION_NAME'] = $auth->sessionName();
-        $init['COOKIE_NAME']  = $auth->cookieName();
-    
-        if(func_num_args() > 0){
-            return $init[$param];
-        }
-        return $init;
+        $init = self::$init;
+        
+        return (func_num_args() > 0)? $init[$param] : $init;
     }
 
     /**
@@ -99,12 +103,56 @@ class User extends Session{
      * @return void
      */
     public static function logout(string $url = '', bool $revokeCookie = false){
-        $parent = new parent;
+        $parent = parent::stream();
         $parent->logoutUser(...func_get_args());
     }     
     
     /**
-     * Returns true if current user session has a key
+     * Validate a session id
+     *
+     * @param string $sessid
+     * @param Closure $callback
+     * @return void
+     */
+    public static function validate($sessid, Closure $callback){
+
+        //select session id from database 
+        if(!Session::has(User::sessionName())){
+            return false;
+        }
+
+        $idField = User::idField();
+        $idTable = User::tableName();
+        
+        $auth = User::auth()->dbh();
+        
+        if($auth){
+
+            $auth->query("SELECT $sessid FROM {$idTable} WHERE $idField = ?", [User::id(true)]);
+            $auth->read();
+            $results = $auth->results(0); 
+
+            $id = $results[$sessid] ?? '';
+
+            $response = $callback($id);            
+            
+            if($response === false){
+                User::logout(false);
+            }
+            return ;
+        }else if(!$auth) {
+            $response = $callback(false);
+
+            if($response === false){
+                User::logout(false);
+            }
+            return ;
+        }
+        
+    }
+        
+    /**
+     * Returns true if current session user data array has a key
      * 
      * @param string $key session key
      * @return bool
@@ -154,7 +202,7 @@ class User extends Session{
     final static function data(array $fields = []) {
 
         if(empty(self::$data)){            
-            $userId      = User::id();
+            $userId = User::id();
             return self::setUserData($userId);
         }
 
@@ -178,11 +226,12 @@ class User extends Session{
      * Fetch user data using user config's userIdField's relative id.
      *
      * @param string $userId userIdField's relative id
-     * @return str
+     * @return array
      */
     final static protected function setUserData(string $userId) : array{
-            $auth = User::Auth()->dbh();
+            $auth = User::auth()->dbh();
             $userTable = User::tableName();
+
             $userIdField = User::config('USER_ID_FIELDNAME');
 
             $query = "SELECT * FROM {$userTable} WHERE $userIdField = ?";

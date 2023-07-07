@@ -203,12 +203,12 @@ class Mailer extends PHPMailer{
      * - Loads php, html or xml files.
      *
      * @param string $body mail content as html body string or filepath (e.g php, html, xml, txt)
-     * @param $type, declares config type ['default', 'file', 'string'] 
-     * @param $type = 'auto': auto detect config type
+     * @param string $type optional declares config type ['auto', 'default', 'file', 'string'] 
+     *  - when set as "auto", auto detect config type
      *
      * @return string|void
      */
-    function content($body = null, $type = 'auto'){
+    function content($body = null, string $type = 'auto'){
         //prepare email body (this can be a file or a string)
 
         if(func_get_args() == 0) return $this->body;
@@ -229,9 +229,10 @@ class Mailer extends PHPMailer{
 
 
     /**
-     * It controls the sending of mail
+     * It controls the sending of mail. Determines if a mail is authorized to be forwarded
      *
-     * @param $send = true : send mail, else do not send
+     * @param bool $send declares if to send mail or not
+     *    - true sends mail while false does not send
      * @return void
      */
     public function authorize(bool $send = true){
@@ -459,13 +460,13 @@ class Mailer extends PHPMailer{
     /**
      * This function returns mail data values 
      *
-     * @param $info get the value of a particular config key (header, client, site, cc, bcc)
+     * @param array|string $info get the value of a particular config key (header, client, site, cc, bcc)
      *
      * @return array|string
-     *      array => when array is supplied 
-     *      string => when string is supplied
+     *    - returns array if array was supplied 
+     *    - returns string if string was supplied
      */    
-    public function info($info){
+    public function info(array|string $info) : array|string {
 
         if(is_array($info)){
             $infos = [];
@@ -624,10 +625,10 @@ class Mailer extends PHPMailer{
      * This function loads a file such as php, xml and html files
      * if declared, mail setup header and addresses keys can be auto updated from supplied php files
      *
-     * @param $file files e.g php, xml, html to be loaded
+     * @param string $file files e.g php, xml, html to be loaded
      * only php files support inline mail configurations
      */
-    private function obfile($file){
+    private function obfile(string $file){
         ob_start();
         include($file);
         $contents = ob_get_contents();
@@ -640,14 +641,13 @@ class Mailer extends PHPMailer{
    /**
     * This function updates default mail configurations 
     *
-    * @param $webmail mail setup configuration addresses and headers
+    * @param array $webmail mail setup configuration addresses and headers
     *
     * @return void
     */
     private function updateVars(&$webmail = []){
         if(!empty($webmail) and is_array($webmail)){
             foreach ($webmail as $mail_key => $value) {
-                javaconsole($value);
                 $this->mail_set($mail_key, $value);
             }
         }
@@ -657,10 +657,11 @@ class Mailer extends PHPMailer{
      * Extract mail setup configuration from the mail content string or document (php, xml and html) files only
      * The setup string format is ignored and is not forward along with the mail
      *
-     * @param $body mail content loaded from document or string
+     * @return void
      */
     private function inlineConfig(){
 
+        // $body as mail content loaded from document or string
         $body = $this->body;
 
         preg_match_all('@<setup type="config">[\w^\s\#:=";-\{\}\/\.]+</setup>@', $body, $matches);
@@ -674,9 +675,8 @@ class Mailer extends PHPMailer{
         $setup = rtrim($setup);
         $setup = preg_replace('@\h+@',' ', $setup);
         $setup = preg_replace('@\n[^\S]+@',"\n", $setup);
-        //var_dump($setup);
+
         preg_match_all('@\n\@\w+\s:\s\{.{0,}\}@', $setup, $matches);
-        //var_dump($matches);
 
         $configs = ['header'=>'header','site_name','site_mail','client_name','client_mail','file'];
         $setups  = $matches[0];
@@ -714,17 +714,16 @@ class Mailer extends PHPMailer{
     }
 
     /**
-     * @param
-     * reItemize, ungroup or restructure an array
+     * @param array|string $item reItemize, ungroup or restructure an array
      *
      * @return array()
      */
-    private function reItemize($item){
-        $box = array(); $items = (array)$item;
-        foreach ($item as $key => $values) {
-        foreach ($values as $value => $subvalue) {
-            $box[$value][$key] = $subvalue;
-        }
+    private function reItemize(array|string $item) : array {
+        $box = array(); $items = (array) $item;
+        foreach ($items as $key => $values) {
+            foreach ($values as $value => $subvalue) {
+                $box[$value][$key] = $subvalue;
+            }
         }
         return $box;
     }

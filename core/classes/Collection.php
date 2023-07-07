@@ -3,7 +3,6 @@
 namespace spoova\mi\core\classes;
 
 use Iterator;
-use Reflection;
 use ReflectionClass;
 use ReflectionMethod;
 use stdClass;
@@ -27,7 +26,7 @@ class Collection implements Iterator{
     private static Collection $container;
 
     /**
-     * Undocumented function
+     * Instance of the Collection class
      *
      * @param mixed $data
      * @param object|null $class
@@ -115,7 +114,7 @@ class Collection implements Iterator{
     /**
      * Protect all collected data having specified keys
      * 
-     * @param $keys array of keys whose values must be protected
+     * @param array $keys array of keys whose values must be protected
      */
     public static function protect(array $keys = []){
         $protected = self::$protected;
