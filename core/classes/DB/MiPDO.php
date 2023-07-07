@@ -62,15 +62,30 @@ class MiPDO extends DBBridge{
         if($DBNAME   != null){ $dnsname = ";dbname=".$this->DBNAME; }                      
       } 
       
-      $DNS = "mysql:".$dnssocks.$dnshost.$dnsport.$dnsname;
+      $configs = [$this->DBSERVER, $this->DBUSER, $this->DBPASS, $this->DBNAME, $this->DBSOCKET];
+      $configs = (array_unset($configs, ''));
+
+      if(!empty($configs)){
       
-      $this->isFailed = false;
-      $db = new \PDO($DNS, $this->DBUSER, $this->DBPASS, $SETTINGS);
-      $this->dbConnection = true;
-      $this->conn = $db;
-      $this->currentDB = $this->DBNAME;
-      $this->conResponse = "connection successful:";    
-      return true;
+        $DNS = "mysql:".$dnssocks.$dnshost.$dnsport.$dnsname;
+
+        $this->isFailed = false;
+        $db = new \PDO($DNS, $this->DBUSER, $this->DBPASS, $SETTINGS);
+        $this->dbConnection = true;
+        $this->conn = $db;
+        $this->currentDB = $this->DBNAME;
+        $this->conResponse = "connection successful:";    
+        return true;
+
+      } else {
+
+        $this->dbConnection = false;
+        $this->conResponse = "connection failed: no defined parameters";
+        $this->buildError('no connection parameters supplied', 'Connection Error');
+        $this->isFailed = true;
+        return false;
+
+      }
       
     }catch(\PDOException $e){
       $this->dbConnection = false;

@@ -1,7 +1,6 @@
 <?php
 
 use spoova\mi\core\classes\FileManager;
-use spoova\mi\core\commands\Install;
 use spoova\mi\core\commands\Project;
 
 /**

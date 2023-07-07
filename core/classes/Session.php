@@ -1,7 +1,9 @@
 <?php
 
+use spoova\mi\core\classes\Csrf;
 use spoova\mi\core\classes\EInfo;
 use spoova\mi\core\classes\Request;
+use spoova\mi\core\classes\Sessionbase;
 use spoova\mi\core\classes\SharedInfo;
 
 /**
@@ -17,7 +19,7 @@ class Session extends SharedInfo {
   private $logid;
   private $autoRedirect = false;
   private $algo  = 'sha1';
-  private static ?Session $stream = null;
+  private static ?Session $stream;
   private static $secure = false;
 
   /**
@@ -41,7 +43,7 @@ class Session extends SharedInfo {
    *
    * @var string
    */
-  protected static $sessionName;
+  protected static $sessionName = '';
   private static $counter = 0;
   private static $auto;
 
@@ -95,31 +97,38 @@ class Session extends SharedInfo {
    * configured user id field name set in the icore/init file
    */
   function __construct(string $sessionName = '', string $cookieName = '',  bool $secure = false){
-    if($sessionName === '::instance' and $cookieName === '::init') return ;
+    
     self::$counter++;
- 
-    $this->start(); //start session
 
-    if(self::$dbh === null && self::$dbe === null && self::$counter == 1){
-        parent::__construct(true); //start connection
+    if(!isset(self::$stream)){
+      self::$stream = $this;
+
+      if(self::$dbh === null && self::$dbe === null && self::$counter === 1){
+          parent::__construct(true); //start connection & set init
+      }
+
+      $this->start(); //start session
+
     }
 
-    if(!empty($cookieName)) self::$cookieName = $cookieName;
     if(self::$counter > 1){
-      
-      //check settings 
+
+      // check settings 
       if(empty(self::$init)){/* no configuration set */}
       
-      //set values
-      if(!empty($sessionName)){ self::$sessionName = $sessionName; } 
-      if(!empty($cookieName)){ self::$cookieName = $cookieName; } 
-      self::$stream = $this; 
+      // set values
+      if(!empty($sessionName)){ 
+        self::$sessionName = $sessionName; 
+      }
+
+      if(!empty($cookieName)){ 
+        self::$cookieName = $cookieName; 
+      } 
 
       if(empty(self::$sessionName)) throw new \Error('No session account defined');
 
       $this->remember();
     }
-
 
     if(func_num_args() > 2) self::secure($secure);
 
@@ -131,38 +140,46 @@ class Session extends SharedInfo {
    * @return void
    */
   private function start(){
+
     if(!isset($_SESSION)){
       //get cookie parameters
       self::$session_params['secure'] = function_exists('isSecure')? isSecure() : self::$session_params['secure'];
       $session_params = array_values(self::$session_params);
       if(!headers_sent()){
         session_set_cookie_params(...$session_params);
-        session_start();  
+        //set storage name 
+        session_name(Session::storage_key());
+        session_start();
+        return true;  
       }
-      
-    }  
+    } 
+
   }
 
   /**
    * An auto redirection method
    * 
    * @param string $redirType redirection type - options [login | logout].
-   * @param $url url address of the redirection type
+   * @param string|null $url url address of the redirection type
    */
   public function auto(string $redirType, ?string $url = null){
-    if((func_num_args() > 1) && trim($url) == '') throw new Error('invalid argument supplied as parameter 2.');
+    if((func_num_args() > 1) && is_string($url) && trim($url) == '') throw new Error('invalid argument supplied as parameter 2.');
     $redirType = strtolower(trim($redirType));
     
     if($redirType !== "login" && $redirType !== "logout") throw new Error('invalid argument supplied in as parameter 1. Value can only be login or logout');
 
     self::$auto = true; 
 
-    if($redirType == "login"){
-      $url = ($url === null)? self::$loginUrl : $url; 
+    if($redirType === "login"){
+      if($url === null) {
+        $url = self::$loginUrl;
+      } 
       self::$loginUrl = $url;
       $this->autoLogin();
-    }elseif($redirType == "logout"){
-      $url = ($url === null)? self::$logoutUrl : $url; 
+    }elseif($redirType === "logout"){
+      if($url === null) {
+        $url = self::$logoutUrl;
+      } 
       self::$logoutUrl = $url;
       $this->autoLogout();
     }
@@ -173,33 +190,35 @@ class Session extends SharedInfo {
    * 
    * This only runs if the user session is initialized
    * 
-   * @param string $redirType redirection type - options [login | logout].
-   * @param $url url address of the redirection type
-   *  
-   *  - if $redirType is login and url is null, a default home is set as url
-   *  - if $redirType is logout and url is null, a default index is set as url
-   *  - if $url is set as false, no redirection is made
-   *  - if $url is set as string, redirection is made to specified string based on $redirType.
-   * 
+   * @param string $type redirection type - options [login|logout].
+   *  - When set as "login", automatic redirection is made to a specified url when a 
+   *    session is active. This is best used in signup or login pages to force an auto-redirection 
+   *    to a home page when session becomes active.
+   *  - When set as "logout", automatic redirection is made to a specified url when 
+   *    session is not active. This is best used in user-related pages to force auto-redirection when user is logged out.
+   * @param string $url defines the redirection destination url
+   *  -If $url is not specified, and $type is "login", default destination url will be set as home
+   *  -If $url is not specified, and $type is "logout", default destination url will be set as index
+   *  -If $url is set as false, no redirection will be made
    * @return void
    */
-  public static function onauto(string $redirType, ?string $url = null){
+  public static function onauto(string $type, ?string $url = null){
 
     if(static::$stream){
-      static::$stream->auto(...func_get_args());
+      if(self::$sessionName) static::$stream->auto(...func_get_args());
     }
 
   }
 
   /**
    * Return current session class or bool false
+   *  - Notice: stream (i.e Session) can only return the session class when a session has been initiailized
    *
-   * @return bool|Session
-   * @Notice: stream can only return the session class when a session has been initiailized
+   * @return Session|false
    */
-  public static function stream() {
+  public static function stream() : Session|false {
 
-    return self::$stream;
+    return self::$stream ?? false;
 
   }
 
@@ -277,8 +296,6 @@ class Session extends SharedInfo {
 
       $cookie_params = self::$cookie_params;
 
-      $lifeTime = '';
-
       $newparams = array_values($params);
       $cookie_params = array_values($cookie_params);
       $newparams = array_replace($cookie_params, $newparams);
@@ -292,8 +309,6 @@ class Session extends SharedInfo {
     $domain = $newparams[2];
     $secure = $newparams[3];
     $httponly = $newparams[4];
-    
-    //$expire = (int) (!empty($expire)? $expire : time() + $expire); //(86400 * 365) => 1 year
 
     $expire = ($expire === 0)? -time() : time() + $expire; 
 
@@ -328,12 +343,12 @@ class Session extends SharedInfo {
    * protected function for logging user in
    *
    * @param array $logdata data to be stored in $sessionName
-   * @param string|bool(false) $url, redirection url (if false, no auto redirection is done)
+   * @param string|false $url, redirection url (if false, no auto redirection is done)
    * @return bool
    */
-  protected function loginUser(array $logdata, $url = '', $lifeTime = 86400) : bool{
+  protected function loginUser(array $logdata, string|false $url = false, $lifeTime = 86400) : bool{
    return $this->internalLogin($logdata, $url, $lifeTime);
-  } 
+  }
 
   /**
    * logs in user internally
@@ -342,11 +357,11 @@ class Session extends SharedInfo {
    * Sets the user data internally
    *
    * @param array $logdata user session data
-   * @param string $url
+   * @param string|false $url
    * @param integer $lifetime
    * @return bool
    */
-  protected function internalLogin(array $logdata, string $url, $lifeTime = 86400) : bool{
+  protected function internalLogin(array $logdata, string|false $url, $lifeTime = 86400) : bool{
 
     $this->checkSession();
     if(!isset($logdata['userid'])) {
@@ -426,9 +441,9 @@ class Session extends SharedInfo {
           
         }
 
-
         if($setCookie) $this->cookie($cookie, $lifeTime);
-        $_SESSION[self::$sessionName] = $logdata;
+        Session::save(self::$sessionName, $logdata);
+
         if($url === '') $url = self::$loginUrl;
         if($url !== false) $this->autoLogin($url);
  
@@ -442,9 +457,8 @@ class Session extends SharedInfo {
 
     }else {
 
-      if(!isset($_SESSION[self::$sessionName])){
-        $_SESSION[self::$sessionName] = $logdata;
-        
+      if(!Session::has(self::$sessionName)){
+        Session::save(self::$sessionName, $logdata);
         if($url === '') $url = self::$loginUrl;
         if($url !== false) $this->autoLogin($url);
       }
@@ -452,18 +466,16 @@ class Session extends SharedInfo {
       return true;     
 
     }
-    
-
-
-
 
   }
 
   private function endSession(bool $destroyCookie = false){
     $this->checkSession();
     $sessionName  = self::$sessionName;
-    $_SESSION[$sessionName] = [];    
-    unset($_SESSION[$sessionName]);
+
+    Session::save($sessionName, []);
+    Session::remove($sessionName);
+
     if(isset(self::$cookieName)){
       $cookieName = self::$cookieName;
       if(isset($_COOKIE[$cookieName])){
@@ -492,14 +504,15 @@ class Session extends SharedInfo {
    */
   private function autoLogin(string $url = null){
 
-    $this->checkSession();
-    if(isset($_SESSION[self::$sessionName])){
-        $url = $url == null ? self::$loginUrl : $url;
-        
-        if(isset($_SESSION[self::$sessionName]['userid'])){
-          if($url === null) $url = self::$loginUrl;
-          $this->autoRedirect($url);
-        }
+    if(isset(self::$sessionName)){
+      $this->checkSession();
+  
+      if(Session::has(self::$sessionName)){
+        if(Session::has(self::$sessionName, 'userid')){
+            if($url === null) $url = self::$loginUrl;
+            $this->autoRedirect($url);        
+        } 
+      }
     }
   }
 
@@ -507,10 +520,10 @@ class Session extends SharedInfo {
      $sessionName = $this->checkSession();
      if($url === null) $url = self::$logoutUrl;
 
-     if(empty($_SESSION[$sessionName])){
+     if(!Session::has($sessionName)){
         $this->endSession();
         $this->autoRedirect($url);      
-     }elseif(self::$auto && empty($_SESSION[$sessionName]['userid'])){
+     }elseif(self::$auto && !(Session::value($sessionName, 'userid'))){
         $this->endSession(); 
         $this->autoLogout(self::$logoutUrl);
      }
@@ -524,9 +537,8 @@ class Session extends SharedInfo {
    */
   public function userid($sessionName): string{
     $sessionName = $this->checkSession();
-    if(isset($_SESSION[$sessionName]) && isset($_SESSION[$sessionName]['userid'])) {
-
-      return $_SESSION[$sessionName]['userid'];
+    if(Session::has($sessionName) && Session::has($sessionName, 'userid')) {
+      return Session::value($sessionName, 'userid');
     }
     return '';
   }
@@ -544,7 +556,7 @@ class Session extends SharedInfo {
    * @param string $cookieName
    * @return void
    */
-  public function cookieName(string $cookieName = null){
+  public static function cookieName(string $cookieName = null){
     if((empty($cookieName)) and (func_num_args() > 0)) trigger_error('cookie name cannot be void', E_USER_ERROR);
     if(func_num_args() === 0){ return self::$cookieName; }
     self::$cookieName = $cookieName;
@@ -553,7 +565,7 @@ class Session extends SharedInfo {
   /**
    * returns the current session name if it exists
    */
-  public function sessionName(){
+  public static function sessionName(){
     return self::$sessionName;
   }
 
@@ -711,9 +723,166 @@ class Session extends SharedInfo {
 
       }
 
- 
     }else{
         //$this->loginUser(['userid'=>$userid]);
+    }
+
+  }
+
+  public static function storage_key() : string {
+
+    return self::$init['SESSION_STORAGE_KEY'] ?? '';
+
+  }
+
+  /**
+   * Return true if the session storage contains a particular root key or a root key's direct subkey
+   *
+   * @param string $key a session key to be checked. 
+   * @param string $subkey a subkey of session key (i.e $key) to be checked. 
+   * @return boolean
+   */
+  public static function has(string $key, string $value = '') : bool{
+
+    $storage = $_SESSION ?? [];
+    
+    if(is_array($storage) && array_key_exists($key, $storage)){
+      if(func_num_args() > 1){
+        $storage = $storage[$key];
+        return (is_array($storage) && array_key_exists($value, $storage));
+      }
+      return true;
+    }
+    return false;
+  }
+
+  public static function save(string $key, mixed $value){
+    $session = $_SESSION ?? [];
+
+    $session[$key] = $value;
+
+    $_SESSION = $session;
+  }
+
+  public static function overwrite(array $value){
+    $_SESSION = $value;  
+  }
+
+  /**
+   * Returns the value in which a session contains in the application environment
+   *
+   * @param string $key Defines a specific key in session whose value is to be returned 
+   *  - If not supplied, this will return the entire value in the session environment.
+   * @param string|array $subkey If supplied, defines a subkey of $key whose value must be  returned. 
+   *  - This is only useful if the value of the $key provided is an array that has a $subkey. The value 
+   *    of that subkey will be returned. If the subkey does not exist, an empty string is returned.
+   *  - If $subkey is set as an array, all corresponding values of that array will be searched and the value 
+   *    returned as an array list.
+   * @return mixed
+   */
+  public static function value(string $key = '', string|array $subkey = ''){
+
+    $session = $_SESSION ?? [];
+
+    if(func_num_args() === 0) return $session;
+    if(func_num_args() > 1) {
+      if(array_key_exists($key, $session) && is_array($session[$key])){
+        if(is_array($subkey)){
+          $value = [];
+          foreach($subkey as $innerKey){
+            $value[] = $session[$key][$subkey] ?? '';
+          }
+          return $value;
+        }
+        return $session[$key][$subkey] ?? '';
+      }
+      return '';
+    }
+
+    return $session[$key] ?? '';
+
+  }
+
+  /**
+   * Returns the value of the current session as a stdClass object
+   *
+   * @return stdClass
+   */
+  public static function fetch() : stdClass {
+
+    return toStdClass($_SESSION ?? []);
+
+  }
+
+  /**
+   * Returns the Sessionbase class function
+   *
+   * @param bool $object defines if the session base value us returned
+   * @return Sessionbase
+   */
+  public static function base(bool $object = false) : Sessionbase|StdClass {
+
+    $Sessionbase = new Sessionbase;
+
+    if($object) {
+      return toStdClass($Sessionbase->value());
+    }
+
+    return $Sessionbase;
+
+  }
+
+  /**
+   * Remove a key from the session or a subkey from a key that exists in session
+   *
+   * @return boolean true if value is successfully removed
+   */
+  public static function remove(string|bool $key, string $subkey = '') : bool {
+
+    if($key === true){
+      $session  = $_SESSION ?? [];
+      foreach($session as $key => $value){
+        unset($_SESSION[$key]);
+      }
+      return true;
+    }
+
+    $session = Session::value();
+
+    if(func_num_args() === 1){
+
+      
+      if(self::has($key)) {
+        unset($session[$key]);
+      }
+
+      Session::overwrite($session);
+      return !self::has($key);
+    }else{
+      if(self::has($key, $subkey)){
+        unset($session[$key][$subkey]);   
+      }
+      Session::overwrite($session);
+      return !self::has($key, $subkey);
+    }
+
+  }
+
+  static function control() {
+
+    if(Session::has(Sessionbase::KEY)){
+      $session = Session::base()->value();
+  
+      if($session){
+        if(!Csrf::generated() && Session::base()->has('CSRF')){
+          unset($session['CSRF']);
+          Session::base()->overwrite($session);
+        }  
+      }      
+    
+      if(empty($session)){
+        Session::base()->remove(true);
+      }        
     }
 
   }

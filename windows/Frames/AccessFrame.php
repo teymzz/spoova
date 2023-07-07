@@ -5,11 +5,9 @@ namespace spoova\mi\windows\Frames;
 use Session;
 use Window;
 
-//session('user');
-
 class AccessFrame extends Window {
     
-    static function super(){
+    static function frame(){
         /* Session only works when all required data table columns have been created */
         new Session('user', 'usercookie', true);
     }

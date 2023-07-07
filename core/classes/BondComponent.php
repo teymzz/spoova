@@ -133,7 +133,6 @@ abstract class BondComponent{
                                 $form->setAttribute('value', $bondArgs[$counter]['value']);
                             }
                             $counter++;
-                            // print_r($form);
                         }
 
                         //select all csrf tokens

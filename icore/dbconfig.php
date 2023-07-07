@@ -1,10 +1,10 @@
 <?php
-
- // custom db connection file for online and offline environments
-
- $_DBCONFIG['SOCKET'] = (online)? '' : '';
- $_DBCONFIG['PORT'] = (online)? '' : '';
- $_DBCONFIG['SERVER'] = (online)? '' : '';
- $_DBCONFIG['USER'] = (online)? '' : '';
- $_DBCONFIG['PASS'] = (online)? '' : ''; 
- $_DBCONFIG['NAME'] = (online)? '' : ''; 
+ 
+ // custom db configuration files for online and offline
+ 
+ $_DBCONFIG['SOCKET'] = $_ENV['online']? '' : '';
+ $_DBCONFIG['PORT']   = $_ENV['online']? '' : '';
+ $_DBCONFIG['SERVER'] = $_ENV['online']? '' : ''; 
+ $_DBCONFIG['USER']   = $_ENV['online']? '' : ''; 
+ $_DBCONFIG['PASS']   = $_ENV['online']? '' : ''; 
+ $_DBCONFIG['NAME']   = $_ENV['online']? '' : '';

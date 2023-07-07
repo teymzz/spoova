@@ -23,8 +23,8 @@ final class Rex extends Resx implements Resin{
     /**
      * Get raw data of rendered rex file
      * 
-     * @param $url url of markup
-     * @param $callback call back function for markup
+     * @param string $url url of markup
+     * @param Closure|String $callback call back function for markup
      *
      * @return string
      */
@@ -50,8 +50,8 @@ final class Rex extends Resx implements Resin{
     /**
      * Get raw data of rendered rex file
      * 
-     * @param $url url of markup
-     * @param $callback call back function for markup
+     * @param string $url url of markup
+     * @param Closure|String $callback call back function for markup
      *
      * @return Compiler
      */

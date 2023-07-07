@@ -1,10 +1,12 @@
 <?php
 
 use spoova\mi\core\classes\Csrf;
-use spoova\mi\core\classes\DB\DBHandler;
 use spoova\mi\core\classes\Model;
-use spoova\mi\core\classes\FormModel;
+use spoova\mi\core\classes\Notice;
+use spoova\mi\core\classes\Request;
 use spoova\mi\core\classes\FormField;
+use spoova\mi\core\classes\FormModel;
+use spoova\mi\core\classes\DB\DBHandler;
 
 /**
  * This Form class is used to build form inputs
@@ -48,6 +50,7 @@ final class Form extends FormField{
      */
     private static $render = false;
     private static $indexed = '';
+    private static array $castedErrors = [];
     private static $start;
     private static $usedClass;
     function __construct(){}
@@ -81,6 +84,37 @@ final class Form extends FormField{
     }
 
     /**
+     * This method is used to run a callback function 
+     * if the forwarded form request method is post
+     * 
+     * @param String|Closure $callback 
+     *  - When set as string, it is assumed to be a key which must 
+     *    exist in request data before $arg2 is called. 
+     *  - When set as Closure, it is assumed to be the callback called when a post request is sent.
+     * 
+     * @param Closure $arg2 A callback to be called if $arg1 is string
+     * 
+     * @return false|mixed
+     *  - This will always return the data type returned by the callback or a false value.
+     */
+    public static function onpost(String|Closure $arg1, ?Closure $arg2 = null) {
+
+        if(func_num_args() == 1 && ($arg1 instanceof Closure)) {
+            if((new Request())->isPost()){
+                return $arg1();
+            }
+        }elseif(func_num_args() == 2 && (is_string($arg1)) && ($arg2 instanceof Closure)){
+            $Request = new Request;
+            if($Request->isPost()){
+                if($Request->has($arg1)){
+                    return $arg2();
+                }                
+            }
+        }
+        return false;
+    }
+
+    /**
      * Sets a model custom error
      *   - Shorthand for Form::model()->setError();
      *
@@ -102,13 +136,29 @@ final class Form extends FormField{
     /**
      * Returns the form model errors
      * @param array &$inputErrors referenced variable that contains only input errors
-     * @return array
-     * @notice errors are only returned if a form model is set
+     * 
+     * @return array errors are only returned if a form model is defined
      */
     public static function errors(&$inputErrors = []) : array {
  
         if(self::$model) {
             $errs = $inputErrors = self::$model->errors();
+
+            if($errs) {
+                $errors = array_values($errs);
+
+                if(isset($errors[0])){
+
+                    if(is_array($errors[0])){
+                        $errs[':index'] = $errors[0][0] ?? '';
+                    }else{
+                        $errs[':index'] = $errors[0] ?? '';
+                    }
+
+                }else{
+                    $errs[':index'] = '';
+                }
+            }
             if(!$errs && DBStatus::err()) {
                 $errs[':dbe'] = 'database error: something is wrong';
                 $errs[':dbm'] = 'something is wrong';
@@ -118,6 +168,7 @@ final class Form extends FormField{
             if($ecsrf = Csrf::error()) {
                 $errs = [':csrf' => $ecsrf];
             }
+            
             return $errs;
         }
         
@@ -125,14 +176,95 @@ final class Form extends FormField{
     }
 
     /**
+     * Store form error into a unique identifier space. This 
+     * method is used after a form model's authentication method has been called.
+     *
+     * @param string $name cast storage name
+     * @return void
+     */
+    static function castError(string $name = ''){
+
+        $errors = Form::errors();
+        $casts = [];
+
+        if(isset($errors[':csrf'])){
+            $casts['csrf:title'] = $errors[':csrf']['title'];
+            $casts['csrf:info']  = $errors[':csrf']['info'];
+            unset($errors[':csrf']);
+        }
+
+        if(isset($errors[':mod'])){
+            $casts['mod:'] = $errors[':mod'];
+            unset($errors[':mod']);
+        }
+
+        if(isset($errors[':index'])){
+            $casts['index:'] = $errors[':index'];
+            unset($errors[':index']);
+        }
+
+        if($flash = flash(':user-error')){
+            $casts['flash:user-error'] = $flash;
+        }
+
+        $casted = array_values($casts)[0] ?? '';
+        
+        if($casted && is_string($casted)) {
+            $casts['any:'] = $casted;
+        }
+
+        (new Notice)->setFlash('sa','tes');
+
+        $flashes = Notice::flashes();
+
+        foreach($flashes as $flash => $message){
+            if($flash === ':user-error') continue;
+            $casts['flash:'.$flash] = $message;
+        }
+        
+        foreach($errors as $key => $value){
+            if(is_string($value) && !array_key_exists($key, $casts)){
+                $casts[$key] = $value;
+            }elseif(is_array($value) && isset($value[0]) && is_string($value[0])){
+                $casts[$key] = $value[0];
+            }
+        }
+
+        $casts[$name] = $casts;
+
+        self::$castedErrors = $casts;
+
+    }
+
+    /**
+     * Returns a specified error key's value wihtin the specified cast name
+     *
+     * @param string $castName cast identifier name
+     * @param string $castKey cast error identifier key
+     * @return string cast error value
+     */
+    static function castedError(string $castName, string $castKey) : string {
+
+        $casts = self::$castedErrors;
+
+        if(isset($casts[$castName])){
+            $casts = $casts[$castName];
+            if( isset($casts[$castKey]) ){
+                return $casts[$castKey];
+            }
+        }
+
+        return '';
+
+    }
+
+    /**
      * Return the validated data of supplied model's formdata
-     * This returns the loaded data only 
-     * if the data key exists as a property
-     * within the model class. The data returned by 
-     * this method will only be available for validation 
+     * This returns the loaded (mapped inclusive) data only if the data key exists as a property
+     * within the model class. The data returned by this method will only be available for validation 
      * 
-     * @notice - data returns attributes with mapped keys (i.e defined database table fields)
      * @return array
+     *  - data keys are returned using redefined mapped keys (i.e defined database table fields), if any.
      */
     public static function data() : array {
         return self::$model->formdata();
@@ -143,14 +275,76 @@ final class Form extends FormField{
     }
 
     /**
-     * Return a key from validated form data if the key exists
+     * Return a value from validated form data (mapped inclusive) key if the supplied key exists. 
      * 
      * @return string|bool(false)
      */
-    public static function dataKey($key) :string|bool {
+    public static function datakey($key) : array|string|bool {
         $data = self::$model->formdata();
         return $data[$key]?? false;
     }
+
+    /**
+     * Return true if form data has specified key
+     * 
+     * @return bool
+     */
+    public static function haskey(string $key) : bool {
+        $data = self::$model->formdata();
+
+        return array_key_exists($key, $data);
+    }
+
+    /**
+     * Return a value from validated form request data (mapped inclusive). This will trigger an error  
+     * if the key does not exist in the specified formdata and
+     * $strict is set as true which will return an empty string instead
+     * 
+     * @param string $key a key which exists in form data
+     * @return string
+     */
+    public static function dataval(string $key, bool $strict = false) : array|string {
+        $data = self::$model->formdata();
+        if($strict) return $data[$key];
+        return $data[$key] ?? '';
+    }
+
+    /**
+     * This is used for registration where the $userid_key supplied 
+     * is a key in the form request data whose value 
+     * is equivalent to the session userid.  
+     *  - To use this method, a Form model class must have been initialized 
+     *  - This method will call the form model's "isAuthenticated()" method.
+     *
+     * @param string $userid_key userid key name in form request data
+     * @param Closure $callback - A closure function called after the form is authenticated.
+     *  - If authentication is true, the Closure argument will always return an array having a "userid" key along with its 
+     *  corresponding "userid" value required for a creating a user's session. 
+     * 
+     * @return bool true if form is authenticated
+     */
+    public static function register(string $userid_key, Closure $callback) : bool {
+
+        if(Form::haskey($userid_key)){
+
+            $sessid = Form::dataval($userid_key);
+
+            if(Form::isAuthenticated()){
+                $data['userid'] = $sessid;
+                $callback($data);
+                return true;
+            }else{
+                $callback(false);
+            }
+
+        }else{
+            Form::setError('error: unknown session identifier');
+        }
+
+        return false;
+
+    }
+
 
     /**
      * autoload a form builder
@@ -253,6 +447,17 @@ final class Form extends FormField{
     }
 
     /**
+     * Uses the defined Model class already defined to 
+     * return the supplied form request data
+     *  - Model must be defined before this method is called, else it throws error.
+     *
+     * @return array
+     */
+    public static function loadedData(array $data, $mods = []) : array {
+        return self::$model->loadedData();
+    }
+
+    /**
      * Check if form is validated using supplied model rules
      * 
      * @return true
@@ -285,8 +490,9 @@ final class Form extends FormField{
     /**
      * Uses model save method to save data
      * 
-     * @param $data array of column and new value key pairs
-     * @show_error enable or disables database error
+     * @param array $data array of column and new value key pairs
+     * @param bool $show_error enable or disables database error
+     * 
      * @return bool
      */
     public static function isSaved(array $data = [], bool $show_error = false) : bool {

@@ -42,6 +42,20 @@ use spoova\mi\core\classes\Slicer;
     }   
 
     /**
+     * This function compiles and directly displays rex template files with no extended functionalities.
+     * 
+     * {@See Rex::compile()}
+     *
+     * @param string|array $arg1 url or arguments
+     * @param array|string $arg2 arguments or url
+     * @return void
+     */
+    function rexcompile(array|string $arg1 = [], array|string $arg2 = '') {
+        $compiler = new Compiler();
+        echo $compiler->compile(...func_get_args());
+    }   
+
+    /**
      * Pulls out the raw content of a rex file
      *
      * @param string $file rex file path within WIN_REX directory.

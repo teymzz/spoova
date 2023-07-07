@@ -216,8 +216,10 @@ a.inherit:hover {
     white-space: nowrap;
     text-align: center;
     justify-content: center;
+    padding: 4px 6px;
     min-height: 30px;
     border: none;
+    background-color: inherit;
 }
 
 :where(button.flex-full:active){

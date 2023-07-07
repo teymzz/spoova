@@ -29,17 +29,28 @@ class MiSQL extends DBBridge{
       $this->isFailed = false;
 
       mysqli_report(MYSQLI_REPORT_STRICT);
-      $db = @(new mysqli($this->DBSERVER, $this->DBUSER, $this->DBPASS, $this->DBNAME, intval($this->DBPORT), $this->DBSOCKET));
-      
 
-      if(!$db){
-        throw new mysqli_sql_exception(mysqli_connect_error());
+      $configs = [$this->DBSERVER, $this->DBUSER, $this->DBPASS, $this->DBNAME, $this->DBSOCKET];
+      $configs = (array_unset($configs, ''));
+
+      if(!empty($configs)){
+        $db = @(new mysqli($this->DBSERVER, $this->DBUSER, $this->DBPASS, $this->DBNAME, intval($this->DBPORT), $this->DBSOCKET));
+  
+        if(!$db){
+          throw new mysqli_sql_exception(mysqli_connect_error());
+        }
+        $this->dbConnection = true;
+        $this->conn = $db;
+        $this->currentDB = $this->DBNAME;
+        return true;
       }
 
-      $this->dbConnection = true;
-      $this->conn = $db;
-      $this->currentDB = $this->DBNAME;
-      return true;
+      $this->dbConnection = false;      
+      $this->isFailed = true;
+      $this->conResponse = "connection failed: no connection parameters defined!";  
+      
+      return false;
+
     }catch(\mysqli_sql_exception $e){  
       $this->dbConnection = false;      
       $this->isFailed = true;
@@ -203,18 +214,23 @@ class MiSQL extends DBBridge{
     $data = $this->data;
     $data = !is_array($data)? array() : $data;
 
-    if(count($data)>0) { call_user_func_array(array($stmt,'bind_param'), $bindVals); }
+    if(count($data) > 0) { call_user_func_array(array($stmt,'bind_param'), $bindVals); }
     
     if($stmt->execute()){
       $this->num_rows = $stmt->num_rows();
       $result = $stmt->get_result();
       $assocs = array();
          $i = 0;
-       while($assoc = $result->fetch_array(MYSQLI_ASSOC)){
-          $assocs[] = $assoc;
-          $i++;
-         }
+
+      while($assoc = $result->fetch_array(MYSQLI_ASSOC)){
+        $assocs[] = $assoc;
+        $i++;
+      }
+
+      $result->free_result();
+
       $this->num_rows = $i;
+
       if($i > 0){
        return $assocs;
       }else{
@@ -232,8 +248,8 @@ class MiSQL extends DBBridge{
   public function update_query($sql) : bool {
     
     if(!($con = $this->conn)){ return false; }
-    $sqL        = MyIsset($sql['sql']);
-    $sqT        = MyIsset($sql['append']);
+    $sqL = $sql['sql'] ?? '';
+    $sqT = $sql['append'] ?? '';
     $dataString = null;
 
     if(isset($sql['where'])){

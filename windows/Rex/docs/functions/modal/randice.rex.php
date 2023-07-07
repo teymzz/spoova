@@ -1,1 +1,0 @@
-returns random hashed string of 5 characters from supplied string

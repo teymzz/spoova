@@ -11,13 +11,15 @@ class MkRex extends MkBase{
 
         $rexfolder = 'windows\Rex';
         $args = static::$args;
-        
+
         if((!$args) || (count($args) > 1 )) {
              return $this->display('Invalid arguments count!');
         }
 
         $path = $args[0];
 
+        Cli::textView(Cli::danger(Cli::emo('point-list').' add:rex '.Cli::warn($path)), 0, '|1');
+        
         $exts = ['css','js', 'php'];
 
         $ext = 'php';
@@ -33,7 +35,8 @@ class MkRex extends MkBase{
 
         if(!in_array($ext, $exts)){
             Cli::break(1);
-            $this->display('Invalid extension "'.Cli::warn($ext).'" supplied for rex file');
+            Cli::textView(Cli::error('invalid template extension "'.Cli::warn($ext).'" supplied'));
+            Cli::break(2);
             return false;
         }
 
@@ -55,17 +58,22 @@ class MkRex extends MkBase{
             
             if( $Filemanager->openFile(true, domroot($fullpath)) ){
     
-                $this->display('Rex file created successfully');
-                $this->display('>> '.$filepath, 2);
+                Cli::break(1);
+                Cli::textView(Cli::success('template created successfully'), '|2', '|2');
+                Cli::textView(Cli::emo('ribbon-arrow', '1|1').Cli::warn($filepath));
+                Cli::break(2);
                 return true;
     
             } else {
-    
-                $this->display($filename.' file creation failed');
+                Cli::break(1);
+                Cli::textView(Cli::error($filename.' file creation failed'));
+                Cli::break(2);
     
             }
         } else {
-            $this->display('File already exists: '.$fullpath); 
+            Cli::break(1);
+            Cli::textView(Cli::danger('File exists: ').$fullpath);
+            Cli::break(2); 
         }
 
         return false;

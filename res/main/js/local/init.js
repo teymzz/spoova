@@ -9,4 +9,4 @@ loadFuncs([
   'dataScroll',
   'hardFormFill', 
   'formValidator', 
-])
+], 10)

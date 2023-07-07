@@ -16,16 +16,16 @@ class Install extends Entry{
 
     function __construct($args = []){
 
-
         $method = trim( ($args[0]?? ' ') );
         $folname = trim( ($args[1]?? ' ') );
-        //$dburl  = trim( ($args[2]?? ' ') );
 
-        if(count($args) > 2){
+die('RAN---------------------');
+        if(is_string($args) || (is_array($args) && count($args) > 2)){
             $this->display(Cli::danger(Cli::emo('point-list', '|1'). 'install'));
-            Cli::textView(Cli::error("invalid number of arguments count supplied."), 0, "|2");
+            Cli::textView(Cli::error("invalid number of arguments count supplied.".$args), 0, "|2");
+            yield false;
+            return false;
         }
-
         if(!$method || ($max = (count($args) > 2))){
             if(empty($max)) $this->display(Cli::danger(Cli::emo('point-list', '|1'). 'install'));
             $this->display('Syntax :'.self::mi('install', '','','').Cli::warn('<args>', 1), 1);
@@ -50,8 +50,6 @@ class Install extends Entry{
         }
 
         if($method === 'dbname') {
-            //$newargs = [$dbname];
-            //if($dburl) array_push($newargs, $dburl);
             //create a database name for default or custom folder dbconfig connection
             $this->install_dbname($folname);
             return;            
@@ -77,8 +75,6 @@ class Install extends Entry{
      */
     public function app()
     {   
-        //Cli::animeType('roller');
-        //$this->display(Cli::color(Cli::emo('point-list','|1'). "Install App", 'green'));
         
         // Text 1: start test animation
         yield from Cli::play(5, 2, 'Installing application');
@@ -112,7 +108,7 @@ class Install extends Entry{
 
             // zip project file into core/custom/spv directory
             $Filemanager->setUrl(docroot);
-            $Filemanager->zipUrl(_core.'custom/spv');
+            $Filemanager->zipUrl(_core.'custom/spv', ['backup','.git']);
             
             Cli::loadTime(2000);
 

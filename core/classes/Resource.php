@@ -82,7 +82,11 @@ class Resource Extends Rescom{
     }
     
     /**
-     * Undocumented function
+     * 
+     * @deprecated version 2.5
+     * Sets the resource class to ignore path processing. This was previously used
+     * to start monitoring a resource folder from the root of the application. This 
+     * functionality is no longer required
      *
      * @return void
      */
@@ -118,11 +122,11 @@ class Resource Extends Rescom{
 
     /** 
      * filters out the extension of a file path using supplied extension (::: + ext) if no extension is found
-     * @param  $url referenced variable url to be sorted
-     * @param $colons reference variable to fetch customized or coloned extension
+     * @param string|null $url referenced variable url to be sorted
+     * @param string|null $colons reference variable to fetch customized or coloned extension
      * @return string
     */
-    private static function getExt(&$url,&$colons = null,&$attrs = null){
+    private static function getExt(&$url,&$colons = null, &$attrs = null){
         
         $attrs = explode("=>",$url);
         if(count($attrs) > 1){

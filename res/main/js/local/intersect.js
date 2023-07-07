@@ -26,7 +26,7 @@ class Intersect {
         };
     
         let sectOptions = {...defaultOptions, ...newOptions}
-  
+
         const observer = new IntersectionObserver((entries)=>{
   
           entries.forEach(entry => {

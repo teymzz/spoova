@@ -1,7 +1,85 @@
 <?php
 
-//check php environment
-function isCli(){ return (php_sapi_name() == 'cli') ; }
+/* App Basic functions - Dependent on defs.php */
+use spoova\mi\core\classes\FileManager;
+
+/**
+ * Check php console environment
+ *
+ * @return boolean
+ */
+function isCli() : bool{ 
+    return (php_sapi_name() == 'cli') ; 
+}
+
+/**
+ * Return app environment value
+ *
+ * @param string $value
+ * @return mixed
+ */
+function appenv($value = ''){
+
+    return $_ENV[$value] ?? '';
+    
+}	
+
+if(!function_exists('env')){
+    /**
+     * Reads the last data obtained from Filemanager::loadEnv() method
+     * @param string $key an access key
+     * @param bool|string $super defines environment where data should be pulled.
+     *  - When $super is not defined or set as false, data returned may be from global scope and if not found, from Filemanager::env_data() 
+     *  - When $super is set as true, $key must exist as a global key only or empty value is returned.
+     *  - When $super is set as a string, $key must be a subkey of $super or empty value is returned.
+     * @return array|string
+     */
+    function env(string $key, bool|string $super = false) : array|string {
+    
+        if((func_num_args() === 1) | ($super === false)){
+        $data = FileManager::env_data();
+        return $_ENV[$key] ?? $data[$key] ?? '';
+        }else{
+        if($super === true){
+            return $_ENV[$key] ?? '';
+        }else{
+    
+            if(isset($_ENV[$super])){
+                return $_ENV[$super][$key] ?? '';
+                }
+    
+                return '';
+            }
+        }
+    
+    
+    }
+} 
+
+/**
+ * Return app environment constants value
+ *
+ * @param string $value
+ * @return mixed
+ */
+function appcon($value = ''){
+
+    $env['base-url'] = baseUrl;
+    $env['base-uri'] = baseUri;
+    $env['pathlink'] = pathlink;
+    $env['docdir']   = docdir;
+    
+    if(!($_ENV['constants'] ?? '')) {
+        return $env[$value]?? '';
+    }
+    
+    if(in_array($value, $env)){
+        return $_ENV['constants'][$value] ?? $env[$value];
+    }
+    
+    return $_ENV['constants'][$value] ?? '';
+    
+} 
 
 //define function undefined
 function _define($name, $value){ if(!defined($name)) define($name,$value); }

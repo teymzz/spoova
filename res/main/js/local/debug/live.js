@@ -110,7 +110,7 @@ if(typeof Res === 'undefined'){
 
                 'Debug'   : 'js/local/debug/debug.js',
                 'Livejs'  : 'js/local/debug/live.js',
-                'Livecss' : 'css/local/res.css',
+                'Livecss' : 'css/local/debug/res.css',
             }
 
         }
@@ -699,6 +699,12 @@ if(typeof Res === 'undefined'){
                                                 if(allowPop){
                                                     let notice = `${error} <span class="fb-6"><span class="bi-file-code"></span> ${(mobi.currentUrl)}</span> <br> fixed <span class="bi-check-circle"></span>`;
                                                     rex.pop(rex.makeDiv(notice, 'spoova-notice-fix'));
+                                                    let cssdebugger = document.querySelector('link[x-debug="spoova"]');
+                                                    if(cssdebugger) {
+                                                        setTimeout(() => {
+                                                            cssdebugger.remove();
+                                                        }, 1000)
+                                                    }
                                                 }
                                                 rex.clear(function(){
 

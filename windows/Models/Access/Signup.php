@@ -11,7 +11,6 @@ class Signup extends AccessModel {
     protected $lastname;
     protected $user;
     protected $pass;
-    protected $email;
 
     /**
      * Validation rules
@@ -21,11 +20,24 @@ class Signup extends AccessModel {
     public function rules(): array {
 
         return [
-            'firstname' => [SELF::RULE_REQUIRED],
-            'lastname'  => [SELF::RULE_REQUIRED],
-            'email'     => [SELF::RULE_REQUIRED, SELF::RULE_UNIQUE],
-            'user'      => [SELF::RULE_REQUIRED, SELF::RULE_UNIQUE],
-            'pass'      => [SELF::RULE_REQUIRED],
+            'firstname' => [SELF::RULE_REQUIRED, SELF::RULE_MIN => 2],
+            'lastname'  => [SELF::RULE_REQUIRED, SELF::RULE_MIN => 2],
+            'user'      => [SELF::RULE_REQUIRED, SELF::RULE_EMAIL, SELF::RULE_UNIQUE],
+            'pass'      => [SELF::RULE_REQUIRED, SELF::RULE_MIN => 6],
+        ];
+
+    }
+    
+    /**
+     * input fields with relative database column name key pairs 
+     *
+     * @return string
+     */
+    public static function mapform(): array {
+
+        return [
+            'user' => 'email',
+            'pass' => 'password'
         ];
 
     }
@@ -33,7 +45,7 @@ class Signup extends AccessModel {
     public function isAuthenticated(): bool
     {
         
-       return Form::isSaved(['password' => password_hash(Form::datakey('pass'), PASSWORD_DEFAULT)]);
+       return Form::isSaved(['password' => password_hash(Form::datakey('password'), PASSWORD_DEFAULT)]);
 
     }
 

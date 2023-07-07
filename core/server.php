@@ -26,6 +26,8 @@ if( !defined('server') ) {
 	if(!defined('online')) define('online', !(in_array(remote,['127.0.0.1','::1','']) ||
 		(empty($_SERVER['DOCUMENT_ROOT']))));
 
+	$_ENV['online'] = online; //set online value
+
 	//apply errors for environment
 	ini_set('display_errors', !online);
 

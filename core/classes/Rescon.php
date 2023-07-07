@@ -114,10 +114,6 @@ abstract class Rescon extends Resx{
      */
     public static function isOnUse(){
       print self::$off;
-      //if(self::$off and self::$watched)
-      if(self::$watched > 1){
-        
-      }
       return (!self::$off || self::$watched > 1)? true : false;
     }
 
