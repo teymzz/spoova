@@ -27,7 +27,7 @@
 		<div class="box-full">
 			<div class="grid-center vh-full">
 				<div class="inner grid-center rad-2" style="min-width:320px; color: black;">
-					<img src="<?= Rexit::mapp('images/404.png') ?> ?>" height="100%" width="100%" alt="404 error">
+					<img src="<?= Rexit::mapp('images/404.png') ?>" height="100%" width="100%" alt="404 error">
 				</div>
 			</div>
 	 	</div>  
