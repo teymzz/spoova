@@ -88,8 +88,6 @@ class MkRoute extends MkBase{
         $Filemanager = new FileManager;
 
         /* create class directory & class file */
-        
-
         if(!is_file($filePath) || ($lastArg == '-O')){
             
             if($Filemanager->openFile(true, $filePath)) {
@@ -102,13 +100,13 @@ class MkRoute extends MkBase{
     
                         self::call(\$this,
                             [
-                                window('root') => 'root'
+                                lastCall() => '$rexName'
                             ]
                         );
     
                     }
     
-                    function root() {
+                    function $rexName() {
     
                         //self::load('$rexName', fn() => compile() );
                         
