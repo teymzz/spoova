@@ -4,6 +4,7 @@ namespace spoova\mi\core\commands\Make;
 
 use spoova\mi\core\commands\Cli;
 use spoova\mi\core\classes\FileManager;
+use spoova\mi\core\classes\Url;
 
 /**
  * This class is an alias for MKWinRoute
@@ -30,6 +31,8 @@ class MkRoute extends MkBase{
 
         /* class subnamespace in Routes if subnamespace exists */
         $classSpace = to_namespace($classDir); 
+        $url = new Url;
+        $classSpace = $url->path($classSpace)->pathmod(fn($val) => ucfirst($val));
         
         /* class namespace starting from windows folder  */
         $routedSpace  = to_namespace(WIN_ROUTES.$classSpace);
@@ -44,7 +47,7 @@ class MkRoute extends MkBase{
         $fileLoc   = $fileDir.$className.'.php'; /* relative file path */
 
         /* window routes' absolute file path */
-        $filePath  = domroot($fileLoc);        
+        $filePath  = domroot($fileLoc);     
         
         Cli::textView(Cli::danger(Cli::emo('point-list').' add:routes ').Cli::warn($fileLoc));
         Cli::break(2);
@@ -89,11 +92,16 @@ class MkRoute extends MkBase{
 
         /* create class directory & class file */
         if(!is_file($filePath) || ($lastArg == '-O')){
-            
+
+            $rexName = strtolower($className); //set className for method...
+            $tmpName = str_replace(['/','\\'], '.',strtolower($classDir.'/'.$className));
+
+            //create class file if not exist, return false if not created      
             if($Filemanager->openFile(true, $filePath)) {
 
-                $rexName = strtolower($className);
-    
+                $rexName = strtolower($className); //set className for method...
+                $tmpName = str_replace(['/','\\'], '.',strtolower($classDir.'/'.$className));
+            
                 $content = <<<CContent
                 
                     public function __construct(){
@@ -108,7 +116,8 @@ class MkRoute extends MkBase{
     
                     function $rexName() {
     
-                        //self::load('$rexName', fn() => compile() );
+                        //self::addRex();
+                        //self::load('$tmpName', fn() => compile() );
                         
                     }
     
