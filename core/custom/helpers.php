@@ -157,7 +157,8 @@ if(!function_exists('route')){
 
 if(!function_exists('lastCall')){
   /**
-   * Return the last called route on a logic
+   * Return the last called route on a logic. If there is no last called url, 
+   * it will return the window url root name.
    *
    * @param string $routeName (optional) new route path to be added to last called route
    *  - Note: This will not convert dots to slashes.
@@ -165,7 +166,11 @@ if(!function_exists('lastCall')){
    * @return string
    */
   function lastCall(string $routeName = ''): string {
-    return Window::lastCall().$routeName;
+    $lastCall = Window::lastCall() ?: window(':');
+    if($routeName && ($routeName[0] !== '/')) {
+      $routeName = '/'.$routeName;
+    }
+    return $lastCall.$routeName;
   }
 }
 
