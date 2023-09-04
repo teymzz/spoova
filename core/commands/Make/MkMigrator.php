@@ -19,7 +19,7 @@ class MkMigrator extends MkBase{
         $arg1 = $args[0] ?? '';
         $arg2 = $args[1] ?? '';
 
-        $filename = $arg1;      
+        $filename = $arg1; 
 
         $class = $arg1;
         $class = ltrim(to_frontslash($class, true), '/');
@@ -27,6 +27,13 @@ class MkMigrator extends MkBase{
         $classDir  = dirname($class);
         $classDir  = ($classDir == '.')? '' : $classDir;
         $className = basename($class);
+
+        if($className == ''){
+
+          Cli::textView(Cli::danger(Cli::emo('point-list').' add:migrator '), 0, '|2');
+          Cli::textView(Cli::danger('Error:')." ".Cli::warn('no valid migration file name is supplied!'), '2', '|2');
+          return false;
+        }
 
         Cli::textView(Cli::danger(Cli::emo('point-list').' add:migrator ').Cli::warn($filename));
         Cli::break(2);
@@ -75,7 +82,7 @@ class MkMigrator extends MkBase{
        
         if($Filemanager->openFile(true, $filepath)) {
 
-            $tableName = 'table_name';
+            $tableName = $className;
 
             if(strtolower(substr($className, 0, 7)) === 'create_'){
 
@@ -96,6 +103,8 @@ class MkMigrator extends MkBase{
                 DBSCHEMA::CREATE(\$this, function(DRAFT \$DRAFT){
 
                     //\$DRAFT::VARCHAR();
+
+                    return \$DRAFT;
 
                 });
 
