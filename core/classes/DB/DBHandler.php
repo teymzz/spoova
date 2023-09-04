@@ -388,7 +388,7 @@ trait DBQuery{
    *
    * @return true if query is successful else, it returns false
    */
-  public function process(){
+  public function process() : bool {
     if($this->sqlquery == null){ return $this->call_error("Error: no query not Supplied"); return false; }
 
     $this->conn->buildBind($this->data, $this->sqlquery);
@@ -496,31 +496,28 @@ trait DBSelect {
 
       /**
        * Returns the results of read / fetched data directly from source.
-       * 
-       * Note: coloned integers are strings that contains integers that have colon (:) as prefix ( e.g ':20' )
+       *  - Note: coloned integers are strings that contains integers that have colon (:) as prefix ( e.g ':20' )
        *
-       * @param int|string $param - options [null | int | ':count' | ':shuffle']
-       * @param string $key as [sub key of index $param in data result || ':shuffle'] 
+       * @param int|string $param - options [null | int | ':count' | ':shuffle' | ':MAX_LENGTH' (e.g ':2')]
+       * @param string $key optional [subkey|':shuffle']
+       *  - where $key is data column name existing as a subkey of data[$param] 
+       *  - where ':shuffle' is the same as when $param is set as ':shuffle'
        * @return mixed
        * 
-       *  - (no arguments) => array of data results is returned.
+       *  -     @return int 
+       *  - -   when counted (i.e $param = ':count')
+       *  -     @return array
+       *  - -   when no arguments supplied, returns all data
+       *  - -   when data shuffled (i.e ($param = ':shuffle')) 
+       *  - -   when data shuffled (i.e ($param = '', $key = ':shuffle'))
+       *  - -   when data indexed (i.e ($param is a number preceded by colon character))
+       *  -     @return string 
+       *  - -   when $param is a valid data index and $key is a valid column name.
        * 
-       *  - ($param == ':shuffle' || $key == ':shuffle') => any array data returned is shuffled.
-       * 
-       *  - ($param == null and $key == ':shuffle') => any array data returned is shuffled.
-       * 
-       *  - ($param == ':count') => the total count of results found is returned.
-       * 
-       *  - if the first argument $param is A valid integer, the corresponding value of the array key $param in results is returned.
-       *    In this case value returned in never shuffled even if second argument is set as ':shuffle'
-       * 
-       *  - if the first argument is a coloned integer (as explained above), then only the number of integer behind the prefix is returned
-       *    For example, if data obtained is 50, if $param == ":20", then only 20 will be returned out of the 50 data results. 
-       *    If a second argument of ':shuffle' is applied, then data returned will be shuffled.
        */
       public function results($param = '', string $key = ''){
         $results = $this->results; //array
-        $count   = count($results);
+        $count   = count($results); //int
         
         //return results if no argument is supplied
         if(func_num_args() === 0){
@@ -532,10 +529,12 @@ trait DBSelect {
         	return $count;
         }
         
-        //return results if no argument is supplied
+        //return shuffled results if : 
+        // case1: $param is set as ':shuffle' or 
+        // case2: $param is empty string and $key is set as ':shuffle'
         if( ($param === ':shuffle') || ($param === '' && $key === ':shuffle') ){
           shuffle($results);
-          return $results;
+          return $results; //array
         }        
         
         //resort argument by splitting coloned integers
@@ -559,24 +558,29 @@ trait DBSelect {
 
         }
         
-        //if $param is invalid or does not exist in result
+        //if $param is invalid or does not exist in result, return empty array
         if(!is_numeric($param) || !array_key_exists($param, $results)) return [];
         
-        //if param is not formatted to get first indices, resolve as an index 
+        //if $param is not an integer with a colon as prefix, 
+        // resolve as a data's index (or key) 
         if(!isset($firstIndices)){
           
           if(!empty(trim($key))) {
             if(array_key_exists($key, $results[$param])){
-              
-              return $results[$param][$key];
+              //if both $param and $key is supplied, return the value of $key where 
+              // $key is a subkey of $param
+              return $results[$param][$key]; //string
             }
             return [];
           }
-          return $results[$param];
+
+          //if $key is not supplied, return value of $param
+          return $results[$param]; //array
 
         } else {
           
-          //if is indices type, solve as array of first indices / fetches
+          //if is $param is an integer preceded by colon, 
+          //get the first array keys using the maximum length of $param.
           $iresults = []; $i = 0;
 					foreach($results as $result){
 						if($i === $param){ break; } //where $param is indices stopping point
@@ -585,7 +589,7 @@ trait DBSelect {
 					}
 					
 					if($key === ':shuffle') shuffle($iresults);
-          return $iresults;
+          return $iresults; //array
           
         }
 
