@@ -48,13 +48,15 @@ class Syntax extends Entry{
 
     public function syntaxes() : array {
 
+        print "\033[41m\033[33mHey\033[0m";
+
         return [
 
             'add'            => 'add:[window|route|model|api|frame|rex] [path] [extends?] [-O?]',
             'add:api'        => 'add:api <path> [extends?] [\subdir] [-O?]',
             'add:frame'      => 'add:frame <path> [extends?] [-O?]',
             'add:model'      => 'add:model <path> [-O]',
-            'add:api'        => 'add:route <path> [extends?] [\subdir] [-O?]',
+            'add:route'      => 'add:route <path> [extends?] [\subdir] [-O?]',
             'add:rex'        => 'add:rex [path.?]<filename>',
             'add:window'     => 'add:window <path> [extends?] [-O?]',
             'add:route'      => 'add:route <path> [extends?] [-O?]',
