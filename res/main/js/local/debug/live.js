@@ -292,6 +292,8 @@ if(typeof Res === 'undefined'){
             mobi.offline = (mobi.enviromodal == "offline");
             mobi.debug = mobi.offline ? mobi.Offline : mobi.Online;
 
+            let cycle = 0;
+
             setTimeout( () => {
                 
                 url = this.defaults.currentUrl;
@@ -318,7 +320,8 @@ if(typeof Res === 'undefined'){
                                 htmlRefined : rex.filterScript(response.responseText),
                                 instance   : 0,
                                 status     : response.status,
-                                terminate  : 0
+                                terminate  : 0,
+                                cycle    : 0
                             };
 
                             rex.info('Live server (mode) >> online');
@@ -342,12 +345,12 @@ if(typeof Res === 'undefined'){
         }
 
         stream(base) {
-
+            
             let defaults, content, mobi, debug, rex = this, offline;
 
             //declare debug variables
             let allowPop = false, allowConsole = false;
-            
+
             //set configuration objects
             content  = base.htmlRefined;
             defaults = this.defaults;
@@ -707,7 +710,8 @@ if(typeof Res === 'undefined'){
                                                     }
                                                 }
                                                 rex.clear(function(){
-
+                                                    
+                                                    base.cycle = 0;
                                                     rex.info('Live server (watch) >> resumed')
 
                                                 })
@@ -780,7 +784,7 @@ if(typeof Res === 'undefined'){
                                         
                                         //* Handle new error
                                         if(mobi.newError){
-
+                                            
                                             let error1 = error.charAt(0).toUpperCase() + error.slice(1);
                                             let error2 = error; let realError;
                                             let split1, split2;
@@ -804,6 +808,7 @@ if(typeof Res === 'undefined'){
                                         }
 
                                         if(mobi.oldError != mobi.newError){
+                                            base.cycle = 0;
                                             if(offline){
                                                 if(allowPop){
                                                     if(oldNotice) oldNotice.remove();
@@ -849,13 +854,27 @@ if(typeof Res === 'undefined'){
                                 }
                             }  
 
+                            let maxCycle = 1880; // 30 minutes maximum
+                            let timerCycle = maxCycle - 20;
+                            let timeLeft   = maxCycle - base.cycle;
+
+                            if(base.cycle > timerCycle){
+                                if(timeLeft < 1){
+                                    rex.mobi.terminated = true;
+                                    rex.clear().error('Live server terminated >> maximum time elapsed')
+                                }else{
+                                    rex.clear().info(`Live server ends in ${timeLeft} seconds.`);
+                                }
+                            }
+
                             if(!rex.mobi.terminated){
 
                                 rex.mobi.startServer(() => {
-                                    
+
+                                    base.cycle++;
                                     rex.stream(base)
     
-                                }, 1000)                            
+                                }, 1000);                            
 
                             }
                             
