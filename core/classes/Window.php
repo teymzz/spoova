@@ -4,12 +4,13 @@ use spoova\mi\core\classes\Rex;
 use spoova\mi\core\classes\Ajax;
 use spoova\mi\core\classes\Compiler;
 use spoova\mi\core\classes\EInfo;
+use spoova\mi\core\classes\Notice;
 use spoova\mi\core\classes\Request;
+use spoova\mi\core\classes\Container;
 use spoova\mi\core\classes\UrlMapper;
 use spoova\mi\core\classes\Controller;
+use spoova\mi\core\classes\Enums\shutter;
 use spoova\mi\core\classes\constants\CASTED;
-use spoova\mi\core\classes\Container;
-use spoova\mi\core\classes\Notice;
 
 /**
  * Controls view from windows frame
@@ -45,6 +46,9 @@ class Window extends Controller{
       
       #close window
       'close' => false, 
+
+      #sleep window
+      'sleep' => false, 
       
       #pend close window
       'pend' => false,
@@ -73,6 +77,24 @@ class Window extends Controller{
         'base' => [], 
         'path' => [],
         'e404' => []
+      ],
+
+      /**
+       * set headers accepted or rejected
+       */
+      'headers' => [
+        'accepted' => [],
+        'rejected' => [],
+      ],
+
+      /**
+       * Convert other response headers from default config
+       */
+      'translations' => [
+
+          '404' => 'error.404',
+          '302' => 'error.302',
+
       ]
 
   ];
@@ -82,6 +104,7 @@ class Window extends Controller{
   public const ARG = ':ARG';
   public const PARAMS = ':ARG';
   public const ONCALL = ':ONCALL';
+  public const ONSHUT = ':SHUTDOWN';
   public const STRICT = ':STRICT';
 
   /**
@@ -110,6 +133,7 @@ class Window extends Controller{
 
   private static string $lastCall = '';
   private static bool $isPended = false;
+  private static bool $transmute = false;
   private static string $pender = '';
 
   /**
@@ -424,6 +448,48 @@ class Window extends Controller{
   }
 
   /**
+   * Set headers accepted for a route
+   *
+   * @param array|int $headers
+   * @param boolean $reset
+   * @return void
+   */
+  final public static function acceptHeaders(array|int $headers, bool $reset = false){
+    
+    $headers = (array) $headers;
+
+    if($reset){
+      self::$wvm['headers']['accepted'] = $headers;
+    }else{
+      foreach($headers as $header){
+        self::$wvm['headers']['accepted'][] = $header;
+      }
+    }
+
+  }
+
+  /**
+   * Set headers rejected for a route
+   *
+   * @param array|int $headers
+   * @param boolean $reset
+   * @return void
+   */
+  final public static function rejectHeaders(array|int $headers, bool $reset = false){
+    
+    $headers = (array) $headers;
+
+    if($reset){
+      self::$wvm['headers']['rejected'] = $headers;
+    }else{
+      foreach($headers as $header){
+        self::$wvm['headers']['rejected'][] = $header;
+      }
+    }
+
+  }
+
+  /**
    * Resolves a parent url root name
    *
    * @param Window $class
@@ -432,11 +498,14 @@ class Window extends Controller{
    *    (array) => as variables
    *    (bool) =>  close window 
    * 
-   * @param bool $reclose close window when $close is array
+   * @param bool $close closes window
+   *   - shutter::open or 0 or false pends shutter
+   *   - shutter::close or 1 or true closes shutter
+   *   - shutter::sleep or 2 sleeps shutter (live mode)
    * 
    * @return void
    */
-  final protected static function rootcall(Window $instance, array $windows = [], bool $close = true){               
+  final protected static function rootcall(Window $instance, array $windows = [], bool|SHUTTER $close = true){               
     
     if($instance->resolved()) return;
 
@@ -445,7 +514,7 @@ class Window extends Controller{
     if(method_exists($class,'loadRoutes')) $class::loadRoutes($instance);
     $reflect = new \ReflectionClass($class);
 
-    self::windowShutterVariables($Request, $windows, $variables, $ONCALL, $arguments, $STRICT);
+    self::windowShutterVariables($Request, $windows, $variables, $ONCALL, $SHUTDOWN, $arguments, $STRICT);
 
     static::integrateAPI();
 
@@ -500,6 +569,8 @@ class Window extends Controller{
 
           if($ONCALL instanceof \Closure) $ONCALL();
 
+          self::validate_response_headers($close, $SHUTDOWN);
+
           if($reflect->getMethod($method)->isStatic()){
             $Container::$method(...$arguments);
           } else {
@@ -521,6 +592,8 @@ class Window extends Controller{
             static::$isPended = false;
             static::$pender = static::$isPended? 'root' : '';
             if($ONCALL instanceof \Closure) $ONCALL();
+            self::validate_response_headers($close, $SHUTDOWN);
+
             $Container = new Container($win, ...$arguments);
             return $instance->resolved();
           }
@@ -532,6 +605,8 @@ class Window extends Controller{
             static::$isPended = false;
             static::$pender = static::$isPended? 'root' : '';
             if($ONCALL instanceof \Closure) $ONCALL();
+            self::validate_response_headers($close, $SHUTDOWN);
+
             $Container = new Container(get_class($method), ...$arguments);
           //  new $method(...$arguments);
             return $instance->resolved();
@@ -558,7 +633,9 @@ class Window extends Controller{
         static::$isPended = !$close;
         static::$pender = static::$isPended? 'root' : '';
 
-        if($ONCALL instanceof \Closure) $ONCALL();          
+        if($ONCALL instanceof \Closure) $ONCALL();  
+        self::validate_response_headers($close, $SHUTDOWN);
+
         if($reflect->getMethod($method)->isStatic()){
           $Container = new Container($class);
           $Container::$method(...$arguments);
@@ -572,7 +649,7 @@ class Window extends Controller{
       return $instance->resolved();
     }
 
-    if($close) self::close();
+    self::shutdown($close, $SHUTDOWN);
 
   }  
 
@@ -580,16 +657,19 @@ class Window extends Controller{
   /**
    * Include different acceptable routes on windows path url
    * The current page url (window + path) should match one of the lists
-   * of supplied permitted urls else a 404 error page is activated
+   * of supplied permitted urls else a 404 error page is activated.
    *
-   * @param Window $class
-   * @param array $windows
+   * @param Window $class window instance
+   * @param array $windows accepted routes and route conditions
    * @param bool $close 
+   *   - shutter::open or 0 or false pends shutter
+   *   - shutter::close or 1 or true closes shutter
+   *   - shutter::sleep or 2 sleeps shutter (live mode)
    * @notice all preloads have the highest order of execution
    * 
    * @return void|bool
    */
-  final protected static function call(Window $instance, array $windows = [], bool $close = true){   
+  final protected static function call(Window $instance, array $windows = [], bool|SHUTTER $close = true){   
 
     if($instance->resolved()) return;
 
@@ -599,7 +679,7 @@ class Window extends Controller{
     if(method_exists($class,'loadRoutes')) $class::loadRoutes($instance);
     $reflect = new \ReflectionClass($class);
 
-    self::windowShutterVariables($Request, $windows, $variables, $ONCALL, $arguments, $STRICT);
+    self::windowShutterVariables($Request, $windows, $variables, $ONCALL, $SHUTDOWN, $arguments, $STRICT);
 
     static::integrateAPI();
 
@@ -661,12 +741,34 @@ class Window extends Controller{
           static::$isPended = !$close;
           static::$pender = static::$isPended? 'call' : '';
           if($ONCALL instanceof \Closure) $ONCALL();
+          self::validate_response_headers($close, $SHUTDOWN);
 
-          if($reflect->getMethod($method)->isStatic()){
-            $Container::$method(...$arguments);
+          if(self::inReservedMethods($method)){
+            
+            $polyfills = $Container->polyfill($method);
+
+            if(!array_key_exists($method, $polyfills)){
+              self::close();
+              return false;
+            }
+
+            if(!($polyfills[$method] instanceof Closure)){
+              EInfo::trigger('Route method "'.$method.'" called has an invalid polyfill that should be a Closure object.', $class);
+              return false;
+            }
+
+            $polyfills[$method](...$arguments);
+
           } else {
-            $Container->$method(...$arguments);
+            
+            if($reflect->getMethod($method)->isStatic()){
+              $Container::$method(...$arguments);
+            } else {
+              $Container->$method(...$arguments);
+            }
+
           }
+
 
           $instance->resolved(true); 
           return $instance->resolved();
@@ -683,6 +785,7 @@ class Window extends Controller{
             static::$isPended = false;
             static::$pender = static::$isPended? 'call' : '';
             if($ONCALL instanceof \Closure) $ONCALL();
+            self::validate_response_headers($close, $SHUTDOWN);
             
             //call window
             new Container($win, $variables);
@@ -698,6 +801,7 @@ class Window extends Controller{
             static::$isPended = false;
             static::$pender = static::$isPended? 'call' : '';
             if($ONCALL instanceof \Closure) $ONCALL();
+            self::validate_response_headers($close, $SHUTDOWN);
             
             //call window
             new Container($method, ...$arguments);
@@ -727,6 +831,7 @@ class Window extends Controller{
           static::$pender = static::$isPended? 'call' : '';
           self::$lastCall = $base;
           if($ONCALL instanceof \Closure) $ONCALL();
+          self::validate_response_headers($close, $SHUTDOWN);
 
           //call window
           $Container = new Container($instance);
@@ -739,6 +844,7 @@ class Window extends Controller{
           static::$isPended = !$close;
           static::$pender = static::$isPended? 'call' : '';
           if($ONCALL instanceof \Closure) $ONCALL();
+          self::validate_response_headers($close, $SHUTDOWN);
           $Container = new Container($instance);
           $Container->$method(...$arguments);
           $instance->resolved(true);
@@ -748,7 +854,7 @@ class Window extends Controller{
       return ;
     }
 
-    if($close) self::close();
+    self::shutdown($close, $SHUTDOWN);
 
   }
 
@@ -757,13 +863,16 @@ class Window extends Controller{
    * The current page url must have a parent path that exist
    * within the list of permitted parent urls
    *
-   * @param Window $class
-   * @param array $windows
+   * @param Window $instance 
+   * @param array $windows acceptable route urls
    * @param bool $close 
+   *   - shutter::open or 0 or false pends shutter
+   *   - shutter::close or 1 or true closes shutter
+   *   - shutter::sleep or 2 sleeps shutter (live mode)
    * 
    * @return void|bool
    */
-  final protected static function basecall(Window $instance, array $windows = [], bool $close = true){
+  final protected static function basecall(Window $instance, array $windows = [], bool|SHUTTER $close = true){
 
     if($instance->resolved()) return;
 
@@ -773,7 +882,7 @@ class Window extends Controller{
     if(method_exists($class,'loadRoutes')) $class::loadRoutes($instance);
     $reflect = new \ReflectionClass($class);
     
-    self::windowShutterVariables($Request, $windows, $variables, $ONCALL, $arguments, $STRICT);
+    self::windowShutterVariables($Request, $windows, $variables, $ONCALL, $SHUTDOWN, $arguments, $STRICT);
 
     static::integrateAPI();
     
@@ -834,6 +943,7 @@ class Window extends Controller{
             static::$pender = static::$isPended? 'base' : '';
             static::$lastCall = $basex;
             if($ONCALL instanceof \Closure) $ONCALL();
+            self::validate_response_headers($close, $SHUTDOWN);
             
             //call window
             $Container = new Container($instance);
@@ -869,6 +979,7 @@ class Window extends Controller{
             static::$pender   = '';
             static::$lastCall = $basex;
             if($ONCALL instanceof \Closure) $ONCALL();
+            self::validate_response_headers($close, $SHUTDOWN);
 
             //call window
             $Container = new Container($win, $arguments);
@@ -893,6 +1004,7 @@ class Window extends Controller{
         static::$pender   = '';
         static::$lastCall = $basex;
         if($ONCALL instanceof \Closure) $ONCALL();
+        self::validate_response_headers($close, $SHUTDOWN);
 
         //call window
         new Container($win, ...$arguments);
@@ -919,6 +1031,7 @@ class Window extends Controller{
         self::$lastCall = $base;
         self::$isPended = !$close;
         if($ONCALL instanceof \Closure) $ONCALL();
+        self::validate_response_headers($close, $SHUTDOWN);
 
         //call window
         $Container = new Container($win, $variables);
@@ -935,20 +1048,64 @@ class Window extends Controller{
     }
 
     if($instance->resolved()) return true;
-    if($close) self::close();
 
+    self::shutdown($close, $SHUTDOWN);
+
+  }
+
+  final protected static function validate_response_headers($close, $SHUTDOWN) {
+    $responseHeaders = self::$wvm['headers'];
+    $acceptedHeaders = $responseHeaders['accepted'];
+    $rejectedHeaders = $responseHeaders['rejected'];
+    $responseHeader  = http_response_code();
+
+    if((in_array($responseHeader, $rejectedHeaders) && !empty($rejectedHeaders)) || 
+        (!in_array($responseHeader, $acceptedHeaders) && !empty($acceptedHeaders)) ){
+        self::shutdown($close, $SHUTDOWN);
+        return ;
+    }
+  }
+
+  final protected static function shutdown($close, ?Closure $SHUTDOWN = null) {
+
+    //execute shutdown function ... 
+    if($SHUTDOWN instanceof Closure) {
+      if(http_response_code() === 200) response(404);
+      $SHUTDOWN();
+    }
+
+    if(self::$transmute) {
+
+      $translations = static::wvm('translations'); 
+
+      $code = http_response_code();
+
+      $codeTemplate = $translations[$code] ?? self::wvm('error');
+
+      Rex::load($codeTemplate, fn() => compile());
+
+      return;
+    }
+    match($close){
+      shutter::pend, false => null,
+      shutter::close, true => self::close(),
+      shutter::sleep => self::sleep(),
+    };
   }
   
   /**
    * Resolves a direct path that comes after a url's entry point (or window)
    *
-   * @param Window $class
-   * @param array $windows
+   * @param Window $instance 
+   * @param array $windows list of acceptable urls
    * @param bool $close 
+   *   - shutter::open or 0 or false pends shutter
+   *   - shutter::close or 1 or true closes shutter
+   *   - shutter::sleep or 2 sleeps shutter (live mode)
    * 
    * @return void|bool
    */
-  final protected static function pathcall(Window $instance, array $windows = [], bool $close = true){
+  final protected static function pathcall(Window $instance, array $windows = [], bool|SHUTTER $close = true){
     
     if($instance->resolved()) return;
 
@@ -959,7 +1116,7 @@ class Window extends Controller{
     
     $reflect = new \ReflectionClass($class);
 
-    self::windowShutterVariables($Request, $windows, $variables, $ONCALL, $arguments, $STRICT);
+    self::windowShutterVariables($Request, $windows, $variables, $ONCALL, $SHUTDOWN, $arguments, $STRICT);
     
     static::integrateAPI();
     
@@ -1008,6 +1165,7 @@ class Window extends Controller{
           static::$isPended = !$close;
           self::$lastCall = $path; 
           if($ONCALL instanceof \Closure) $ONCALL();
+          self::validate_response_headers($close, $SHUTDOWN);
 
           //call window
           if($reflect->getMethod($method)->isStatic()){ 
@@ -1031,6 +1189,7 @@ class Window extends Controller{
             static::$isPended = false;
             self::$lastCall = $path;
             if($ONCALL instanceof \Closure) $ONCALL();
+            self::validate_response_headers($close, $SHUTDOWN);
             
             //call window
             $Container = new Container($win, ...$arguments);
@@ -1068,6 +1227,7 @@ class Window extends Controller{
         static::$isPended = !$close;
         self::$lastCall = $path;
         if($ONCALL instanceof \Closure) $ONCALL();
+        self::validate_response_headers($close, $SHUTDOWN);
 
         //call window
         if($reflect->getMethod($method)->isStatic()){
@@ -1085,7 +1245,7 @@ class Window extends Controller{
 
     if($instance->resolved()) return true;
 
-    if($close) self::close();
+    self::shutdown($close, $SHUTDOWN);
 
   } 
 
@@ -1128,6 +1288,31 @@ class Window extends Controller{
     static::close();
     
   }  
+  
+  /**
+   * Returns the list of reserved methods
+   *
+   * @param [type] $method
+   * @return boolean
+   */
+  static private function inReservedMethods($method) : bool {
+    
+    $reserved = [
+      'wvm', 'e_response', 'integrateapi', 'isindex', 
+      'callroute', 'inRoutes', 'open', 'mapurl', 
+      'frame', 'oncall', 'preset', 'preload', 
+      'acceptheaders', 'rejectheaders', 'rootcall', 'call', 
+      'basecall', 'validate_response', 'shutdown', 'pathcall', 
+      'resolved', 'clearResolved', 'onOpen', 'session', 
+      'lastcall', 'pend', 'close', 'sleep', 
+      'transmute', 'eview', 'addRex', 'load', 
+      'view', 'markup', 'loadbase', 'secure', 'polyfill',
+      'bindformdata', 'pushformdata', 'htcaliber', 'inReservedMethods'
+      ];   
+
+      return in_array($method, $reserved);
+    
+  }
 
   /**
    * Set a session & cookie keys for the session class
@@ -1179,7 +1364,7 @@ class Window extends Controller{
     if(self::wvm('close')) return;
     static::wvm('close', true);
 
-    //set and return and array of response header
+    //set and return array of response header
     $response = response(404, 'Page not found!');
 
     if(!static::$winAPI) {
@@ -1189,6 +1374,44 @@ class Window extends Controller{
     }
 
     exit();
+
+  }
+
+
+  /**
+   * Sleep live server during error display
+   * Notice:: this will send a 423 response header code
+   * 
+   * @return void
+   */
+  final protected static function sleep(bool $pend = false) { 
+      Res::live();
+
+      if($pend) self::wvm('pend', true);
+
+      //set and return and array of response header
+      $response = response(423, 'Page in lock mode!');
+
+      if(!static::$winAPI) {
+        Rex::load(static::wvm(':404'), fn() => compile());
+      } else{
+        echo $response; /* print response header */
+      }
+
+      if(!$pend) exit();
+  }
+
+  final static function transmute(array $codes = []) {
+
+    self::$transmute = true;
+
+    if(func_get_args() > 0) {
+
+      foreach($codes as $code => $template){
+        self::$wvm['translations'][$code] = $template;
+      }
+
+    }
 
   }
   
@@ -1218,10 +1441,11 @@ class Window extends Controller{
    * Renders and Outputs the rex template files
    * 
    * @param string $path rex template path
-   * @param mixed $callback template handler function
+   * @param Closure|false $callback template handler function
+   *  - The closure must return a compiler function or a string
    * @return void
    */
-  final protected static function load($path, $callback){
+  final protected static function load($path, Closure|false $callback = false){
     Rex::load($path, $callback);
   }
 
@@ -1260,9 +1484,10 @@ class Window extends Controller{
    * @param string $url
    * @return void
    */
-  final public static function loadBase($url = '') {
+  final public static function loadBase(string $url = '') {
     
     $uri = (!$url)? uri : $url ;
+    
     $uri = strtok($uri, '?');
 
     if(!online){
@@ -1322,18 +1547,6 @@ class Window extends Controller{
   final protected static function secure($route, $session = ''){
     $session = strtoupper($session);
     static::$wvm['secure'][$session][] = $route;
-  }
-
-  /**
-   * Sleep live server during error display
-   * Notice:: this will send a success response header
-   * 
-   * @return void
-   */
-  final protected static function sleep() {
-      http_response_code(200); 
-      Res::live();
-      self::close();
   }
 
   /**
@@ -1439,7 +1652,7 @@ class Window extends Controller{
    * @param [type] $STRICT
    * @return void
    */
-  private static function windowShutterVariables(&$Request, &$windows, &$variables, &$ONCALL, &$arguments, &$STRICT){
+  private static function windowShutterVariables(&$Request, &$windows, &$variables, &$ONCALL, &$SHUTDOWN, &$arguments, &$STRICT){
     
     $Request = new Request;
 
@@ -1448,6 +1661,7 @@ class Window extends Controller{
     $variables = $windows[SELF::ARG] ?? static::$variables;
 
     $ONCALL = $windows[SELF::ONCALL] ?? '';
+    $SHUTDOWN = $windows[SELF::ONSHUT] ?? null;
     
     if($variables || isset($windows[SELF::ARG]) || isset(static::$variables)) {
       array_unshift($arguments, $variables);   
@@ -1458,6 +1672,12 @@ class Window extends Controller{
     $STRICT = $windows[SELF::STRICT] ?? false;
 
     unset($windows[SELF::ARG], $windows[SELF::ONCALL], $windows[SELF::STRICT]);
+
+  }
+
+  static function polyfill(string $method) : array {
+
+    return [];
 
   }
 

@@ -13,44 +13,15 @@ class SETTER {
     private static $vars = [];
     private static $locked = [];
 
-    // SET('JOIN', '');
-    // SET('PREFIX', '');
-    // SET('SUFFIX', '');
-
-    // GET('JOIN');
-    // GET('PREFIX');
-    // GET('SUFFIX');
-
-    // DBSET(DBSET::CLOSE);
-
-  /* 
-  SET('key1','value'); // can be updated or fetched
-  SET('key2', GET('key1'), true) //lock, can only be fetched not modified
-  SET('key3', GET('key1'), 'hash123') //locked with hash, must be fetched or modified with hash
-
-  SET('key1', 'newvalue'); //modified
-  SET('key2', 'newvalue'); //error: cannot be modified..Read only
-  SET('key3', 'newvalue'); //error: cannot be modified or fetched without hash key
-  SET('key3', 'newvalue', '123'); //error: invalid modifier key
-
-  GET('key1') // value
-  GET('key2') // value
-  GET('key3') // error: invalid fisher key supplied
-  GET('key3', 'hash123') // value
-
-  GET('key2') // returns new value
-  */  
-
     /**
      * Set static values which can be called before SETTER::CLOSE() method is called.
      * 
-     * @param string $key 
-     * @param mixed $value
-     * @param bool|string
-     *   - if $lock is bool:true locked cannot be modified or unset
-     *   - if $lock is string value, it will be used as a secure key
-     *   - if $lock is string locked cannot be modified or unset unless hash string is supplied
-     * @return |false 
+     * @param string $key key to which a value is expected to be assigned
+     * @param mixed $value value to be assigned to a key
+     * @param bool|string defines key protection
+     *   - if $lock is [true], $key cannot be modified or unset
+     *   - if $lock is {string}, $key cannot be modified or unset unless $lock string is supplied
+     * @return void|false 
      */
     static function SET(string $key, $value, bool|string $lock = false){
 
@@ -124,7 +95,7 @@ class SETTER {
      * @param string $secureKey - secure key for fetching previously stored secure value
      * @return string|false 
      */
-    static function GET(string $key, $secureKey = ''){
+    static function GET(string $key, string $secureKey = ''){
 
       if(isset(self::$vars[$key])){
         $hashKey = self::$locked[$key]?? '';
@@ -156,9 +127,8 @@ class SETTER {
     }
 
     /**
-     * Check if a key exists
-     * 
-     * @param string $value - DBSetter constants
+     * Unset all declared keys.
+     *  - Warning, this will unset all declared keys.
      * @return void 
      */
     static function CLOSE() {

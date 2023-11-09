@@ -19,7 +19,7 @@ class MkMigrator extends MkBase{
         $arg1 = $args[0] ?? '';
         $arg2 = $args[1] ?? '';
 
-        $filename = $arg1; 
+        $filename = $arg1;      
 
         $class = $arg1;
         $class = ltrim(to_frontslash($class, true), '/');
@@ -27,7 +27,7 @@ class MkMigrator extends MkBase{
         $classDir  = dirname($class);
         $classDir  = ($classDir == '.')? '' : $classDir;
         $className = basename($class);
-
+        
         if($className == ''){
 
           Cli::textView(Cli::danger(Cli::emo('point-list').' add:migrator '), 0, '|2');

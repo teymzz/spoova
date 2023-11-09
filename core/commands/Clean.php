@@ -2,11 +2,13 @@
 
 namespace spoova\mi\core\commands;
 
+use spoova\mi\core\classes\FileManager;
+
 class Clean extends Entry{
 
 
     /**
-     * @param array func_get_args() : installer arguments
+     * @param array $args installer arguments
      */
     function __construct($args = []){
 
@@ -65,14 +67,11 @@ class Clean extends Entry{
     }
 
     private function deleteAll($dir){
-        foreach(glob($dir.'/*') as $file){
-            if(is_file($file)){
-                unlink($file);
-            }elseif(is_dir($file)){
-                $this->deleteAll($file);
-            }
-        }    
-        if($dir != _core.'storage') rmdir($dir);
+
+        $Filemanager = new FileManager;
+
+        $Filemanager->deleteFile($dir, ['exclude' => $dir]);
+
     }
 
 }

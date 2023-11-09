@@ -2,9 +2,7 @@
 
 namespace spoova\mi\core\classes;
 
-use spoova\mi\core\classes\Ress;
 use spoova\mi\core\classes\Rescom;
-use spoova\mi\core\classes\FileManager;
 
 /**
  * Resource class was mainly built to properly link css and javascript urls.
@@ -32,67 +30,172 @@ use spoova\mi\core\classes\FileManager;
  */
 class Resource Extends Rescom{
 
+    private static bool $boot = false;
+
+    /**
+     * Allow meta tags autoloading
+     *
+     * @var boolean
+     */
+    private static $meta_on = true;
+
+    /**
+     * Valid extensions
+     *
+     * @var array
+     */
     private static $exts  = array("css","js","php","html");
+
+    /**
+     * Extensions for static resources
+     *
+     * @var array
+     */
     private static $extTags  = array("css","js");
+
+    /**
+     * Extensions for hypertext files
+     *
+     * @var array
+     */
     private static $extFils  = array("php","html");    
     private static $cpath = '';
+
+    /**
+     * Prefix directory
+     *
+     * @var string
+     */
     private static string $dir = '';
-    private static bool|string $xdir = ''; //skip directory $dir
+
+    /**
+     * Escaped prefix directory. Overide $dir
+     *
+     * @var boolean|string
+     */
+    private static bool|string $xdir = '';
+
+    /**
+     * Stores all errors encountered during validation
+     *
+     * @var array
+     */
     private static $error = [];
+
+    /**
+     * Contains all stored resources
+     *
+     * @var array
+     */
     private static array $resources = [];
+
+    /**
+     * Current resource name pointer
+     *
+     * @var boolean|string
+     */
     private static bool|string $resourceName;  
+
+    /**
+     * Allow the storage of imported resources
+     *
+     * @var boolean
+     */
     private static bool $storeImports = false; 
+
+    /**
+     * Contains all current importations made
+     *
+     * @var array
+     */
     private static array $currentImports = [];
-    private static string $resource_path = '';
+
+    /**
+     * Pulled resource files only
+     *
+     * @var array
+     */
+    private static array $pulls = [];
+    
     private static string $prepend = '';
-    private static $meta_on = true;
-    private static $ignore;
     private static ?Resource $called_static = null;
     private static string $currentScript = '';
     private static array $namedFiles = [];
     private static array $namedGroup = [];
+
+    private static array $processed_urls = [];
+    private static array $url_filters = [];
+
+    /**
+     * All supplied urls
+     *
+     * @var array
+     */
+    private static array $urls = [];
 
     /**
      * instantiate resource watch if configured
      */
     function __construct(){ 
       
-      if(!defined('_core') || !defined('_icore')) return false;
-      if(!defined('online')) return false;  
-      if(!@class_exists(scheme('core\classes\FileManager', false))) return false;
-      if(!method_exists($this,'watch')) return false;
-      
-      //read fileManager for resource watching
-      $fileManager = new FileManager;
-      $fileManager->setUrl(getDefined('_icore').'init');
-      $fileManager->openFile(true, getDefined('_icore').'init');
-      $monitor = (int)$fileManager->readFile('RESOURCE_WATCH');
-
-      //resource enviroment controller(int) 
-      if($monitor !== 1 && $monitor !== 2) return false; //not configured
-      if(($monitor === 1) && (online)) return false; //disable for online configuration
-      
-      //initialize resource only once (from here) - prevent multiple initializations
-      if(!self::$initialized_watch){   
-
-        self::watch(); 
-
-      }
+        $this->bootResource();
 
     }
-    
+
     /**
-     * 
-     * @deprecated version 2.5
-     * Sets the resource class to ignore path processing. This was previously used
-     * to start monitoring a resource folder from the root of the application. This 
-     * functionality is no longer required
+     * Boot resource class
      *
      * @return void
      */
-    public static function ignore(){
-      //after every ignore remember to close
-      self::$ignore = true;
+    private function bootResource() {
+
+        if(!self::$boot) {
+            if(!$this->validRequirements()) return false; 
+
+            //get watch value from Init class
+            $watch = (int) Init::key('RESOURCE_WATCH');
+
+            //set valid environment for resource watch...
+            $watch_disabled = (!in_array($watch, [1, 2]));
+            $watch_offline = (($watch === 1) && (online));
+
+            if($watch_disabled || $watch_offline){
+                return false;
+            }
+
+            //initialize live script only once
+            if(!self::$initialized_watch) self::watch();
+            self::$boot = true;
+            self::$called_static = $this;
+        }
+
+
+    }
+
+    /**
+     * Validate basic requirements needed by the class.
+     *
+     * @return boolean
+     */
+    private function validRequirements() : bool {
+              
+        //set required constants
+        $constants = ['_core','_icore','online'];
+  
+        foreach($constants as $constant){
+          if(!defined($constant)) return false;
+        }
+  
+        //check class availability
+        if(!@class_exists(scheme('core\classes\FileManager', false))) {
+          return false;
+        }
+  
+        //check method availability 
+        if(!method_exists($this,'watch')) return false;  
+  
+        return true;
+  
     }
 
     /**
@@ -102,21 +205,36 @@ class Resource Extends Rescom{
      * @param boolean $store tells resource class to store path or ignore storage when called
      * @return boolean | string sorted $url
      */
-    private static function make_request(string $url,bool$store=false){
+    private static function make_request(string $url, bool $store = false){
 
-         if(!self::processUrl($url,$ext,$attrs,$store)){ return false; }
-  
-   	    if($script = self::call_script($url,$ext,$attrs)){
-   	      
-   	      if(self::is_script($script)){ 
-   	        return $script;
-   	      }else{ 
-   	        return $url;
-   	      }
+         // sort out url supplied 
+         $filter = self::filterUrl($url);
 
-   	    }else{
-   	      return self::call_error("Resource :$url: was not found"); 
-   	    }
+         if(!array_key_exists($url, self::$urls)){
+
+           self::$urls[$url] = ''; //save filtered url
+
+           //Url Validation
+           if(!self::processUrl($url, $store)){ return false; } 
+
+           // return script or processed urls
+           if($script = self::call_script($url, $filter['ext'], $filter['attrs'])){
+             
+              if(self::is_script($script)){ 
+                return self::$urls[$url] = $script;
+              }else{ 
+                return self::$urls[$url] = $url;
+              }
+ 
+           }else{
+              return self::call_error("Resource :$url: was not found"); 
+           }
+           
+         } else {
+
+           return self::$urls[$url];
+
+         }
 
     }
 
@@ -126,12 +244,12 @@ class Resource Extends Rescom{
      * @param string|null $colons reference variable to fetch customized or coloned extension
      * @return string
     */
-    private static function getExt(&$url,&$colons = null, &$attrs = null){
+    private static function filterUrl(&$url){
         
         $attrs = explode("=>",$url);
         if(count($attrs) > 1){
           $url = $attrs[0];
-          $attrs = " => ".$attrs[1];
+          $attrs = $attrs[1];
         }else{
           $attrs = "";
         }
@@ -143,81 +261,84 @@ class Resource Extends Rescom{
            $colons = ":::".$ext;
         }else{
            $ext = pathinfo($split[0],PATHINFO_EXTENSION);
+           $colons = '';
         }
-        return trim($ext);
+
+        return self::$url_filters = [
+          'colons' => $colons,
+          'attrs' => $attrs,
+          'ext'   => trim($ext)
+        ];
+
     }
 
 
-    private static function processUrl(&$url, &$ext = null, &$attrs = null,$store = false){
-        
-        $path = self::$resource_path; //get resource path
-        $asterisk = '';
+    private static function processUrl(&$url, bool $store = false){
 
-        //split url
-        $ext = self::getExt($url, $colons, $attrs);
+        self::$processed_urls[$url] = '';
+
+        //Get url filters
+        $filter = self::$url_filters;
+
+        //redefine variables
+        $colons = $filter['colons'];
+        $attrs  = $filter['attrs'];
+        $ext    = $filter['ext'];
+
+        //sets the parent path to be prefixed on $url
+        $dir = self::$xdir? '' : self::$dir;
+
+        //validate path && url 
+        $isDomainUrl = self::is_protocol($url);
+        $isStaticUrl = self::is_ext($ext, self::$extTags);
+        $isHyperUrl  = self::is_ext($ext, self::$extFils);
+        $isDomainDir = ($dir && self::is_protocol($dir));
+
+        $url_supplied = $url.$colons.$ext.$attrs;
+
+        //reset url filtered 
+        self::$url_filters = [];
+
+        if( ($domify = (!$isDomainUrl && $isStaticUrl)) || (!$isDomainUrl && !$isDomainDir)) {
+          //append directory to url for only accepted formats
+          $url = str_replace(['//','\\'], '/', to_frontslash($dir.DS.$url)); 
+          if($domify) {
+            //modify static url online to document root
+            $newurl = self::domify($url, $ext);
+          }
+          if($isDomainDir) $isDomainUrl = true;
+        }
+
+        if(!in_array($ext, self::$exts)){ 
+        	return self::call_error("Resource file with $ext extension is not allowed"); 
+        }
+
+        if(isset($newurl)) $url = $newurl;
         
-        if(self::is_ext($ext, self::$extTags) && !self::is_protocol($url)){
-            if(realpath(docroot.'/'.$url)){
-              $url = DomUrl($url);
+        if($isStaticUrl && !$isDomainDir){
+            if(realpath(docroot.DS.$url)){
+              $url = DomUrl($url); //change url to protocol format
+              $isDomainUrl = true;
+            }else if(!is_file($url)){
+                return self::call_error("Resource path :$url: is not found");
             }
         }
         
-
-	    //store url and path forms (save memory)
-	    $isProtoUrl  = self::is_protocol($url);
-	    $isProtoPath = self::is_protocol($path);
-	    $isDotUrl    = self::is_absolute($url);
-	    $isDotPath   = self::is_absolute($path);    	
-      
-        //append resource path if neccessary
-        if($path != null){
-      	   $reurl = ltrim($url,"/");
-      	   $repath = ($path == '/')? "/" : rtrim($path,"/");
-
-           //append resource path before url is processed
-      	   if($isProtoPath && !$isProtoUrl && !$isDotUrl){
-      		  $url = $repath.DS.$reurl;
-      	   }elseif($isDotPath && !$isProtoUrl){
-         	  $url = $repath.DS.$reurl;
-           }
-        }
-
-        //url: apply document root where necessary
-        $xurl = $url;
-       	if(!$isDotUrl && !$isProtoUrl){
-           $xurl = getDefined('docroot').DS.$url;
-       	}
-
-       	//validate url supplied
-        if($isProtoUrl){ 
-          if(!filter_var($url,FILTER_VALIDATE_URL)){ 
-            return self::call_error("Resource path :$url: is not valid"); 
-          } 
-        }else{
-        	if(!is_file($xurl)) return self::call_error("Resource path :$url: is not found");         
-        	$nurl = self::domify($url,$ext);
-        }
+        if($isDomainUrl && (!filter_var($url,FILTER_VALIDATE_URL))){
+          return self::call_error("Resource path :$url: is not valid"); 
+        }    
                	   
         //resource: store url if neccessary
-        if(self::$resourceName){
-          if($store == true){self::$resources[self::$resourceName][] = $asterisk.$url.$colons.$attrs;}
-        }else{
-          if($store == true){self::$resources[] = $asterisk.$url.$colons.$attrs;}
-        }
-
-        if(isset($nurl)){ $url = $nurl; }
-        
-
-        //validate extension
-        $files = self::$exts;         
-
-        if(!in_array($ext,$files)){ 
-        	return self::call_error("Resource file with $ext extension is not allowed"); 
+        if($store === true){
+          if(self::$resourceName ?? ''){
+            self::$resources[self::$resourceName][] = $url_supplied;
+          }else{
+            self::$resources[] = $url_supplied; //save to unnamed space
+          }
         }
         
-        //reconfigure configure $url if necessary
-        $urlExt = self::getExt($url);
-        if(!self::is_protocol($url) && self::is_ext($urlExt, self::$extFils)){ $url = str_replace("\\",'/',getDefined('docroot')).DS.$url; }
+        //convert url to full path for html & php files
+        if(!$isDomainUrl && $isHyperUrl){ $url = to_dirslash(docroot.DS.$url); }
         
         return true; //return true if all checks are successfully done
 
@@ -231,8 +352,7 @@ class Resource Extends Rescom{
      * @return boolean
      */
     private static function is_protocol($url) : bool{
-       $url = (string) $url;
-    	 return ((substr($url, 0,4) == 'http') || (substr($url, 0,4) == 'www.'))? true : false;
+       return (preg_match('/^https?:\/\//i', $url) || preg_match('/^www\./i', $url));
     }
 
     /**
@@ -242,8 +362,7 @@ class Resource Extends Rescom{
      * @return boolean
      */
     private static function is_absolute($url){
-      //isAbsolutePath: declared in functions.php
-      return isAbsolutePath($url); 
+      return isAbsolutePath($url); // declared in functions.php
     }    
 
     /**
@@ -285,52 +404,35 @@ class Resource Extends Rescom{
      * @param string $url file url / path
      * @param string $ext file extension
      * @param string $attrs attributes
-     * @return [bool | string] 
+     * @return [bool|string] 
      */
-    private static function call_script(string $url,string $ext, string $attrs){
+    private static function call_script(string $url, string $ext, string $attrs){
 
       if($ext == "css" || $ext == "js"){
 
         //internally defined default properties
-        $indefsCss = ['rel'=>'stylesheet','type'=>'text/css','href'=>$url]; 
-
+        $indefsCss = ['rel'=>'stylesheet','type'=>'text/css']; 
 
         if($attrs != ''){
+            if($ext === 'css') {
+                $css = ['rel'=>'stylesheet','type'=>'text/css']; 
+                $attrs = Attribs::update($css, $attrs);
+            } else {
+                $attrs = Attribs::split($attrs); // convert urx to attributes string format
+            }
 
-          //process attrs
-          $props = rtrim(str_replace('=>','',$attrs),"; ");
-          $attrs = trim(rtrim(str_replace(';','"',str_replace(':','="',$props)),'" ').'"');
-          if($ext == 'css'){
-              $filprops = explode(';',trim($props));
-              
-
-              
-              //$exdefs = []; //externally defined default properties
-
-              foreach($filprops as $filprop){
-                $def = explode(":",$filprop);//externally defined default properties
-                $defKey = trim($def[0]);//internally defined default key
-                $defVal = trim($def[1]);//internally defined default value
-                
-                if(!array_key_exists($defKey, $indefsCss)){
-                  $indefsCss[$defKey] = $defVal; //externally defined updated value
-                }
-              }
-          }
-
+        }else {
+            if($ext === 'css') {
+                $attrs = Attribs::join(['rel'=>'stylesheet','type'=>'text/css']);
+            }
         }
         
         if($ext == "css"){
-          $newdefs = '';
-          foreach($indefsCss as $indefKey => $newdefVal){
-            $newdefs .= " ".$indefKey.'="'.$newdefVal.'"';
-          }
-
-          return '<link '.$newdefs.'>';
+          return '<link href="'.$url.'"'.$attrs.'>';
         }
 
         if($ext == "js"){
-          return "<script src='".$url."'></script>";
+          return '<script src="'.$url.'"'.$attrs.'></script>';
         }
 
       }
@@ -345,7 +447,7 @@ class Resource Extends Rescom{
      * check if extension is of valid types
      *
      * @param string $ext extension name
-     * @param string|array $exts
+     * @param string|array $exts{
      * @return boolean
      */
     private static function is_ext(string $ext, $exts) : bool{
@@ -363,10 +465,8 @@ class Resource Extends Rescom{
      */
     private static function refresh($param = false){
       if($param === true){
-        self::$resource_path = '';
         self::$error = [];  
         self::$resources = [];
-        self::$ignore = false;
         self::$dir = '';
         self::$xdir = '';
         self::$error = [];
@@ -376,9 +476,7 @@ class Resource Extends Rescom{
         self::$currentScript = '';
         self::$namedFiles = [];
         self::$namedGroup = [];
-      }else{
-        self::$resource_path = '';
-      }  
+      } 
     }
 
     /**
@@ -440,21 +538,6 @@ class Resource Extends Rescom{
     }
 
     /**
-     * sets a global path for all file urls
-     *
-     * @param string|void $path
-     * @return void
-     */
-    public static function path($path = null){
-
-      if(is_dir($path)){ 
-        return self::call_error("Resource path :$path: is not found");
-      } 
-
-      self::$resource_path = $path;
-    }
-
-    /**
      * executes a url supplied immediately 
      *
      * @param string $url url to be executed immediately
@@ -463,16 +546,16 @@ class Resource Extends Rescom{
      *  -- when url is html / php, $execute shoul be set to false
      * @return void
      */
-    public static function getFile(string $url, $store=false, $execute = true){
+    public static function getFile(string $url, $store = false, $execute = true){
 
       $store = (bool) $store;
-      $script = self::make_request($url,$store);
+      $script = self::make_request($url, $store);
 
       if(self::$storeImports === true){ self::$currentImports[] = $script; }
     
       if(!$execute) return self::execute($script,$execute);
       
-      self::execute($script,$execute);
+      self::execute($script, $execute);
     }
 
     /**
@@ -485,8 +568,6 @@ class Resource Extends Rescom{
     public static function callFile(string $url, $store=true){
       $store = (bool) $store;
       
-      $xdir = self::$xdir? '' : self::$dir;
-      $url = self::is_protocol($url)? $url : $xdir.$url; 
     	$script = self::make_request($url, $store);
       self::$currentScript = $script;
      	return $script;
@@ -534,6 +615,7 @@ class Resource Extends Rescom{
       if(is_array($file)){
         if($array) return $file;
         $file = implode("\n", $file);
+        if(trim($file)) $file = "\n".$file."\n";
       }elseif($array) {
         $file = $file? [$file] : [] ;
       }
@@ -547,7 +629,7 @@ class Resource Extends Rescom{
      *
      * @return void
      */
-    public static function local(){
+    public static function local() : string {
       self::new('res/main/')->name('local-css')->url('css/local/spi.css')->named('local-css')->urlClose();
       return recall('local-css');
     }
@@ -614,8 +696,6 @@ class Resource Extends Rescom{
 
       }
 
-
-
       return $this;
 
     }
@@ -677,27 +757,51 @@ class Resource Extends Rescom{
      *
      * @param string $new a new parent path if supplied.
      * 
-     * @return Rosource|Ress
+     * @return Resource
      */
-    public static function new(string $dir = '') : Resource|Ress {
+    public static function new(string $dir = '') : Resource {
 
-      
-      if(!self::$called_static){
-        self::$called_static = new static();
-      }     
-      self::$dir = $dir;
-      return new Ress(self::$called_static); 
+        if(!self::$called_static){
+            self::$called_static = new static();
+        }     
+        self::$dir = $dir;
+        return self::$called_static;
       
     }
     
-   /**
-    * Static method for declaring a new group name 
-    * selects (or declares a new) group name
-    * Note :: This will create a new instance of Resource class if it does not exists 
+    /**
+     * Static method for including external file resource 
+     *
+     * @param string $path Php file path without the php extension name. Supports dot convention
+     * @return Resource|null
+     */
+    public static function pull(string $path) : Resource | null {
+      
+      $folder = Init::key('RESOURCE_FOLDER');
+      
+      $path = to_dirslash(domroot($folder.'.'.$path), true). '.php';
+      
+      if(!in_array($path, self::$pulls)){
+          if(!is_file($path)){
+            trigger_error("Resource file '{$path}' does not exist!", E_USER_ERROR);
+            return self::$called_static;
+          }
+    
+          include_once($path);
+    
+          self::$pulls[] = $path;
+      }
 
-    * @param string $name
-    * @return Resource|null
-    */
+      return self::$called_static;
+    }
+    
+    /**
+     * Static method for declaring a new group name 
+     * selects (or declares a new) group name
+     * Note :: This will create a new instance of Resource class if it does not exists 
+     * @param string $name Unique group name of urls
+     * @return Resource|null
+     */
     public static function name(string $name = '') : Resource | null{
       self::$resourceName = $name; 
       if(!isset(self::$resources[$name])){
@@ -707,15 +811,7 @@ class Resource Extends Rescom{
         self::$called_static = new static();
       }
       return self::$called_static;
-    }
-    
-    /**
-     * Non-static method for declaring a new group name
-     */
-    public function group($name = null){
-      self::name($name);      
-      return $this;
-    }    
+    }  
 
     /**
      * returns the plain format of a url return type for viewing purpose
@@ -744,69 +840,21 @@ class Resource Extends Rescom{
      *  -- $usename as group name(s) to be exported (name(s) (array | string) of group(s) to be exported)
      * @return array
      */
-    public static function export($dpath = null, $usename = null) : array {
+    public static function export($usename = null) : array {
     	$values = ':lists';
-    	if(count(func_get_args()) < 2){
-    	  $usename  = $dpath;
-    	  $dpath = null;
-    	}
-      self::import($dpath, $usename, $values);
+      self::import($usename, $values);
     	return (array) $values;
-    }
-    
-    /**
-     * applies a prefix on urls when importing
-     * @return array|void
-     */
-    private static function prefixer($dpath=null,$usename=null,$execute=true){
-
-    	if($usename == "" || $usename == null){ $usename = ":"; }
-    	if($usename[0] != ":"){ return false; }
-    	
-    	$strlen  = strlen($usename);
-    	$usename = ltrim($usename, ":");
-    	$scripts = [];
-
-    	if($usename != null && isset(self::$resources[$usename])){
-    	  $selfResources = self::$resources[$usename];
-    	}else{
-    	  $selfResources = self::$resources;
-    	}
-
-    	foreach ($selfResources as $key => $resource){
-    	  if(!is_array($resource)){
-    	  	
-    	  	$url = trim($resource);
-    	    
-    	    if(!self::processUrl($url,$ext,$attrs)){ return false; /**import prefixing failed!!!*/ }
-
-    	    if(self::is_absolute($dpath) and is_dir($dpath) and !self::is_protocol($url)){
-    	    	$dpath = rtrim($dpath,"/");
-    	    	$url = ltrim($url,"/");
-    	    	$url = self::is_ext($ext,self::$extTags)? $dpath.DS.$url : $url;
-    	    }elseif(self::is_protocol($dpath) and !self::is_protocol($url)){
-    	    	$url = str_replace("../", '' , $url);
-    	    	$dpath = rtrim($dpath,"/");
-    	    	$url = ltrim($url,"/");
-    	    	$url =  self::is_ext($ext,self::$extTags)? $dpath.DS.$url : $url;
-    	    }
-            $script    = self::call_script($url,$ext,$attrs); 
-            $scripts[] = self::execute($script,$execute);
-    	  }
-    	}
-    	if(!$execute){ return $scripts; }
     }
 
 
     /**
       * import stored urls
       */
-    private static function importer($dpath=null,$usename=null,$execute = true){
+    private static function importer($usename = null, bool $execute = true){
     	
-    	if($usename == "" || $usename == null){ $usename = ":"; }
+    	if($usename == "" || $usename == null){ $usename = ":";}
     	if($usename[0] != ":"){ return false; }
     	
-    	$strlen = strlen($usename);
     	$usename = ltrim($usename, ":");
     	$script = [];
 
@@ -816,20 +864,14 @@ class Resource Extends Rescom{
     	  $selfResources = self::$resources;
     	}
     	
-    	foreach ($selfResources as $key => $resource) {
+    	foreach ($selfResources as $resource) {
         
     	  if(!is_array($resource)){ 
-    	    if(self::is_protocol($resource)){
-    	      $resource = trim($resource);
-    	    }else{
-    	      if(strlen($dpath??'') > 0 and !is_dir($dpath)){ continue; }
-    	      $resource = trim($dpath.$resource);
-    	    }     
 
     	    if(!$execute){ 
-    	    	$script[] = self::getFile($resource,"",false); 
+    	    	$script[] = self::getFile($resource, false, false); //return
     	    }else{
-            self::getFile($resource,"",true); 
+            self::getFile($resource, false, true); //execute
     	    }
     	    
     	  }
@@ -839,91 +881,44 @@ class Resource Extends Rescom{
     } 
 
     /**
-     * sets a parent root path to prepend on absolute urls
-     *
-     * @param boolean|string $path
-     * @return void
-     */
-    public static function parent(string $path = ''){
-    	self::$prepend = $path;
-    }
-
-    /**
      * sort, executes and imports files in a group or lists of groups 
      *
-     * @param string|array $dpath as $usename || as a prefix for $usename when args > 1
-     * @param string|arrray $usename as name(s) of group(s) to be imported
-     * @var $imports returns the imported urls if args > 2
+     * @param string|array $name This can be the names of groups or option for watch to be imported
+     *  - When used as watch option, options are [::watch|::lock|<<console]
+     * @param string|false $imports references all imported urls. 
+     *  - The ':values' option returns
      * @return string scripts
      */
-    public static function import($dpath = null, $usename=null, &$imports=false){
+    public static function import(string|array $name = null, string|false &$imports = false){
 
-      	self::$resource_path  = '';
       	self::$storeImports   = false;
         self::$currentImports = [];  
 
         //call watchFile if parameters are (::watch | ::lock ) and watch is not on
         $watches = ['::watch', '::lock', '<<console'];
 
-        if(in_array($dpath, $watches)){
+        if(in_array($name, $watches)){
           //import watch script internally 
-          return self::watchFile($dpath, false);
+          return self::watchFile($name, false);
         }
         
         //variables that deal with importing of data
-      	$exec = ($imports === ":values")? false : true; 
-        if($imports === ":lists") $exec = false; 
+        $exec = !in_array($imports, [':values',':lists']);
+        $store = !in_array($imports, [':values', false]);
 
      	  $scripts = [];
 
-      	if($imports !== false and $imports != ":values"){ self::$storeImports = true; }
+      	if($store){ self::$storeImports = true; }
 
-      	if(func_num_args() < 2){
-      	  $usename  = $dpath;
-      	  $dpath = null;
-      	}else{
-      		if(is_array($dpath)){
-      			return ("import error: first arg must be a null or string (upper directory or domain url) if arg > 1");
-      		}
-      	}
+        $name = (array) $name;
 
-        if(self::$prepend and substr($dpath, 0,5) != "pre::"){ 
-           $dpath = $prep = "pre::".self::$prepend; 
+        foreach ($name as $grpName) {
+          $gpName = str_replace(":", '', $grpName);
+          if($gpName == null || isset(self::$resources[$gpName])){
+            $imp = self::importer($grpName, $exec) ;
+            $scripts[$grpName] = $imp;
+          }
         }
-
-      	if($dpath != null and !is_array($dpath)){       
-      	  
-          $url = str_replace("pre::", '', $dpath);
-      		$url = trim($url);
-      		if(!self::is_protocol($url) and !is_dir($url)){
-      			return self::call_error("path of '$dpath' does is not found");
-      		}
-
-      	}
-
-      	if(substr($dpath??'', 0,5) == "pre::"){
-      	  $dExp = explode("pre::", $dpath);
-      	  $dpath = $dExp[1];
-      	}
-
-      	if(is_array($usename)){ 
-      		foreach ($usename as $grpName) {
-      		 $gpName = str_replace(":", '', $grpName);
-      		 if($gpName == null || isset(self::$resources[$gpName])){
-             $imp = isset($dExp)?  self::prefixer($dpath,$grpName,$exec) : self::importer($dpath,$grpName,$exec) ;
-      		 	$scripts[$grpName] = $imp;
-      		 }
-      		}
-      	}else
-        {
-
-          $usName = str_replace(":", '', $usename);
-      		if(isset(self::$resources[$usName]) || $usName == null){
-            $imp = isset($dExp)? self::prefixer($dpath,$usName,$exec) : self::importer($dpath,$usename,$exec);
-      			$scripts[$usename] = $imp;
-      		}
-
-      	}
 
       	$imports = self::$currentImports;
 
@@ -938,15 +933,13 @@ class Resource Extends Rescom{
           //self::$use_watch watch init settings
           //self::$watched is when watch is activated (though may not be running)
           if(!$exec){ $watchFile = self::watchFile(self::$use_watch, !$exec); };
-          if($exec) print self::watchFile(self::$use_watch);
+          if($exec) echo self::watchFile(self::$use_watch);
 
         }
 
-        if(self::$meta_on){
+        if(!self::$meta_on){
 
-          $fileManager = new FileManager;
-          $isMeta = $fileManager->setUrl(getDefined('_icore').'init')->readFile('RESOURCE_META');
-        
+          $isMeta = Init::key('RESOURCE_META');
 
           if($isMeta === "on"){
             if(isset($_ENV['meta'])){
@@ -1016,8 +1009,6 @@ class Resource Extends Rescom{
      */
     public static function open(bool $reset = false){
         
-        Resource::$resource_path = ''; 
-        
         if(Resource::active()) {
            Resource::close(false); 
         }elseif($reset === true){
@@ -1067,13 +1058,11 @@ class Resource Extends Rescom{
         //@param / unset only currently selected name
         self::$resourceName = false;
 
-      }elseif(self::$resourceName != "" && $param === false){
+      }elseif(((self::$resourceName ?? '') != "") && $param === false){
         
         //@param ('*' | false)
         //unsets ignore, parent path and selected name only if 
         //an active name (or selection) exists 
-        self::$resource_path = '';
-        self::$ignore = false;
         self::$resourceName = false;
 
       }

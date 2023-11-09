@@ -2,6 +2,7 @@
 
 namespace spoova\mi\core\classes;
 
+use Exception;
 use PDO;
 use Reflection;
 use ReflectionClass;
@@ -60,10 +61,40 @@ class Slicer extends Directives{
       * @return Slicer
       */
      public static function slice($body, $return = false){ 
+        // resolve all layouts
         $process = self::process($body, $return);
-
         return ($return)? $process : (new self);
      }
+     
+     private static function sort_escapes(&$body){
+        self::sort_comments($body);
+        self::sort_excludes($body);
+     }
+     
+     public static function unsort_escapes(&$body){
+       self::unsort_excludes($body);
+       self::unsort_comments($body);
+     }
+     
+    //  protected static function sort_layouts(&$body){
+    //     $pattern = '/@lay\(\'(.*?)\'\)/';
+      
+    //     while (preg_match($pattern, $body, $matches)) {
+    //         $fileToInclude = to_dirslash($matches[1], true);
+    //         $fileInfo = explode(':', $fileToInclude, 2);
+            
+    //         $layout_url = WIN_REX.$fileInfo[0]; //get file path 
+    //         $layout_id = $fileInfo[1];
+            
+    //         //build a layout pattern from layoutId values
+    //         $layoutPattern = "~@layout:{$id}.*?@layout;~is";//replacement 
+
+    //         $fileContent = file_get_contents($fileToInclude);
+    //         $body = preg_replace('/@lay\(\''.preg_quote($fileToInclude, '/').'\'\)/', $fileContent, $content);
+    //     }
+    
+    //     return $body;
+    //  }
 
      protected function endSlice(){
 
@@ -108,11 +139,9 @@ class Slicer extends Directives{
       * @return string|void
       */
      private static function process($body, $return){ 
-
+        
         if($body){
-          self::sort_comments($body);
-          
-          self::sort_excludes($body);
+          self::sort_escapes($body);
           
           self::sort_placeholders($body);
 
@@ -133,6 +162,7 @@ class Slicer extends Directives{
 
           self::sort_conditions($body);
 
+          //self::unsort_comments($body);
         }
 
         $body = $body;
@@ -151,7 +181,6 @@ class Slicer extends Directives{
       foreach($fetches as $fetched) {
        $hashed = base_encode($fetched);
        $rep = "@comments(c:$hashed)";
-       
        $body = str_replace($fetched, $rep, $body);
        self::$comments[] = $hashed;      
       }
@@ -159,9 +188,10 @@ class Slicer extends Directives{
     }
 
     public static function unsort_comments(&$body){
-      foreach(self::$comments as $comment){
+      foreach(self::$comments as $key => $comment){
         $content = base_decode($comment);
         $body = str_replace("@comments(c:$comment)", $content, $body);
+        //unset(self::$comments[$key]);
       }
     }
 
@@ -172,7 +202,6 @@ class Slicer extends Directives{
       $body = preg_replace('~@else:~', '<?php else: ?>', $body);
       $body = preg_replace('~@endif;~', '<?php endif; ?>', $body);
 
-      $body = preg_replace('~@do:~', '<?php do: ?>', $body);
       $body = preg_replace('~@while\((.*?)\):~', '<?php while($1): ?>', $body);
       $body = preg_replace('~@endwhile;~', '<?php endwhile; ?>', $body);
 
@@ -186,9 +215,45 @@ class Slicer extends Directives{
 
       $body = preg_replace('~@break;~', '<?php break; ?>', $body);
 
+      //set switch pattern
+      $pattern = '/^[\s]*(@switch\([^)]+\)|@case\([^)]+\)|@break|@default)/m';
+      $body = preg_replace($pattern, '$1', $body);
+
       //handling switch statements
-      $body = preg_replace('~@switch\((.*?)\):~', '<?php switch($1): ', $body);       
-      $body = preg_replace('~@endswitch;~', 'endswitch; ?>', $body);
+      $body = preg_replace('~@test\((.*?)\):~', '<?php switch($1): ', $body);       
+      $body = preg_replace('~@endtest;~', 'endswitch; ?>', $body);
+      
+      //handle do-while statements
+      $pattern = '/@do:(.*?)@while\((.*?)\);/s';
+
+      // Replace the pattern with the desired format
+      $replacement = '<?php do{$1}while($2); ?>';
+      $body = preg_replace($pattern, $replacement, $body);
+      
+      //handle loop statement
+      // Define the regular expression pattern
+      $varArrows = '~@loop\(([^:]+): ([^ ]+) [@-]> (.+)\):~';
+      $body = preg_replace($varArrows, '<?php for($1 = $2; $1 <= $3; $1++): ?>', $body);
+      
+      $varArrows = '~@loop\(([^:]+): ([^ ]+) <[@-] (.+)\):~';
+      $body = preg_replace($varArrows, '<?php for($1 = $3; $1 >= $2; $1--): ?>', $body);
+       
+      $varOperators = '~@loop\(([^:]+): ([^ ]+) ([<>]=?|=) (.+)\):~';
+      $body = preg_replace($varOperators, '<?php for($1 = $2; $1 $3 $4; $1++): ?>', $body);
+ 
+      // Replace the pattern with the desired format
+      /* $body = preg_replace($pattern, '<?php for($1 = $2; $1 $3 $4; $1): ?>', $body);
+      */
+
+      // Replace the pattern with the desired format
+      /*$body = preg_replace($pattern, '<?php for($1 = $2; $1 $3 $4; $1++): ?>', $body);
+       */
+      $body = preg_replace('~@endloop;~', '<?php endfor; ?>', $body);
+      
+      $body = preg_replace('~@switch\((.*?)\):~', '<?php switch($1): ?>', $body);       
+      $body = preg_replace('~@case\((.*?)\):~', '<?php case $1: ?>', $body);       
+      $body = preg_replace('~@default:(.*?)~', '<?php default: $1; ?>', $body);       
+      $body = preg_replace('~@endswitch;~', '<?php endswitch; ?>', $body);
 
     }
 
@@ -199,23 +264,50 @@ class Slicer extends Directives{
 
       $fetches = $fetches[0];
 
+      //vdump($fetches);
+
+      usort($fetches, fn($a, $b) => strlen($b) - strlen($a) );
+
       foreach($fetches as $fetched) {
        $hashed = base_encode($fetched);
        $rep    = "@ccomments(c:$hashed)";
+       $reps[] = $rep;
        $body = str_replace($fetched, $rep, $body);
-       self::$excludes[] = $hashed;      
+       self::$excludes[] = [
+         'hash' => $hashed, 
+         'rep' => $rep, 
+         'fetched' => $fetched, 
+       ];      
       }
             
     }
 
     final public static function unsort_excludes(&$body){
-      foreach(self::$excludes as $exclude){
-        $mod = base_decode($exclude);
+ 
+
+      foreach(self::$excludes as $key => $exclude){
+        //$mod = base_decode($exclude);
         
-        $body = str_replace("@ccomments(c:$exclude)", $mod, $body);
+        $rep = $exclude['rep'];
+        $fetched = $exclude['fetched'];
+        $comment = substr($fetched, 2); 
+        $comment = substr($comment, 0, -2); 
+        //unset(self::$excludes[$key]);
+        
+        $body = str_replace($rep, $comment, $body);
+        //$body = str_replace("@ccomments(c:$exclude)", $mod, $body);
         //$body = preg_replace('~@\(\{\{(.*?)\}\}\)@~', "&#123;&#123;$1&#125;&#125;", $body);
-        $body = preg_replace('~@\((.*?)\)@~s', "$1", $body);
-      }
+        //$body = str_ireplace($rep, $fetched, $body);
+        // $body = preg_replace('~@\((.*?)\)@~s', "$1", $body);
+        //unset(self::$excludes[$key]);
+      }    
+      // var_dump($body);
+      //var_dump(self::$excludes);
+      //vdump(self::$excludes, $body);
+    }
+    
+    final public static function excludes(){
+      return self::$excludes;
     }
 
     /**
@@ -226,10 +318,11 @@ class Slicer extends Directives{
      */
     private static function sort_placeholders(&$body){
 
+      $body = preg_replace('~{{:\s?(.*?)?\s?}}~is','<?php $1 ?>', $body);
       $body = preg_replace('~{{\s?([a-zA-Z_0-9]+)?\?\s?}}~is','<?= $$1 ?? \'\' ?>', $body);
       $body = preg_replace('~{{\s?\$([a-zA-Z_0-9]+)?\?\s?}}~is','<?= $$1 ?? \'\' ?>', $body);
     
-      $body = preg_replace('~{{\s?(.*?)?\s?}}~is','<?= $1 ?>', $body);
+      $body = preg_replace('~{{\s?(.*?)?\s?}}~is','<?php echo $1; ?>', $body);
 
     }
 
@@ -371,8 +464,6 @@ class Slicer extends Directives{
      */
     private static function sort_directives(&$body){
 
-
-
       //get all directives ... 
       $rc = new ReflectionClass('Rexit');
       $statics = $rc->getMethods(ReflectionMethod::IS_PUBLIC | ReflectionMethod::IS_STATIC);
@@ -432,7 +523,9 @@ class Slicer extends Directives{
      * @return string raw contents of file
      */
     public static function loadTemplate(string $file, $params = []){
-
+      
+      SET('::sp-file', $file, 123);
+      
       foreach($params as $locals => $value){
         if($locals != 'this') $$locals = $value;
       }
@@ -448,7 +541,7 @@ class Slicer extends Directives{
       }
 
       ob_start();
-      include($file);
+      include(GET('::sp-file', 123));
       $template = ob_get_clean();
       return $template;
 

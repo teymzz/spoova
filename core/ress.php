@@ -1,9 +1,6 @@
 <?php
 
-/* Core Static Resources  */
-Res::new('res/main/')
-   
-    ->name("headers")
+Ress::new('res/main/')
   
         # css headers
         ->url("css/local/debug/res.css => x-debug:res-css")->named('x-debug')
@@ -25,22 +22,17 @@ Res::new('res/main/')
         ->url("js/local/helper.js")->named('helperJS')
         ->url("js/local/init.js")->named('initJS')
 
-         ->bindTo('headers')
-  
-    ->name('footers')
+        ->bindTo('headers')
 
         # javascript footers
         ->url("js/local/loadFuncs.js")->named('loadFuncs')
         ->url("css/mdb5/js/mdb.min.js")->named('mdb')
 
         ->bindTo('footers')
-    
-    ->name('bond')
 
         # javascript footers
         ->url("js/local/bond.js")->named('bond')
 
-    ->name('') #unamed global storage space
         ->url('js/local/switcher.js')->named('switcherJS')
         ->url('js/local/intersect.js')->named('intersectJS')
         ->url('js/local/ajax.js')->named('ajaxJS')
@@ -50,6 +42,4 @@ Res::new('res/main/')
 
         // css urls
         ->url('css/animations/animate.min.css')->named('animateCSS')
-
-    ->urlClose()
     ;

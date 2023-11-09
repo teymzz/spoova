@@ -8,22 +8,28 @@ namespace spoova\mi\core\classes;
  */
 class Init {
 
+    public const File = _icore.'init';
+    private static ?FileManager $Filemanager = null;
     private static $update = false;
     private static $init = [];
 
-    static function key($key) : string|false {
+    /**
+     * Retrieve init file configuration key's value
+     *   - Left empty spaces of values are  before value is returned.
+     * @param string $key
+     * @param mixed $alternate alternate value to be returned when $key is empty
+     * @return string|false
+     */
+    static function key(string $key, $alternate = false) : string|false {
 
         self::setData();
         self::$update = false;
-        return self::$init[$key] ?? false;
+        $value = self::$init[$key] ?? '';
+
+        return trim($value)? $value : $alternate;
 
     }
 
-    /**
-     * Get entire key and value pairs from the init file.
-     *
-     * @return array
-     */
     static function values() : array {
         
         self::$update = false;
@@ -33,24 +39,80 @@ class Init {
     private static function setData() {
         if(empty(self::$init) || (!empty(self::$init) && self::$update)){
 
-            $Filemanager = new FileManager; 
-            $initFile    = _icore.'init';
-
-            $Filemanager->setUrl($initFile)->openFile($initFile);
-
-            self::$init = $Filemanager->readAll(':');
+            if(self::setFilemanager()){
+                $Filemanager = self::$Filemanager;
+                self::$init = $Filemanager->readAll(':');
+            }
 
         }
     }
 
     /**
-     * This method is used to force the init file to re-read from the init file 
-     * after an initial read. If required, it must be called before any other public method.
+     * Sets a key and value into the icore/init configuration file
+     *
+     * @param string $key
+     * @param string $value
+     * @return bool true when $key is successfully set
+     */
+    public static function set(string $key , string $value) : bool {
+        if(self::setFilemanager()){
+            $Filemanager = self::$Filemanager;
+            $Filemanager->textUpdate([$key => $value]);
+            if($Filemanager->readFile($key) === $value){
+                self::update();
+                self::setData();
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Unsets a key from the icore/init configuration file
+     *
+     * @param string|array $key
+     * @param string $value
+     * @return string|array|false depending on the value supplied
+     *  - false is returned if no key is deleted
+     */
+    public static function unset(string|array $key) : string|array|false {
+        if(self::setFilemanager()){
+            $Filemanager = self::$Filemanager;
+
+            if($Filemanager->textDelete($key, $dels)){
+                if(is_string($key)) {
+                    return $key;
+                }else if(is_array($key)){
+                    return $dels;
+                }
+            }else{
+                return false;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Update stored data
      *
      * @return void
      */
     public static function update() : void {
         self::$update = true;
+    }
+
+    /**
+     * Set Filemanager
+     *
+     * @return boolean
+     */
+    private static function setFilemanager() : bool{
+            $Filemanager = new FileManager; 
+            $open = $Filemanager->setUrl(self::File)->openFile(true);
+            self::$Filemanager = $Filemanager;   
+            return $open;    
     }
 
 }

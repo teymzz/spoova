@@ -1,15 +1,13 @@
-/* 
-This class was created to support dynamic php and php content control. 
-It is strongly advised that this class should only be used in development mode. 
-PHP has different ways of displaying errors, this means that error debugger may not work successfully on all php server applications. 
-There will not be any critical changes to the code structure, so developers may use in on live apps. Again, it is strongly advise to avoid this. 
-*/
-
+/**
+ * This class was created to support dynamic php and php content control.
+ * PHP has different ways of displaying errors, this means that error debugger may not work successfully on all php server applications. 
+ * This algorithm may be subjected to future changes and updates as at when necessary to further improve its performace.
+ */
 if(typeof Res === 'undefined'){
 
     class Res {
 
-        constructor(url, responseField, settings = {}){
+        constructor(){
 
             //default variables anchor
             let defaults = {}, loc, uri, xdefaults;
@@ -68,9 +66,10 @@ if(typeof Res === 'undefined'){
                 window.location.reload();
             }
 
-            var data = Object.create(null), id = 0;
+            var data = Object.create(null), id = 0; 
 
             this.defaults.controller = function(res){
+        
                 res.defaults.startServer = function(func, time){
                     data[id] = {
                         nativeID: setTimeout(func, time),
@@ -85,16 +84,39 @@ if(typeof Res === 'undefined'){
                         clearTimeout(data[id].nativeID);
                         delete data[id];
                     }
+                
                     res.defaults.terminated  = true;
                     return id++;
                 }  
+
+                res.defaults.pauseServer = function(bool) {
+                    if(bool){
+                        res.defaults.stopServer();
+                    }else{
+                        if(res.boot) {
+                            res.boot(true) //start server
+                        }else{
+                            res.stream(res.baseStream)
+                        }
+                    }
+                }
+
+                res.defaults.pauseActivity = function(bool, callback) {
+                    res.defaults.pauseServer(bool)
+                    if(callback) callback(bool);
+                }
                 
                 document.addEventListener('visibilitychange', function(){
-                    if(document.visibilityState == 'visible'){
-                        for(var id in data)
-                            data[id].nativeID = setTimeout(data[id].func, data[id].time);
-                    } else {
-                        for(var id in data) clearTimeout(data[id].nativeID);
+                    if(res.boot){
+                        if(document.visibilityState == 'visible'){
+                            if(res.defaults.remotePause !== true){
+                                res.defaults.terminated = false;
+                                res.boot(true) //start
+                                res.timerBox().resume();
+                            }
+                        } else {
+                            res.defaults.stopServer();
+                        }
                     }
                 })
 
@@ -111,6 +133,10 @@ if(typeof Res === 'undefined'){
                 'Debug'   : 'js/local/debug/debug.js',
                 'Livejs'  : 'js/local/debug/live.js',
                 'Livecss' : 'css/local/debug/res.css',
+            }
+                
+            if(!this.resources('css').exists){
+                this.resources('css').add();
             }
 
         }
@@ -142,7 +168,7 @@ if(typeof Res === 'undefined'){
         }
 
         /**
-         * Update an old data with a new date
+         * Update an old data with a new data
          */
         update(target, newdata){
             if(newdata == undefined) return target;
@@ -214,39 +240,71 @@ if(typeof Res === 'undefined'){
             //store current environment
             this.defaults.environment = isOnline? 'online' : 'offline';
 
+
+            //reconfigure settings
+            let json = this.jsonval(settings);
+            let configs = json.object;
+            let mode = configs.mode;
+            let controls;
+            
+            if(configs.controls !== 'false' && configs.controls !== ''){ 
+                controls = configs.controls;
+            }
+
+            //validate runtime 
+            let runtime = configs.runtime || 600; //allows 30 seconds minimum time 
+            runtime = parseInt(runtime); 
+
+            if(!runtime || runtime < 60){
+                if(runtime < 60) {
+                    console.error('Live server config error >> runtime('+runtime+') less than min of 60secs.');
+                }else{
+                    console.error('Live server config error >> runtime using default.');
+                }
+                console.info('Live server (runtime) >> '+runtime+' secs.');
+                runtime = 600;
+            }
+
             //re-initialize environment debugging
             this.defaults.Online  = 'uiconsole'; // [uiconsole|pop|console|off]
             this.defaults.Offline = 'uiconsole'; // [uiconsole|pop|console|off]
-            this.defaults.ops     = settings;
+            this.defaults.ops     = mode;
+            this.defaults.runtime = runtime;
+            this.defaults.controls = controls;
+            this.defaults.remoteIcons = {
+                review: configs.review || 'bi-arrow-clockwise',
+                pauser: configs.pauser || 'bi-pause-circle',
+                player: configs.player || 'bi-play-circle',
+                position: configs.position
+            };
 
-            if(settings == "::console" || settings == "<<console"){
+            if(mode === "::console" || mode === "<<console"){
                 this.defaults.show = true;
                 return this.defaults;
             }
 
-            if(settings == 'online') {
+            if(mode === 'online') {
                 //enable all environments debugging
                 return this.defaults
             } 
 
-            if(settings == '::lock' || settings == '<<lock') {
+            if(mode === '::lock' || mode ==='<<lock') {
                 //enable all environments debugging
                 return this.defaults;
             }  
 
-            if(settings == '::watch' || settings == '<<watch') {
+            if(mode === '::watch' || mode === '<<watch') {
                 //enable all environments debugging
                 return this.defaults;
             }  
-            
 
-            if(settings == 'offline') {
+            if(mode === 'offline') {
                 //allow only offline environment debugging
                 this.defaults.Online  = false;
                 return this.defaults;
             } 
 
-            if(settings == 'on:offline') {
+            if(mode === 'on:offline') {
                 //allow only offline environment debugging
                 this.defaults.Online  = false;
 
@@ -255,7 +313,7 @@ if(typeof Res === 'undefined'){
                 return this.defaults;
             }  
             
-            if(typeof settings == 'integer') {
+            if(typeof mode === 'integer') {
                 settings.interlock = false;
                 settings.interval  = settings;
                 return this.update(this.defaults, settings);
@@ -274,12 +332,12 @@ if(typeof Res === 'undefined'){
          * 
          * special built-in function for live error notification 
          */
-        monitor(settings = {}, appUrl){
+        monitor(settings = {}, appUrl = ''){
 
             settings = this.monitorInit(settings, appUrl);
 
             //monitor's internal variables
-            let mobi = settings, rex, url, view, params, base;
+            let mobi = settings, rex, url, view, params, base, runtime;
 
             //initialize few internal variables
             mobi.errlog = 0; mobi.notice = 0; mobi.counter = 0;
@@ -295,6 +353,7 @@ if(typeof Res === 'undefined'){
             setTimeout( () => {
                 
                 url = this.defaults.currentUrl;
+                runtime = this.defaults.runtime;
                 view = (settings.currentLoc == '')? ':' : `>> ${settings.currentUrl} `;
                 params = this.defaults.params = window.location.search;
                 
@@ -310,7 +369,7 @@ if(typeof Res === 'undefined'){
 
                     if(response.readyState == 4){
 
-                        if(response.status === 200){
+                        if(response.status === 200 || response.status === 423){
 
                             base = {
                                 url: url + params,
@@ -318,11 +377,23 @@ if(typeof Res === 'undefined'){
                                 htmlRefined : rex.filterScript(response.responseText),
                                 instance   : 0,
                                 status     : response.status,
-                                terminate  : 0
+                                terminate  : 0,
+                                cycle    : 0
                             };
 
-                            rex.info('Live server (mode) >> online');
+                            rex.info('Live server (mode) >> online for '+runtime+' seconds');
 
+                            document.addEventListener('visibilitychange', function(){
+                                if(document.visibilityState == 'visible' && !res.defaults.remotePause){
+                                    base.cycle = 0;
+                                }
+                            })
+
+                            if(rex.defaults.controls && ['poll','seek'].includes(rex.defaults.controls)){
+                                rex.addRemoteControl();
+                            }
+
+                            rex.baseStream = base;
                             rex.stream(base);
 
                         }else{
@@ -342,12 +413,12 @@ if(typeof Res === 'undefined'){
         }
 
         stream(base) {
-
+            
             let defaults, content, mobi, debug, rex = this, offline;
 
             //declare debug variables
             let allowPop = false, allowConsole = false;
-            
+
             //set configuration objects
             content  = base.htmlRefined;
             defaults = this.defaults;
@@ -431,13 +502,16 @@ if(typeof Res === 'undefined'){
 
                                 if(allowPop && mobi.serverError == 0) {
 
+                                    //remove any previous error ... 
+                                    rex.box('::notice').remove();
+
                                     let widget = `
-                                        <div class="widget spoova-e-widget box relative px-100">
-                                            <div class="relative box rad-r" style="z-index:1000">
-                                                <div class="roller-circle absolute box rad-r grid-center" style="z-index:11">
+                                        <div class="widget spoova-e-widget box relative px-full">
+                                            <div class="box relative rad-r">
+                                                <div class="roller-circle absolute box rad-r">
                                                     <div class="roller rad-r ov-d4 absolute ico-spin"></div>
                                                     <div class="roller-text rad-r absolute flow-hide ov-l1 c-grey anc-btn-link">
-                                                        <div class="box px-full grid-center font-em-d6">
+                                                        <div class="px-full grid-center font-em-d6">
                                                             &#9888
                                                         </div>    
                                                     </div>        
@@ -446,7 +520,7 @@ if(typeof Res === 'undefined'){
                                         </div>
                                     `;
                                     //fix code or server error notice was replaced with roller widget
-                                    rex.pop(rex.makeDiv(widget, 'spoova-notice-err e-widget'));
+                                    rex.pop(rex.makeDiv(widget, 'spoova-notice-err e-widget'), true);
                                 }
                                 if(mobi.serverError == 0){
                                     rex.clear(function(){
@@ -697,17 +771,30 @@ if(typeof Res === 'undefined'){
                                             
                                             if(offline){
                                                 if(allowPop){
-                                                    let notice = `${error} <span class="fb-6"><span class="bi-file-code"></span> ${(mobi.currentUrl)}</span> <br> fixed <span class="bi-check-circle"></span>`;
-                                                    rex.pop(rex.makeDiv(notice, 'spoova-notice-fix'));
-                                                    let cssdebugger = document.querySelector('link[x-debug="spoova"]');
-                                                    if(cssdebugger) {
+
+                                                    if(!['poll','seek'].includes(rex.mobi.controls)){
+                                                        let notice = `${error} fixed <span class="bi-check-circle"></span>`;
+                                                        rex.pop(rex.makeDiv(notice, 'spoova-notice-fix'));
+                                                    }else{
+                                                        let spControl = rex.box('::sp-control').get();
+                                                        let spNotice = spControl.querySelector('[sp-notice]');
+
+                                                        spNotice.setAttribute ('view', true);
+                                                        
                                                         setTimeout(() => {
-                                                            cssdebugger.remove();
-                                                        }, 1000)
+                                                            spNotice.removeAttribute('view');
+                                                        }, 2000)
                                                     }
+                                                    // let cssdebugger = document.querySelector('link[x-debug="spoova"]');
+                                                    // if(cssdebugger) {
+                                                    //     setTimeout(() => {
+                                                    //         cssdebugger.remove();
+                                                    //     }, 1000)
+                                                    // }
                                                 }
                                                 rex.clear(function(){
-
+                                                    
+                                                    base.cycle = 0;
                                                     rex.info('Live server (watch) >> resumed')
 
                                                 })
@@ -780,7 +867,7 @@ if(typeof Res === 'undefined'){
                                         
                                         //* Handle new error
                                         if(mobi.newError){
-
+                                            
                                             let error1 = error.charAt(0).toUpperCase() + error.slice(1);
                                             let error2 = error; let realError;
                                             let split1, split2;
@@ -804,6 +891,9 @@ if(typeof Res === 'undefined'){
                                         }
 
                                         if(mobi.oldError != mobi.newError){
+
+                                            rex.timerBox(base).remove();
+
                                             if(offline){
                                                 if(allowPop){
                                                     if(oldNotice) oldNotice.remove();
@@ -839,7 +929,6 @@ if(typeof Res === 'undefined'){
                                 if(offline){
                                     if(allowPop){
 
-                                        let cssText = "position:fixed; top:.25em; right:.25em; display:inline-block; border:solid 2px; color:red; background:white; z-index:100000; padding: .25em; border-radius:.25em; font-size: .95em";
                                         rex.pop(rex.makeDiv('...', 'res-notice'));
 
                                     }
@@ -849,15 +938,26 @@ if(typeof Res === 'undefined'){
                                 }
                             }  
 
-                            if(!rex.mobi.terminated){
-
-                                rex.mobi.startServer(() => {
-                                    
-                                    rex.stream(base)
+                            if(rex.mobi.controls !== 'seek'){
+                                // add a timer box
+                                rex.timerBox(base).timed(20);
     
-                                }, 1000)                            
-
+                                res.boot = function(start){
+                                    if(!rex.mobi.terminated || start){
+    
+                                        rex.mobi.stopServer();
+                                        rex.mobi.terminated = false;
+    
+                                        rex.mobi.startServer(() => {
+                                            base.cycle++;
+                                            rex.stream(base)
+                                        }, 1000);                            
+    
+                                    }
+                                }
+                                res.boot();
                             }
+                            
                             
                         }
 
@@ -955,7 +1055,7 @@ if(typeof Res === 'undefined'){
             let status = request.status; 
 
             response.isReady       = (state === 4);
-            response.isServerError = (state === 4 && status >= 500);
+            response.isServerError = (state === 4 && (status >= 500 || status === 423));
             response.isFileError   = (state === 4 && status === 404);
             response.success       = (state === 4 && status === 200);
 
@@ -1017,13 +1117,16 @@ if(typeof Res === 'undefined'){
             return false;          
         }
 
-        pop(message) {
+        pop(message, isDraggable = false) {
             if(!message) return;
             document.body.appendChild(message);
+            if(isDraggable){
+                this.isDraggable(message);
+            }
         }
 
         makeDiv(content, eclass){
-            let html, div, message, fatal, warning, style, assets = this.assets;
+            let html, div, message, fatal, warning, rex = this;
 
             html = document.body.innerHTML;
             div = document.createElement("div");
@@ -1032,22 +1135,19 @@ if(typeof Res === 'undefined'){
             div.setAttribute('class', (eclass || ''));
 
             message = new DOMParser().parseFromString(content, "text/html");
-            message = message.querySelector('script[x-debug]')
+            message = message.querySelector(rex.resources('js').query)
             fatal = document.querySelector('[class="xdebug-error xe-fatal-error"]')
             warning = document.querySelector('[class="xdebug-error xe-warning"]')
-           if (fatal) fatal.remove();
-           if (warning) warning.remove();
-
-            style = document.createElement('link');
-            if(!document.querySelector('link[x-debug="spoova"]')){
-                style.setAttribute('href', assets.root+assets.base+assets.Livecss);
-                style.setAttribute('x-debug', 'spoova');                
-                style.setAttribute('rel', 'stylesheet');                
-                style.setAttribute('type', 'text/css');                
-                if(content) document.getElementsByTagName("head")[0].appendChild(style);
+            
+            if (fatal) fatal.remove();
+            if (warning) warning.remove();
+                
+            if(!rex.resources('css').exists){
+                rex.resources('css').add();
             }
 
             if(message){
+                // display message
                 console.log(message);
                 message = message.parentElement;
                 message = message.innerHTML;
@@ -1064,14 +1164,26 @@ if(typeof Res === 'undefined'){
                 div.classList.remove('lite');
             }
             
+            if(rex.resources('css').exists){
+                if(div.querySelector(rex.resources('css').query)){
+                    div.querySelector(rex.resources('css').query).remove()
+                }
+            }
+            
+            if(rex.resources('js').exists){
+                if(div.querySelector(rex.resources('js').query)){
+                    div.querySelector(rex.resources('js').query).remove()
+                }
+            }
+            
             return div;
         }
 
         clearDebugs(){
 
-            let xDebugs = document.querySelectorAll('[data-err="x-debug"]')          
-            let xScripts = document.querySelectorAll('script[x-debug]');
-            let xLinks   = document.querySelectorAll('link[x-debug="res-css"]');
+            let xDebugs  = this.resources('error-boxes').links          
+            let xScripts = this.resources('js').links;
+            let xLinks   = this.resources('css').links;
             
             for(const xDebug of xDebugs){
                 xDebug.remove();
@@ -1087,16 +1199,563 @@ if(typeof Res === 'undefined'){
             for(const xLink of xLinks){
                 i++;
                 if(i == xLinks.length) break;
-                if(document.querySelectorAll('link[x-debug="res-css"]').length > 1) xLink.remove();
+                if(this.resources('css').length > 1) xLink.remove();
             } 
 
         }
 
         cleanDebugs(){
-            let iDebugs = document.querySelectorAll('.custom-error-pane');
+            let iDebugs = this.resources('.custom-error-pane').links;
             for(const iDebug of iDebugs){
                 iDebug.remove();
             }            
+        }
+
+        box(id, cacheName) {
+
+            let div, uiBox, rex = this;
+
+            return uiBox = {
+
+                add: function(content) {
+                    div = document.createElement('div');
+                    div.id = id;
+                    div.innerHTML = content || '';
+                    document.body.appendChild(div);
+                    return this;
+                },
+
+                get: function(){
+                    div = document.getElementById(id);
+                    return div;
+                },
+
+                addCss(style) {
+                    div = document.getElementById(id);
+                    rex.element(div).style(style)
+                    // rex.addCss(div, style);
+                    return this;
+                },
+
+                remove : function() {
+                    div = document.getElementById(id);
+                    if(div) div.remove();
+                    return this;
+                },
+
+                isDraggable: function() {
+                    rex.isDraggable(uiBox.get(), cacheName);
+                    return this;
+                },
+
+                setAttributes: (attributes) => {
+                    rex.element(uiBox.get()).setAttributes(attributes);
+                    return this;
+                }
+
+            }
+
+        }
+
+        timerBox(base) {
+
+            let rex =  this;
+
+            let obj = {
+
+                timed: (time = 20) => {
+                    let maxCycle, timerCycle, timeLeft;
+                    maxCycle = rex.defaults.runtime; // 30 minutes maximum
+                    timerCycle = maxCycle - 20;
+                    timeLeft   = maxCycle - base.cycle;
+                    
+                    if(base.cycle > timerCycle){
+                        let resetBase = function(){
+                             rex.timerBox(base).resume();
+                             document.removeEventListener('mousemove', resetBase);
+                        }
+                        if(timeLeft < 1){
+
+                            rex.timerBox().terminate(base);
+
+                        }else{
+
+                            document.addEventListener('mousemove', resetBase)
+                            rex.timerBox().add(timeLeft);
+                            //live server will resume when you move mouse on browser ...
+                        }
+                    }
+                },
+
+                add : (timeLeft) => {
+                    rex.box('::sp-timer').remove().add(
+                        `
+                        <div class="sp-live-notice" rel="live-secs" style="position:fixed; padding:10px; font-size: 14px; z-index:1; right:0; top:0; background-color:#8a213a; color:white">
+                            <div>Live server terminates in:</div>
+                            <div>${timeLeft} seconds</div>
+                        </div>
+                        `
+                    )
+                    rex.clear().info(`Live server pausing in ${timeLeft} seconds.`);
+                },
+
+                resume: () => {
+                    rex.box('::sp-timer').remove().add(
+                        `
+                        <div class="sp-live-notice" rel="live-resm" style="position:fixed; padding:10px; font-size: 14px; z-index:1; right:0; top:0; background-color:#2e8a21; color:white">
+                            <div>Live server resumed</div>
+                        </div>
+                        `
+                    );
+                    
+                    setTimeout(() => {
+                        rex.box('::sp-timer').remove();
+                    }, 1500)
+                    
+                    rex.clear().info('Live server (resumed)');
+
+                    if(base) base.cycle = 0;
+
+                },
+
+                //silent removal
+                remove(){
+                    base.cycle = 0;
+                    rex.box('::sp-timer').remove()
+                },
+
+                terminate: (base) => {
+
+                    rex.box('::sp-timer').remove().add(
+                        `
+                        <div style="position:fixed; font-size: 14px; padding:10px; z-index:1; right:0; top:0; background-color:#8a213a; color:white">
+                            <div>Live server terminated:</div>
+                            <div>resumes on browser mouse activity</div>
+                        </div>
+                        `
+                    )
+                    rex.clear().info(`Live server (terminated) >> resumes on browser activity.`);
+                    
+                    rex.mobi.pauseActivity(true, function(){
+                        let selector = document.querySelector('body');
+                        var userActivity = function(){
+                            base.cycle = 0;
+                            rex.mobi.pauseActivity(false);
+                            obj.resume();
+                            selector.removeEventListener('mousemove', userActivity, false);
+                        } 
+                        selector.addEventListener('mousemove', userActivity, false);
+                    });
+
+                }
+
+            }
+
+            return obj;
+
+        }
+
+        addRemoteControl() {
+            let liveRemote, liveControl, controls, remote, rex = this;
+            let remoteColor, remoteBtn, remoteIcons = rex.mobi.remoteIcons;
+
+            liveRemote = rex.box('::sp-control', 'spoovaLiveBtn');
+
+            controls = rex.mobi.controls;
+
+            let pauser, player, review, activeColor, inactiveColor;
+
+            review = remoteIcons.review || 'bi-arrow-clockwise';
+            pauser = remoteIcons.pauser || 'bi-pause-circle';
+            player = remoteIcons.player || 'bi-play-circle';
+
+            activeColor = '#197563';
+            inactiveColor = 'red';
+            
+            let remotePositions = rex.remotePositions('spoovaLiveBtn', {
+              top: remoteIcons.position.top, 
+              right: remoteIcons.position.right, 
+            })
+
+            if(controls === 'seek') {
+                remoteBtn = review; 
+            }else{
+                remoteBtn = pauser;
+            }
+
+            liveRemote.add(`
+            
+                <div sp-rel="sp-box">
+                    <div sp-control>
+                        <div style="user-select:none">Live</div>
+                        <span live-control="control" class="${remoteBtn}"></span>
+                    </div>
+                    <div sp-notice>
+                        <span style="padding:0 .2em">Fixed <span class="bi bi-check-circle"></span></span>
+                    </div>
+                </div>
+
+            `).addCss({
+              top: remotePositions.top,
+              right: remotePositions.right
+            }).isDraggable();
+            
+            remote = liveRemote.get();
+            remote.setAttribute('spoova-role','live-control');  
+
+            //pausing activity
+            liveControl = remote.querySelector('[live-control]');
+            liveControl.addEventListener('click', function(e){ 
+
+                this.addEventListener('touchstart', function (e) {
+                  e.stopPropagation(); // Prevent the touch event from propagating to the parent
+                });
+                if(liveControl.classList.contains(review)){
+                    rex.defaults.remotePause = false;
+                    rex.mobi.pauseActivity(false, function(){  
+                        remote.style.backgroundColor = inactiveColor;
+                    });
+                    if(!rex.boot){
+                        liveControl.classList.add('cycle')
+                        setTimeout(() => {
+
+                            liveControl.classList.remove('cycle')
+                            remote.style.backgroundColor = activeColor;  
+
+                        }, 200)
+                    }
+                } else {
+
+                    if(liveControl.classList.contains(pauser)){
+                        rex.defaults.remotePause = true;
+                        rex.mobi.pauseActivity(true, function(){      
+                            liveControl.classList.remove(pauser)
+                            liveControl.classList.add(player)
+                            remote.style.backgroundColor = 'red';                         
+                        });
+                    }else{
+                        rex.defaults.remotePause = false;
+                        rex.mobi.pauseActivity(false, function(){                               
+                            liveControl.classList.remove(player)
+                            liveControl.classList.add(pauser)
+                            remote.style.backgroundColor = '#197563';
+                        });
+                        if(!rex.boot){
+                            setTimeout(() => {
+    
+                                liveControl.classList.remove(pauser)
+                                liveControl.classList.add(player)
+                                remote.style.backgroundColor = 'red';  
+    
+                            }, 200)
+                        }
+                    }
+
+                }
+
+            })
+        }
+
+        element(selection){
+
+            let rex = this;
+
+            return {
+
+                setAttributes : (object) => {
+                    if(typeof selection !== 'object'){
+                        rex.error('invalid object supplied for element');
+                        return false;
+                    }
+                    if(typeof object !== 'object'){
+                        rex.error('invalid object supplied for attributes');
+                        return false;
+                    }
+
+                    for(let i in object){
+                        selection.setAttribute(i, object[i]);
+                    }
+                },
+
+                style(arg1) {
+                    
+                    let css; //css object container
+                    
+                    if((typeof arg1 === 'string')){
+                        let cssObj  = arg1.split(";"); 
+                        css = {};
+
+                        cssObj.forEach(obj => {
+                            prop = obj.split(":");
+                            if (prop.length == 2){
+                                css[prop[0].trim()] = prop[1].trim();            
+                            }
+                        })
+                    } else if (typeof arg1 === 'object') {
+                        css = arg1;
+                    }
+                    
+                    if(css){
+                        setTimeout(()=>{
+
+                            if(typeof selection === 'string'){
+                                selection = document.querySelector(selection);
+                            }
+                            
+                            if(typeof selection === 'object'){
+                                Object.assign(selection.style, css);
+                            }            
+                        })
+                    }
+                }
+
+            }
+
+        }
+
+        resources(option) {
+
+           let info = {}, rex = this;
+
+           if(option === 'css') {
+
+               let cssSelector = 'link[x-debug="res-css"]';
+
+               info = {
+                query: cssSelector,
+                links: document.querySelectorAll(cssSelector),
+                exists: document.querySelector(cssSelector),
+                add: function() {
+                    setTimeout(() => {
+                        if(!info.exists) {
+                            let debugCss = document.createElement('link');
+        
+                            let style = rex.element(debugCss).setAttributes({
+                                rel:  'stylesheet',
+                                type: 'text/css',
+                                href: rex.assets.root+rex.assets.base+rex.assets.Livecss,
+                                'x-debug': 'res-css'
+                            });
+        
+                            document.getElementsByTagName("head")[0].appendChild(debugCss);
+                        }
+                    })
+                }
+               }
+               info.length = info.links.length
+               return info;
+           }
+
+           if(option === 'js') {
+
+               let jsSelector = 'script[x-debug]';
+
+               info = {
+                query: jsSelector,
+                links: document.querySelectorAll(jsSelector),
+                exists: document.querySelector(jsSelector),
+               }
+                info.length = info.links.length
+
+                return info;
+           }
+
+           if(option === 'error-boxes') {
+
+               let errorSelector = '[data-err="x-debug"]';
+
+               info = {
+                query: errorSelector,
+                links: document.querySelectorAll(errorSelector),
+                exists: document.querySelector(errorSelector)
+               }
+               info.length = info.links.length
+               return info;
+           }
+
+           if(option) {
+
+               let selector = option;
+
+               info = {
+                query: selector,
+                links: document.querySelectorAll(selector),
+                exists: document.querySelector(selector)
+               }
+               info.length = info.links.length
+
+           }
+
+           return info;
+
+        }
+
+        /**
+         * 
+         * @param {object} uiBox 
+         * @returns 
+         */
+        isDraggable(uiBox, cacheName) {
+            
+            if(typeof uiBox !== 'object') return false;
+            if(!uiBox.tagName) return false;
+            
+            let rex = this;
+            let remote = uiBox;
+            let isDragging = false;
+            let initialX, offsetX, offsetY;
+            let maxX, maxY;
+
+            let control = {
+                start : (e) => {
+                    isDragging = true;  
+                    let target = e.target;
+                    if (target.getAttribute('live-control')) {
+                        return false;
+                    }
+                    e.preventDefault()
+                    
+                    let touch;
+
+                    if(e.touches){
+                        touch = e.touches[0] || e.changedTouches[0];
+                    } else {
+                        touch = e;
+                    }
+
+                    let computes = window.getComputedStyle(remote)
+
+                    initialX = touch.clientX - parseFloat(remote.style.right || computes.getPropertyValue('right') || 0);
+
+                    //set initial offset x in percentage
+                    offsetX = (window.innerWidth - touch.clientX) / window.innerWidth * 100;
+                    
+                    //set initial offset y in pixels
+                    offsetY = touch.clientY - remote.getBoundingClientRect().top;
+                    document.body.style.userSelect = 'none';
+                    document.body.classList.add('no-select');
+                    remote.style.cursor = 'grabbing';
+                },
+
+                move: (e) => {
+                    if(!isDragging) return;
+
+                    let touch;
+                    
+                    if(e.touches){
+                        touch = e.touches[0] || e.changedTouches[0];
+                    } else {
+                        touch = e;
+                    }
+
+                    const x = ((window.innerWidth - touch.clientX) / window.innerWidth * 100); // percentage
+                    const y = touch.clientY - offsetY; // pixels
+
+                    maxX = 100 - remote.clientWidth / window.innerWidth * 100;
+                    maxY = window.innerHeight - remote.clientHeight;
+
+                    //limit box position    
+                    const constrainedX = Math.min(Math.max(x, 0), maxX)
+                    const constrainedY = Math.min(Math.max(y, 0), maxY)
+                    
+                    remote.style.right = constrainedX + '%'
+                    remote.style.top  = constrainedY + 'px'
+                    if(cacheName) {
+                      
+                      rex.remotePositions(cacheName, {
+                        top: remote.style.top, 
+                        right: remote.style.right, 
+                      }, true)
+                    } 
+                },
+
+                stop: (e) => {
+                    isDragging = false;
+                    remote.style.cursor = 'pointer';
+                    document.body.style.userSelect = 'auto';
+                    document.body.classList.remove('no-select');
+                }
+            }
+
+            
+            remote.addEventListener('mousedown', control.start)
+            remote.addEventListener('touchstart', control.start, {passive:false})
+            
+            document.addEventListener('mousemove', control.move)
+            document.addEventListener('touchmove', control.move)
+            
+            document.addEventListener('mouseup', control.stop)
+            document.addEventListener('touchend', control.stop)
+
+            // //keep in screen range
+            window.addEventListener('resize', (e) => {
+
+                //calculate the maximum allowable position to keep the box within screen
+                const maxX = 100 - remote.clientWidth / window.innerWidth * 100
+                const maxY = window.innerHeight - remote.clientHeight
+
+                //limit box position
+                const currentX = parseFloat(remote.style.left)
+                const currentY = parseFloat(remote.style.top)
+
+                if(currentX > maxX){
+                    remote.style.right = maxX + '%'
+                }
+
+                if(currentY > maxY){
+                    remote.style.top = maxY + 'px'
+                }
+                
+                if(cacheName) {
+                  rex.remotePositions(cacheName, {
+                    top: remote.style.top, 
+                    right: remote.style.right, 
+                  }, true)
+                } 
+            })
+
+            remote.addEventListener('mouseup', () => {
+                isDragging = false;
+                remote.style.cursor = 'pointer';
+            })
+            return this;
+        }
+        
+        /**
+         * Test a json string
+         */
+        jsonval(string) {
+
+            let is_json = true, object = {};
+
+            try {
+               object = JSON.parse(string);
+            } catch (err) {
+                is_json = false;
+                object = {
+                    mode: string
+                }
+            }
+
+            return {
+                isJSON : is_json,
+                object : object
+            }
+
+        }
+        
+        remotePositions(key, posit = {}, update = false) {
+          let settings, cache, positions;
+          
+          //posit = this.jsonval(posit).object; //root
+          if(update || (!sessionStorage.getItem(key))) {
+            positions = JSON.stringify(posit);
+            sessionStorage.setItem(key, positions);
+          }
+          
+          cache = sessionStorage.getItem(key);
+          cache = this.jsonval(cache).object;
+          return cache;
         }
 
     }

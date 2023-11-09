@@ -16,7 +16,7 @@ class Compiler {
     /**
      * Instance of compiler
      *
-     * @param string $rex path of rex file
+     * @param string $rex path of rex file  
      * @param array $args
      */
     function __construct(string $rex = '', array $args = [])
@@ -80,7 +80,7 @@ class Compiler {
      * @param string|array $arg1 rex file path or arguments
      * @param array|string $arg2 rex file path or arguments
      *   - File paths are assumed to be within the WIN_REX directory
-     * @return Compiler|false
+     * @return Compiler|False
      */
     function compile(array|string $arg1 = [], array|string $arg2 = ''): Compiler|False {
 
@@ -98,7 +98,7 @@ class Compiler {
         if( is_string($arg1) && is_array($arg2) ){
           $this->setFile($arg1);
           $this->setArgs($arg2);
-        } else if( is_string($arg2) && is_array($arg1) ) {          
+        } else if( is_string($arg2) && is_array($arg1) ) {   
           $this->setFile($arg2);
           $this->setArgs($arg1);
         } else {
@@ -176,6 +176,7 @@ class Compiler {
       $nargs = func_num_args();
 
       $rexFile  = ($nargs > 0)? $data : $this->rexdata();
+
       $fileLoc  = $rexFile['location'];
       $fileUrl  = $rexFile['path'];
       $file     = $rexFile['file'];
@@ -198,11 +199,19 @@ class Compiler {
           $data = file_get_contents(E_CSRF.'.rex.php');
           $template = Slicer::slice($data)->data();  
         }elseif(!$isScreen) {
+          
+          if(!is_file($file)) {
+            if(is_dir($fileUrl) && is_file($fileUrl.DS.basename($fileUrl).'.rex.php')){
+              $file = $fileUrl.DS.basename($fileUrl).'.rex.php';
+            }elseif((Init::key('WEBVIEW') === 'NO_BLANKS') && is_file(_core.'/custom/errors/e-blank')){
 
-            if(!is_file($file) && self::$addRex) {
-                //create a rex file if it does not exist (use template or throw error)
-                if(!self::useTemplate($file, $fileLoc)) return false;
+              $file = _core.'/custom/errors/e-blank';
+
+            }elseif(self::$addRex){
+              //create a rex file if it does not exist (use template or throw error)
+              if(!self::useTemplate($file, $fileLoc)) return false;
             }
+          }
             
             $template = Slicer::slice(Slicer::loadTemplate($file, $args))->data();
 
@@ -210,14 +219,13 @@ class Compiler {
 
       }
 
-      Slicer::unsort_comments($template);
-
       foreach($this->managers as $manager) {
 
         $template = $manager->render($template);
 
-      }
-      Slicer::unsort_excludes($template);
+      }      
+      
+      Slicer::unsort_escapes($template);
       return $template;
 
     }
@@ -275,7 +283,7 @@ class Compiler {
     private function rexdata() : array {        
         
         $file = $this->file ?: $this->base;
-        $base = to_frontslash($this->base, true); //storage base
+        $base = to_frontslash($this->base ?: '', true); //storage base
 
         if(empty($file)){
           EInfo::trigger('no file supplied for compiler', true);
@@ -325,17 +333,17 @@ class Compiler {
         $file = !$escape? Slicer::sliceUrl($fileUrl): $file;
 
         return $this->rexdata = [
-          'location' => $rexpath, //assumed path of file within rex folder (without extension)
-          'path' => $fileUrl, // rex path (rex directory + location)
-          'file' => $file,    // rex file (rex path + rex extension)
+          'location' => to_dirslash($rexpath), //assumed path of file within rex folder (without extension)
+          'path' => to_dirslash($fileUrl), // rex path (rex directory + location)
+          'file' => to_dirslash($file),    // rex file (rex path + rex extension)
           'isScreen' => $isScreen,
           'format' => $format,
-          'storage' => $storage
+          'storage' => to_dirslash($storage)
         ];
 
     }
 
-        /**
+    /**
      * Use default template syntax
      *
      * @param string $file

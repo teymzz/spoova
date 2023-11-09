@@ -1,11 +1,12 @@
 <?php 
 
 /* Set custom static resources url */
+Ress::pull('core.ress');
 
-Res::new('assets/') //base directory
+Ress::new('res/assets/') //base directory
     
-    ->url('your-file-path')->named('unique-name') //add your resources
+     ->url('your-file-path')->named('unique-name') //add your resources
 
-    ->bindTo('headers', ['animateCSS'])
+     ->bindTo('headers', ['animateCSS'])
     
-    ->urlClose(); //close resource
+     ->close(); //close resource

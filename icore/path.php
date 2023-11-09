@@ -14,7 +14,7 @@ if(!defined('basefolder') || empty($_SERVER['DOCUMENT_ROOT'])){
   function domroot($path = ''){
       $ds = DIRECTORY_SEPARATOR;
       $broot = str_replace(["/","\\"], $ds, realpath(broot).'/');
-      $bfol = str_replace("\\",$ds, str_replace("/",$ds,bfol));
+      $bfol = str_replace("\\",$ds, str_replace("/", $ds, bfol));
 
       if(empty($_SERVER['DOCUMENT_ROOT'])){
        

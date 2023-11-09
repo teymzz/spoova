@@ -5,9 +5,6 @@ use spoova\mi\core\classes\FileManager;
 
 class Watch extends Entry{
 
-    /* Database constants */
-    private const DBCONSTANTS = [ 'USER', 'PASS', 'NAME', 'SERVER', 'PORT', 'SOCKET' ];
-
     /**
      * @param array func_get_args() : installer arguments
      */
@@ -159,54 +156,6 @@ class Watch extends Entry{
             }
 
         }
-
-    }
-
-    private function meta(){
-        $args = func_get_args();
-        if(count($args) < 1){
-            $syntax = self::$syntaxes['config']['meta']?? '';
-            $this->log_syntax($syntax);
-            return;
-        }
-
-        if($args[0] !== 'on' and $args[0] !== 'off'){
-            Console::error("command not recognized", $args[0]);  
-            return;
-        }
-
-        if($FileManager = $this->get_init()){
-            $FileManager->textUpdate(['RESOURCE_META' => $args[0] ]);
-            
-            if($FileManager->readFile('RESOURCE_META')){
-                Console::log('meta configured successfully');   
-                $this->complete_setup();          
-            } else {
-                Console::log('meta configuration failed');                
-            }            
-        }
-
-    }
-
-    private function init(){
-        $args = func_get_args();
-
-        if(empty($args)){
-            $syntax = self::$syntaxes['config']['init'];
-            $this->log_syntax($syntax);
-            return;
-        }
-    }
-
-    private function log_syntax($syntax){
-
-        $expSyntax = explode(">>", $syntax, 2)[1]?? '';
-            
-        if($expSyntax){
-            Console::log(">> ".$expSyntax);
-            return;
-        }
-        Console::log("no syntaxes found for this command");
 
     }
 

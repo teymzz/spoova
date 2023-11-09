@@ -2,14 +2,13 @@
 
 use spoova\mi\core\classes\Init;
 use spoova\mi\core\classes\EInfo;
-use spoova\mi\core\classes\Rescon;
+use spoova\mi\core\classes\Rescom;
 use spoova\mi\core\classes\Attribs;
 use spoova\mi\core\classes\Enums\live;
-use spoova\mi\core\classes\Meta;
 
-class Ress extends Rescon {
+class Rexa extends Rescom {
 
-    private static Ress $instance;
+    private static Rexa $instance;
 
     /**
      * Path of resource file
@@ -45,20 +44,6 @@ class Ress extends Rescon {
      * @var array
      */
     private static array $urls = [];
-
-    /**
-     * Defines the currently or last added url value
-     *
-     * @var array
-     */
-    private static array $current_url = [];
-    
-    /**
-     * All names and their respective url values
-     *
-     * @var array
-     */
-    private static array $named = [];
     
     /**
      * All named urls
@@ -113,7 +98,7 @@ class Ress extends Rescon {
 
     
     /**
-     * Collection of urls that have gone at least once through Ress::makescript()
+     * Collection of urls that have gone at least once through Rexa::makescript()
      *
      * @var array
      */
@@ -126,10 +111,6 @@ class Ress extends Rescon {
      */
     private static $extTags = ['css','js'];
 
-    private static bool $metaLoad = false;
-
-    private static int $metaStatus = 0;
-
     /**
      * Extensions for hypertext files
      *
@@ -137,7 +118,7 @@ class Ress extends Rescon {
      */
     private static $extFils = ['php','html'];  
 
-    public static function new(string $path = '') : Ress {
+    public static function new(string $path = '') : Rexa {
         self::$path = $path;
         return self::instance();
     } 
@@ -154,7 +135,6 @@ class Ress extends Rescon {
       
       //read fileManager for resource watching
       $monitor = (int) Init::key('RESOURCE_WATCH');
-
 
       //resource enviroment controller(int) 
       if($monitor !== 1 && $monitor !== 2) return false; //not configured
@@ -174,40 +154,31 @@ class Ress extends Rescon {
      * Stores a url
      *
      * @param string $path path of resource file
-     * @return Ress
+     * @return Rexa
      */
-    public static function url(string $path) : Ress {
+    public static function url(string $path) : Rexa {
         $unique = randice(10);
-        self::$tracked[] = $unique;
 
-        $url = [
+        self::$tracked[] = $unique;
+        
+        self::$urls[(self::$unique = $unique)] = [
             'name' => self::$name,
             'dir'  => trim(to_frontslash(self::$path), '/ '),
             'url'  => trim(to_frontslash($path), '/ '),
         ];
-        
-        self::$urls[(self::$unique = $unique)] = $url;
-
-        self::$current_url = $url;
-        
         return self::instance();
     }
 
     public static function urx($path) {
         $unique = randice(10);
 
-        $url = [
+        self::$tracked[] = $unique;
+
+        self::$urls[(self::$unique = $unique)] = [
             'name' => self::$name,
             'dir'  => '',
             'url'  => $path,
         ];
-
-        self::$tracked[] = $unique;
-
-        self::$urls[(self::$unique = $unique)] = $url;
-
-        self::$current_url = $url;
-
         return self::instance();
     }
 
@@ -215,18 +186,14 @@ class Ress extends Rescon {
 
         if(!trim($name)) {
             EInfo::trigger('Resource unique names cannot be empty strings');
-            return self::instance();
+            return false;
         }
 
         if(in_array($name, self::$mapped_names)) {
-            if(self::$named[$name] !== self::$current_url){
-              EInfo::trigger('Resource unique name "'.$name.'" already exists');
-            }
-            return self::instance();
+            EInfo::trigger('Resource unique name "'.$name.'" already exists');
+            return false;
         }
         
-        self::$named[$name] = self::$current_url;
-
         self::$mapped_names[self::$unique] = $name;
 
         $search = array_search(self::$unique, self::$tracked);
@@ -246,9 +213,9 @@ class Ress extends Rescon {
     /**
      * Creates an instance of Resource class
      *
-     * @return Ress
+     * @return Rexa
      */
-    private static function instance() : Ress {
+    private static function instance() : Rexa {
         if(!isset(self::$instance)) {
             self::$instance = new static();
         }
@@ -260,9 +227,9 @@ class Ress extends Rescon {
      *
      * @param array $unique new group name to be assigned for merged items
      * @param array $names existing names of items to be merged
-     * @return Ress
+     * @return Rexa
      */
-    public static function bind(string $unique, array $names) : Ress {
+    public static function bind(string $unique, array $names) : Rexa {
         if(!in_array($unique, $names)){
 
             if(!isset(self::$named_urls[$unique])){
@@ -296,9 +263,9 @@ class Ress extends Rescon {
     /**
      * Binds previously named urls to new named group and flushes the binded values.
      * @param String[] $names names of named files
-     * @return Ress
+     * @return Rexa
      */
-    public function bindTo(string $group, array $names = []) : Ress {
+    public function bindTo(string $group, array $names = []) : Rexa {
 
         if(func_num_args() < 2){
 
@@ -357,9 +324,9 @@ class Ress extends Rescon {
      * @param array|string $list This may be a valid PHP file path (dot convention only) without the php extension name returning an array. 
      *  - If string is supplied, the valid PHP File must return an array of name and file url.
      *  Supports dot convention
-     * @return Ress|null
+     * @return Rexa|null
      */
-    public static function pull(array|string $list) : Ress | null {
+    public static function pull(array|string $list) : Rexa | null {
 
         $instance = self::instance();
 
@@ -387,7 +354,7 @@ class Ress extends Rescon {
         }
 
 
-        if(is_array($list) && $load) {
+        if($load && is_array($list)) {
 
             foreach($list as $name => $path){
     
@@ -411,7 +378,7 @@ class Ress extends Rescon {
      * @param array $names
      *  - [null]: returns all saved scripts once 
      *  - [string,array]: returns scripts for only specified groups
-     * @return Ress|null
+     * @return Rexa|null
      */
     public static function import(string|array|null|live $names = null) : string {
 
@@ -474,30 +441,11 @@ class Ress extends Rescon {
 
         }
 
-        $meta = '';
-
-        //Resolve meta tags 
-        if(self::$metaStatus == 0){
-          $isMeta = Init::key('RESOURCE_META');
-          self::$metaStatus = 1;
-          
-          if($isMeta === "on"){
-            if(isset($_ENV['meta']) && ($envMeta = $_ENV['meta'])){
-              if($envMeta instanceof Meta){
-                self::$metaLoad = true;
-                $meta = $envMeta->dump();           
-              }
-            }
-
-          }
-
-        }
-
         $resolve = implode("\n", $resolve);
 
         if(trim($resolve)) $resolve = "\n".$resolve."\n";
 
-        return $meta.$resolve;
+        return $resolve;
         
     }
 

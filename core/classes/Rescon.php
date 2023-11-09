@@ -6,9 +6,8 @@ use Res;
 use spoova\mi\core\classes\Resx;
 
 /**
- * This class is used to handle javascript resource watch method class
+ * This class is used to handle javascript resource watch. 
  * It was created specifically to enable code readability for Resource class 
- * Documentations are also included to thr
  */
 abstract class Rescon extends Resx{
     
@@ -108,12 +107,11 @@ abstract class Rescon extends Resx{
     }
 
     /**
-     * Return true if monitor system is activated an is currently being used
+     * Return true if monitor system is activated and{ is currently being used
      *
      * @return boolean
      */
     public static function isOnUse(){
-      print self::$off;
       return (!self::$off || self::$watched > 1)? true : false;
     }
 
@@ -186,7 +184,34 @@ abstract class Rescon extends Resx{
       //if monitor is switched off return back
       if(self::$off === true) return false;
 
-      $script = self::initAutoloader().'<script>if(typeof res != \'undefined\') res.monitor("'.$interval.'","'.domurl().'")</script>';
+      $runtime = Livescript::key('RUNTIME') ?: 60;
+      $control = Livescript::key('CONTROLS') ?: '';
+
+      //control buttons
+      $review  = Livescript::key('REVIEW') ?: '';
+      $pauser  = Livescript::key('PAUSER') ?: '';
+      $player  = Livescript::key('PLAYER') ?: '';
+      $position = Livescript::key('POSITION') ?: '';
+
+      $position = explode(" ", $position);
+      $top = $position[0];
+      $right = $position[1];
+      
+
+      if(is_string($interval)){
+        $interval = [
+          'mode' => $interval,
+          'runtime'  => $runtime,
+          'controls' => $control,
+          'review'   => $review,
+          'pauser'   => $pauser,
+          'player'   => $player,
+          'position' => ['top'=>$top, 'right' => $right],
+        ];
+      }
+      $interval = json_encode($interval);
+
+      $script = self::initAutoloader().'<script>if(typeof res != \'undefined\') res.monitor(\''.$interval.'\',\''.domurl().'\')</script>';
       if($return) { return $script; } 
 
       if(self::$watched > 0) return false;

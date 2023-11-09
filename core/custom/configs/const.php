@@ -10,8 +10,8 @@ if( !defined('sys') ) define('sys', $_SERVER['SystemRoot'] ?? $_SERVER['SYSTEMRO
 if( !defined('consoler') ) define('consoler', 'mi' );
 
 //set core & icore (root) folders 
-if( !defined('_core') ) define('_core', docroot.DS.'core/');
-if( !defined('_icore') ) define('_icore', docroot.DS.'icore/');
+if( !defined('_core') ) define('_core', docroot.DS.'core'.DS);
+if( !defined('_icore') ) define('_icore', docroot.DS.'icore'.DS);
 
 //set app folder
 if( !defined('fol') ) define('fol', '');
@@ -42,11 +42,11 @@ if( !defined('WIN_FRAMES') )
 
 //default error file
 if( !defined('E_404') )
-    define('E_404', _core.'custom/errors/e-404');
+    define('E_404', _core.'custom'.DS.'errors'.DS.'e-404');
 
 //default csrf error file
 if( !defined('E_CSRF') )
-    define('E_CSRF', _core.'custom/errors/e-csrf');
+    define('E_CSRF', _core.'custom'.DS.'errors'.DS.'e-csrf');
     
 //app environment settings
 if( !defined('siteUrl') )
