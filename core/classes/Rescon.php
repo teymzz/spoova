@@ -194,8 +194,8 @@ abstract class Rescon extends Resx{
       $position = Livescript::key('POSITION') ?: '';
 
       $position = explode(" ", $position);
-      $top = $position[0];
-      $right = $position[1];
+      $top = $position[0] ?? 30;
+      $right = $position[1] ?? 30;
       
 
       if(is_string($interval)){
