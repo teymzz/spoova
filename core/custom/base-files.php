@@ -7,6 +7,7 @@
  require_once docroot.'/core/classes/Ress.php';
  require_once docroot.'/core/classes/Rexit.php';
  require_once docroot.'/core/classes/Window.php';
+ require_once docroot.'/core/classes/Route.php';
  require_once docroot.'/core/classes/Session.php'; 
  require_once docroot.'/core/classes/User.php';  
  require_once docroot.'/core/classes/DB/DBStatus.php'; 
