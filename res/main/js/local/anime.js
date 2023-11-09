@@ -2,41 +2,53 @@
 /**
  * Loops through an array of texts supplied into a target element in animated format.
  * 
- * @param {*} element target element selector
- * @param {*} texts array of texts
- * @param {*} interval loop interval
- * @param {*} callBack callback when loop finishes
+ * @param {string|object} element target element selector
+ * @param {array} texts array of texts
+ * @param {number} interval loop interval
+ * @param {object} settings settings for applied callbacks 
  */
-function animeText(element, texts, interval, callBack) {
+function animeText(element, texts, settings) {
     var counter = 0;
     var texts = (texts == undefined) ? [] : texts;
-    
 
-    if (element.length != false) {
+    element = (typeof element === 'object')? element : document.querySelector(element);
+
+    let callBack = settings.callback;
+    let callEach = settings.each;
+    let interval = settings.interval || 200;
+
+    if (element) {
         
-        element = document.querySelector(element);
-        if(element.length > 0){
-            animeTextWord = setInterval(function() {
-                
-                element.html(texts[counter]);
-                console.log(texts[counter]);
+        let animeTextWord = setInterval(function() {
+            
+            element.innerHTML = texts[counter];
+
+            if(!this.running) {
+
+                this.running = true;
+
+                callBack(element, this);
+
                 counter++;
+
                 if (counter === (texts.length)) {
                     clearInterval(animeTextWord);
 
                     setTimeout(() => {
-                        callFunc(callBack);
+                        if(typeof callBack === 'function'){
+                            callBack(element);
+                        }
                     }, interval)
 
                 }
-            }, interval);
-        }else{
-            console.log("no element found for selector: " + element);
-        }
 
-    } else {
-        clearInterval(animeTextWord);
-    }
+            }
+
+        }, interval);
+
+    }else{
+        console.log("no element found for selector: " + element);
+    } 
 
 }
 
@@ -48,14 +60,16 @@ function animeText(element, texts, interval, callBack) {
 function typeWrite(selector, settings){
         
     let i = 0;
-    let field = document.querySelector(selector);
-    let txt = field.innerHTML;
+    let field = (typeof selector === 'object')? selector : document.querySelector(selector);
+    let txt = field.innerText;
     field.innerHTML = "";
-    let speed, attributes, init, final;
+    let speed, attributes = "", init, done, final;
     let styleAttr = "";
+
 
     if(typeof settings === "object"){
         speed = settings.speed;
+        done  = settings.done;
         init = settings.init || 0;
         final = settings.final  || txt.length
         if(final >= txt.length) final = txt.length - 1; 
@@ -120,6 +134,8 @@ function typeWrite(selector, settings){
 
         i++;
         setTimeout(type, speed);
+      } else {
+        if(typeof done === 'function') done();
       }
     }
 

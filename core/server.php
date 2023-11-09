@@ -57,8 +57,8 @@ if( !defined('server') ) {
 
 		$path = ltrim($path?:'', '/ ');
 		$http = isSecure()? 'https://' : 'http://';
-		$server = (server == 'localhost')? server.DS.docBase.DS : server.DS;
-		$host   = (server == 'localhost')? host.DS.docBase.DS : host.DS;
+		$server = (server == 'localhost')? server.FS.docBase.FS : server.FS;
+		$host   = (server == 'localhost')? host.FS.docBase.FS : host.FS;
 
 		//keep track of last value supplied
 		if($modified) SET(DomUrl::Name(), $path, DomUrl::Hash()); 

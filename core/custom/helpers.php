@@ -9,6 +9,7 @@ use spoova\mi\core\classes\SETTER;
 use spoova\mi\core\classes\Spoova;
 use spoova\mi\core\classes\Collection;
 use spoova\mi\core\classes\Collectibles;
+use spoova\mi\core\classes\Init;
 use spoova\mi\core\classes\ModelOptimizer;
 
 if(!function_exists('scheme')){
@@ -29,7 +30,7 @@ if(!function_exists('scheme')){
 
 if(!function_exists('domlink')){
 
-  function domlink(string $link, bool $modified = true){
+  function domlink(string $link = '', bool $modified = true){
 
      $link = str_replace(['\\','.'], '/', $link);
 
@@ -55,10 +56,101 @@ if(!function_exists('recall')){
   function recall($args) : string {
     $args = func_get_args();
     $resource = '';
+    
+    $key = Init::key('RESOURCE_HANDLER');
+    if($key === 'Res'){
+      $Res = 'Res'; $method = 'recall';
+    }else{
+      $Res = 'Ress'; $method = 'import';
+    }
+    $Res = $key === 'Res'? 'Res' : 'Ress';
     foreach($args as $res) {
-      $resource .= Res::recall($res);
+      $resource .= $Res::$method($res);
     }
     return $resource;
+  }
+}
+
+if(!function_exists('import')){
+  /**
+   * Imports resource files based on configuration settings
+   */
+  function import(string $caller) : string {
+
+    $key = Init::key('RESOURCE_HANDLER');
+    $path = Init::key('RESOURCE_PATH');
+    $path .= ($path)? FS : '';
+
+    if(strtolower($key) === 'Res') {
+
+      //Use Old Resource Handler
+      $isHash  = in_array(substr($caller, 0 , 1), ['#',':']);
+      $isColon = strpos($caller, ':') !== false;
+
+      if($isHash || $isColon) {
+
+        if($isHash) {
+          $res = '';
+          $caller = substr($caller, 1, strlen($caller));
+          $names = explode(',',$caller);
+          array_trim($names); 
+        } else {
+          $res = '';
+          $caller = explode(':', $caller, 2);
+          $file = trim($caller[0]);
+          $names = $caller[1];
+          $names = explode(',',$names);
+          array_trim($names);
+          if($file) Res::pull($path.$file);
+        }
+
+        foreach($names as $name) {
+          $res .= Res::recall($name);
+        }
+        return $res;        
+
+      } else {
+
+        Res::pull($path.$caller);
+
+      }
+      
+    } else {
+
+      // Set Default Resource Handler as Ress
+      $isHash  = in_array(substr($caller, 0 , 1), ['#',':']);
+      $isColon = strpos($caller, ':') !== false;
+
+      if($isHash || $isColon) {
+
+        if($isHash) {
+          $caller = substr($caller, 1, strlen($caller));
+          $caller = explode(',',$caller);
+          array_trim($caller);
+          return ($caller)? Ress::import($caller) : '';
+        } else {
+
+          $caller = explode(':', $caller, 2);
+          $file = trim($caller[0]);
+          $ress = $caller[1];
+          $ress = explode(',', $ress);
+
+          if($file) Ress::pull($path.$file);
+
+          array_trim($ress);
+          return ($ress)? Ress::import($ress) : '';
+        }
+
+      } else {
+
+         Ress::pull($path.$caller);
+
+         return '';
+
+      }    
+
+    }
+
   }
 }
 
@@ -157,8 +249,7 @@ if(!function_exists('route')){
 
 if(!function_exists('lastCall')){
   /**
-   * Return the last called route on a logic. If there is no last called url, 
-   * it will return the window url root name.
+   * Return the last called route on a logic
    *
    * @param string $routeName (optional) new route path to be added to last called route
    *  - Note: This will not convert dots to slashes.
@@ -602,7 +693,7 @@ if(!function_exists('ress')) {
    *
    * @return string
    */
-  function ress($path){
+  function ress(string $path){
     return DomUrl('res/'.ltrim($path,'/ '));
   }
   

@@ -48,8 +48,6 @@ class Syntax extends Entry{
 
     public function syntaxes() : array {
 
-        print "\033[41m\033[33mHey\033[0m";
-
         return [
 
             'add'            => 'add:[window|route|model|api|frame|rex] [path] [extends?] [-O?]',

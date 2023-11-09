@@ -59,26 +59,40 @@ function hasAttr(elem, attr) {
  * adds style to selector element.
  * 
  * @param {string} arg1 css text string or selector 
- *  - If arg1 only is supplied used as element selector
+ *  - If arg1 only is supplied, use as element selector
  *  - If arg2 is supplied arg1 is used as element selector
  * @param {string} arg2 css text string when both arguments are supplied
  */
 function cssFormat(arg1, arg2){
 
-    let csqsText = (arg2 === undefined)? arg1 : arg2;
+    let css; // css object container
     
-    let cssObj = cssText.split(";");
-    let css = {};
-    cssObj.forEach(obj => {
-        prop = obj.split(":");
-        if (prop.length == 2){
-            css[prop[0].trim()] = prop[1].trim();            
-        }
-    })
+    if((typeof arg1 === 'string' && arg2 === undefined) || 
+        (typeof(arg2) === 'string')
+    ){
+        let cssText = (arg2 === undefined)? arg1 : arg2;
+        let cssObj  = cssText.split(";"); 
+        css = {};
+
+        cssObj.forEach(obj => {
+            prop = obj.split(":");
+            if (prop.length == 2){
+                css[prop[0].trim()] = prop[1].trim();            
+            }
+        })
+    } else if (typeof arg2 === 'object') {
+        css = arg2;
+    }
     
-    if(arg2 !== undefined && arg1 != null){
+    if((arg2 !== undefined) && (arg1 != null) && (css)){
         setTimeout(()=>{
-            element = document.querySelector(arg1);
+            let element;
+
+            if(typeof arg1 === 'object'){
+                element = arg1;
+            }else if(typeof arg1 === 'string'){
+                element = document.querySelector(arg1);
+            }
             
             if(element != null){
                 Object.assign(element.style, css);

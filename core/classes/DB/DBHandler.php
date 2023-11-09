@@ -498,7 +498,7 @@ trait DBSelect {
        * Returns the results of read / fetched data directly from source.
        *  - Note: coloned integers are strings that contains integers that have colon (:) as prefix ( e.g ':20' )
        *
-       * @param int|string $param - options [null | int | ':count' | ':shuffle' | ':MAX_LENGTH' (e.g ':2')]
+       * @param int|string $param - options [null|int|':count'|':shuffle'|':MAX_LENGTH' (e.g ':2')]
        * @param string $key optional [subkey|':shuffle']
        *  - where $key is data column name existing as a subkey of data[$param] 
        *  - where ':shuffle' is the same as when $param is set as ':shuffle'
@@ -562,7 +562,7 @@ trait DBSelect {
         if(!is_numeric($param) || !array_key_exists($param, $results)) return [];
         
         //if $param is not an integer with a colon as prefix, 
-        // resolve as a data's index (or key) 
+        // resolve as a data's index (or key)
         if(!isset($firstIndices)){
           
           if(!empty(trim($key))) {
@@ -573,14 +573,14 @@ trait DBSelect {
             }
             return [];
           }
-
+          
           //if $key is not supplied, return value of $param
           return $results[$param]; //array
 
         } else {
           
           //if is $param is an integer preceded by colon, 
-          //get the first array keys using the maximum length of $param.
+          //get the first array keys using the maximum length of $param.          
           $iresults = []; $i = 0;
 					foreach($results as $result){
 						if($i === $param){ break; } //where $param is indices stopping point

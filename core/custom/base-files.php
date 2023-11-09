@@ -4,6 +4,7 @@
  require_once docroot.'/core/custom/dbsets.php';  
  require_once docroot.'/core/classes/Dev.php';
  require_once docroot.'/core/classes/Res.php';
+ require_once docroot.'/core/classes/Ress.php';
  require_once docroot.'/core/classes/Rexit.php';
  require_once docroot.'/core/classes/Window.php';
  require_once docroot.'/core/classes/Session.php'; 

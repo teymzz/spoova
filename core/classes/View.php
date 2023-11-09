@@ -39,21 +39,37 @@ use spoova\mi\core\classes\Slicer;
     function compile(array|string $arg1 = [], array|string $arg2 = ''): Compiler|String {
         $compiler = new Compiler();
         return $compiler->compile(...func_get_args());
-    }   
+    }  
 
     /**
-     * This function compiles and directly displays rex template files with no extended functionalities.
+     * This function compiles and directly displays rex template files with no extended functionalities. 
+     * The order of the arguments is not required.
      * 
      * {@See Rex::compile()}
      *
-     * @param string|array $arg1 url or arguments
-     * @param array|string $arg2 arguments or url
+     * @param string|array $arg1 path of template file or arguments
+     * @param array|string $arg2 arguments or path of template file
      * @return void
      */
     function rexcompile(array|string $arg1 = [], array|string $arg2 = '') {
         $compiler = new Compiler();
         echo $compiler->compile(...func_get_args());
+    }  
+
+    /**
+     * This function is an alias for rexcompile function
+     * 
+     * {@See rexcompile()}
+     *
+     * @param string|array $arg1 url or arguments
+     * @param array|string $arg2 arguments or url
+     * @return void
+     */
+    function rexx(array|string $arg1 = [], array|string $arg2 = '') {
+        $compiler = new Compiler();
+        echo $compiler->compile(...func_get_args());
     }   
+
 
     /**
      * Pulls out the raw content of a rex file
@@ -61,9 +77,9 @@ use spoova\mi\core\classes\Slicer;
      * @param string $file rex file path within WIN_REX directory.
      *  - Note: supports dot convention with default extension as ".rex.php"
      * 
-     * @return string|false
+     * @return String|False
      */
-    function raw(string $file) : string|false {
+    function raw(string $file) : String|False {
 
         $file = to_frontslash(WIN_REX.$file, true);
         $file .= ".rex.php";
@@ -86,12 +102,11 @@ use spoova\mi\core\classes\Slicer;
     /**
      * Returns the markup of a rendered component
      */
-    function rex(string $url = '', bool|Closure $callback = false) {
-  
+    function rex(string $url = '', bool|Closure $callback = false) : String {
+
       $rex = new Rex;
       return (string) $rex::markup(...func_get_args());
     
     }
-
 
 ?>

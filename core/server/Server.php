@@ -3,6 +3,7 @@
 use spoova\mi\core\classes\Base;
 use spoova\mi\core\server\Serve;
 use spoova\mi\core\classes\Spinner;
+use spoova\mi\core\commands\Cli;
 
 /**
  * This class contains window entry file. It should not be modified unless you have an idea 
@@ -46,7 +47,13 @@ class Server extends Base{
 
     //initialize the index page
     if($type === '') $type = 'standard';
-
+    
+    if(isCli()) {
+      Cli::break();
+      Cli::textView(Cli::error('index access denied.'));
+      Cli::break(2);
+      return false;
+    }
     if($type === 'index'){
       Serve::indexlogic();
     } elseif($type === 'standard') {
