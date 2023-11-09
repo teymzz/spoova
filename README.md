@@ -1,5 +1,5 @@
 ### SPOOVA FRAME
-Spoova is a PHP Framework that uses a Window-View-Model (WVM) pattern that is built upon MVC architecture. The WVM is a 3-Logic pattern that determine how routes are resolved. Other features include inbuilt live server, inbuilt template engine, Reusable components, Static Resource Handler, ORM (beta) and FileManager tool.  
+Spoova is a PHP Framework that uses a Window-View-Model (WVM) pattern that is built upon MVC architecture. The WVM is a 3-Logic pattern that determines how routes are resolved. Other features include inbuilt live server, inbuilt template engine, Reusable components, Static Resource Handler, ORM (beta) and FileManager tool.  
 
 ##### INSTALLATION
 
@@ -35,7 +35,7 @@ Spoova is a PHP Framework that uses a Window-View-Model (WVM) pattern that is bu
         "type": "project",
         "license": "MIT",
         "require": {
-            "spoova/mi": "^2.5"
+            "spoova/mi": "^2.6"
         },
         "require-dev": {
             "phpunit/phpunit": "^9.5"
@@ -77,7 +77,7 @@ Spoova is a PHP Framework that uses a Window-View-Model (WVM) pattern that is bu
    ```cmd
    php mi config:all
    ```
-   > To use spoova for development on mobile devices once the configuration is done, transfer your new project folder to the root of your local mobile web server (e.g KSWeb).
+   > To use spoova for development on mobile devices, once the configuration is done, transfer your new project folder to the root of your local mobile web server (e.g KSWeb).
 
    Visit the offline or online project pack documentation as the case may be to learn more on how to install the framework and other cli commands.
 
@@ -98,14 +98,14 @@ Deploying a production-ready application requires the use of specially designed 
 ##### QUICK TIPS
 
 1. The root _.htaccess_ file should not be modified without proper knowledge of how to handle such files.
-2. Storing of unused static resource urls into Resource class (Res) should be avoided to reduce load time.
+2. Storing of unused static resource urls into static Resource handler classes should be avoided to reduce load time.
 3. Spoova uses the _res/_ directory to store global static files. Hence, all global css and javascript files should be placed within the res directory.
-4. All domain and subdomains must have an icore folder within them as icore folder helps to localize and (or) update default configurations when necessary.
+4. All domain and subdomains must have an _icore_ folder within them as the folder helps to localize and (or) update default configurations when necessary.
 5. All subdomain folders (if created), should have access to the global _res/_ directory (this may require the use of symlink).
 6. Avoid placing classes directly in the the root of _core/_ directory. Custom classes may be added to a custom separate folder within the root of your application 
-7. To use the live server feature, read the offline documentation provided on how to implement it.
+7. To use the live server feature, read the documentation provided on how to implement it.
 8. All directories and php files are protected while other file extensions are excluded. However, the core, icore and windows directories are strictly protected. Any file within these directories also inherit their protection. These can prove useful in helping to secure the _composer.json_ file.
 
 ##### NOTICE
 
-1. The earlier spoova main project pack versions previously contained offline documentation. Starting from version 2.5, The documentation is now available on [spoova.com](https://www.spoova.com)
+1. The earlier spoova main project pack versions previously contained offline documentation. Starting from version 2.5, The documentation is now available on [spoova.com](https://www.spoova.com/docs)
