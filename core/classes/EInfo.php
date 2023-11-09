@@ -16,7 +16,8 @@ class EInfo {
      * @param boolean $addfile
      * @return boolean false
      */
-    public static function trigger(string $message = '', $addfile = true) : bool{
+    public static function trigger(string $message = '', string|object|bool $addfile = true) : bool{
+        if(is_object($addfile)) $addfile = get_class($addfile);
         ErrorHandler::addFile($addfile);
         trigger_error($message);
         return false;

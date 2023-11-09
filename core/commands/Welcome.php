@@ -64,9 +64,9 @@ class Welcome {
 
         namespace spoova\mi\windows\Routes;
         
-        use Window;
+        use Route;
         
-        class $fileName extends Window {
+        class $fileName extends Route {
             
             public function __construct(){
         
@@ -74,7 +74,7 @@ class Welcome {
         
                     self::call(\$this, [
             
-                        window('root') => 'root',
+                        lastUrl() => 'root',
                     
                     ]);
         
@@ -224,9 +224,9 @@ class Welcome {
         namespace spoova\mi\windows\Routes;
 
         use Installer;
-        use Window;
+        use Route;
 
-        class Install extends Window{
+        class Install extends Route{
 
 
             function __construct()

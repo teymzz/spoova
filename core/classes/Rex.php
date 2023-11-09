@@ -14,7 +14,7 @@ use spoova\mi\core\classes\Resin;
  */
 final class Rex extends Resx implements Resin{
 
-    public static function load(string $url, Closure|String $callback = ''){
+    public static function load(string $url, Closure|False $callback = false){
         
         print self::markup(...func_get_args());
 
@@ -24,11 +24,11 @@ final class Rex extends Resx implements Resin{
      * Get raw data of rendered rex file
      * 
      * @param string $url url of markup
-     * @param Closure|String $callback call back function for markup
+     * @param Closure|false $callback call back function for markup
      *
      * @return string
      */
-    public static function markup(string $url, Closure|String $callback = '') : string {
+    public static function markup(string $url, Closure|False $callback = false) : String {
 
         return (string) self::compile(...func_get_args());
 
@@ -38,10 +38,10 @@ final class Rex extends Resx implements Resin{
      * Rex compiler function
      *
      * @param string|null $url
-     * @param Closure|false $callback
-     * @return Compiler|String
+     * @param Closure|False $callback
+     * @return Compiler|String|False
      */
-    public static function compile(string $url, Closure|false $callback = false) : Compiler|String {
+    public static function compile(string $url, Closure|False $callback = false) : Compiler|String|False {
 
        return self::engine(...func_get_args());
     
@@ -51,11 +51,11 @@ final class Rex extends Resx implements Resin{
      * Get raw data of rendered rex file
      * 
      * @param string $url url of markup
-     * @param Closure|String $callback call back function for markup
+     * @param Closure|False|String $callback call back function for markup
      *
-     * @return Compiler
+     * @return Compiler|String
      */
-    private static function engine(string $url, Closure|String $callback = '') : Compiler {
+    private static function engine(string $url, Closure|False|String $callback = '') : Compiler|String {
         
         if($callback instanceof Closure){
           $caller = $callback();
@@ -76,7 +76,8 @@ final class Rex extends Resx implements Resin{
             return $Compiler;        
   
         }
-        
+        return '';
+
     }
 
     /**

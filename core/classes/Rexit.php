@@ -6,10 +6,26 @@ use spoova\mi\core\classes\Request;
 
 class Rexit {
 
+    static function scheme($namespace = '', $prefix = true) {
+
+        return scheme($namespace, $prefix);
+
+    }
+    
     static function head($title) {
 
         return "<title>". $title . "</title>";
 
+    }
+
+   /**
+     * Redirect to a new page
+     *
+     * @param string $body
+     * @return string
+     */
+    static function redirect($url) {
+        return redirectTo(DomUrl($url));
     }
 
    /**
@@ -75,17 +91,34 @@ class Rexit {
     }
 
     /**
-     * Directs the slicer to render all view syntaxes using view function
-     * Syntax will be replaced with either empty string or the appropraite resolved value
+     * Directs the slicer to render all view syntaxes using rex compiler function
+     * Syntax will be replaced with either empty string or the appropriate resolved value
+     *    - This directive is an alias to the Rexit::rex() directive and it should not be confused 
+     *      with the view() function.
      *    - syntax @view('url')
      *
      * @param string $body
      * @return string $body
      */
     static function view($url) {
-        return view(...func_get_args());
+        return rex(...func_get_args());
     }
 
+    /**
+     * Directs the slicer to render all view syntaxes using rex compiler function
+     * Syntax will be replaced with either empty string or the appropriate resolved value
+     *    - syntax @view('url')
+     *
+     * @param string $body
+     * @return string $body
+     */
+    static function rex($url) {
+        return rex(...func_get_args());
+    }
+
+    /**
+     * Applies 
+     */
     static function flash($args) {
 
         return Res::flash(...func_get_args());
@@ -127,6 +160,16 @@ class Rexit {
     }
 
     /**
+     * Import static resources
+     *
+     * @param string|array $url
+     * @return string
+     */
+    static function import(string|array $url = '') {
+        return import(...func_get_args());
+    }
+
+    /**
      * Alias for directive - recall
      *
      * @return string
@@ -135,7 +178,13 @@ class Rexit {
         return self::recall(...func_get_args());
     }
 
-    static function src($url) {
+    /**
+     * Returns paths of resources starting from res directory
+     *
+     * @param string $url path of static file   
+     * @return string
+     */
+    static function src(string $url = '') {
         return ress($url);
     }
 
@@ -150,24 +199,24 @@ class Rexit {
     }
 
     /**
-     * Add static files from the apps' res/main directory
+     * Returns path to files starting from the res/main directory
      *
-     * @param string $body
+     * @param string $url path of static file within res/main directory
      * @return string
      */
-    static function mapp($url) {
+    static function mapp(string $url = '') {
         $url = 'main/'.ltrim($url, '/');
         $replacement = ress($url);
         return $replacement;
     }
 
     /**
-     * Add static files from the apps' res/assets directory
-     *
-     * @param string $body
+     * Returns path to files starting from the res/assets directory
+     * 
+     * @param string $url path of static file within res/assets directory
      * @return string
      */
-    static function mass($url) {
+    static function mass(string $url = '') {
         $url = 'assets/'.ltrim($url, '/');
         $replacement = ress($url);
         return $replacement;
@@ -181,7 +230,7 @@ class Rexit {
      * @param string $body
      * @return string
      */
-    static function assets($url) {
+    static function assets(string $url = '') {
         if(substr($url, 0, 1) == ":"){
 
             if($url == '::watch'){
@@ -203,32 +252,70 @@ class Rexit {
         return $url;
     }
 
+    /**
+     * Adds live script to template file
+     *
+     * @return string
+     */
     static function live() {
 
         return Res::live(...func_get_args());
 
     }
 
+    /**
+     * Returns localized url protocol for url supplied stating from project root
+     *
+     * @param string $url path of file to be converted to http protocol
+     * @return string
+     */
     static function domurl($url = '') {
         return domurl($url);
     }
 
-    static function domlink($url) {
+    /**
+     * Returns localized url protocol for url supplied stating from project root. 
+     * All character dots are always converted to slashes. This should be used for 
+     * only links that do not have a dot character within them
+     *
+     * @param string $url path of file to be converted to http protocol
+     * @return string
+     */
+    static function domlink($url = '') {
         return domlink($url);
     }
 
-    static function formurl($url) {
+    static function formurl(string $url = '') {
         return FormUrl($url);
     }
 
-    static function images($url) {
+    /**
+     * Returns localized url protocol for url supplied whose parent directory is 
+     * res/assets/images directory.
+     *
+     * @param string $url path of file to be converted to http protocol
+     * @return string
+     */
+    static function images(string $url = '') {
         return DomUrl('res/assets/images/'.$url);
     }
 
-    static function onShow($args = '') {
+    /**
+     * Returns the word "hidden" when the function $name supplied returns a non-empty value
+     * @param string $func function name to be called.
+     * @param string[] $args list of arguments for specified function
+     * @return string
+     */
+    static function onShow(string $func, $args = null) {
         return onShow(...func_get_args());
     }
 
+    /**
+     * Returns the word "hidden" when the function $name supplied returns an empty value
+     * @param string $func function name to be called.
+     * @param string[] $args list of arguments for specified function
+     * @return string
+     */
     static function onHide($args = '') {
         return onHide(...func_get_args());
     }
@@ -320,7 +407,7 @@ class Rexit {
      * @return string rendered $body
      */
     static function post($values = []) {
-
+      
         $method = $_POST;
 
         foreach($values as $child){
@@ -373,6 +460,9 @@ class Rexit {
         return formerror(...func_get_args());
     }
 
+    /**
+     * Dumps useful information about the argument supplied.
+     */
     static function vdump() {
         return vdump(...func_get_args());
     }

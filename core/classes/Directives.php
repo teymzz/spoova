@@ -14,6 +14,8 @@ use spoova\mi\app\RexComponent;
 abstract class Directives{
 
     protected static $locals = [];
+    protected static $cssLayouts = [];
+    protected static $jsLayouts = [];
 
     protected static $pattern = [
 
@@ -25,7 +27,7 @@ abstract class Directives{
         'guest'       => "~@guest:\s?(.)*?@guest;~is",
 
         // Import a specific resource
-        'import'      => "~(<@import\s|@import\()\s?\'?(http(s)?:\/\/)?[A-Za-z_\/]+(.[A-Za-z]+)\'?\s?(\)|\/>)~i", //import (local or remote file) css / js files
+        //'import'      => "~(<@import\s|@import\()\s?\'?(http(s)?:\/\/)?[A-Za-z_\/]+(.[A-Za-z]+)\'?\s?(\)|\/>)~i", //import (local or remote file) css / js files
 
         //Handle live server
         'live'        => '~@live(\((\'(console|pop|uiconsole|[0-9])?\')?\))?~i', 
@@ -465,25 +467,29 @@ abstract class Directives{
 
                 }else{
 
-                    ob_start();
-                    include($path);
-                    $templateContent = ob_get_clean();
-
+                    if(!($templateContent = (self::$cssLayouts[$path]?? ''))){
+                        ob_start();
+                        include($path);
+                        $templateContent = self::$cssLayouts[$path] = ob_get_clean();
+                    }
                     $replacement = '';
 
                     foreach($explode as $id){
 
                         //build a style pattern from style id
-                        $layoutPattern = "~#style:{$id}\s(.)*?#style;~is";//replacement 
+                        $layoutPattern1 = "~/\* #style\.* ?{$id}: \*/(.*?)/\* #style\.* ?{$id}; \*/~is";//replacement 
+                        $layoutPattern2 = "~#style:{$id}\s(.*?)#style;~is";//replacement 
 
                         //find expected style pattern from the template content
-                        preg_match($layoutPattern, $templateContent, $contentsMatched);
-                        $contentMatched = $contentsMatched[0]?? '';
-                        $contentMatched = preg_replace('~\\\([A-Za-z0-9]{2,100})~', "\\\\\\\\$1", $contentMatched);
-                        $replacement .= str_ireplace(["#style:$id", "#style;"], '', $contentMatched);
-
+                        if(preg_match($layoutPattern1, $templateContent, $contentsMatched)) {
+                          $contentMatched = $contentsMatched[0]?? '';
+                          $replacement .= preg_replace($layoutPattern1, "$1", $contentMatched);                          //$replacement .= str_ireplace(["#style:$id", "#style;"], '', $contentMatched);$replacement 
+                        }elseif(preg_match($layoutPattern2, $templateContent, $contentsMatched)){
+                          $contentMatched = $contentsMatched[0]?? '';
+                          $replacement .= preg_replace($layoutPattern2, "$1", $contentMatched);
+                        }
                     }                
-                    
+
                     if(trim($replacement)){
                         $replacement = '<style rel="'.$urx.'"> '.$replacement.' </style>'."\n";
                     }
@@ -534,8 +540,6 @@ abstract class Directives{
                 $url = $explode[0];
 
                 $url = $urx = array_shift($explode);
-
-                //$urx = str_replace('/', '.', url($urx)->ignore(1));
                 $urx = str_replace('/', '.', $urx);
 
                 //get url extension
@@ -545,7 +549,6 @@ abstract class Directives{
 
                 //load layoutId's supplied template url
                 $path =  docroot.DS.to_frontslash(WIN_REX).ltrim($url, '/');
-                
 
                 if(!is_file($path)){
 
@@ -568,24 +571,35 @@ abstract class Directives{
                     $body = str_replace($matchValue, '', $body);
 
                 }else{
-
-                    ob_start();
-                    include($path);
-                    $templateContent = ob_get_clean();
+                    
+                    if(!($templateContent = (self::$jsLayouts[$path]?? ''))){
+                        ob_start();
+                        include($path);
+                        $templateContent = self::$jsLayouts[$path] = ob_get_clean();
+                    }
 
                     $replacement = '';
 
                     foreach($explode as $id){
                 
                         //build a script pattern from script id
-                        $layoutPattern = "~#script:{$id}\s(.)*?#script;~is";//replacement 
-                        //find expected script pattern from the template content
-                        preg_match($layoutPattern, $templateContent, $contentsMatched);
+                        $layoutPattern1 = "~/\* #script\.* ?{$id}: \*/(.*?)/\* #script\.* ?{$id}; \*/~is";//replacement
+                        $layoutPattern2 = "~// #script\.* ?{$id}:(.*?)// #script\.* ?{$id};~is";//replacement
+                        $layoutPattern3 = "~#script:{$id}\s(.*?)#script;~is";//replacement 
                         
-                        $contentMatched = $contentsMatched[0]?? '';
-                        $contentMatched = preg_replace('~\\\([A-Za-z0-9]{2,50})~', "\\\\\\\\$1", $contentMatched);
-                        $replacement .= str_ireplace(["#script:$id", "#script;"], '', $contentMatched);
-
+                        //find expected script pattern from the template content
+                        if(preg_match($layoutPattern1, $templateContent, $contentsMatched)) {
+                          $contentMatched = $contentsMatched[0]?? '';
+                          //$contentMatched = preg_replace('~\\\([A-Za-z0-9]{2,50})~', "\\\\\\\\$1", $contentMatched);
+                          //$replacement .= str_ireplace(["#script:$id", "#script;"], '', $contentMatched);%
+                          $replacement .= preg_replace($layoutPattern1, "$1", $contentMatched);
+                        }elseif(preg_match($layoutPattern2, $templateContent, $contentsMatched)) {
+                          $contentMatched = $contentsMatched[0]?? '';
+                          $replacement .= preg_replace($layoutPattern2, "$1", $contentMatched);
+                        }elseif(preg_match($layoutPattern3, $templateContent, $contentsMatched)) {
+                          $contentMatched = $contentsMatched[0]?? '';
+                          $replacement .= preg_replace($layoutPattern3, "$1", $contentMatched);
+                        }
                     }
 
                     if(trim($replacement)){ 
@@ -634,8 +648,6 @@ abstract class Directives{
                 $url = $explode[0];
 
                 $url = $urx = array_shift($explode);
-
-                //$urx = str_replace('/', '.', url($urx)->ignore(1));
                 $urx = str_replace('/', '.', $urx);
 
                 //get url extension
@@ -663,13 +675,24 @@ abstract class Directives{
                     foreach($explode as $id){
                 
                         //build a script pattern from script id
-                        $layoutPattern = "~#script:{$id}\s(.)*?#script;~is";//replacement 
-                        //find expected script pattern from the template content
-                        preg_match($layoutPattern, $templateContent, $contentsMatched);
+                        $layoutPattern1 = "~/\* #script\.*{$id}: \*/(.*?)/\* #script\.*{$id}; \*/~is";//replacement
+                        $layoutPattern2 = "~// #script\.*{$id}:(.*?)// #script\.*{$id};~is";//replacement
+                        $layoutPattern3 = "~#script:{$id}\s(.*?)#script;~is";//replacement 
                         
-                        $contentMatched = $contentsMatched[0]?? '';
-                        $contentMatched = preg_replace('~\\\([A-Za-z0-9]{2,50})~', "\\\\\\\\$1", $contentMatched);
-                        $replacement .= str_ireplace(["#script:$id", "#script;"], '', $contentMatched);
+                        //find expected script pattern from the template content
+                        if(preg_match($layoutPattern1, $templateContent, $contentsMatched)) {
+                          $contentMatched = $contentsMatched[0]?? '';
+                          //$contentMatched = preg_replace('~\\\([A-Za-z0-9]{2,50})~', "\\\\\\\\$1", $contentMatched);
+                          //$replacement .= str_ireplace(["#script:$id", "#script;"], '', $contentMatched);%
+                          $replacement .= preg_replace($layoutPattern1, "$1", $contentMatched);
+                        }elseif(preg_match($layoutPattern2, $templateContent, $contentsMatched)) {
+                          $contentMatched = $contentsMatched[0]?? '';
+                          $replacement .= preg_replace($layoutPattern2, "$1", $contentMatched);
+                        }elseif(preg_match($layoutPattern3, $templateContent, $contentsMatched)) {
+                          $contentMatched = $contentsMatched[0]?? '';
+                          $replacement .= preg_replace($layoutPattern3, "$1", $contentMatched);
+                        }
+                        
 
                     }
 

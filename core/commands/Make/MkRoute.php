@@ -30,9 +30,9 @@ class MkRoute extends MkBase{
         /* Note:: all space variables have no trail slash */
 
         /* class subnamespace in Routes if subnamespace exists */
-        $classSpace = to_namespace($classDir); 
+        $classSpace = to_namespace($classDir);
         $url = new Url;
-        $classSpace = $url->path($classSpace)->pathmod(fn($val) => ucfirst($val));
+        $classSpace = $url->path($classSpace)->pathmod(fn($val) => ucfirst($val)); 
         
         /* class namespace starting from windows folder  */
         $routedSpace  = to_namespace(WIN_ROUTES.$classSpace);
@@ -47,7 +47,7 @@ class MkRoute extends MkBase{
         $fileLoc   = $fileDir.$className.'.php'; /* relative file path */
 
         /* window routes' absolute file path */
-        $filePath  = domroot($fileLoc);     
+        $filePath  = domroot($fileLoc);        
         
         Cli::textView(Cli::danger(Cli::emo('point-list').' add:routes ').Cli::warn($fileLoc));
         Cli::break(2);
@@ -65,7 +65,7 @@ class MkRoute extends MkBase{
         }
 
         $extend = to_frontslash(($arg2 != '-O') ? $arg2 : '', true);
-        $use = "Window";
+        $use = "Route";
 
         //try validating class, extends name
         $pattern1 = '~[^\w\/]~';
@@ -86,7 +86,7 @@ class MkRoute extends MkBase{
 
         if($extend) $use = scheme(WIN_FRAMES.$extend, false);
 
-        $extends = $extend? $extend : 'Window';
+        $extends = $extend? $extend : 'Route';
 
         $Filemanager = new FileManager;
 
@@ -96,12 +96,12 @@ class MkRoute extends MkBase{
             $rexName = strtolower($className); //set className for method...
             $tmpName = str_replace(['/','\\'], '.',strtolower($classDir.'/'.$className));
 
-            //create class file if not exist, return false if not created      
+            //create class file if not exist, return false if not created                  
             if($Filemanager->openFile(true, $filePath)) {
 
                 $rexName = strtolower($className); //set className for method...
                 $tmpName = str_replace(['/','\\'], '.',strtolower($classDir.'/'.$className));
-            
+                
                 $content = <<<CContent
                 
                     public function __construct(){
@@ -118,7 +118,7 @@ class MkRoute extends MkBase{
     
                         //self::addRex();
                         //self::load('$tmpName', fn() => compile() );
-                        
+                                                
                     }
     
                     /**

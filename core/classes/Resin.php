@@ -15,9 +15,9 @@ Interface Resin{
      * Renders rex templates files
      *
      * @param string $url rex template url
-     * @param Closure $callback template handler function
+     * @param Closure|False $callback template handler function
      * @return string
      */
-    public static function load(string $url, Closure|String $callback = '');
+    public static function load(string $url, Closure|False $callback = false);
 
 }

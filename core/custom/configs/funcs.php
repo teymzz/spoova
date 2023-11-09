@@ -305,6 +305,21 @@ function to_backslash(string $text, $dots = false) : string {
 
 }
 
+
+/**
+ * Converts all slashes to DIRECTORY_SEPARTOR
+ *
+ * @param string $text
+ * @param bool $dots true allows all dots to be converted to frontslash 
+ * @return string
+ */
+function to_dirslash(string $text, $dots = false) : string {
+
+    return str_replace(($dots? ['\\','.','/'] : ['\\','/']), DIRECTORY_SEPARATOR, $text);
+
+}
+
+
 /**
  * Returns backslash to frontslash (i.e using back slash)
  *

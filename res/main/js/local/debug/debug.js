@@ -6,15 +6,27 @@
 function stack(element){
 
     let stackTrace = element.closest('.stack-trace');
+    let stackDebug;
 
-    let stackDebug = stackTrace.querySelector(".stack-debug");
+    if(element.classList.contains('code-block-item')){
+        stackDebug = stackTrace.querySelector(".stack-code-debug");
+    }else{
+
+        if(element.classList.contains('track-route-item')){
+            stackDebug = stackTrace.querySelector(".window-debug");
+        } else {
+            stackDebug = stackTrace.querySelector(".stack-debug");
+        }
+    }
     let scrollHeight = `${stackDebug.scrollHeight}px`;
 
     if(stackDebug.classList.contains('opened')){
         scrollHeight = 0;
         stackDebug.classList.remove('opened')
         stackTrace.classList.remove('opened');
+        element.classList.remove('opened');
     } else {
+        element.classList.add('opened');
         stackDebug.classList.add('opened')
         stackTrace.classList.add('opened')
     }

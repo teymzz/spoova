@@ -720,15 +720,15 @@ function array_unset(array $array, $value, bool $series = false) : array {
 /**
  * Combines a string or array into the second defined array
  *
- * @param string|array $array
+ * @param string|array $array1
  * @param array        $array2
  * @return array
  * 
  */
-function combine($array, array &$array2){
-  //combine $array2 and $array and sets combined value in $array2
-  $array = (array) $array;
-  $combiner = array_combine($array2,$array);
+function combine($array1, array &$array2){
+  //combine $array2 and $array1 into $array2
+  $array1 = (array) $array1;
+  $combiner = array_combine($array2,$array1);
   $array2 = $combiner ;
 }  
 

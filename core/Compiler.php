@@ -11,6 +11,7 @@ class Compiler {
     private $activity = 'default';
     private array $args = [];
     private array $rexdata = [];
+    private array $managers = [];
 
     /**
      * Instance of compiler
@@ -29,6 +30,12 @@ class Compiler {
         $this->setActivity();
       }
         
+    }
+
+    function addmanager(CompilerManagers $Manager) {
+
+      $this->managers[] = $Manager;
+
     }
     
     /**
@@ -66,9 +73,7 @@ class Compiler {
     }
 
     /**
-     * Compile is a function used to compile a page for unrouted files.
-     * Because it accepts arguments (variables). It should only be used once
-     * within the Rex::load() method. 
+     * Compile is a function used to compile rex files.
      * 
      * {@See Res::compile()}
      *
@@ -111,19 +116,22 @@ class Compiler {
     }
 
     /**
-     * Compile is a function used to compile a page for unrouted files.
-     * Because it accepts arguments (variables). It should only be used once
-     * within the Rex::load() method. 
-     * 
-     * {@See Res::compile()}
+     * This function sets a string for rendering
      *
-     * @param string|array $arg1 body or arguments
-     * @param array|string $arg2 arguments or body
+     * @param string $content content to be rendered
+     *
      * @return Compiler
      */
-    function body($content) : Compiler {
+    function body(string $content) : Compiler {
       //slice data into url ... 
       $this->setActivity('body');
+
+      foreach($this->managers as $manager) {
+
+        $content = $manager->render($content);
+
+      }
+      
       $this->content = $content;
 
       return $this;
@@ -146,10 +154,10 @@ class Compiler {
 
         $rexFile = $this->rexdata();
 
-        $template = $this->rex($rexFile);
+        $template = $this->raw($rexFile);
         
-        //create file ... 
-       return $this->create_storage($rexFile['storage'], $template);
+        //create file, buffer and return data... 
+        return $this->create_storage($rexFile['storage'], $template);
 
     }
 
@@ -158,11 +166,11 @@ class Compiler {
      *
      * @return string
      */
-    public function rex() : string {
-      return $this->fetchrex();
+    public function raw() : string {
+      return $this->fetchraw();
     }
 
-    private function fetchrex($data = '') : string {
+    private function fetchraw($data = '') : string {
 
       $args = $this->args; 
       $nargs = func_num_args();
@@ -202,7 +210,13 @@ class Compiler {
 
       }
 
-      Slicer::unsort_comments($template);
+      Slicer::unsort_comments($template);   
+
+      foreach($this->managers as $manager) {
+
+        $template = $manager->render($template);
+
+      }
       return $template;
 
     }
@@ -214,10 +228,10 @@ class Compiler {
         
     }
 
-    private function create_storage($storage, $content)
+    private function create_storage(string $storage, string $content) : string
     {
 
-        //push to file and print data 
+        //push to file and return data 
 
         $Filemanager = new FileManager;
         $realFile    = $storage;
@@ -310,12 +324,12 @@ class Compiler {
         $file = !$escape? Slicer::sliceUrl($fileUrl): $file;
 
         return $this->rexdata = [
-          'location' => $rexpath, //assumed path of file within rex folder (without extension)
-          'path' => $fileUrl, // rex path (rex directory + location)
-          'file' => $file,    // rex file (rex path + rex extension)
-          'isScreen' => $isScreen,
+          'location' => to_dirslash($rexpath), //assumed path of file within rex folder (without extension)
+          'path' => to_dirslash($fileUrl), // rex path (rex directory + location)
+          'file' => to_dirslash($file),    // rex file (rex path + rex extension)
+          'isScreen' => to_dirslash($isScreen),
           'format' => $format,
-          'storage' => $storage
+          'storage' => to_dirslash($storage)
         ];
 
     }
@@ -343,7 +357,7 @@ class Compiler {
             $fileName = pathinfo($file, PATHINFO_FILENAME);
             $fileName = substr($fileName, 0, strlen($fileName) - 4);
   
-            if(is_string($addRex) && is_file(docroot.'/windows/Rex/'.to_frontslash($addRex, true).".rex.php") ) {          
+            if(is_string($addRex) && is_file(docroot.DS.'windows'.DS.'Rex'.DS.to_dirslash($addRex, true).".rex.php") ) {          
                       
               $template = <<<Template
               @template('$addRex')

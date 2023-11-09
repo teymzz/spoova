@@ -12,8 +12,10 @@ use RecursiveDirectoryIterator;
  */
 class FileManager extends Enlist{
 
+    private const DS = DIRECTORY_SEPARATOR;
     private static string $envKey = ':ENV';
     private static array $envData = [];
+    private string $separator = ':'; // default used if not overridden
     private string $url = '';
     private string $lastDir = '';
     private $zipName;
@@ -53,6 +55,16 @@ class FileManager extends Enlist{
       }
       $this->url = $url;
       $this->lastDir = $url;
+      return $this;
+    }
+
+    /**
+     * Sets universal separator character
+     * 
+     * @param string $separator separator character 
+     */
+    public function separator(string $separator = ':') {
+      $this->separator = $separator;
       return $this;
     }
 
@@ -165,14 +177,15 @@ class FileManager extends Enlist{
      * @param array|string $key list of key(s) to be fetched from file. Bool:true reads entire file
      * @param string|bool $separator A line key-to-value unique separator character
      *
-     * @return array|bool returns an array or bool depending on certain conditions
-     *    - (array) array of keys and values => if $separator character is defined (NOT true) and string(s) of $key or $key[] exist in file
-     *    - (bool)  true                     => if $separator === true and string of $key exists in file
+     * @return array|string|bool returns an string, array or bool depending on arguments supplied
+     *    - (array) array of keys and values => if type of $key is array and typeof $separator character is string.
+     *    - (string)                         => if type of $key is string and type of $separator is string.
+     *    - (bool) true                      => if $separator === true and string of $key exists in file
      *    - (bool) false                     => if $separator === true and string of $key does not exists in file or file in not readable
      * 
-     * @throws Notice Error if file is not readable or separator is the same as delimiter
+     * @throws Notice Error if file is not readable or separator is the same as delimiter (;)
      */
-    public function readFile($key = null, $separator= ":"){
+    public function readFile(string|array $key = null, string|bool $separator= ":"){
       
       if(!is_readable($this->url)){
         trigger_error("url \"".$this->url."\" is not readable");
@@ -180,6 +193,8 @@ class FileManager extends Enlist{
       }   
 
       $delimiter = ";";
+      
+      $separator = (func_num_args() < 2)? $this->separator : $separator;
       if(trim($separator) === $delimiter) trigger_error("separator cannot be the same as delimiter", E_USER_ERROR);
       
       if(empty($key)) return false;
@@ -405,7 +420,7 @@ class FileManager extends Enlist{
       
       //construct text format
       $newText = '';
-      $separator = ($options['separator'])?? ":";
+      $separator = ($options['separator'])?? $this->separator;
       $delimiter = ";";
       if($separator === $delimiter) trigger_error("separator cannot be the same as delimiter", E_USER_ERROR);
 
@@ -420,25 +435,49 @@ class FileManager extends Enlist{
     }
 
     /**
-     * Updates a existing text key or adds a new text 
+     * Updates an existing text key or adds a new text 
      *
      * @param string|array $data data of array key(s) with new values to be added to file
-     * @param array $options postions to add new text [before, after]
+     * @param void|array $replacements reference to updated keys
+     * @param string $separator separator character
      * @return boolean
      */
-    public function textUpdate($data, &$upds = '', $separator = ":") : bool {
+    public function textUpdate($data, &$replacements = '', string $separator = ":") : bool {
 
       $fileUrl = $this->url;
-      if(!is_file($fileUrl)) return false;   
+      if(!is_file($fileUrl)) return false;  
+      
+      // //start
+      // $contents = file_get_contents($fileUrl);
+      // $lines = explode($contents, "\n");
+      // $edata = [];
+      // array_map(function($val, $key) use(&$edata, $separator){
+      //    $edata[$key.$separator] = $val;
+      // }, $data, array_keys($data));
+
+      // $newliness = [];
+      // foreach($lines as $line){
+      //   foreach($edata as $lineKey => $lineVal){
+      //     $line = ltrim($line);
+      //     if(substr($line, strlen($lineKey)) === $lineKey){
+      //       $newliness[$lineKey] = $lineVal.$delimiter."\n";
+      //     }else{
+      //       $eline = explode($line, $separator, 2);
+      //       $eline = (count($eline) === 2)? [$eline[0].$separator => $eline[0]] : $line;
+      //     }
+      //   }
+      // }
+      // //end
 
       $reading = fopen($fileUrl, 'r');
       $delimiter = ";";
+
+      $separator = (func_num_args() < 3)? $this->separator : $separator;
 
       if(trim($separator) == '') trigger_error('separator cannot be null', E_USER_ERROR);
 
       $replaced = false;
       $replacements = [];
-      $lines = '';
       $arrLines = [];
 
       while (!feof($reading)) {
@@ -450,16 +489,16 @@ class FileManager extends Enlist{
         foreach($data as $datakey => $dataValue){
           if(is_numeric($datakey)) trigger_error('data keys should not be integers', E_USER_ERROR);
           if(is_array($dataValue)){
+            //wrap array values as json in square brackets
             $dataValue = "[".json_encode($dataValue)."]";
           }
           
           if(empty(ltrim($datakey) || empty($line))) continue;
-          $idatakey = !empty($datakey)? ltrim($datakey) : ' '.$datakey;
           
           if (stristr($line, $datakey.$separator)){        
             $replaced = true;
             $replacements[] = $datakey;
-            $line = explode(":", $line, 2);
+            $line = explode($separator, $line, 2);
             $line = $line[0].$separator." ".$dataValue.$delimiter."\n";
             unset($data[$datakey]);
             break;
@@ -471,15 +510,13 @@ class FileManager extends Enlist{
     
       if(!empty($data)){
           $replaced = true;
-          $newText = "";
           foreach($data as $key => $value){
             if(is_numeric($key)) trigger_error('keys must have a string name',E_USER_ERROR);
 
             //may later require trimming...
-            $arrLines[] = $key.$separator." ".(is_array($value)? "[".json_encode($value)."]" : $value);
+            $arrLines[] = ($key.$separator." ".(is_array($value)? "[".json_encode($value)."]" : $value)).$delimiter;
 
           }
-    
       }
 
       fclose($reading);
@@ -530,19 +567,22 @@ class FileManager extends Enlist{
      * Deletes a line or lists of lines using line key
      *
      * @param array|string $keys line key or array of lines keys
-     * @param void $dels anchors/contains array of keys deleted keys
+     * @param void|array $dels anchors/contains array of keys deleted keys
      * @param string $separator A key to value separator
      *  - A separator should not exist twice on a single line
      * @return bool true if any text was deleted
      */
-    public function textDelete($keys, &$dels = [], $separator = ":"){
+    public function textDelete(array|string $keys, &$dels = [], $separator = ":"){
      
       $fileUrl = $this->url;
       if(!is_file($fileUrl)) return false;
 
+      $separator = (func_num_args() < 3)? $this->separator : $separator;
+
       $reading = fopen($fileUrl, 'r');
       $lines   = '';
       $edited  = false;
+      $keys = (array) $keys;
 
       foreach($keys as $key){
         if(is_array($key)) trigger_error('keys cannot be of array value', 'E_USER_ERROR');
@@ -592,8 +632,9 @@ class FileManager extends Enlist{
      *
      * @param string $separator A key to value separator (e.g 'key: value' or  'key= value' )
      *  - A separator should not exist twice on a single line
-     * @return array
-     *   - Note that a delimiter of semicolon (i.e ";") will be trimmed off
+     * @return array Returns array of keys and value pairs
+     *  - Note that a delimiter of semicolon (i.e ";") will be trimmed off
+     *  - It is better to specify the character separator to avoid any uncertainty
      */
     public function readAll(string $separator = ':') {
 
@@ -614,6 +655,8 @@ class FileManager extends Enlist{
             continue ;
           }
         }
+
+        $separator = (func_num_args() === 0)? $this->separator : $separator;
 
         $text = explode($separator, $line, 2)?? [];
         $key   = trim($text[0]?? ' ');
@@ -719,6 +762,8 @@ class FileManager extends Enlist{
       $delimiter = ";";
       $lines = "";
       $arrLines = [];
+
+      $separator = (func_num_args() < 2)? $this->separator : $separator;
 
       if(trim($separator) == '') trigger_error('separator cannot be null', E_USER_ERROR);
 
@@ -1103,10 +1148,10 @@ class FileManager extends Enlist{
       }
 
       // set new path or directory
-      $newDir = realpath($newdir)."\\";
+      $newDir = realpath($newdir).SELF::DS;
       $newDir .= ($newname == '')? basename($this->lastDir) : $newname;
   
-      if(!is_writable(realpath($newdir)."\\")){
+      if(!is_writable(realpath($newdir).SELF::DS)){
         $this->error = ('destination path "'.$newDir.'" is not writeable');
         return $this;
       }
@@ -1174,10 +1219,9 @@ class FileManager extends Enlist{
       if(func_num_args() === 1){
 
         // move selection to a new location
-        
         if(!is_dir($param1)){ return false; }
         rename($selection, $param1);
-        return file_exists($param1."/".$param2);
+        return file_exists($param1."/".$selection);
 
       }
 
@@ -1185,7 +1229,7 @@ class FileManager extends Enlist{
 
         //move $param1 in selection to $param2
         if(!file_exists($param2)){ 
-          $this->error = ('invalid destination path "'.$this->lastDir.'" supplied as argument(#2) on Filemanager::move() ');
+          $this->error = ('invalid destination path "'.$param2.'" supplied as argument(#2) on Filemanager::move() ');
           return false; 
         }
       

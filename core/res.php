@@ -1,9 +1,8 @@
 <?php
 
 /* Core Static Resources  */
-
 Res::new('res/main/')
-  
+   
     ->name("headers")
   
         # css headers
@@ -26,8 +25,8 @@ Res::new('res/main/')
         ->url("js/local/helper.js")->named('helperJS')
         ->url("js/local/init.js")->named('initJS')
 
-        ->bindTo('headers')
-   
+         ->bindTo('headers')
+  
     ->name('footers')
 
         # javascript footers
@@ -35,7 +34,7 @@ Res::new('res/main/')
         ->url("css/mdb5/js/mdb.min.js")->named('mdb')
 
         ->bindTo('footers')
-   
+    
     ->name('bond')
 
         # javascript footers
