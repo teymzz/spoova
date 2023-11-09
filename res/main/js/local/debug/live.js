@@ -347,8 +347,10 @@ if(typeof Res === 'undefined'){
             mobi.timer = 21;
                                     
             //get debug type
-            mobi.offline = (mobi.enviromodal == "offline");
+            mobi.offline = (mobi.enviromodal === "offline");
             mobi.debug = mobi.offline ? mobi.Offline : mobi.Online;
+
+            if(!mobi.offline) return ;
 
             setTimeout( () => {
                 
@@ -785,12 +787,6 @@ if(typeof Res === 'undefined'){
                                                             spNotice.removeAttribute('view');
                                                         }, 2000)
                                                     }
-                                                    // let cssdebugger = document.querySelector('link[x-debug="spoova"]');
-                                                    // if(cssdebugger) {
-                                                    //     setTimeout(() => {
-                                                    //         cssdebugger.remove();
-                                                    //     }, 1000)
-                                                    // }
                                                 }
                                                 rex.clear(function(){
                                                     
