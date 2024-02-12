@@ -8,6 +8,8 @@ use ReflectionMethod;
 class Dumper{
 
     private $init = false;
+    private static $cdump = false;
+    private static bool $headers = true;
     private const dumpFile = _core.'custom/views/dump.php';
 
     /**
@@ -19,17 +21,34 @@ class Dumper{
     public static function dump($value) {
         self::set_xdebug_ini();     
 
-        print '<style>'.self::style().'</style>';   
+        print '<style>'.self::style().'</style>';  
 
-        foreach(func_get_args() as $args){
+        if(self::$cdump === false){
+            foreach(func_get_args() as $key => $args){
+    
+                print '<details class="main">';
+                // add key here ... 
+                self::handleVariableObject(...func_get_args());
+    
+                print '</details>';   
+                
+            }
+        } else {
+            foreach($value as $key => $args){
 
-            print '<details class="main">';
-            
-            self::handleVariableObject(...func_get_args());
+                print '<details class="main padd-15">';
+                print '<summary>['.$key.']</summary>';
+                print '<div class="padd-16">'; 
+                self::handleVariableObject($args);
+                print '</div>';
 
-            print '</details>';   
+                print '</details>';   
 
+            }
+            self::$cdump = false;
+            self::$headers = true;
         }
+
 
         return new self;
 
@@ -74,6 +93,42 @@ class Dumper{
 
     }
 
+    public static function cdump(array $args, array $titles = [], false $headers = false){
+
+            if(isCli()){
+                var_dump(...$args);
+                return new self;
+            }
+            self::$cdump = $titles;
+            if(func_num_args() > 2) self::$headers = $headers;
+            $contents = <<<'CONTENTS'
+            <?php 
+            
+            use spoova\mi\core\classes\Dumper;
+
+            Dumper::dump($args);
+
+            CONTENTS;
+
+            $Filemanager = new FileManager;
+
+            if($Filemanager->openFile(true, self::dumpFile)){
+                
+                file_put_contents(self::dumpFile, $contents);
+    
+                ob_start();
+                include(self::dumpFile);
+                $template = ob_get_clean(); //new replacement
+                $vfile = str_replace(['\\','/'], '\\\\', __FILE__).':[\d]+:';
+                $template = preg_replace("~(<small>)?$vfile(</small>)?\n?~", '', $template);
+                echo $template;     
+            }
+
+            return new self;
+        
+
+    }
+
     public function exit() {
         if(is_file(self::dumpFile)) unlink(self::dumpFile);
         exit();
@@ -89,9 +144,11 @@ class Dumper{
     private static function handleVariableObject($args) {
 
 
-        $args = func_get_args();
+        $args = func_get_args(); $count = -1;
 
         foreach($args as $property => $value){
+
+            $count++;
 
             $items = !is_numeric($property)? $property : gettype($value);
 
@@ -100,7 +157,10 @@ class Dumper{
 
             $objectType = (!is_object($value) && ($objectType === 'Double'))? 'Float' : $objectType;
 
-            print '<summary><span>'.$objectType.$traversable.'</span></summary>';
+            $subject = self::$cdump ?: $objectType.$traversable;
+            if(is_array($subject) && isset($subject[$count])) $subject = $subject[$count];
+
+            if(self::$headers) print '<summary><span>'.$subject.'</span></summary>';
             
             $openHTML = $closeHTML = '';
             $summary = '<details><summary><span>%s</span></summary><div class="padd-16 dump">%s</div></details>';
@@ -167,6 +227,7 @@ class Dumper{
                 width:100%; 
                 padding: 1em;
                 margin-bottom: 10px;
+                list-style: none;
             }
 
             details[open] > summary {

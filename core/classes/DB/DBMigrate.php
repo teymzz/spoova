@@ -2,7 +2,7 @@
 
 namespace spoova\mi\core\classes\DB;
 
-use spoova\mi\core\commands\Make\MkMigrator;
+use spoova\mi\core\commands\Root\Make\MkMigrator;
 
 class DBMigrate {
 

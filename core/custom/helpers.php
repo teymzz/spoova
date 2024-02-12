@@ -32,7 +32,9 @@ if(!function_exists('domlink')){
 
   function domlink(string $link = '', bool $modified = true){
 
-     $link = str_replace(['\\','.'], '/', $link);
+    if(!isHTTP($link)){
+      $link = str_replace(['\\','.'], '/', $link);
+    }
 
      return domUrl($link, $modified);
 
@@ -888,7 +890,6 @@ if(!function_exists('HTERDOC')) {
    * @return string  $filepath path of error file in rex folder
    */
   function HTERDOC(string $name, string $filepath = ''){
-    Res::ignore();
     Res::name($name)
 		->url('res/main/js/config.js')
 		->url('res/main/css/res.css');

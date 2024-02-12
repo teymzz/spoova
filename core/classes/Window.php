@@ -1446,7 +1446,7 @@ class Window extends Controller{
    * @return void
    */
   final protected static function load($path, Closure|false $callback = false){
-    Rex::load($path, $callback);
+    echo Compiler::read(...func_get_args());
   }
 
   /**

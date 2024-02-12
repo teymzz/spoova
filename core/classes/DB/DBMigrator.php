@@ -7,7 +7,7 @@ use spoova\mi\core\classes\DB;
 use spoova\mi\core\classes\DB\DBSchema\DBSCHEMA;
 use spoova\mi\core\classes\DB\DBSchema\DRAFT;
 use spoova\mi\core\classes\FileManager;
-use spoova\mi\core\commands\Cli;
+use spoova\mi\core\commands\Root\Cli;
 use User;
 
 /**

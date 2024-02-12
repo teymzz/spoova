@@ -567,7 +567,7 @@ use spoova\mi\core\tools\Input;
      * @return mixed
      */
     public function isAuthenticated() : bool {
-        return self::errors()? false : true;
+        return $this->errors()? false : true;
     }
 
     /**

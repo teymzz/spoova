@@ -33,6 +33,41 @@ function vdump($var){
 }
 
 /**
+ * Execute a list of function sequentially
+ *
+ * @param array $processes
+ * @param boolean $isArray if set as false, array is returned, else last response is obtained.
+ * @return bool|array
+ */
+function step_run(array $processes, bool $isArray = false) : mixed {
+
+  $response = []; $result = '';
+
+  foreach($processes as $function => $process) {
+
+    if($process instanceof Closure){
+
+      $response[$function] = $result = $process();
+
+      if(!$isArray && ($result === false)) {
+        return false;
+      }
+
+    } else {
+      if(!$isArray && ($process === false)) {
+        return false;
+      }      
+    }
+
+  }
+
+  if(!$isArray)  return $result;
+
+  return $response;
+
+}
+
+/**
  * Declares / initializes non existing variable
  *
  * @param mixed $value

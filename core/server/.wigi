@@ -216,6 +216,11 @@
     z-index: 10000;
     width: 80px;
     height: 80px;
+    user-select: none;
+}
+
+:where(.widget .roller-text:active){
+  opacity: .2;
 }
 
 :where(.wi .w-1 .roller){
