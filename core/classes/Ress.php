@@ -4,6 +4,7 @@ use spoova\mi\core\classes\Init;
 use spoova\mi\core\classes\EInfo;
 use spoova\mi\core\classes\Rescon;
 use spoova\mi\core\classes\Attribs;
+use spoova\mi\core\classes\Dumper;
 use spoova\mi\core\classes\Enums\live;
 use spoova\mi\core\classes\Meta;
 
@@ -280,8 +281,6 @@ class Ress extends Rescon {
                         }
                     }
                 } 
-                //vdump(self::$named_urls);
-                // self::$named_urls = array_unique(self::$named_urls);
             }else {
                 EInfo::trigger('Resource unique name "'.$unique.'" already exists');
             }
@@ -305,11 +304,42 @@ class Ress extends Rescon {
             //get previous named urls 
             $tracks = self::$tracked; 
 
-            //bind all tracks to a new group name
-            self::bind($group, $tracks);
+            if($tracks){
+
+                if(isset(self::$named_urls[$group])){
+                    //bind new tracks to a existing group name 
+
+                    if(!in_array($group, $tracks)){
+
+                        $self_urls = self::$named_urls; // fetch tracked names
+                        
+                        foreach($tracks as $track){
+                            if(isset($self_urls[$track])){
+                                $named_url = $self_urls[$track];
+                                if(!in_array($named_url[0], self::$named_urls)){
+                                    self::$named_urls[$group][] = $named_url[0];
+                                }
+                            }
+                        } 
+
+                    }else{
+
+                        //prevent existing group from being added to tracks.
+                        EInfo::trigger('Resource unique name "'.$group.'" cannot bind to itself');
+                    }
+                    
+                }else{
+                    //bind new tracks to a new group name
+                    self::bind($group, $tracks);
+                }
+                
+            } else {
+                
+                EInfo::trigger('Resource cannot bind empty tracks.');
+                
+            }
 
             self::$tracked = [];  
-            // self::$mapped_names[self::$unique];
 
         }else {
 
@@ -323,8 +353,6 @@ class Ress extends Rescon {
 
                 //get exsiting group data
                 $groups = $all_groups[$group];
-
-                // var_dump($named_urls[$name]);
                 
                 foreach($names as $name){
 
@@ -341,14 +369,90 @@ class Ress extends Rescon {
                     
                 }
                 self::$named_urls[$group] = $groups; 
-                //if(!in_array($group, $names)){
-               // }
-               // self::bind($group, $new_group);
             }
 
         }
 
         return $this;
+    }
+
+    /**
+     * This displays the information about urls stored in a unique group
+     *
+     * @param string $uniqueName
+     * @param bool $display true displays value while 
+     * @return void
+     */
+    public static function show(string $uniqueName, bool $display = true) : array|false {
+
+        if(isset(self::$named_urls[$uniqueName])){
+
+            $resources = [];
+            $named_urls = self::$named_urls[$uniqueName];
+
+            foreach($named_urls as $id => $resource){
+
+                $resource_dir = trim($resource['dir'], ' ');
+                $resource_url = trim($resource['url'],' ');
+
+                $resource_urx = explode('=>',$resource_url);
+                $resource_url = $resource_urx[0] ?? null;
+                $resource_att = $resource_urx[1] ?? null;
+                $ext = null;
+
+                $resource_url = ($resource_url)? trim($resource_url, ' ') : $resource_url;
+
+                if($resource_att) {
+                    $resource_att = ltrim($resource_att, ' ');
+                    $resource_att = Attribs::split($resource_att, true);
+                }
+
+                $uext = pathinfo($resource_url, PATHINFO_EXTENSION);
+
+                if(preg_match('/:::(css|js)$/', $resource_url, $matches)){
+                    $ext = $matches[1]; // update url extension name
+                    $resource_url = substr($resource_url, 0, strlen($resource_url) - strlen(':::'.$ext));
+                    $colons = ':::'.$ext;
+                }
+
+                $ext = $ext ?: $uext;
+
+                if($ext === 'js' && $uext !== 'js' && $uext !== ''){
+                    return self::call_error('Resource url extension for js file "'.$url.$colons.'" is not valid');
+                }
+
+                $base = ($resource_dir) ?? null;
+                $root = 'internal';
+
+                //$attrs = 
+
+                if($resource_dir && !($isHTTP = isHTTP($resource_url))) {
+                    $resource_dir = $resource_dir.'/'.$resource_url;
+                }else{
+                    $resource_dir = $resource_url ;
+                    if($isHTTP) {
+                        $resource_url = $resource_dir;
+                        $root = 'external';
+                    }
+                }
+
+                $resources[$id] = [
+                    'name' => $resource['name'],
+                    'root' => $root,
+                    'base' => $resource['dir'],
+                    'type' => $ext,
+                    'path' => $resource_url,
+                    'link' => domurl($resource_dir),
+                    'attr' => $resource_att,
+                ];
+            }
+            if($display) Dumper::cdump([get_class(self::$instance).':'.$uniqueName=>$resources],[$uniqueName],false);
+            return $resources;
+        }else{
+            if($display) Dumper::cdump([get_class(self::$instance).':'.$uniqueName=>'(undefined)'],[$uniqueName],false);
+            return false;
+        }
+
     }
 
     /**

@@ -3,11 +3,12 @@
 //include core framework
 include_once 'icore/filebase.php';
 
-use spoova\mi\core\commands\Root;
-use spoova\mi\core\commands\Entry;
-use spoova\mi\core\commands\Syntax;
+use spoova\mi\core\commands\Root\Root;
+use spoova\mi\core\commands\Root\Entry;
+use spoova\mi\core\commands\Root\Syntax;
+use spoova\mi\core\commands\Root\Cli;
 use spoova\mi\core\classes\FileManager;
-use spoova\mi\core\commands\Cli;
+use spoova\mi\core\classes\Init;
 
 class spoova extends Entry{
 
@@ -100,6 +101,121 @@ class spoova extends Entry{
         $command = ($commands)? $commands[0] : '';
         $tolower = strtolower((string)$command);
 
+        $catDescs = ['cati::','catd::','catx::'];
+
+        if(($isCat = (substr($command, 0, 5) === 'cat::')) || in_array(($catx = substr($command, 0, 6)), $catDescs)){
+
+            $cat = ($isCat)? 'cat::' : $catx;
+
+            $base = $command;
+            $command = explode($cat, $command, 2)[1] ?? '';
+            $command = ucfirst($command);
+
+            //invalid control directories ...
+            $reserved_directories = ['core','icore','migrations','res','vendor','windows'];
+
+            $commands_directory = Init::key('CONSOLE_DIRECTORY', 'commands');
+
+            $control_directory = docroot.DS.$commands_directory.DS;
+
+            if(in_array($commands_directory, $reserved_directories)) {
+                
+                Cli::clearUp();
+                Cli::break(2);
+                Cli::textView(Cli::error('commands directory "'.Cli::warn($commands_directory).'" is reserved.'));
+                Cli::break(2);
+
+            }else if(is_dir($control_directory)){
+                
+                $controlSpace = scheme('commands');
+
+                $appSpace = $commands_directory.'\\'.$command;
+                $controller = $controlSpace.'\\'.$command;
+
+                if(appExists($appSpace)) {
+                    //parse other arguments ...
+
+                    $args = $commands;
+
+                    //resort arguments ... 
+                    unset($args[0]); $args = array_values($args);
+
+                    if(method_exists($controller, 'setCat')){
+                        $controller::setCat($cat);
+                    }
+
+                    if(method_exists($controller, 'validate_console') && method_exists($controller, 'isAuto')){
+                        
+                        if($controller::isAuto()){
+                            if($method = $controller::validate_console($args)){
+                                $arg = $args[count($args)-1];
+    
+                                $class = new $controller();
+    
+                                if(is_array($method)){
+                                    $args = $method;
+                                    $method = $args[0];
+                                    unset($args[0]); array_values($args);
+                                    if(method_exists($controller, $method)){
+                                        $class->$method($args);
+                                    }else{
+                                        Cli::textView(Cli::error('missing control method('.Cli::warn($method).') for "'.Cli::warn($arg).'"'));
+                                        Cli::break(2);
+                                    }
+                                }elseif(method_exists($controller, $method)){
+                                    $class->$method($arg);
+                                } else {
+                                    Cli::textView(Cli::error('missing control method('.Cli::warn($method).') for "'.Cli::warn($arg).'"'));
+                                    Cli::break(2);
+                                    return;
+                                }
+                            }else{
+                                return;
+                            }
+                        } else {
+                            $class = new $controller($args);
+                            $cats = $class->getCats();
+                            $cat = substr($cat, 0, -2);
+             
+                            $method  = $cats[$cat] ?? '';
+
+                            if(!method_exists($class, $method)){
+                                $meth = $method ? '('.Cli::warn($method).')' : '';
+                                Cli::break();
+                                Cli::textView(Cli::error('missing controller method'.$meth.' for "'.Cli::warn($base).'"'));
+                                Cli::break(2);
+                                return;
+                            }
+                            $class->$method($args);
+
+                        }
+                    }else{
+                        $class = new $controller($args);
+                    }
+
+                } else {
+
+                        
+                    Cli::clearUp();
+                    Cli::break(2);
+                    Cli::textView(Cli::danger(Cli::emo('point-list').' php mi '.Cli::warn($base)));
+                    Cli::break(2);
+                    Cli::textView(Cli::error('unrecognized command ['.Cli::warn($base).']'));
+                    Cli::break(2);
+
+                }
+
+            } else {
+                Cli::clearUp();
+                Cli::break(2);
+                Cli::textView(Cli::error('commands directory "'.Cli::warn($commands_directory).'" does not exist.'));
+                Cli::break(2);
+            }
+
+            
+            return ;
+        }
+
         /* Handle Root Commands */
         if(in_array($tolower, self::root)){
 
@@ -136,7 +252,7 @@ class spoova extends Entry{
                 array_shift($commands);
                 $arguments = array_values($commands);
                 
-                $class = scheme('core\commands\\'.$command, false);
+                $class = scheme('core\commands\Root\\'.$command, false);
 
                 if(@class_exists($class)){
                     (new $class($arguments));
@@ -157,7 +273,7 @@ class spoova extends Entry{
 
             array_shift($commands);
             $arguments = array_values($commands);
-            $class = scheme('core\commands\\'.$command);
+            $class = scheme('core\commands\Root\\'.$command);
         
             if(@class_exists($class)){
                 (new $class($arguments));
@@ -176,7 +292,7 @@ class spoova extends Entry{
     }
 
     /**
-     * @inheritDoc \core\commands\console
+     * @inheritDoc \core\commands\Root\console
      *
      * @return void
      */

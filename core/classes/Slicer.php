@@ -2,12 +2,8 @@
 
 namespace spoova\mi\core\classes;
 
-use Exception;
-use PDO;
-use Reflection;
 use ReflectionClass;
 use ReflectionMethod;
-use ReflectionProperty;
 use User;
 
 /**
@@ -75,26 +71,6 @@ class Slicer extends Directives{
        self::unsort_excludes($body);
        self::unsort_comments($body);
      }
-     
-    //  protected static function sort_layouts(&$body){
-    //     $pattern = '/@lay\(\'(.*?)\'\)/';
-      
-    //     while (preg_match($pattern, $body, $matches)) {
-    //         $fileToInclude = to_dirslash($matches[1], true);
-    //         $fileInfo = explode(':', $fileToInclude, 2);
-            
-    //         $layout_url = WIN_REX.$fileInfo[0]; //get file path 
-    //         $layout_id = $fileInfo[1];
-            
-    //         //build a layout pattern from layoutId values
-    //         $layoutPattern = "~@layout:{$id}.*?@layout;~is";//replacement 
-
-    //         $fileContent = file_get_contents($fileToInclude);
-    //         $body = preg_replace('/@lay\(\''.preg_quote($fileToInclude, '/').'\'\)/', $fileContent, $content);
-    //     }
-    
-    //     return $body;
-    //  }
 
      protected function endSlice(){
 
@@ -161,8 +137,6 @@ class Slicer extends Directives{
           self::sort_styles($body);
 
           self::sort_conditions($body);
-
-          //self::unsort_comments($body);
         }
 
         $body = $body;
@@ -191,7 +165,6 @@ class Slicer extends Directives{
       foreach(self::$comments as $key => $comment){
         $content = base_decode($comment);
         $body = str_replace("@comments(c:$comment)", $content, $body);
-        //unset(self::$comments[$key]);
       }
     }
 
@@ -232,22 +205,15 @@ class Slicer extends Directives{
       
       //handle loop statement
       // Define the regular expression pattern
-      $varArrows = '~@loop\(([^:]+): ([^ ]+) [@-]> (.+)\):~';
+      $varArrows = '~@loop\(([^:]+): ?([^ ]+) [@-]> (.+)\):~';
       $body = preg_replace($varArrows, '<?php for($1 = $2; $1 <= $3; $1++): ?>', $body);
       
-      $varArrows = '~@loop\(([^:]+): ([^ ]+) <[@-] (.+)\):~';
+      $varArrows = '~@loop\(([^:]+): ?([^ ]+) <[@-] (.+)\):~';
       $body = preg_replace($varArrows, '<?php for($1 = $3; $1 >= $2; $1--): ?>', $body);
        
-      $varOperators = '~@loop\(([^:]+): ([^ ]+) ([<>]=?|=) (.+)\):~';
+      $varOperators = '~@loop\(([^:]+): ?([^ ]+) ([<>]=?|=) (.+)\):~';
       $body = preg_replace($varOperators, '<?php for($1 = $2; $1 $3 $4; $1++): ?>', $body);
- 
-      // Replace the pattern with the desired format
-      /* $body = preg_replace($pattern, '<?php for($1 = $2; $1 $3 $4; $1): ?>', $body);
-      */
 
-      // Replace the pattern with the desired format
-      /*$body = preg_replace($pattern, '<?php for($1 = $2; $1 $3 $4; $1++): ?>', $body);
-       */
       $body = preg_replace('~@endloop;~', '<?php endfor; ?>', $body);
       
       $body = preg_replace('~@switch\((.*?)\):~', '<?php switch($1): ?>', $body);       
@@ -263,8 +229,6 @@ class Slicer extends Directives{
       preg_match_all('~@\(.*?\)@~s', $body, $fetches);
 
       $fetches = $fetches[0];
-
-      //vdump($fetches);
 
       usort($fetches, fn($a, $b) => strlen($b) - strlen($a) );
 
@@ -286,24 +250,13 @@ class Slicer extends Directives{
  
 
       foreach(self::$excludes as $key => $exclude){
-        //$mod = base_decode($exclude);
-        
         $rep = $exclude['rep'];
         $fetched = $exclude['fetched'];
         $comment = substr($fetched, 2); 
         $comment = substr($comment, 0, -2); 
-        //unset(self::$excludes[$key]);
         
         $body = str_replace($rep, $comment, $body);
-        //$body = str_replace("@ccomments(c:$exclude)", $mod, $body);
-        //$body = preg_replace('~@\(\{\{(.*?)\}\}\)@~', "&#123;&#123;$1&#125;&#125;", $body);
-        //$body = str_ireplace($rep, $fetched, $body);
-        // $body = preg_replace('~@\((.*?)\)@~s', "$1", $body);
-        //unset(self::$excludes[$key]);
       }    
-      // var_dump($body);
-      //var_dump(self::$excludes);
-      //vdump(self::$excludes, $body);
     }
     
     final public static function excludes(){

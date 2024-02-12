@@ -2,6 +2,8 @@
 
 namespace spoova\mi\core\classes;
 
+use Closure;
+
 class Compiler {
 
     private $base;
@@ -414,5 +416,38 @@ class Compiler {
       public static function addRex(bool|string $add = true){
         self::$addRex = $add;
       }
+
+      /**
+       * Return a rendered rex file
+       *
+       * @param string $path  path to rex file
+       * @param Closure|False|String $callback
+       * @return Compiler|String
+       */
+      public static function read(string $path, Closure|False|String $callback = '') : Compiler|String {
+        
+        if($callback instanceof Closure){
+          $caller = $callback();
+          if($caller instanceof Compiler){
+            $caller->setBase($path);
+            return $caller; 
+          }else{
+            $Compiler = new Compiler();
+            $Compiler->setBase($path);
+            $Compiler->body($callback());
+            return $Compiler;
+          }
+        } else if (func_num_args() == 1) {
+  
+            $Compiler = new Compiler();
+            $Compiler->setBase($path);
+            $Compiler->compile([]);
+            return $Compiler;        
+  
+        }
+        return '';
+        
+      }
+
 
 }
