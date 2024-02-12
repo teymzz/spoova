@@ -6,7 +6,7 @@ use spoova\mi\core\classes\Request;
 
 class Rexit {
 
-    static function scheme($namespace = '', $prefix = true) {
+    static function scheme($namespace = '', $prefix = false) {
 
         return scheme($namespace, $prefix);
 

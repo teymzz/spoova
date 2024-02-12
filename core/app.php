@@ -13,7 +13,7 @@ if(!defined('approot')) define('approot', dirname(docroot));  # project folder d
 !defined('FS')? define('FS', '/') : '';
 
 //define app details
-!defined('SP_VERSION')? define('SP_VERSION', '2.6.0') : '';
+!defined('SP_VERSION')? define('SP_VERSION', '2.6.1') : '';
 !defined('SP_SPOOVA')? define('SP_SPOOVA', approot.DS.'spoova'.DS) : '';
 
 //define spack file path

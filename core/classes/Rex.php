@@ -16,7 +16,7 @@ final class Rex extends Resx implements Resin{
 
     public static function load(string $url, Closure|False $callback = false){
         
-        print self::markup(...func_get_args());
+        print self::engine(...func_get_args());
 
     }
     

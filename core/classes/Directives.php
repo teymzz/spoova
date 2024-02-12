@@ -477,7 +477,7 @@ abstract class Directives{
                     foreach($explode as $id){
 
                         //build a style pattern from style id
-                        $layoutPattern1 = "~/\* #style\.* ?{$id}: \*/(.*?)/\* #style\.* ?{$id}; \*/~is";//replacement 
+                        $layoutPattern1 = "~/\* style\.* ?{$id}: \*/(.*?)/\* style\.* ?{$id}; \*/~is";//replacement 
                         $layoutPattern2 = "~#style:{$id}\s(.*?)#style;~is";//replacement 
 
                         //find expected style pattern from the template content
@@ -583,7 +583,7 @@ abstract class Directives{
                     foreach($explode as $id){
                 
                         //build a script pattern from script id
-                        $layoutPattern1 = "~/\* #script\.* ?{$id}: \*/(.*?)/\* #script\.* ?{$id}; \*/~is";//replacement
+                        $layoutPattern1 = "~/\* script\.* ?{$id}: \*/(.*?)/\* script\.* ?{$id}; \*/~is";//replacement
                         $layoutPattern2 = "~// #script\.* ?{$id}:(.*?)// #script\.* ?{$id};~is";//replacement
                         $layoutPattern3 = "~#script:{$id}\s(.*?)#script;~is";//replacement 
                         

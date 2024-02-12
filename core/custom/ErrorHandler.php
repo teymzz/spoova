@@ -3,7 +3,7 @@
 use spoova\mi\core\classes\ErrorHandlers\HandleErrors;
 use spoova\mi\core\classes\ErrorHandlers\HandleExceptions;
 use spoova\mi\core\classes\Init;
-use spoova\mi\core\commands\Cli;
+use spoova\mi\core\commands\Root\Cli;
 
 class ErrorHandler extends Exception{
 

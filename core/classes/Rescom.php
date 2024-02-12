@@ -19,13 +19,13 @@ abstract class Rescom extends Rescon
    * @return string|false
    */
   static function mkFile(string $name, $args){
-    $class = scheme('core\commands\Make\Mk'.$name, false);
+    $class = scheme('core\commands\Root\Make\Mk'.$name, false);
     if(class_exists($class)){
         $newclass = new $class($args);
         $build = $newclass->build();
         return $build;
     }else{
-      trigger_error('Missing executable file: core/commands/Make/Mk'.$name);
+      trigger_error('Missing executable file: core/commands/Root/Make/Mk'.$name);
       return false;
     }
   }

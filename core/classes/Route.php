@@ -6,6 +6,4 @@
  */
 class Route extends Window{
 
- 
-
 }

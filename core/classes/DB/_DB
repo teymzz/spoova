@@ -21,7 +21,7 @@
          DBNAME, DBUSER, DBPASS, DBSERVER, DBPORT, DBSOCKET
 
       6: //initialize your database controller
-         $dbcon = new \core\classes\DB;
+         $dbcon = new spoova\mi\core\classes\DB;
 
          You can now open connection in two ways
       
@@ -51,7 +51,7 @@
 
     STEP 1) connect to database controller
 
-    $dbcon = new \core\classes\DB(); // @param: ["MySQLi" | "PDO" | ""]
+    $dbcon = new spoova\mi\core\classes\DB(); // @param: ["MySQLi" | "PDO" | ""]
 
       @ "MySQLI" -> use MySQLI
       @ "PDO" -> use PDO 
@@ -69,14 +69,14 @@
 
     EXAMPLE 1 - connecting with parameters above
 
-    $dbcon = new \core\classes\DB(); //using PDO as Default
+    $dbcon = new spoova\mi\core\classes\DB(); //using PDO as Default
 
     $db = $dbcon->openDB($dbname, $dbuser, $dbpass, $dbserver, $dbport, $dbsocket);  //using parameters set above
   
     
     EXAMPLE 2 - connecting with your default parameters set in dbconfig.php
 
-    $dbcon = new \core\classes\DB(); //using PDO as Default
+    $dbcon = new spoova\mi\core\classes\DB(); //using PDO as Default
 
     $db = $dbcon->openDB();  //using your database setup file
 
@@ -589,8 +589,7 @@
 
     H. ERRORS AND ERROR LEVELS - PLEASE IGNORE!!! 
        
-       These error levels are intended for ajax responses but are
-       under development phase. 
+       These error levels are intended for ajax responses but have not been implemented. 
        
        -----------------------------------------------------------+
        errors and their errorLevel------------------------------- +
