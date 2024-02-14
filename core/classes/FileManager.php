@@ -36,6 +36,10 @@ class FileManager extends Enlist{
       return false;
     }
 
+    private static function toDir($url) : string {
+      return str_replace(['/','\\'], DIRECTORY_SEPARATOR, $url);
+    }
+
     /**
      * Set a url for reading content
      * 
@@ -967,12 +971,13 @@ class FileManager extends Enlist{
 
       //recursive directory iterator
       $files = new RecursiveIteratorIterator(
-        new RecursiveDirectoryIterator($dir),
+        new RecursiveDirectoryIterator(self::toDir($dir)),
         RecursiveIteratorIterator::LEAVES_ONLY
         );
 
       $exclude = array_map(function($path) use($dir) {
-        return str_replace('/','\\',(is_dir($dir) && is_string($path))? rtrim($dir, '/ ').'/'.ltrim($path, '/ ') : $path);
+        $urx = (is_dir($dir) && is_string($path))? (rtrim($dir, '/ ').'/'.ltrim($path, '/ ')) : $path;
+        return self::toDir($urx);
       }, $exclude);
 
       foreach($files as $file){
@@ -989,9 +994,8 @@ class FileManager extends Enlist{
           }, $exclude);
 
           if(!in_array($path, $exclusion)){
-            //* Add current non-excluded file to archive  
-            $DS = '\\';     
-            $zip->addFile($path, str_replace(['\\','/',' '],[$DS,$DS,''], $relpath));
+            //* Add current non-excluded file to archive       
+            $zip->addFile($path, self::toDir($relpath));
           }
 
          }
@@ -1042,7 +1046,7 @@ class FileManager extends Enlist{
           $zip = new ZipArchive;
 
           if($zip->open($curdir)){
-              $zip->extractTo($foldername);
+              $zip->extractTo(self::toDir($foldername));
               $zip->close();
               if($del) unlink($curdir);            
               return $this; 
