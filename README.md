@@ -3,8 +3,8 @@ Spoova is a PHP Framework that uses a Window-View-Model (WVM) pattern that is bu
 
 ##### INSTALLATION
 
-   ###### Direct Installation
-   If you are downloading spoova project pack directly from the source pack, clone or download the spoova frame project package to your device web server root and rename extracted pack to `spoova`
+   ###### Installation from git respository
+   Clone or download the spoova frame project package to your device web server root and rename extracted pack to `spoova`
 
    ###### Installation from composer #1
    Run the following command in your local web server root to generate the project pack
@@ -61,23 +61,30 @@ Spoova is a PHP Framework that uses a Window-View-Model (WVM) pattern that is bu
    ``` 
 ##### Creating First Project Application
 
-   > Once the project package installer is successfully installed on desktop devices, open the newly created pack in a code editor's terminal and run the command below to create a new separate project application.
+   > Once the project package installer is successfully installed on desktop devices, open the newly created pack in a code editor's terminal and run the command below: 
+
+   ```
+   php mi repack
+   ```
+   
+   > Once the repack is successful, to create your new separate project application, run the command below where ```<project_name>``` refers to the name of your project application.
 
    ```
    php mi project <project_name>
    ```
 
-   > If web installer was added during project app creation, you can navigate to "<project_name>/install" page to configure the essential parameters needed to get started but it is advisable to use the terminal to ensure all required processes are duely configured.
+   > During project app creation, if web installer was enabled, you can navigate to "<project_name>/install" page to configure the essential parameters needed to get started but it is advisable to use the terminal to ensure all required processes are duely configured.
    - To restart or refresh configuration on web, select the refresh button "R" or navigate to "<project_name>/install?refresh" page.
    - Once the application is installed, the installation page can be removed.
    - Once configuration has completed, page will be redirected back to the home page.
 
-   > If you prefer to configure your application from the terminal, skip step 4 and run the command below to start an interactive installation process. Ensuring that all database parameters if supplied, are wrapped within quotes.
+   > If you prefer to configure your application from the terminal, skip the step immediately above and run the command below to start an interactive installation process. Ensuring that all database parameters if supplied, are wrapped within quotes.
 
    ```cmd
    php mi config:all
    ```
-   > To use spoova for development on mobile devices, once the configuration is done, transfer your new project folder to the root of your local mobile web server (e.g KSWeb).
+
+   > Note that the database configuration parameters testing may return error in terminal if the terminal does not have access to the database. If an error is returned for testing configuration, try connecting using web browser.
 
    Visit the offline or online project pack documentation as the case may be to learn more on how to install the framework and other cli commands.
 
@@ -89,7 +96,7 @@ Deploying a production-ready application requires the use of specially designed 
 
 ##### CONFIGURATION FILES
 
-1. The database configuration files are automatically configured by the ```php mi config:all``` command but can be manually configured at _icore/dbconfig.php_ file. Database connection parameters are also loaded by default from this file. Remember to remove your connection paramaters when submitting project to a public environment by running ```php mi config:dboffline``` and also remove the online parameters if previously defined also by running the ```php mi config:dbonline``` with the parameters set as dash (i.e "-") in the command-line. This can also be done manually from the database connection configuration file  _icore/init_.
+1. The database configuration files are automatically configured by the ```php mi config:all``` command but if any error occurs, this can be manually configured at _icore/dbconfig.php_ file. Database connection parameters are also loaded by default from this file. Remember to remove your connection paramaters when submitting project to a public environment by running ```php mi config:dboffline``` and also remove the online parameters if previously defined also by running the ```php mi config:dbonline``` with the parameters set as dash (i.e "-") in the command-line. This can also be done manually from the database connection configuration file  _icore/init_.
 2. Other configuration files can be found within the same _icore/_ directory.
 3. The _icore/init_ file is used to initialize the state of the application.
 4. The _.env_ file should also be added to the same directory, if needed. This will enable the _env()_ function to load the defined keys automatically if needed.
