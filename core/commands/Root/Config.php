@@ -163,9 +163,11 @@ class Config extends Entry{
                             if($db->createDB($dbname)){
                                 Cli::textView(Cli::success('database name created successfully'), 0, "|2");                                    
                             }else{
-                                Cli::textView(Cli::error("some error occured!"), 0, '|2');
-                                Cli::textView(Cli::error($db->error(true)), 0, '|2');
-                                Cli::textView(Cli::error("process aborted!"), 0, '|2');
+                                $error = $db->error(true);
+                                //Cli::textView(Cli::error("some error occured!"), 0, '|2');
+                                Cli::textView(Cli::error("database connection parameters setup process aborted!"), 0, '|2');
+                                if(trim($error)) Cli::textView(Cli::error($error), 0, '|2');
+                                Cli::textView(Cli::danger('Fix:',"|1").Cli::warn("database connection through terminal may be unavailable in your device."), 0, '|2');
                                 exit;                            
                             }
 
