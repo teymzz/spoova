@@ -4,7 +4,7 @@
  include_once 'assets.php' ; 
  Res::import(":headers");
 
- function pathContents($url=null,$type=''){
+ function pathContents(?string $url = null, array|string $type = ''){
     if(strlen($url)> 0 && $url != null){ $url .='/'; }
   
     $url = str_replace('+', '/', $url);

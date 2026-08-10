@@ -6,5 +6,9 @@ class Bond extends BondComponent{
 
     protected static $body = '';
 
+    public function mount(){
+        
+    }
+
 }
 

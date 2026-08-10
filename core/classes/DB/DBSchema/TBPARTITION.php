@@ -4,7 +4,8 @@ namespace spoova\mi\core\classes\DB\DBSchema;
 
 use Closure;
 use spoova\mi\core\classes\DB\DBPlugins;
-use spoova\mi\core\commands\Cli;
+use spoova\mi\core\classes\DB\DBSchema\DRAFT;
+use spoova\mi\core\commands\Root\Cli;
 
 trait TBPARTITION {
 
@@ -14,13 +15,16 @@ trait TBPARTITION {
      * Set partition option
      *
      * @param string $type  optional [RANGE|LIST]
+     * @param Closure $callback recieves the {@see spoova\mi\core\classes\DB\DBSchema\DRAFT} instance  optional [RANGE|LIST]
      * @return DRAFT
      */
     public static function PARTITION_BY($type, Closure $callback) : DRAFT {
 
         $plugin = DBPlugins::get('partition', 'PLUGIN_STATUS');
 
-        if(strtolower($plugin) !== 'active'){
+        //print_r($plugin);
+
+        if($plugin && (strtolower($plugin) !== 'active')){
             self::callError(Cli::error(" Database does not support table partitioning "));
             return self::$instance;
         }
@@ -68,7 +72,7 @@ trait TBPARTITION {
         if($MODE === 'PARTITION'){
             
             if(is_array($columns) && !arrInside($columns)){
-                self::$$TYPE['PARTITION_BY'] .= " COLUMNS (". implode(',', $columns)." )";
+                self::$$TYPE['PARTITION_BY'] .= " COLUMNS (". implode(',', $columns). ")";
             }elseif(is_string($columns)){
                 self::$$TYPE['PARTITION_BY'] .= "($columns)";
             }else{
@@ -96,8 +100,9 @@ trait TBPARTITION {
         self::$TYPE[2] =  __FUNCTION__; //FUNCTION
 
         $checkers = [
-            'LESS THAN' => 'VALUES LESS THAN', 'VALUES LESS THAN' => 'VALUES LESS THAN',
-            'IN'=>'VALUES IN', 'VALUES IN' => 'VALUES IN'];
+            'LESS THAN' => 'VALUES LESS THAN', 'VALUES LESS THAN' => 'VALUES LESS THAN', //RANGE
+            'IN'=>'VALUES IN', 'VALUES IN' => 'VALUES IN' //LIST
+        ];
 
         if($MODE === 'PARTITION'){
 
@@ -119,18 +124,32 @@ trait TBPARTITION {
     /**
      * Set partition values
      *
-     * @param string $name
-     * @param string $value  
-     *  - options [ ('VALUES LESS THAN' or 'LESS THAN') | ('VALUES IN' or 'IN') ]
+     * @param string|int|float|array $value  
      * @return DRAFT
      */
-    public function VALUE(string|array $value) : DRAFT {
+    public function VALUE(int|float|string|array $value) : DRAFT {
 
         $TYPE = self::$TYPE['OLD'] ?? ''; //CREATE or ALTER
         $MODE = self::$TYPE[1] ?? ''; //PARTITION
         $FUNC = self::$TYPE[2] ?? ''; //PARTITION
 
         $value = (array) $value;
+
+        $value = array_map(function($val){
+
+            if(is_string($val)) {
+                $fchar = substr($val, 0, 1);
+                $lchar = substr($val, -1);
+
+                if($fchar === '(' && $lchar === ')'){
+                    return substr($val, 1, strlen($val) -1);
+                }
+                return "'$val'";
+            }
+
+            return $val;
+
+        },$value);
 
         if($MODE === 'PARTITION'){
 

@@ -9,6 +9,13 @@ class Sessionbase {
     
     const KEY = ':base:';
 
+    function __construct()
+    {
+        //ensure that the storage key's value only supports array data
+        $storage = Session::value(SELF::KEY) ?: [];
+        if(!is_array($storage)) Session::save(SELF::KEY, []);
+    }
+
     function remove(string|bool $key, string $subkey = '') : bool{
         
         if($key === true){
@@ -75,7 +82,7 @@ class Sessionbase {
    * Return true if the session storage base contains a particular root key or a root key's direct subkey
    *
    * @param string $key a session key to be checked. 
-   * @param string $subkey a subkey of session key (i.e $key) to be checked. 
+   * @param string $value a subkey of session key (i.e $key) to be checked. 
    * @return boolean
    */
   public static function has(string $key, string $value = '') : bool{
@@ -94,6 +101,7 @@ class Sessionbase {
      *
      * @param string $key defines a specific key in session whose value is to be returned 
      *  - If not supplied, this will return the entire value in the session environment.
+     * @param string $subkey subkey for $key if value of $key is array.
      * @return mixed
      */
     public static function value(string $key = '', string $subkey = ''){

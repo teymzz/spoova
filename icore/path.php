@@ -18,7 +18,7 @@ if(!defined('basefolder') || empty($_SERVER['DOCUMENT_ROOT'])){
 
       if(empty($_SERVER['DOCUMENT_ROOT'])){
        
-        return dirname(__DIR__).'/'.$path;
+        return dirname(__DIR__).str_replace(['/','\\'], DIRECTORY_SEPARATOR, '/'.$path);
         
       }
       $broot = (!in_array($_SERVER['REMOTE_ADDR'],['127.0.0.1','::1','']))? dirname($broot) : $broot;
@@ -35,14 +35,14 @@ if(!defined('basefolder') || empty($_SERVER['DOCUMENT_ROOT'])){
       $corePath = dirname(dirname(__DIR__))."/core"; 
       $coresymPath = dirname(__DIR__)."/core";      
       
-        if(!is_file($symPath)){
+        if(!is_file($symPath) && file_exists($resPath)){
           if(function_exists('symlink')) {
             /** only for supported devices */
             @symlink($resPath, $symPath);
           }
         }  
         
-        if(!is_file($coresymPath)){
+        if(!is_file($coresymPath) && file_exists($corePath)){
           if(function_exists('symlink')) {
             /** only for supported devices */      
             @symlink($corePath, $coresymPath);
@@ -67,9 +67,9 @@ if(function_exists('domroot')){
   function htCaliber(bool $load = false, $loader = ''){
    
     if(!defined('online')){
+      /** Refers to app deployment environment.*/
       define('online', !in_array($_SERVER['REMOTE_ADDR'] ?? '',['127.0.0.1','::1','']));
     }    
-
     $ENVIRONMENT = $_SERVER['ENVIRONMENT'] ?? $_SERVER['REDIRECT_ENVIRONMENT'] ?? '';
     //format htaccess
     if(is_file(domroot().".htaccess")){
@@ -117,7 +117,7 @@ if(function_exists('domroot')){
                   }
     
                   if($errDocText !== $matchesText){
-                    if($loader){ echo $loader; usleep(500000); }
+                    if($loader) echo $loader; usleep(500000); 
                     $htaccess = str_replace($matchesText, $errDocText, $htaccess);
                     if($addLine){ 
                       $htaccess = str_replace("#ErrorDocuments","#ErrorDocuments\n".$sp.$errDocText, $htaccess);
@@ -127,6 +127,7 @@ if(function_exists('domroot')){
                     fclose($fp);
                     if($load){
                       echo "<script>setTimeout(()=>{window.location.reload()},1000)</script>";
+                      exit;
                     }
                   }             
                 }			

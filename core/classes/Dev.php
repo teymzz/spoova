@@ -1,7 +1,7 @@
 <?php
 
-use spoova\mi\core\classes\FileManager;
-use spoova\mi\core\commands\Project;
+use spoova\mi\core\classes\Bundle\Filemanager\Filemanager;
+use spoova\mi\core\commands\Support\Project;
 
 /**
  * Development contoller
@@ -155,7 +155,7 @@ class Dev{
 
     public static function Compile()
     {
-        $Filemanager = new FileManager;
+        $Filemanager = new Filemanager;
         $Filemanager->setUrl(SP_SPOOVA);
         $Filemanager->zipUrl(SP_SPOOVA.'core/custom/spoove');
         $Filemanager->moveTo(SP_SPOOVA.'core/custom/', 'spack_'.SP_VERSION);

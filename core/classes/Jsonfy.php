@@ -8,11 +8,11 @@ namespace spoova\mi\core\classes;
  * to note that this class was not built to handle data more than two
  * dimentional level which is its only known limitation.
  * 
- * @author Akinola Saheed <teymss@gmail.com>
+ * @author Akinola Saheed <akinolasaheed001@gmail.com>
  */
 class Jsonfy{
 
-	public $sourceData;
+	public array $sourceData;
 
 	/**
 	 * array of data supplied or generated from json string
@@ -27,7 +27,7 @@ class Jsonfy{
 	 * @param string|array $data
 	 * @return void
 	 */
-    public function newData($data){
+    public function newData(string|array $data){
     	//supplies an array or json data to decompress to an array format.
         $data = !is_array($data)? json_decode($data, true) : $data;
 
@@ -38,7 +38,7 @@ class Jsonfy{
 	/**
 	 * return the key for value one level array 
 	 *
-	 * @param string $name
+	 * @param string $value
 	 * @return int|string|false
 	 */
 	public function datakey(string $value) : int|string|false {
@@ -61,7 +61,7 @@ class Jsonfy{
      *    - value is never numbered
 	 * @return void
 	 */
-    public function add($name, $key = null , $value = null){
+    public function add($name, mixed $key = null , mixed $value = null){
     	$data = $this->data;
         $args = func_num_args();
 		
@@ -97,7 +97,7 @@ class Jsonfy{
 	 *   -- @args count = 3, set value of @var $data[@param $key][@param $value] = @param $subval
 	 * @return void
 	 */
-    public function update($key, $value = null, $subval = null){
+    public function update($key, mixed $value = null, mixed $subval = null){
        	
        	$data = $this->data;
 		$args = func_num_args();
@@ -121,21 +121,26 @@ class Jsonfy{
 	 * deletes value from an array
 	 * 
 	 * @param string $keyname
-	 * @param string $value
+	 * @param mixed $value
 	 * 
 	 * if @args = 1, deletes @param $keyname from @var $data
 	 * if @args = 2, deletes @param $value from @var $data[@param $keyname]
 	 *
 	 * @return void
 	 */
-    public function delete(string $keyname,$value = null){
+    public function delete(string $keyname, mixed $value = null){
     	$data = $this->data;
 		$args = func_num_args();
 		
 		if($args === 1){
 			unset($data[$keyname]);
 		}elseif($args == 2){
-			unset($data[$keyname][$value]);
+			/* a key holding a scalar has no sub-key to remove. unset() used to be
+			   reached anyway, raising a fatal "cannot unset offset in a non-array
+			   variable" where an unknown key is otherwise a no-op */
+			if(isset($data[$keyname]) && is_array($data[$keyname])){
+				unset($data[$keyname][$value]);
+			}
 		}
 
     	$this->data = $data;    	
@@ -144,10 +149,11 @@ class Jsonfy{
 	/**
 	 * read @param string $keyname from @var array $data
 	 * 
-	 * @return string if found
+	 * @return mixed 
+	 *  - false : if key does not exist.
 	 * @return boolean false if not found
 	 */
-    public function read($keyname){
+    public function read(string $keyname) : mixed {
 
     	$data = $this->data;
 
@@ -169,7 +175,7 @@ class Jsonfy{
 	 * 	 - $type == 'count'   : return integer count of property $data
 	 * 
 	 */
-    public function data($type = null){
+    public function data(?string $type = null){
 
     	if($type == 'source'){
     		return $this->sourceData;

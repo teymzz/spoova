@@ -13,9 +13,9 @@ class Url{
    * Sets a path for testing
    *
    * @param string $url path to be tested
-   * @return \spoova\mi\core\classes\Url
+   * @return Url
    */
-  function path($url = '') {
+  function path(string $url = '') {
     $this->url = ltrim(str_replace('\\', '/', $url), "/");
     return $this;
   }
@@ -35,12 +35,12 @@ class Url{
   
   /**
    * Modify specified path
-   *
-   * @param array|int $position index to be modified 
-   *  - Note $position can either be greater than or less than zero.
+   * @param Closure $callback a callback function to be applied for specified divisional indices of a path.
+   * @param array|int|null $position positional index or indices to be modified 
+   *  - Note $position when defined can should be greater than or less than zero. However, if not specified, all divisional indices will be affected
    * @return string
    */
-  function pathmod(Closure $callback, array|int $position = null) : string {
+  function pathmod(Closure $callback, array|int|null $position = null) : string {
     
     $paths = $this->pathlist();
     
@@ -58,7 +58,7 @@ class Url{
           $arrReverse = array_reverse($paths);
 
           if(isset($arrReverse[$index])){
-            $arrReverse[$index] =  $callback($arrReverse[$index]);
+            $arrReverse[$index] =  $callback($arrReverse[$index], $posit);
           }
 
           $paths = array_reverse($arrReverse);
@@ -66,7 +66,7 @@ class Url{
           $index = $posit - 1;          
           
           if(isset($paths[$index])){
-            $paths[$index] =  $callback($paths[$index]);
+            $paths[$index] =  $callback($paths[$index], $posit);
           }
         }
 
@@ -78,7 +78,7 @@ class Url{
           $arrReverse = array_reverse($paths);
 
           if(isset($arrReverse[$index])) {
-            $arrReverse[$index] = $callback($arrReverse[$index]);
+            $arrReverse[$index] = $callback($arrReverse[$index],$position);
           }
 
           $paths = array_reverse($arrReverse);
@@ -86,7 +86,7 @@ class Url{
           $index = $position - 1;          
           
           if(isset($paths[$index])) {
-            $paths[$index] = $callback($paths[$index]);
+            $paths[$index] = $callback($paths[$index],$position);
           }
         }
 
@@ -109,8 +109,8 @@ class Url{
     $testpath = $this->url; //url address 
     $basepath = $basepath; //url address 
     if(!$strict) {
-    $testpath = strtolower($testpath);
-    $basepath = strtolower($basepath);
+      $testpath = strtolower($testpath);
+      $basepath = strtolower($basepath);
     }
     $baselen = strlen($basepath);
     $pathlen = strlen($testpath);
@@ -130,7 +130,6 @@ class Url{
   function is(string $path = '', bool $strict = true) : bool {
 
     $url  = $this->url;
-    $path = $url;
     if(!$strict) {
     $url = strtolower($url);
     $path = strtolower($path);
@@ -176,7 +175,7 @@ class Url{
    */
   function query(): array {
     $url = $this->url;
-    $url = parse_url($url,PHP_URL_QUERY);
+    $url = parse_url($url,PHP_URL_QUERY) ?: '';
     parse_str($url, $params);
     return $params;
   }
@@ -216,6 +215,7 @@ class Url{
 
     $url = $this->url;
     $splitUrls = explode('/', $url)?? [];
+
     $newurl = '';
     
     $count = 0; $ignored = 0;
@@ -228,16 +228,30 @@ class Url{
       $newurl .= $splitUrl.'/';
       $count++;
     }
-
+    $newurl = self::strip_questionmark($newurl);    
     return rtrim($newurl, '/ ');
-
   }
 
-  function last() {
+  function last(int $level = 1, int $ignore = 0) : string {
 
-    return basename($this->url);
+    if($level === 1 && $ignore === 0) return self::strip_questionmark(basename($this->url));
+    $path = rtrim(self::strip_questionmark($this->url));
+    $paths = array_reverse(explode('/',$path));
+    $pathsCount = count($paths);
 
-  } 
+    if($pathsCount < $level) return $path;
+    $count = 0; $ignored = 0; $newurl = [];
+    foreach($paths as $pth){
+      if($ignored < $ignore) {
+        $ignored++;
+        continue;
+      }
+      if($count >= $level) break;
+      $newurl[] = $pth;
+      $count++;
+    }    
+    return implode('/',array_reverse($newurl));
+  }
 
   /**
    * Returns a url path while ignoring the first levels defined
@@ -272,13 +286,11 @@ class Url{
    * Get the path from a particular string
    *
    * @param string $baseUrl
+   *  - Paths with prefixes [root:|base:|path:] applies the {@see window()} helper function while other values are treated as normal url path structure
+   * @param string $index refers to the starting index relative to a path's positional index.
    * @return string
    */
-  function pathFrom($baseUrl){
-
-    if(func_num_args() < 2){
-      //$baseUrl = window('base');
-    }
+  function pathFrom($baseUrl, ?int $index = null) : string {
 
     $acceptedDirectives = [':', 'base:', 'root:', 'path:'];
 
@@ -287,10 +299,30 @@ class Url{
     }
 
     $url = $this->url;
+    if(!$url){
+      EInfo::view('No valid url detected! Try using Url->path() to load url first');
+      return false;
+    }
 
-    return ltrim(explode($baseUrl, $url, 2)[1] ?? '', '/');
+    if(!$index){
+      $exp = $baseUrl? explode($baseUrl, $url, 2)[1] ?? '' : $url;
+      return ltrim($exp, '/');
+    }else{
+      $exp = explode($baseUrl, $url); $j = 0;
+      for($i = $index; $i < count($exp); $i++){
+        $prefix = ($j === 0) ? '' : $baseUrl.'/';
+        $paths[] = $prefix.ltrim(rtrim($exp[$i], ' /'),' /');
+        $j++;
+      }
+      if(isset($paths))return implode('/',$paths);
+      return '';
+    }
 
   }
-  
+
+  private static function strip_questionmark(string $value) : string {
+    return preg_replace('/\?.*/','', $value);
+    // return  rtrim($value, ' ?'); //substr($value, -1) === '?'? substr($value, 0, strlen($value) -1) : $value;
+  }
   
 }

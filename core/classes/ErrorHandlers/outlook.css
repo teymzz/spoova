@@ -1,0 +1,73 @@
+#\:\:xdebug-error .error-bind {
+    border: solid 1px #191616;
+    background-color: #100e0e;
+    color: #ff4c4c;
+    text-transform: normal;
+}
+
+.error-bind .notice-id {
+    background-color: #ec888847;
+    color: #cea6a6;
+}
+
+.error-bind .error-navs > div > :not(:first-child) {
+    background-color: #7846463d;
+    color: #f3b4aa;
+}
+.error-bind .error-navs > div > .active {
+    border-bottom: solid #7c3c3c;
+}
+.error-bind .error-track {
+    background: #7c21213b;
+}
+.error-bind .message-box {
+    background: #311a1a;
+    color: #ff3b3b;
+}
+
+.error-bind .file-name {
+    color: #9d8787;
+}
+
+/* stack trace ............. */
+.error-bind .err-stack-division {
+    background-color: #271919;
+}
+.error-bind .fn-track > div {
+    background-color: #301d1d;
+    color: #ac9090;
+}
+.error-bind .err-stack-line {
+    background: #3b2525;
+    color: #c5acac;
+}
+.error-bind .stack-code-debug [stack-debug] {
+    background-color: #261e1e;
+}
+
+/* code beta ........... */
+.error-bind .code-path {
+    background-color: #1d1313;
+    color: #947d7d;
+}
+.error-bind pre {
+    font-family: firacode;
+    font-weight: normal;
+    color: #726868;
+}
+.error-bind pre .code-line {
+    color: #fe7474;
+    font-size: 12px;
+    font-weight: normal;
+}
+
+@media (min-width: 1000px) {
+    .error-bind .notice-id {
+      font-size: 11px;
+      height: 35px;
+      min-width: 35px;
+      outline: solid #c83636;
+      outline-offset: 2px;
+      margin: 0 9px;
+    }
+}

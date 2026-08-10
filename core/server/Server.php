@@ -1,9 +1,12 @@
 <?php
 
 use spoova\mi\core\classes\Base;
+use spoova\mi\core\classes\Container\Container;
+use spoova\mi\core\classes\CSRF;
+use spoova\mi\core\classes\Sensor\Sensor;
 use spoova\mi\core\server\Serve;
 use spoova\mi\core\classes\Spinner;
-use spoova\mi\core\commands\Cli;
+use spoova\mi\core\commands\Root\Cli;
 
 /**
  * This class contains window entry file. It should not be modified unless you have an idea 
@@ -11,15 +14,21 @@ use spoova\mi\core\commands\Cli;
  */
 class Server extends Base{
 
+  private static $logic = '';
+
 
   /**
    * Start server
    *
    * @param string $type
    */
-  final function __construct($type = '')
+  final function __construct(string $type = '')
   {
+      if(isCli()){
+        self::$logic = $type; return;
+      }
       static::htcaliber($this);
+      
       /* preload data */
       static::loadRoutes(); 
       static::bindFormData();
@@ -32,7 +41,8 @@ class Server extends Base{
 
   }
     
-  final static function run($type = '') {
+  final static function run(string $logic = '') {
+    if(is_file(domroot(to_dirslash(ltrim(strtok(uri, '?'),'/'))))) return false;
     new static(...func_get_args());
   }
 
@@ -45,6 +55,7 @@ class Server extends Base{
    */
   protected static function start(string $type){
 
+    ob_start();
     //initialize the index page
     if($type === '') $type = 'standard';
     
@@ -54,13 +65,30 @@ class Server extends Base{
       Cli::break(2);
       return false;
     }
+    
+    error_reporting(E_ALL);
+    // ini_set('display_errors', 0);
+    Serve::ini();
+
     if($type === 'index'){
+      self::$logic = 'index';
       Serve::indexlogic();
     } elseif($type === 'standard') {
+      self::$logic = 'standard';
       Serve::standardlogic();
     } else {
+      self::$logic = 'basic';
       Serve::baselogic(ucfirst($type));
     }
+
+    if($lastWindow = Window::getLast()){
+      if(method_exists($lastWindow, '__onFinal')) {
+        Container::callMethod($lastWindow, '__onFinal');
+        // $lastWindow::__onFinal();
+      }
+    }
+
+    ob_end_flush();
 
   }
 
@@ -80,6 +108,10 @@ class Server extends Base{
       </div>
     ';
    
+  }
+
+  public static function logic() : string{
+    return self::$logic ?: 'standard';
   }
 
   function __destruct(){}

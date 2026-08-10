@@ -1,11 +1,18 @@
 <?php
 namespace spoova\mi\core\classes\DB;
 
+use Closure;
 use DBStatus;
+use ErrorException;
 use ReflectionClass;
+use spoova\mi\core\classes\Activity;
+use spoova\mi\core\classes\Container\Container;
 use spoova\mi\core\classes\DB;
+use spoova\mi\core\classes\DB\DBBridge;
+use spoova\mi\core\classes\DB\DBHelpers;
 use spoova\mi\core\classes\UserAuth;
 
+//-------------------------------------DBHANDLER CLASS ----------------------------------------
 /**
  * Database handler for managing or modifying connections
  * Currently Supports Mysqli and PostGreSql database system
@@ -14,21 +21,17 @@ use spoova\mi\core\classes\UserAuth;
  * Handler is capable of storing queries in static states than can be executed or used later.
  * Future feature will support MongoDB connection
  */
-
-//-------------------------------------DBHANDLER CLASS ----------------------------------------
 class DBHandler Implements DBHelpers{
 	
   use StrictRules, Helpers, DBQuery, 
-	    DBState, DBSelect, 
-	    DBInsert, DBUpdate,
-	    DBDelete, OSql,
+	    DBState, DBInsert, DBSelect, DBUpdate, DBDelete, DBCrud, OSql,
 	    DBDATA, DBLimit,
 	    DBError, SQLJoin;
 
   /**
    * Connection is an instance of DBBridge
    *
-   * @var DBBridge|null
+   * @var DBBridge|null $conn
    */
 	private ?DBBridge $conn = null;
   
@@ -44,7 +47,7 @@ class DBHandler Implements DBHelpers{
    *
    * @var string
    */
-	private $sqlquery;
+	private string $sqlquery;
 
   /**
    * Allows the use of setData function on query method
@@ -53,14 +56,23 @@ class DBHandler Implements DBHelpers{
    */
   private $usedata;
 
-  public $fetched;
+  /**
+   * Refers to an applied CRUD helper method name (i.e insert, read, update, delete, process)
+   *
+   * @var string
+   */
+  private ?string $crud_name = null;
+
+  public ?bool $fetched = null;
   
   /**
    * set the instance of a new connection
    *
    * @param DBBridge $conn connection instance of DBBridge
+   * @param DB $db 
    */
-  function __construct(DBBridge $conn, DB $db = null){
+  function __construct(DBBridge $conn, ?DB $db = null){
+
     if($conn->isConnected()){
 
       $this->conn = $conn;
@@ -74,9 +86,9 @@ class DBHandler Implements DBHelpers{
 
 
   /**
-   * swicth to a new database
+   * switch to a new database
    */
-  public function switchDB($dbname,$dbuser = null,$dbpass = null, $dbserver = null){
+  public function switchDB(string $dbname, ?string $dbuser = null, ?string $dbpass = null, ?string $dbserver = null){
     if($this->conn != null){
       if($this->conn->switchDB($dbname,$dbuser,$dbpass, $dbserver)){
         return true;
@@ -119,7 +131,7 @@ class DBHandler Implements DBHelpers{
    *
    * @return string
    */
-  public function conResponse(){
+  public function conResponse() : string {
     return $this->conn->conResponse();
   }
 
@@ -128,7 +140,7 @@ class DBHandler Implements DBHelpers{
    *
    * @return string
    */
-  public function conType(){
+  public function conType() : string {
     return $this->conn->conType();
   }    
 
@@ -140,7 +152,7 @@ class DBHandler Implements DBHelpers{
    * @param mixed $return
    * @return array|boolean|$return
    */
-  private function array_pick(&$array, $arraykey, $return = null){
+  private function array_pick(&$array, $arraykey, mixed $return = null){
     // picks out a key and its values from an array
     // sets $array as $array[$arrayKey] if $arrayKey exists in $array and (returns true)
     // sets $array as $return (if supplied) and array key cannot be found (returns false)
@@ -159,7 +171,7 @@ class DBHandler Implements DBHelpers{
     }
   }
     
-  private function checkdb($db){
+  private function checkdb(mixed $db){
 
     $con = $db;
 
@@ -246,43 +258,36 @@ class DBHandler Implements DBHelpers{
 
     $classvars = get_class_vars(__CLASS__);
     if($param == false){
-        $strictvars =  array('conn','sqlquery','data','strict','where','into','statename','queryState');
+        $strictvars =  ['conn','sqlquery','data','strict','where','into','statename','queryState','metrics','metrics_mode'];
     }else{
-        $strictvars =  array('conn');     
+        $strictvars =  ['conn'];     
     }
 
     $class  = new ReflectionClass(__CLASS__);
-    $statics     = $class->getStaticProperties();
 
-    foreach ($classvars as $key => $value) {
-        if(!in_array($key,$strictvars) && !array_key_exists($key, $statics)){
-          
-          if(isset($this->$key)) {
-            if(is_array($this->$key)){
-              $this->$key = [];
-            }else{
-              $this->$key = null;
-            }
-          }
-        
-        }  else if(array_key_exists($key, $statics)){
+    foreach($class->getProperties() as $property){
 
-            if($key === 'queryState' || $key === 'statedata') continue;
-            if(isset(self::$$key)) {
-              if(is_array(self::$$key)){
-                self::$$key = [];
-              }else{
-                self::$$key = null;
-              }
-            }
+      if(in_array($property->getName(), $strictvars, true)) continue;
 
+      $property->setAccessible(true);
+      $defaultProperties = $class->getDefaultProperties(); 
+
+      if(array_key_exists($property->getName(), $defaultProperties)){
+        if($property->isStatic()){
+          $property->setValue(null, $defaultProperties[$property->getName()]);
+        }else{
+          $property->setValue($this, $defaultProperties[$property->getName()]);
         }
+      }
+
+
     }
-      $this->limit  = null;
-      $this->errlog = array();
-      $this->results = array();
-      $this->fetches = false;
-      return true;
+
+    $this->limit  = null;
+    $this->errlog = array();
+    $this->results = array();
+    $this->fetches = false;
+    return true;
   }
 
   public function close(){
@@ -322,7 +327,9 @@ class DBHandler Implements DBHelpers{
 
 
 //* ALl DBHandler Traits -----------------------------------------------------------------------------------------
-
+/**
+ * Trait of DBHandler. Provide helper methods for certain strict rules.
+ */
 trait StrictRules{
 
   private $strict = false;
@@ -358,14 +365,31 @@ trait StrictRules{
 
 
 //-----------------------------------FLAT QUERY TRAIT----------------------------------------------
+/**
+ * Trait of DBHandler. Handles raw query operations
+ */
 trait DBQuery{
 
+  private ?Closure $crud_exec_callback = null;
+
+  /**
+   * executes crud_exec_callback's closure function.
+   *
+   * @return array
+   */
+  private function crud_exec_callback() {
+    
+    Container::feeder(['db' => $this, 'dbh' => $this, 'name' => $this->crud_name], function(){
+      Container::instance()->callFunction($this->crud_exec_callback);
+    });
+
+  }
   /**
    * sets sql queries
    *
    * @param array $query sql query
    * @param array $data binded parameters
-   * @param boolean $usedata true disables the use of binded parameters for raw sql queries
+   * @param boolean $usedata TRUE disables the use of binded parameters for raw sql queries
    * @return DBHandler
    */
   public function query($query, array $data = [], $usedata = false){
@@ -389,13 +413,20 @@ trait DBQuery{
    * @return true if query is successful else, it returns false
    */
   public function process() : bool {
+    
+    $this->crud_name = __FUNCTION__;
     if($this->sqlquery == null){ return $this->call_error("Error: no query not Supplied"); return false; }
 
-    $this->conn->buildBind($this->data, $this->sqlquery);
+    $this->conn->buildBind($this->data, $this->sqlquery); // sets data for DBM
 
-    $process = $this->conn->process_query($this->sqlquery);
+    $sql['sql'] = $this->sqlquery;
     
+    Activity::bench($uid = uniqid());
+    $process = $this->conn->process_query($this->sqlquery);
+
+
     if($process === false){
+      $this->add_metrics($sql, $uid, 'failed');
       if($this->conn->error_exists()){ 
         return  $this->call_error("Failed:".$this->conn->error()); 
       }else{
@@ -407,15 +438,37 @@ trait DBQuery{
       return  $this->call_error("Failed:".$this->conn->error());
     } 
 
-    return true;
+    if ($this->crud_exec_callback) {
+      $this->add_metrics($sql, $uid, 'failed');
+      $this->crud_exec_callback(); // process executed.
+    }
+
+    return $process;
+  }
+
+  /**
+   * Executes a callback function on any CRUD operation successfully performed
+   *
+   * @param Closure $callback
+   * @return void
+   */
+  public function onCRUD(Closure $callback){
+
+    $this->crud_exec_callback = $callback;
+    return $this; 
   }
 
 }
 
 //-----------------------------------FETCH DATA TRAIT----------------------------------------------
+
+/**
+ * Trait of DBHandler. Handles select operations
+ *  @mixin DBHandler
+ */
 trait DBSelect {
-    private $select;
-    private $numrows;
+    private string $select;
+    private int|string $numrows;
     private $results = [];
     private $fetches = false;
 
@@ -425,7 +478,7 @@ trait DBSelect {
     * @param string $sql as sql query to be supplied
     * @return self
     */
-    public function select($sql){
+    public function select(string $sql) : self{
       if($this->strict != true){
         $this->freeVars();
       }
@@ -444,14 +497,15 @@ trait DBSelect {
     /**
      * preferred method for execting fetch queries
      *
-     * @param string $limit1
-     * @param string $limit2
-     * @return array|bool
+     * @param string|null $limit1
+     * @param string|null $limit2
+     * @return array|false
      *  - Boolean false is returned if error occurs
      *  - Array is returned if no error occurs
      */
-    public function read(string $limit1 = null, string $limit2 = null) {
+    public function read(?string $limit1 = null, ?string $limit2 = null): array|false {
        
+       $this->crud_name = __FUNCTION__;
        //This line stops query once error is found in previous connections
        if(($this->find_error())  == true){ 
       	return $this->call_error("no results found: previous connection error");  //cannot read (strict)
@@ -472,15 +526,23 @@ trait DBSelect {
        //check if connection data return is not false (or empty)
          //if false check if there is error
             //if error is found return the error log
+       Activity::bench($uid = uniqid());
        if(($array = $this->conn->fetch_array($sql)) !== false){
            $this->numrows = $this->conn->num_rows();
            $this->limit   = $this->buildLimit(false);
            $this->results = $array;
            $this->fetches = $array;
+           
+           $this->add_metrics($sql, $uid, 'success');
+           $this->crud_exec_callback();
+          //  ContainerFunction::resolve($this->crud_exec_callback, [$this, $this->crud_name], 'test');
            return $array;        
        }else{
 	        if($this->conn->error() != null){ 
             $error = $this->conn->error(true);
+            $benchtime = Activity::benched($uid);
+            
+            $this->add_metrics($sql, $uid, 'failed');
             return  $this->call_error($error);        
          }else{
             return $this->call_error("no results found: error in connection");       	
@@ -488,7 +550,6 @@ trait DBSelect {
        }
 
       }
-
       //return the number of rows
       public function num_rows(){ 
         return $this->conn->num_rows();
@@ -599,10 +660,13 @@ trait DBSelect {
 
 
 //---------------------------------INSERT DATA TRAITS------------------------------------------
+/**
+ * Trait of DBHandler. Handles insert operations
+ */
 trait DBInsert{
 
-  private $insert_into;
-  private $column_keys;
+  private string $insert_into;
+  private array $column_keys;
 
   /**
    * Connection insertion id
@@ -616,9 +680,9 @@ trait DBInsert{
    *
    * @param string $table name of database table
    * @param array $data array of binded pair key(column) and values(values) parameters
-   * @return DBhandler
+   * @return DBHandler
    */
-  public function insert_into(string $table, $data = null){
+  public function insert_into(string $table, ?array $data = null) : DBHandler {
 
       $this->freeVars(true);
       $this->limit = $this->buildLimit(false);
@@ -628,7 +692,7 @@ trait DBInsert{
         trigger_error('invalid (empty) table name supplied for database insertion');
       }
 
-      $this->sqlquery .= $this->insert_into;
+      $this->sqlquery = $this->insert_into;
     
       if($data != null && is_array($data)){
         $this->setData($data);
@@ -639,12 +703,12 @@ trait DBInsert{
 	}
 
   /**
-   * sets the insertion columns
+   * sets the data insertion columns
    * 
-   * @param string func_get_args(), database table columns for inserting data 
-   * @return DBHandler
+   * @uses \func_get_args(), to specify database table columns for inserting data 
+   * @return DBHandler|false
    */
-	public function columns(){
+	public function columns() : DBHandler|false {
 
 		if($this->sqlquery == null){ return $this->call_error('no query found earlier'); }
 
@@ -669,12 +733,12 @@ trait DBInsert{
 	
 
   /**
-   * sets the insert values
+   * Sets the insertion values based on the number of arguments supplied.
    * 
-   * @param string func_get_args(), values to be inserted into columns 
-   * @return DBHandler
+   * @uses \func_get_args(), string values to be inserted into columns 
+   * @return DBHandler|false
    */
-	public function values(){
+	public function values(): DBHandler|false {
 
 		if($this->sqlquery == null){ return $this->call_error('no query found earlier'); }
 
@@ -708,10 +772,13 @@ trait DBInsert{
 
   /**
    * prepares an insert query before execution
-   *
-   * @return void
+   *  - This only saves the SQL query structure. It does not trigger any SQL error. 
+   *    Any error being retrieved must be from previously executed queries.
+   * @return bool
+   *  - TRUE : if query was stored in DBHandler.
+   *  - FALSE : if any pre-existing error stops query from being stored.
    */
-  public function prepare_insert(){
+  public function prepare_insert() : bool {
 
     //This line stops query once error is found in previous connections
     if(($err = $this->find_error())  == true){ 
@@ -766,7 +833,7 @@ trait DBInsert{
     $this->data = $params;
 
     $this->sqlquery = $this->sqlquery." ($keys) values {$values}"; //sets sql insert (full query)
-              
+    return true;
   }
 
   /**
@@ -775,28 +842,38 @@ trait DBInsert{
    * @return bool
    */
 	public function insert() : bool{
-        
+    
+    $this->crud_name = __FUNCTION__;    
     if($this->usedata){ $this->prepare_insert(); }
     $sql['sql'] = $this->sqlquery;  //sets sql['sql']
 
     $this->conn->buildBind($this->data,$this->sqlquery); //binds data
-       
+    
+    Activity::bench($uid = uniqid());  
+
     //check if connection is not false
     if(($this->conn->insert_query($sql)) == false){
 
       if($this->conn->error() != null){ 
 
-        return  $this->call_error("Failed: Something is wrong");  
+        $message = $this->call_error("Failed: Something is wrong");  
 
       }else{
 
-        return  $this->call_error("Failed: Something went wrong");
+        $message = $this->call_error("Failed: Something went wrong");
 
       }
+
+      $this->add_metrics($sql, $uid, 'failed');
+      return $message;
 
     }else{
 
       $this->connID = $this->conn->insert_id();
+      $this->add_metrics($sql, $uid, 'success');
+
+      $this->crud_exec_callback();
+
       return true;
     
     } 
@@ -816,9 +893,13 @@ trait DBInsert{
 
 
 //---------------------------------UPDATE DATA TRAITS------------------------------------------------
+/**
+ * Trait of DBHandler. Handles update operations
+ */
 trait DBUpdate{
 
-  private  $update;
+  private string $update;
+  private string $set;
 
   /**
    * for contructing update queries
@@ -859,6 +940,8 @@ trait DBUpdate{
    */
   public function update() : bool {
 
+    $this->crud_name = __FUNCTION__;
+
     //This line stops query once error is found in previous connections
     //This prevents uneccessary data insertions
     if(($err = $this->find_error())  == true){ 
@@ -875,21 +958,30 @@ trait DBUpdate{
 
     $this->conn->buildBind($this->data,$this->sqlquery); //binds data
        
+    Activity::bench($uid = uniqid());
+    
     //check if connection is not false
       //if false check if there is error
-         //if error is found return the error log
-    if(($array = $this->conn->update_query($sql))!==false){
+         //if error is found return the error log 
+    if(($this->conn->update_query($sql))!==false){
      
-       $this->freeVars(); //free variables except few         
+       $this->freeVars(); //free variables except few  
+
+       $this->crud_exec_callback();
+       $this->add_metrics($sql, $uid, 'success');
+       
        return true;    
 
     }else{
 
       if($this->conn->error() != null){ 
-        return  $this->call_error('Error');        
+        $message = $this->call_error('Error');        
       }else{
-        return $this->call_error("Something is wrong!!! Try again later");     
+        $message = $this->call_error("Something is wrong!!! Try again later");     
       }
+      $this->add_metrics($sql, $uid, 'failed');
+
+      return $message;
 
     }   
      
@@ -898,11 +990,14 @@ trait DBUpdate{
 }
 
 //---------------------------------DELETE DATA TRAITS------------------------------------------------
+/**
+ * Trait of DBHandler. Handles delete operations
+ */
 trait DBDelete{ 
 
-  private $delete;
+  private string $delete;
 
-	public function do_delete($tbname = null){
+	public function do_delete(?string $tbname = null){
 
      if($this->strict != true){
        $this->freeVars();
@@ -922,10 +1017,12 @@ trait DBDelete{
   /**
    * Performs delete operation
    *
-   * @param int $limit1 sql optional limit
+   * @param string|int|null $limit1 sql optional limit
    * @return bool
    */
-  public function delete($limit1 = null) : bool {
+  public function delete(string|int|null $limit1 = null) : bool {
+
+    $this->crud_name = __FUNCTION__;
 
     //This line stops query once error 
     //is found in previous connections
@@ -953,36 +1050,154 @@ trait DBDelete{
       //This line prevents multiple instantiations of limit
       return  $this->call_error("limit cannot be applied more than once");        
     }
-      
+    
+    Activity::bench($uid = uniqid());
+
     //check if connection is not false
       //if false check if there is error
           //if error is found return the error log
-    if(($array = $this->conn->delete_query($sql)) !== false ){
+    if(($this->conn->delete_query($sql)) !== false){
 
-      $this->freeVars(); //free variables except few         
+      $this->freeVars(); //free variables except few     
+      
+      $this->add_metrics($sql, $uid, 'success');
+      $this->crud_exec_callback();
+      
       return true;        
 
     }else{
 
       if($this->conn->error() != null){ 
-        return  $this->call_error($this->conn->error());        
+        $message = $this->call_error($this->conn->error());        
       }else{
-        return $this->call_error("Something is wrong!!!");     
+        $message = $this->call_error("Something is wrong!!!");     
       }
 
+      $this->add_metrics($sql, $uid, 'failed');
+
+      return $message;
     }  
 
   }
 
 }
 
+/**
+ * Trait of DBHandler. Relative to metrics and retrieving information
+ */
+trait DBCrud{
+  
+  private static array $metrics = [];
+  private static int $metrics_mode = 0;
+  private static bool $analyze = false;
+
+  /**
+   * Add benchtime metrics
+   *
+   * @param array $sql sql info
+   * @param string $uid benchmark id
+   * @param string $status optional [success|failed]
+   * @return void
+   */
+  private function add_metrics($sql, string $uid, string $status) {
+    if(self::$metrics_mode === 0) return;
+    $benchtime = Activity::benched($uid);
+    static::$metrics[] = [
+      'query' => $sql['sql'],
+      'conName' => strtoupper(DB::DBCON(true)),
+      'timeframe' => $benchtime['timeframe'],
+      'runtime' => $benchtime['runtime'],
+      'status' => $status,
+      'response' => $this->error(true),
+    ];
+    if(self::$metrics_mode === 2){
+      $analyses = $this->explain($sql);
+      $dataAnalyzed = [];
+      foreach($analyses as $analysis){
+          $dataAnalyzed[] = array_filter($analysis, fn($value) => $value !== NULL);
+      }
+      static::$metrics[count(static::$metrics)-1]['analysis'] = $dataAnalyzed;
+
+    }
+  }
+  
+  /**
+   * Apply inline configuration within a chained structure
+   *
+   * @param Closure $config
+   * @return DBHandler
+   */
+  public function apply(Closure $config): DBHandler{
+    $config();
+    return $this;
+  }
+
+  /**
+   * Explain specified SQL query
+   *
+   * @param array $sql
+   * @return array|false
+   */
+  public function explain(array $sql): array|false {
+    $sql['sql'] = 'EXPLAIN '.$sql['sql'];
+    return $this->conn->fetch_array($sql) ?: [];
+  }
+
+  /**
+   * Returns all applied CRUD queries
+   *
+   * @return array
+   */
+  public static function queries() : array {
+    $metrics = static::$metrics; $queries = [];
+    foreach($metrics as $query){
+      $queries[] = $query['query'];
+    }
+    return $queries;
+  }
+
+  /**
+   * sets permission for enabling metrics or returns metrics data
+   *
+   * @param integer $mode optional [0|1|2]
+   *  - 0: returns metrics data 
+   *  - 1: enables simple metrics analysis 
+   *  - 2: enable advanced metrics analysis
+   * @return array
+   */
+  public static function metrics(int $mode = 0): array {
+    if(!in_array($mode, [0, 1, 2])) throw new ErrorException('argument(#1) must be set at 0, 1 or 2.');
+    if(in_array($mode, [1, 2])){
+      self::$metrics_mode = $mode;
+      return [];
+    }
+    return static::$metrics; 
+  }
+
+  /**
+   * Returns the metrics mode
+   *  - 0: disabled
+   *  - 1: simple
+   *  - 2: advanced
+   * @return integer
+   */
+  public static function metrics_fetch_mode(): int {
+    return static::$metrics_mode; 
+  }
+
+}
+
 //---------------------------------JOIN DATA TRAITS------------------------------------------------
+/**
+ * Trait of DBHandler. Provides query join helper methods (join, on).
+ */
 trait SQLJoin{
 
-	private $join;
-  private $sqljoin;
+	private string $join;
+	private string $join_on;
+  private array $sqljoin;
 	
-	public function joins($param,$sqljoin=''){
+	public function joins(string $param, string $sqljoin = ''){
 		if($this->sqlquery == null){return $this;}
 		if($this->where != null){ $this->call_error("cannot perform a join after 'where' query"); return $this;}
 
@@ -1006,7 +1221,7 @@ trait SQLJoin{
 		return $this;
 	} 
 
-	public function on($param){
+	public function on(string $param){
 		if($this->sqlquery == null){return $this; }
 		if($this->sqljoin  == null){return $this; }
 		$this->join_on = " ".$param;
@@ -1016,11 +1231,13 @@ trait SQLJoin{
 }
 
 //-------------------------------- LIMIT DATA TRAITS -------------------------------------------------
+/**
+ * Trait of DBHandler
+ */
 trait DBLimit{
-    private $limit;
+    private string|false|null $limit;
 
-
-    private function limit($lim1, $lim2 = null){
+    private function limit(string|int|null $lim1 = null, string|int|null $lim2 = null){
 
 		  if($this->sqlquery == null){ return $this; }
     
@@ -1031,7 +1248,8 @@ trait DBLimit{
       if($lim2 != null && !is_numeric($lim2)){
         return $this->call_error("invalid limit: Parameter 2");
       }
-    
+        
+      $limArr = [];
       if($lim1 != null && is_numeric($lim1)){
         $limArr[0] = $lim1;
       }
@@ -1052,25 +1270,31 @@ trait DBLimit{
 
   
   /**
-   * Build the limit used. Supports only a maximum of two limits range
-   *
-   * @param array|bool(false) $limit [from, to]
-   * {@see DBBridge::buildLimit()}
-   * @return bool|string
+   * Build the limit used. Supports only a maximum of two limits range. See {@see DBBridge::buildLimit()}
+   *  - depends on the argument supplied which can be : 
+   *    - array: [from, to]
+   *    - false: unsets the limit 
+   * 
+   * @return string|false|null
    */
-  private function buildLimit(){
-    $this->conn->buildLimit(...func_get_args());
+  private function buildLimit(array|false $limit) : string|false|null {
+    /** @var DBBridge $conn */
+    $conn = $this->conn;
+    return $conn->buildLimit(...func_get_args());
   }
 }
 
 //-------------------------COMMANDS WHERE, FROM ---SQL CONJUCTION---------------------------------
+/**
+ * Trait of DBHandler. Provides conditional methods (from, where, order)
+ */
 trait OSql{
 
-	private $where;
-	private $from;
-  private $order;
+	private string $where;
+	private string $from;
+  private string $order;
 
-  public function from($param){
+  public function from(string $param){
     if($this->sqlquery == null){ return $this; }
     $frm =  " from ".$param;
     $this->sqlquery .= $frm;
@@ -1080,17 +1304,23 @@ trait OSql{
   }
 
 
-	public function where($param){ 
-	    if($this->sqlquery == null){ return $this; }
-      if(($this->update != null)&&($this->set==null)){
-        return $this->call_error("cannot perform where before set query");
-      }
+	public function where(string $param) : DBHandler { 
+    if($this->sqlquery == null){ return $this; }
+    if(($this->update != null)&&($this->set == null)){
+      return $this->call_error("cannot perform where before set query");
+    }
 		$this->where = " where ".$param;
 		$this->sqlquery .= $this->where;
-    	return $this;
+    return $this;
 	}
    
-  public function order($param){
+  /**
+   * Sets the table sorting order
+   *
+   * @param string $param order to be used to sort table.
+   * @return DBHandler
+   */
+  public function order(string $param) : DBHandler {
     if($this->sqlquery == null){ return $this; }
     $ord =  " order by ".$param;
     $this->sqlquery .= $ord;
@@ -1102,16 +1332,25 @@ trait OSql{
 
 
 //--------------------------- DATA TRAITS ------------------------------------------------ 
+/**
+ * Trait of DBHandler. Provides global setData method.
+ */
 trait DBDATA{
   
   private array $data = [];
 
-  public function setData($arr = array()){
+  /**
+   * Sets SQL parameters
+   *   - Note: keys and parameters may both be applied where necessary
+   * @param array $arr
+   * @return void|false
+   */
+  public function setData($arr = array()) {
     if($this->sqlquery == null){return $this->call_error("No Sql query found yet");}
     $this->data = $this->trimAll($arr);
   }
     
-	private function trimAll($data) : array {
+	private function trimAll(array $data) : array {
     
 		if($data == null){ return array(); }
 
@@ -1127,9 +1366,12 @@ trait DBDATA{
 
 }
 
-//* HELPER TRAITS: Contains all helper methods @see DBHelper
-//* This methods will only be accessible on the class instance via successful connection
-
+/**
+ * Trait of DBHandler. Contains all helper methods {@see DBHelpers}
+ * Methods provided by this trait will only be accessible on the class 
+ * instance via successful connection.
+ * Trait of DBHandler
+ */
 trait Helpers {
 
   /**
@@ -1145,7 +1387,7 @@ trait Helpers {
   /**
    * Returns the connection name
    *
-   * @return string connection name
+   * @return string|false connection name
    */
   public function conName(){
     if(!$this->conn) return false;
@@ -1155,7 +1397,7 @@ trait Helpers {
   /**
    * Returns the connection type (e.g MySQL, PDO)
    *
-   * @return string connection type
+   * @return string|false connection type
    */
   public function conType(){
     if(!$this->conn) return false;
@@ -1165,7 +1407,7 @@ trait Helpers {
   /**
    * Returns the connection response after a connection to database is tried
    *
-   * @return string response
+   * @return string|false response
    */
   public function conResponse(){
     if(!$this->conn) return false;
@@ -1175,7 +1417,7 @@ trait Helpers {
   /**
    * Returns the currently selected database name
    *
-   * @return string response
+   * @return string|false response
    */
   public function currentDB(){
     if(!$this->conn) return false;
@@ -1213,21 +1455,18 @@ trait Helpers {
    * Database connection must be active to do this
    *
    * @param string $dbname name of new database to be created
-   * @return boolean true if database was created or already exists, else it returns false
+   * @return boolean TRUE if database was created or already exists, else it returns FALSE
    */
-  public function createDB(string $dbname){
+  public function createDB(string $dbname) : bool {
     
     $db = $this->clone();
     $db->query("SELECT SCHEMA_NAME FROM INFORMATION_SCHEMA.SCHEMATA WHERE SCHEMA_NAME = ? ", [$dbname]);
-    $db_exists = $db->read()? true : false;
 
-    if($db_exists) return true;
+    if($db->read()) return true;
+
+    if($db->error_exists()) return false;
     
-    if(!$db->error_exists()){
-      return $db->query("CREATE DATABASE IF NOT EXISTS $dbname")->process();
-    }
-
-    return false;
+    return $db->query("CREATE DATABASE IF NOT EXISTS $dbname")->process();
 
   }
 
@@ -1244,16 +1483,16 @@ trait Helpers {
    * 
    * @return array
    */
-  public function tables(string $dbname = '', string $tbname = ''){
+  public function tables(?string $dbname = null, ?string $tbname = '') : array {
 
-    if(func_num_args() == 0){
+    if($dbname === null){
       $dbname = $this->currentDB();
     }
 
     $db = $this->clone();
 
 
-    if(func_num_args() < 2){
+    if(func_num_args() < 2 && ($dbname !== null)){
 
       // Return tables from currently selected or defined database name $dbname
       $db->query("SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES
@@ -1279,17 +1518,6 @@ trait Helpers {
     }
 
     return [];
-  }
-
-  /**
-   * Returns the clone of the current handler
-   *
-   * @return DBhandler
-   */
-  public function clone(){
-
-    return clone $this;
-
   }
 
   /**
@@ -1417,22 +1645,16 @@ trait Helpers {
       return true;
     }
 
-    // if(empty($column)) return false;
-
-    // $db = $this->clone();
-
-    // $db->query("SHOW COLUMNS FROM `".$table."` LIKE '".$column."' ");
-    
-    // return $db->read()? true : false;
+    return false; // No map supplied
 
   }
 
   /**
    * Drop a table or Column
    *
-   * @param array|bool|string $tableName name of table to be dropped
+   * @param array|string|bool $tableName name of table to be dropped
    *  -if $tableName is bool current connected database will be dropped 
-   * @param bool|string $column in $tableName of table to be dropped
+   * @param string|bool|null $columnName in $tableName of table to be dropped
    *     - string value will drop column if it exists
    *     - boolean (true) will drop database
    * 
@@ -1442,7 +1664,7 @@ trait Helpers {
    * @return bool
    *  - true is returned if table is successfully dropped
    */
-  public function drop(array|bool|string $tableName, string|bool $columnName = null) : bool {
+  public function drop(array|string|bool $tableName, string|bool|null $columnName = null) : bool {
 
     $db = $this->clone();
     $sql= '';
@@ -1473,17 +1695,29 @@ trait Helpers {
 
   }
 
+  /**
+   * Returns the clone of the current handler
+   *
+   * @return DBHandler
+   */
+  public function clone() : DBHandler {
+
+    return clone $this;
+
+  }
 
 }
 
-//* STATE TRAITS: Methods tha keep the state of a query ----------------------------------- 
+/**
+ * Trait of DBHandler. Provides methods that keep the state of a query
+ */
 trait DBState{
   
-  private static $queryState = [];
-  private static $statename;
-  private static $statequery;
-  private static $statedata;
-  private static $statemessage;
+  private static array $queryState = [];
+  private static string $statename = '';
+  private static ?string $statequery = null;
+  private static array $statedata = [];
+  private static string $statemessage;
   
 
   /**
@@ -1494,7 +1728,7 @@ trait DBState{
    * @param string|null $statename
    * @return void
    */
-  public function queryState($query, array $data = null, string $statename = null){
+  public function queryState($query, ?array $data = null, ?string $statename = null) : void{
     self::$statequery = $query;
     if($data === null) $data = [];
     self::$statedata  = $data;
@@ -1507,9 +1741,9 @@ trait DBState{
    * This method can be applied on queryState() or query() methods
    * 
    * @param string $statename name of state
-   * @return DBHandler
+   * @return DBHandler|false
    */
-  public function saveState($statename = null){
+  public function saveState(?string $statename = null) : DBHandler|false {
     
     if(trim($statename) == null){
       //set statename from class property (declared by stateSet) if it exists
@@ -1556,7 +1790,7 @@ trait DBState{
    * 
    * @return void
   */
-  public function endState(string $statename = ''){
+  public function endState(string $statename = '') : void {
     
     //unset a declared state
     if($statename != ''){
@@ -1586,11 +1820,11 @@ trait DBState{
    *  only if the state name supplied exists. If it doesn't exist, statename returns false. 
    * 
    * @param string $statename name of state
-   * $param $statemod , a new set of binded parameters with equal number of existing binded parameters.
+   * @param array $statemod , a new set of binded parameters with equal number of existing binded parameters.
    *        -note : statemod will not overide the default binded parameters. 
-   * @return bool|DBHandler checks if a state already exists to return a boolean of true | false
+   * @return DBHandler|false checks if a state already exists to return a boolean of true | false
   */
-  public function stateSet(string $statename = '', array $statemod = []) {
+  public function stateSet(string $statename = '', array $statemod = []): DBHandler|false {
 
     if(substr($statename, 0, 1) == ':'){
       
@@ -1633,13 +1867,20 @@ trait DBState{
    * State data returns the data attached to a particular state name.
    * 
    * @param string $infoname - options [sql | data | fetches | error ]
+   *  - sql : to fetch sql query
+   *  - data : to fetch sql data
+   *  - fetches : to fetch sql results
+   *  - error : to fetch sql error
+   * @return array|false
+   *  - FALSE : if $infoname does not exist
+   *  - Array : if $infoname exists
    */
-  public function stateFind($infoname){
+  public function stateFind($infoname) : array|false {
       
       //if state does not exist return false
       if(!isset(self::$queryState[self::$statename])){
-         self::$statemessage = 'state:  "'.self::$statename.'" not set!';
-          return false;
+        self::$statemessage = 'state:  "'.self::$statename.'" not set!';
+        return false;
       }
 
       if(array_key_exists($infoname, self::$queryState[self::$statename])){
@@ -1659,9 +1900,9 @@ trait DBState{
    * returns all stored states or specific states if a state key is supplied
    *
    * @param string $statekey
-   * @return array|bool
+   * @return array|false
    */
-  public function states($statekey = ''){
+  public function states($statekey = ''): array|false {
 
     $queryStates = self::$queryState;
 
@@ -1684,17 +1925,16 @@ trait DBState{
   /**
    * state message returns the last message of the currently selected state
    * 
-   * @return string|bool
+   * @return string|false
   */
-  public function stateMessage(){
+  public function stateMessage(): string|false {
     return self::$statemessage?? false;
   }
 
   /**
    * State Error returns error found
    *
-   * @param boolean:true $param return array
-   * @return string|array
+   * @return string
    */
   public function stateError() : string {
 
@@ -1711,6 +1951,9 @@ trait DBState{
 }
 
 //--------------------------- ERROR TRAITS ------------------------------------------------ 
+/**
+ * Trait of DBHandler. Contains Error related methods
+ */
 trait DBError{
   
   /**
@@ -1725,9 +1968,9 @@ trait DBError{
    * Sets the error message and returns a false value
    *
    * @param string $uerror
-   * @return bool false
+   * @return false
    */
-	private function call_error($uerror){ 
+	private function call_error($uerror) : false{ 
     $uerror = trim($uerror);
     if(!empty($uerror)){
         $this->errlog['error']      = true;
@@ -1735,6 +1978,9 @@ trait DBError{
         $this->errlog['core'] = isset($this->conn)? $this->conn->error(true) : null;  
     }
     $nerror[] =  $this->errlog;
+    if ($this->crud_exec_callback){
+      $this->crud_exec_callback();
+    }
     return false;
   }
 
@@ -1742,10 +1988,12 @@ trait DBError{
    * Returns the last error logged
    * By default core error is not displayed unless true is supplied as argument
    *
-   * @param null|bool (true) 
+   * @param string|bool|null 
+   *  - TRUE gets all errors including core errors 
+   *  - string gets error using specified key name
   * @return array|string
    */
-  public function getError($param = null){ 
+  public function getError(string|bool|null $param = null){ 
 
     if($param === true){
 
@@ -1776,7 +2024,7 @@ trait DBError{
    *
    * @return string
    */
-  public function error(bool $status = false){
+  public function error(bool $status = false) : string {
     $core  = $this->getError('core');
     if($core) return $core;
     if($status) return DBStatus::err();
@@ -1813,5 +2061,5 @@ trait DBError{
   private function find_error() : bool {  //finds if error exists
   	return isset($this->errlog['error']);
   } 
+
 }
-?>

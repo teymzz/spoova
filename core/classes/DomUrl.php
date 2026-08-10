@@ -14,7 +14,6 @@ class DomUrl {
     /**
      * Generates a single one-way hash key on each supplied integer
      *
-     * @param integer $int
      * @return string hash key of supplied integer
      */
     static function Hash() : string {
@@ -39,7 +38,7 @@ class DomUrl {
 
     }
 
-    static function Port(int $port = null){
+    static function Port(?int $port = null){
 
         if(func_num_args() > 0){
             self::$Port = $port;

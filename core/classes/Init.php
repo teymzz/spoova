@@ -2,42 +2,96 @@
 
 namespace spoova\mi\core\classes;
 
+use spoova\mi\core\classes\Bundle\Filemanager\Filemanager;
+use Closure;
+
 /**
  * This class is used to read the init configuration file keys from the 
- * icore/init directory.
+ * "icore/init" directory. Note that defined values must contain non-space 
+ * character to be considered a valid value.
  */
 class Init {
 
     public const File = _icore.'init';
-    private static ?FileManager $Filemanager = null;
+    private static ?Filemanager $Filemanager = null;
     private static $update = false;
     private static $init = [];
 
     /**
+     * Updates previous init configuration and returns all configuation keys and values after update. 
+     *
+     * @return array
+     */
+    static function load() : array {
+
+        self::setData(true);
+        return self::$init;
+
+    }
+
+    /**
+     * Return all previously read init configuration keys if it exists or new one if it does not already exist
+     *
+     * @return array
+     */
+    static function data() : array {
+
+        if(!self::$init) self::setData(true); 
+
+        return self::$init;
+
+    }
+
+    /**
      * Retrieve init file configuration key's value
-     *   - Left empty spaces of values are  before value is returned.
+     *   - Empty spaces that preceeds configuration value is usually trimmed before value is returned while empty spaces after value is retained.
+     *   - Note that spaces are not considered as value unless a non-space character exists within the value retrieved. 
+     *   - To get updated value after new change is made to init config file, consider using {@see Init::load()} first before calling this method.
      * @param string $key
      * @param mixed $alternate alternate value to be returned when $key is empty
      * @return string|false
      */
-    static function key(string $key, $alternate = false) : string|false {
+    static function key(string $key, string|false $alternate = false) : string|false {
 
         self::setData();
         self::$update = false;
         $value = self::$init[$key] ?? '';
 
+        if(!isset(self::$init[$key])) return $alternate;
         return trim($value)? $value : $alternate;
 
     }
 
-    static function values() : array {
+    /**
+     * Retrieve init file configuration key's value
+     *   - Left empty spaces of values are  before value is returned.
+     *   - Note that spaces are not considered as value unless a non-space character exists within the value retrieved. 
+     *   - To get updated value after new change is made to init config file, consider using {@see Init::load()} first before calling this method. 
+     * @param string $key
+     * @param Closure|null $modifier callback to modify the value to be returned when $key is empty
+     * @return string|false
+     */
+    static function value(string $key, ?Closure $modifier = null) : string|false {
+
+        self::setData();
+        self::$update = false;
         
+        $realValue = self::$init[$key] ?? false;
+        if($realValue === false) return $modifier? $modifier(false) : false;
+        $value = ($realValue !== false) ? $realValue : '';
+        $value = trim($value)? $value : '';
+        
+        return $modifier? $modifier($value) : $value;
+
+    }
+
+    static function values() : array {
         self::$update = false;
         return self::$init;
     }
 
-    private static function setData() {
-        if(empty(self::$init) || (!empty(self::$init) && self::$update)){
+    private static function setData(bool $new = false) {
+        if(empty(self::$init) || (!empty(self::$init) && self::$update) || $new){
 
             if(self::setFilemanager()){
                 $Filemanager = self::$Filemanager;
@@ -72,7 +126,6 @@ class Init {
      * Unsets a key from the icore/init configuration file
      *
      * @param string|array $key
-     * @param string $value
      * @return string|array|false depending on the value supplied
      *  - false is returned if no key is deleted
      */
@@ -83,7 +136,7 @@ class Init {
             if($Filemanager->textDelete($key, $dels)){
                 if(is_string($key)) {
                     return $key;
-                }else if(is_array($key)){
+                }else if(is_array($key) && is_array($dels)){
                     return $dels;
                 }
             }else{
@@ -109,7 +162,7 @@ class Init {
      * @return boolean
      */
     private static function setFilemanager() : bool{
-            $Filemanager = new FileManager; 
+            $Filemanager = new Filemanager; 
             $open = $Filemanager->setUrl(self::File)->openFile(true);
             self::$Filemanager = $Filemanager;   
             return $open;    

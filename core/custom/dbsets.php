@@ -39,7 +39,7 @@
   ];
 
   include_once 'dbconfig.php';
-
+  
   $_ENV['DBDEFAULT'] = [
     'NAME'   => $_DBNAME,
     'USER'   => $_DBUSER,

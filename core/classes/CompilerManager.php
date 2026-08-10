@@ -2,7 +2,7 @@
 
 namespace spoova\mi\core\classes;
 
-interface CompilerManagers {
+interface CompilerManager {
 
    public function render() : string ; 
 

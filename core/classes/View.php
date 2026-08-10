@@ -2,14 +2,14 @@
 
 use spoova\mi\core\classes\Compiler;
 use spoova\mi\core\classes\EInfo;
-use spoova\mi\core\classes\Rex;
+use spoova\mi\core\classes\Res\Rex;
 use spoova\mi\core\classes\Slicer;
 
     /**
      * View is a function used render template files for routed files.
      * 
      * @param string $file_path file path
-     * @param array $arg2 variable arguments
+     * @param array $params variable arguments
      * @return string|void void is returned if file path does not exist
      */
     function view(string $file_path = '', array $params = []){

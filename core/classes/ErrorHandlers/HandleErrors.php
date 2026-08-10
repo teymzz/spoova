@@ -3,6 +3,7 @@
 namespace spoova\mi\core\classes\ErrorHandlers;
 
 use ErrorHandler;
+use spoova\mi\core\classes\Debug;
 use spoova\mi\core\classes\Init;
 
 class HandleErrors extends ErrorHandler{
@@ -16,13 +17,9 @@ class HandleErrors extends ErrorHandler{
      * @param int $errline
      * @return void
      */
-    public function __construct($errno, $errstr, $errfile, $errline) {
+    public function __construct(int $errno, string $errstr, string $errfile, int $errline) {
 
-        if(php_sapi_name() !== 'cli'){
-            $this->handleErrors(...func_get_args());
-        }else{
-            $this->handleCliErrors(...func_get_args());
-        }
+        $this->handleErrors(...func_get_args());
 
     }
 
@@ -35,21 +32,24 @@ class HandleErrors extends ErrorHandler{
      * @param int $errline
      * @return void
      */
-    public static function handleErrors($errno, $errstr, $errfile, $errline)
+    public static function handleErrors(int $errno, string $errstr, string $errfile, int $errline)
     {
-        
-        if(self::$err_displayed == self::$err_displays) return;
 
-        $backTrace = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS);
+        if((self::$err_displayed !== null) && (self::$err_displayed === self::$err_displays)) return;
+    
+        $traces = Debug::traces(); // all back traces
+        $backTrace = Debug::get(2, true) ?: $traces; // backtrace from 2 else backtrace all
 
+        // preFormat($traces);
         $useFile = self::$addfile;
         $cfile = strtolower(to_dirslash(str_replace(scheme('', false), docroot.DS, $useFile)));
        
         if(($ext = pathinfo($cfile, PATHINFO_EXTENSION))){
             if(realpath($cfile.'.php')) $cfile .= '.php';
         }
-  
+
         if(is_string($useFile)){
+            //use $traceIndex(>=[2]) later to remove  
           foreach ($backTrace as $traceBack) {
             if(isset($traceBack['file'])){
               $file = strtolower(to_dirslash($traceBack['file']));   
@@ -66,34 +66,47 @@ class HandleErrors extends ErrorHandler{
               }
             }
           }
-        }else{
-          foreach ($backTrace as $traceBack) {
+        }else{ 
+          foreach ($backTrace as $backTraceIndex => $traceBack) {
             if(isset($traceBack['file'])){
-              $file = strtolower(to_frontslash($traceBack['file'])); 
-              $core_file = rtrim(strtolower(to_frontslash(domroot('core'))), '/');
 
-              $stripos = stripos($file, $core_file);
-              
-              if($stripos === false){
-                    // Trace other directories (may update later)
-                    $errfile = $traceBack['file'];
-                    $errline = $traceBack['line'];
-                    break;
+                $class = $traceBack['class']  ?? '';
+                $type = $traceBack['type'] ?? '';
+                $function = $traceBack['function'] ?? '';
+
+                if($class === 'ErrorHandler' && ($type === '::') && ($function === 'handleErrors')){
+                    if($traceBack['file'] !== __FILE__){
+                        $backTrace[$backTraceIndex]['class'] = '';
+                        $backTrace[$backTraceIndex]['type'] = '';
+                        $backTrace[$backTraceIndex]['function'] = '';
+                    }
                 }
+                #REVISIT THIS FOR Undefined Variable Errors & Others before final removal!!!
+            //   $file = strtolower(to_frontslash($traceBack['file'])); 
+            //   $core_file = rtrim(strtolower(to_frontslash(domroot('core'))), '/');
+
+            //   $stripos = stripos($file, $core_file);
+              
+            //   if($stripos === false){
+            //         // Trace other directories (may update later)
+            //         $errfile = $traceBack['file'];
+            //         $errline = $traceBack['line'];
+            //         break;
+            //   }
             }
           }            
         }
-
         $err = [
-            'error'    => self::$errors[$errno],
+            'error'    => self::errors[$errno],
             'message'  => $errstr,
             'errfile'  => $errfile,
             'errline'  => $errline,
-            'errtrace' => $backTrace, //debug backtrace
-            'handler'  => 'Exception'
+            'backtrace'=> $backTrace, //debug backtrace
+            'alltrace' => $traces, //debug backtrace full
+            'handler'  => 'Error'
         ];
 
-        $max = 1;
+        $max = 1; 
 
         for($i = 0; $i <= count($backTrace); $i++){
 
@@ -103,6 +116,8 @@ class HandleErrors extends ErrorHandler{
             if(isset($trace['line']) && ($trace['line'] === $errline)){
                 $max = $i + 1; //update maximum
                 break;
+            }elseif($i === count($backTrace)){
+                $max = $i;
             }
 
         }
@@ -110,39 +125,8 @@ class HandleErrors extends ErrorHandler{
         $min = $max - 1;
 
         if(isset($backTrace[$max])){
-
-            // max length of backtrace with equal error lines.
-            $file = $backTrace[$min]['file'] ?? $backTrace[$max]['file'] ?? '';
-            $line = $backTrace[$min]['line'] ?? $backTrace[$max]['line'] ?? '';
-            
-            $class = $backTrace[$max]['class'] ?? '';
-            $type = $backTrace[$max]['type'] ?? '';
-            $func = $backTrace[$max]['function'] ?? '';
-           
-            // var_dump($min, $max, $backTrace); 
-            if(!$func && !$class){
-                $class = $backTrace[$min]['class'] ?? '';     
-                $type = $backTrace[$max]['type'] ?? '';
-                $func = $backTrace[$min]['function'] ?? '';
-            }
-            // if($file) $backTrace[$min]['file'] = $file;          
-            // if($line) $backTrace[$min]['line'] = $line;           
-            // if($func) $backTrace[$min]['function'] = $func;          
-            // if($class) $backTrace[$min]['class'] = $class;          
-            // if($type) $backTrace[$min]['type'] = $type;  
-
-            $previous = [];
-            for($i = 0; $i < $max; $i++){
-                $previous[$i] = $backTrace[$i];
-                unset($backTrace[$i]);
-            }
-        
-            $err['errfile'] = $file;
-            $err['errline'] = $line;
-            $err['errtrace'] = array_values($previous);
             $err['errtracx'] = array_values($backTrace);
         }
-        
         self::displayErrors($err);
     }
 
@@ -157,29 +141,11 @@ class HandleErrors extends ErrorHandler{
         $error   = $errors['error']    ?? '';
         $efile   = $errors['errfile']  ?? '';
         $eline   = $errors['errline']  ?? '';
-        $etraces = $errors['errtrace'] ?? [];
-        $etracex = $errors['errtracx'] ?? [];
+        $btraces = $errors['backtrace']?? [];   // backtraces all 
+        $etraces = $errors['errtrace'] ?? [];  // stack traces (Exceptions)
         $message = $errors['message']  ?? '';
-        $err = $error;
 
-        self::webdisplay($error, $message, $efile, $eline, $etraces, $etracex);
-        
-    }
-
-    /**
-     * Handle all simple errors (Warning / Notice)
-     *
-     * @param int $errno
-     * @param string $errstr
-     * @param string $errfile
-     * @param int $errline
-     * @return void
-     */
-    public static function handleCliErrors($errno, $errstr, $errfile, $errline) {
-        $err = self::buildErrors(self::$errors[$errno], $errstr, $errfile, $errline);
-
-        //* Display with default cli text format
-        self::clidisplay($err);
+        self::webdisplay($errors, $error, $message, $efile, $eline, $btraces, $etraces);
     }
 
 }

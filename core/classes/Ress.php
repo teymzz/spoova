@@ -2,11 +2,13 @@
 
 use spoova\mi\core\classes\Init;
 use spoova\mi\core\classes\EInfo;
-use spoova\mi\core\classes\Rescon;
+use spoova\mi\core\classes\Res\Rescon;
 use spoova\mi\core\classes\Attribs;
+use spoova\mi\core\classes\Debug;
 use spoova\mi\core\classes\Dumper;
 use spoova\mi\core\classes\Enums\live;
 use spoova\mi\core\classes\Meta;
+use spoova\mi\core\classes\SETTER;
 
 class Ress extends Rescon {
 
@@ -18,6 +20,13 @@ class Ress extends Rescon {
      * @var string
      */
     private static string $path = '';
+
+    /**
+     * Pull out an hidden (already imported script)
+     *
+     * @var boolean|Closure
+     */
+    private static bool|Closure $evoke = false;
 
     /**
      * Unique custom name of resource file
@@ -39,6 +48,30 @@ class Ress extends Rescon {
      * @var array
      */
     private static array $tracked = [];
+
+    
+    /**
+     * Stores used links
+     *
+     * @var array
+     */
+    private static array $used = [];
+    
+    /**
+     * Names of groups or files imported
+     *
+     * @var array
+     */
+    private static array $importeds = [];
+    
+    /**
+     * Stores array key and value pairs of scripts and their links
+     *
+     * @var array
+     */
+    private static array $scripts_link = [];
+
+
 
     /**
      * All called urls
@@ -114,7 +147,7 @@ class Ress extends Rescon {
 
     
     /**
-     * Collection of urls that have gone at least once through Ress::makescript()
+     * Collection of urls that have gone at least once through {@see Ress::makescript()}
      *
      * @var array
      */
@@ -143,6 +176,10 @@ class Ress extends Rescon {
         return self::instance();
     } 
 
+    public static function no_meta(bool $status = true){
+        self::$metaStatus = $status? 1 : 0;
+    }
+
     /**
      * instantiate resource watch if configured
      */
@@ -150,7 +187,7 @@ class Ress extends Rescon {
       
       if(!defined('_core') || !defined('_icore')) return false;
       if(!defined('online')) return false;  
-      if(!@class_exists(scheme('core\classes\FileManager', false))) return false;
+      if(!@class_exists(scheme('core\classes\Bundle\Filemanager\Filemanager', false))) return false;
       if(!method_exists($this,'watch')) return false;
       
       //read fileManager for resource watching
@@ -167,6 +204,20 @@ class Ress extends Rescon {
         self::watch(); //auto play
 
       }
+
+    }
+
+    public static function evoke(bool|Closure $evoker = false){
+        
+        if(is_closure($evoker)){
+            self::$evoke = $evoker;
+            $evoker();
+            self::$evoke = false;
+        }else{
+            
+            self::$evoke = true;
+
+        }
 
     }
 
@@ -194,7 +245,7 @@ class Ress extends Rescon {
         return self::instance();
     }
 
-    public static function urx($path) {
+    public static function urx(string $path) {
         $unique = randice(10);
 
         $url = [
@@ -210,6 +261,35 @@ class Ress extends Rescon {
         self::$current_url = $url;
 
         return self::instance();
+    }
+
+    public static function assigned(string $name) {
+
+        if(!trim($name)) {
+            EInfo::trigger('Resource unique names cannot be empty strings');
+            return self::instance();
+        }
+
+        if(in_array($name, self::$mapped_names)) {
+            return self::instance();
+        }
+        
+        self::$named[$name] = self::$current_url;
+
+        self::$mapped_names[self::$unique] = $name;
+
+        $search = array_search(self::$unique, self::$tracked);
+        
+        // Update tracked unique keys
+        self::$tracked[$search] = $name;
+        
+        //add name key to url saved
+        self::$urls[self::$unique]['name'] = $name;
+        
+        // save url data to named urls
+        self::$named_urls[$name] = [self::$urls[self::$unique]];
+        return self::instance();
+
     }
 
     public static function named(string $name) {
@@ -257,9 +337,9 @@ class Ress extends Rescon {
     }
 
     /**
-     * Binds unique group names together
+     * Binds the previous state of predefined unique group names together into a new unique group
      *
-     * @param array $unique new group name to be assigned for merged items
+     * @param string $unique new group name to be assigned for merged items
      * @param array $names existing names of items to be merged
      * @return Ress
      */
@@ -270,7 +350,6 @@ class Ress extends Rescon {
 
                 $self_urls = self::$named_urls;
 
-                // self::$named_urls[$unique] = ['::bind' => true];
                 self::$named_urls[$unique] = [];
                
                 foreach($names as $name){
@@ -294,6 +373,7 @@ class Ress extends Rescon {
     
     /**
      * Binds previously named urls to new named group and flushes the binded values.
+     * @param string $group new group name under which $names are registered.
      * @param String[] $names names of named files
      * @return Ress
      */
@@ -381,7 +461,7 @@ class Ress extends Rescon {
      *
      * @param string $uniqueName
      * @param bool $display true displays value while 
-     * @return void
+     * @return array|false depending on the value of $display
      */
     public static function show(string $uniqueName, bool $display = true) : array|false {
 
@@ -409,6 +489,7 @@ class Ress extends Rescon {
 
                 $uext = pathinfo($resource_url, PATHINFO_EXTENSION);
 
+                $colons = '';
                 if(preg_match('/:::(css|js)$/', $resource_url, $matches)){
                     $ext = $matches[1]; // update url extension name
                     $resource_url = substr($resource_url, 0, strlen($resource_url) - strlen(':::'.$ext));
@@ -418,7 +499,7 @@ class Ress extends Rescon {
                 $ext = $ext ?: $uext;
 
                 if($ext === 'js' && $uext !== 'js' && $uext !== ''){
-                    return self::call_error('Resource url extension for js file "'.$url.$colons.'" is not valid');
+                    return self::call_error('Resource url extension for js file "'.$resource_url.$colons.'" is not valid');
                 }
 
                 $base = ($resource_dir) ?? null;
@@ -430,7 +511,7 @@ class Ress extends Rescon {
                     $resource_dir = $resource_dir.'/'.$resource_url;
                 }else{
                     $resource_dir = $resource_url ;
-                    if($isHTTP) {
+                    if(isset($isHTTP) && $isHTTP) {
                         $resource_url = $resource_dir;
                         $root = 'external';
                     }
@@ -475,13 +556,13 @@ class Ress extends Rescon {
             self::$pulls[] = $path; 
             $load = true;
             if(!is_file($path)){
-              trigger_error("Resource file '{$path}' does not exist!", E_USER_ERROR);
+              trigger_error("Resource file '{$path}' does not exist!");
               return self::instance();
             }else{ 
                 $list = include($path);
             }
           }else{
-              trigger_error("Resource file '{$list}' has been previously pulled", E_USER_ERROR);
+              trigger_error("Resource file '{$list}' has been previously pulled");
           }
         } else {
             if(!in_array($list, self::$pulls)){
@@ -506,29 +587,46 @@ class Ress extends Rescon {
 
         
         return self::instance();
-      }
-      
+    }
+
+    /**
+     * Refers to all created scripts
+     *
+     * @return array
+     */
+    public static function madeScripts() : array {
+        return self::$makescripts;
+    }
 
     /**
      * Imports all required scripts depending on arguments supplied
      *
-     * @param array $names
+     * @param string|array|null|live $names
      *  - [null]: returns all saved scripts once 
      *  - [string,array]: returns scripts for only specified groups
-     * @return Ress|null
+     * @return string
      */
     public static function import(string|array|null|live $names = null) : string {
 
-        $resolve = [];
-
-        if(func_num_args()  === 0) {
+        if(func_num_args() === 0) {
+            // when no argument is supplied generate all scripts for use
+            // This generation assumes that stored scripts are being utilized or imported.
             foreach(self::$named_urls as $url) {
 
                 foreach($url as $bind){
-                    $full_url = $bind['dir'].FS.$bind['url'];
+
+                    $full_url = $bind['dir'] . FS . $bind['url'];
+
+                    // create a script tag using url data if the script does 
+                     // not exist in previously created 
                     if(!in_array($full_url, self::$makescripts)){
-                        if($resolved = self::makescript($bind)){
-                          self::$exports[] = $resolve[] = $resolved;
+                        // 
+                        if($resolved = self::makescript($bind, $pathlink)){
+                          if(!in_array($pathlink, self::$used)) {
+                            self::$used[] = $pathlink;
+                            self::$scripts_link[$resolved] = $pathlink;
+                            self::$exports[] = $resolve[] = $resolved; 
+                          }
                         }
                     }
                 }
@@ -536,35 +634,53 @@ class Ress extends Rescon {
             }
         }else{
           
-            if($names instanceof live){
-                //import watch script internally 
-                return self::watchFile($names, false) ?: '';
-            }
-            
-            $names = (array) $names;
+            // import watch script internally for live server montoring
+            if($names instanceof live) return self::watchFile($names, false) ?: '';
+
+            $names = (array) $names; // refers to list of associative names (single or group) to be imported
+            $resolve = [];
 
             foreach($names as $name) {
+                if(in_array($name, self::$importeds)) continue;
+                self::$importeds[] = $name;
                 
                 if(isset(self::$named_urls[$name])){
-
+                    
+                    // if supplied name exists in the list of url assigned names, run this.
+                    
                     if(!isset(self::$imports[$name])){
+                        // if unique url's name exists, but name has not been previously imported
 
-                        self::$imports[$name] = [];
-    
-                        $url = self::$named_urls[$name]; // group name
-                            
+                        self::$imports[$name] = []; // register the url's name into importation container
+                        
+                        $url = self::$named_urls[$name]; // fetch the url data of supplied group name
+                        
                         foreach($url as $bind){
                             $full_url = $bind['dir'].FS.$bind['url'];
+                            
+                            // check full url from stored scripts urls
                             if(!in_array($full_url, self::$makescripts)){
-                                if($resolved = self::makescript($bind)){
-                                  self::$imports[$name][] = self::$exports[] = $resolve[] = $resolved;
+                                // NOTE:: Already generated script will not be regenerated.
+                                // generate script tags or resolve URL paths with URL data
+                                if($resolved = self::makescript($bind, $pathlink)){   
+                                  if($pathlink && !in_array($pathlink, self::$used)){
+                                      self::$used[] = $pathlink;
+                                      self::$scripts_link[$resolved] = $pathlink;
+                                      //store resolved scripts into defined name
+                                      self::$imports[$name][] = self::$exports[] = $resolve[] = $resolved;
+                                  }
                                 }
+                            }else if(self::$evoke){
+                                $resolve[] = self::makescript($bind, $pathlink);
                             }
                         }
                         
                     }else{
                         foreach(self::$imports[$name] as $scripted){
-                            $resolve[] = $scripted;
+                            if(!in_array($scripted, self::$scripts_link)){
+                                $resolve[] = $scripted;
+                                self::$scripts_link[$scripted] = $scripted;
+                            }
                         }
                     }
 
@@ -592,19 +708,32 @@ class Ress extends Rescon {
                 $meta = $envMeta->dump();           
               }
             }
-
           }
-
         }
 
         $resolve = implode("\n", $resolve);
 
         if(trim($resolve)) $resolve = "\n".$resolve."\n";
-
         return $meta.$resolve;
-        
+    }
+  
+    /**
+     * Alias to {@see Ress::import()}. Imports all required scripts depending on arguments supplied
+     *
+     * @param string|array|null|live $names
+     *  - [null]: returns all saved scripts once 
+     *  - [string,array]: returns scripts for only specified groups
+     * @return string
+     */
+    public static function recall(string|array|null|live $names = null) : string {
+        return self::import($names);
     }
 
+    /**
+     * Displays all exported scripts (i.e scripts that are assumed to have been imported).
+     *
+     * @return void
+     */
     public static function export() {
 
         $exports = self::$exports;
@@ -613,26 +742,44 @@ class Ress extends Rescon {
 
     }
     
-    public static function close(){
+    /**
+     * Flushes and resets scripts cache container.
+     *
+     * @return Ress
+     */
+    public static function close() : Ress {
 
       self::$tracked = [];
       return self::instance();
 
     }
     
-    public static function errors(){
+    /**
+     * Refers to errors encountered during script path registration or import process
+     *
+     * @return array
+     */
+    public static function errors() : array {
 
         return self::$errors;
 
     }
 
-    private static function makescript(array $url) {
+    /**
+     * Generate scripts or url from the URL data supplied
+     *  - All supplied urls are stored
+     * @param array $url
+     * @param string $pathlink
+     * @return string|false depending on the validity of the url supplied
+     */
+    private static function makescript(array $url, &$pathlink) : string|false {
 
         $dir = $url['dir'];
         $url = $url['url'];
         $urc = $url;
 
-        self::$makescripts[] = $dir.FS.$url;
+        // store full unfiltered url path of scripts
+        if(!self::$evoke) self::$makescripts[] = $dir . FS . $url;
 
         $uri = explode('=>', $url, 2);
         $url = rtrim($uri[0], ' ');
@@ -645,8 +792,9 @@ class Ress extends Rescon {
             $colons = ':::'.$ext;
         }
 
-        $uext = pathinfo($url, PATHINFO_EXTENSION);
 
+        // resolve file extension
+        $uext = pathinfo($url, PATHINFO_EXTENSION);
         $ext = $ext ?: $uext;
 
         if($ext === 'js' && $uext !== 'js' && $uext !== ''){
@@ -654,9 +802,16 @@ class Ress extends Rescon {
         }
 
 
+
         if(!self::validate_link($dir, $url, $ext, $colons)){
+            // update the referencing variable
+            $pathlink = $url;
             return '';
         }
+
+
+        // update the referencing variable
+        $pathlink = $url;
 
         if($urx){
            if($ext === 'css'){
@@ -670,9 +825,8 @@ class Ress extends Rescon {
                 $urx = Attribs::join(['rel'=>'stylesheet','type'=>'text/css']);
             }
         }
-
         if($ext === "css"){
-            return '<link href="'.$url.'"'.rtrim($urx).'>';
+            return $url? '<link href="'.$url.'"'.rtrim($urx).'>' : '';
         }
 
         if($ext === "js"){
@@ -715,7 +869,7 @@ class Ress extends Rescon {
             }
 
             if(!$isDomainDir){
-                $url = $dir.DS.$url;
+                $url = $dir . DS . $url;
 
                 $uri = realpath(to_dirslash($url));
                 if(!in_array($url, self::$collections) && !in_array($url, self::$collections)){
@@ -748,14 +902,15 @@ class Ress extends Rescon {
             $urx = self::domify($url);
             $uri = realpath($urx);
 
-            if(!in_array($url, self::$collections) && !in_array($url, self::$collections)){
+            if(!in_array($url, self::$collections)){
                 self::$collections[] = $url;
                 self::$collections[] = $uri;
+                
                 if(!$uri) {
                     return self::call_error('Resource path for "'.$urx.$colons.'" is not valid');
                 }
             }else{
-                return false;
+                if(!self::$evoke) return false; // allow evoke to return TRUE for validation.
             }
 
             $url = DomUrl($urx);
@@ -771,7 +926,6 @@ class Ress extends Rescon {
      * replace script(css, js) urls while online
      *
      * @param string $url
-     * @param string $ext
      * @return string
      */
     private static function domify(string $url){

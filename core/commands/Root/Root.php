@@ -2,28 +2,45 @@
 
 namespace spoova\mi\core\commands\Root;
 
-use spoova\mi\core\commands\Root\InteractiveConsole;
+use spoova\mi\core\classes\Bundle\Filemanager\FileCompressor;
+use spoova\mi\core\classes\Bundle\Filemanager\Filemanager;
 use spoova\mi\core\commands\Root\Cli;
-use spoova\mi\core\classes\FileManager;
+use spoova\mi\core\commands\Support\Handlers\CastConsole;
+use spoova\mi\core\commands\Support\Handlers\InteractiveConsole;
+use spoova\mi\core\commands\Support\Handlers\Syntax;
 
 /**
- * This class contains all spoova direct commands except the Info class
+ * This class contains all spoova direct commands that do not take extra arguments. 
+ * It processes only {@see Entry::root} commands.
  */
 class Root extends Entry{
 
+    /* consider removing this... Already defined in Entry as Entry::root */
+    // public const commands = [
+    //     'version','support','cli','repack','features'
+    // ];
+    public const commands = Entry::root;
 
-    function __construct(string $arg)
+    function __construct(string $command)
     {
         
-        if($arg === ':wiz'){
 
-            new InteractiveConsole;
+        if($command === ':wizi') return new CastConsole;
+        if($command === ':wiz') return new InteractiveConsole;
 
-        } else {
-            if(is_iterable($this->$arg())){
-                Cli::runAnime([$this, $arg]);
-            }
+        if(str_starts_with($command, 'cli')){
+          if($command === 'cli ') return self::cli();
+          if($command === 'cli -lists') return self::cliLists();
+          Cli::headerView($command, break: 2);
+          Cli::errorView('Invalid argument on cli command.', break: 1);
+          return;
         }
+
+        if(is_iterable($this->$command())){
+            // runs only iterable methods
+            return Cli::runAnime([$this, $command]);
+        }
+
     }
 
     /**
@@ -33,7 +50,29 @@ class Root extends Entry{
      */
     function version() {
 
-       Cli::textView(Cli::alert(Cli::emos('hot', 1).'SPOOVA VERSION').Cli::warn(SP_VERSION, 1). ' (Beta)', 0, '1|2');
+       Cli::headerView('version', break: 2);
+
+       Cli::response(false, false);
+
+       if(isTerminal('bash') && !isTerminal(['wsl','termux-bash'])){
+            Cli::break();
+       }
+
+       Cli::pulseView(Cli::emo('hot').' SPOOVA VERSION '.SP_VERSION.' [Stable]', 20000, function($char, $index){
+        if($index <= 17) {
+            return Cli::alert($char);
+        }elseif($index <= 23){
+            return Cli::warn($char);
+        }
+        elseif($index === 24){
+            Cli::wait(500000);
+        }
+        return $char;
+       });
+
+       Cli::break(2);
+                
+       Cli::textView('| Type '.Cli::bgWarn(' mi ').' '.Cli::warn('cli -list').' to see a list of commands', pause: '3', break: 1, spacing: '2');
 
     }
 
@@ -43,14 +82,18 @@ class Root extends Entry{
      * @return void
      */
     function support() {
-        
+
         $support = Cli::warn(Cli::emos('diamond', 1).'Supports: '); 
         
-        Cli::textView($support, 0).Cli::break();
-        Cli::textView(Cli::alert('PHP VERSION .......... 8.2 +'), 2, 1, 1);
-        Cli::textView(Cli::alert('MYSQL VERSION ........ 5.4 +'), 2, 1, 1);
-        Cli::textView(Cli::alert('SERVER SUPPORT ....... APACHE'), 2, 1, 1);
-        Cli::textView(Cli::alert('ANDROID SERVER ....... KSWEB SERVER'), 2, [1, 2], 1);
+        Cli::hideCursor();
+        Cli::textView($support, 0).Cli::break(2);
+
+        Cli::textView(Cli::alert('PHP VERSION .......... '.SP_PHP_VERSION.' +'), '2', 1, '1');
+        Cli::textView(Cli::alert('MYSQL VERSION ........ '.SP_MYSQL_VERSION.' +'), '2', 1, '1');
+        Cli::textView(Cli::alert('SERVER SUPPORT ....... APACHE '.SP_APACHE_VERSION.' +'), '2', 1, '1');
+        Cli::textView(Cli::alert('ANDROID SERVER ....... KSWEB SERVER'), '2', 1, '1|1');    
+        Cli::response(false, false);
+        Cli::showCursor();
 
     }    
 
@@ -61,6 +104,8 @@ class Root extends Entry{
      * @return void
      */
     public function cli() {
+
+      Cli::cls()->headerView("cli", break: 2);
 
       $clis =  [     
         Cli::emos('point-list', 1).'cli (commands) :' => '',
@@ -82,20 +127,25 @@ class Root extends Entry{
 
         $i = 0;
 
-        Cli::break(2);
+        Cli::break(1);
 
         foreach($clis as $cli => $value) {
             if($i == 0) { $i++;
                 Cli::textView(Cli::danger($cli)).Cli::break(2);
                 continue;
             }
-            Cli::textView(Cli::warn($cli), 3).Cli::break(2);
+            Cli::textView(Cli::warn($cli), '2').Cli::break(2);
            
         }
 
-        $help = 'Type'.self::mi('cli','','','').Cli::danger("-lists", 1).' to see description.';
-        Cli::textView($help).Cli::break(2);
+        $help = 'Type'.self::mi('cli','','','').Cli::danger("-lists").' to see description.';
+        Cli::textView($help).Cli::break(1);
 
+    }
+
+    private static function cliLists(){
+        Cli::cls();
+        new Syntax(['-lists']);
     }
 
     /**
@@ -106,26 +156,31 @@ class Root extends Entry{
     function features(){
 
         $features = [
-            'RESOURCE CONTROL'    => 'Importing and grouping of static resources',
-            'LIVE SERVER CONTROL' => 'Inbuilt live server file integrated with code debugging (beta)',
-            'TEMPLATE RENDERING'  => 'Renders template engine',
-            'DATA VALIDATION'     => 'Inbuilt input validation',
-            'FILE UPLOADER'       => 'Inbuilt file uploader class',
-            'FILE MANAGER'        => 'Inbuilt file manager class',
-            'SESSION CONTROL'     => 'Built in structure for handling sessions',
-            'META TAGS CONTROL'   => 'Designed structure for managing meta tags setup and importation.',
-            'DATABASE CONTROL'    => 'Simple Handlers for running mysql queries on mysql database',
-            'DATABASE MIGRATION'  => 'Cli commands for generating and running migration files',
-            'INTERACTIVE CLI'     => 'An interactive console assistant',
-            'WVM(WMV) PATTERN'    => 'A development structure built on MVC architecture',
+            'RESOURCE CONTROL'    => 'Importing and grouping of static resources.',
+            'LIVE SERVER CONTROL' => 'Live server file integrated with code debugging (beta).',
+            'TEMPLATE RENDERING'  => 'Inbuilt template engine.',
+            'DATA VALIDATION'     => 'Inbuilt input validation.',
+            'FILE UPLOADER'       => 'Inbuilt file uploader class.',
+            'FILE MANAGER'        => 'Inbuilt file manager class.',
+            'SESSION CONTROL'     => 'Built in structure for handling sessions.',
+            'META TAGS CONTROL'   => 'Controllers for managing meta tags setup and importation.',
+            'DATABASE CONTROL'    => 'Simple Handlers for running mysql queries on mysql database.',
+            'DATABASE MIGRATION'  => 'Cli commands for generating and running migration files.',
+            'INTERACTIVE CLI'     => 'An interactive console assistant.',
+            'WVM / WMV PATTERN'   => 'A development pattern built on MVC architecture.',
         ];
         
-        Cli::textView(Cli::color(Cli::emos('diamond', 1).'FEATURES','yellow'), 0, "1|1");
+        Cli::textView(Cli::color(Cli::emos('diamond', 1).'APP FEATURES'), '0', "|2");
 
+        $count = count($features) - 1;
         foreach($features as $feature => $desc) {
-
-            $this->display( Cli::emo('ribbon-arrow',1, 0).Cli::warn($feature, 1) ." ".Cli::dots(25, $feature)." ".$desc);
-        }        
+            $i = ($i ?? -1) + 1;
+            
+            $break = $count === $i ? 1 : 2; 
+            Cli::textView(Cli::warn(Cli::emo('pipe','2')).Cli::warn($feature, '1') ." ".Cli::dots(25, $feature)." ".$desc, break: $break);
+        }  
+        
+        return Cli::response(false, false);
         
     }
 
@@ -136,21 +191,19 @@ class Root extends Entry{
      */
     public function repack(){
 
+        Cli::textView(Cli::headerView('Project repack'));
+        Cli::break(2);
+
         // Handle environmental directive
         if(!is_file(_core.'custom/app')){
-            Cli::textView(Cli::danger(Cli::emo('point-list').' repack '));
-            Cli::break(2);
             Cli::textView(Cli::error('invalid command '.Cli::warn('"repack"')));
             Cli::break(2);
             yield false; //stop here
         }
 
-        Cli::textView(Cli::color(Cli::emos('hot', 1),'blue').'spoova build ... ');
+        yield from Cli::play(3, Cli::color(Cli::emos('hot', 1),'blue').'spoova build ... '); //stage 1 & 2
 
-        yield 3; //stage 1 & 2
-
-        // Import FileManager
-        $Filemanager = new FileManager;
+        $Filemanager = new Filemanager;
 
         // Set crest file variables
         $crest_name = self::crest;
@@ -162,31 +215,54 @@ class Root extends Entry{
         $sys_cresp  = sys.'/'.self::crest;
         $sys_cresf  = sys.'/'.self::crest;
 
-        yield 3; //stage 3
+        yield from Cli::play(3, Cli::color(Cli::emos('hot', 1),'blue').'spoova build ... '); //stage 3
 
         // Generate a spack file 
         if(!is_file($crest_file)) {
-
-            yield 4; //stage 4
-
+            
+            Cli::clearLine();
+            yield from Cli::play(4, Cli::color(Cli::emos('hot', 1),'blue').'spoova [checking compiler] ... '); //stage 4
+            
             //unlink any spack file
             if(is_file($crest_spac))
             {
-
-                Cli::textView(Cli::emos('checkmark'), 2, 2);
-
-                Cli::textView('initializing compiler ... ', 0, 0);
-
+                Cli::clearLine();
+                yield from Cli::play(4, Cli::color(Cli::emos('hot', 1),'blue').'spoova [initializing process] ... '); //stage 5
                 unlink($crest_spac);
             }
-
-            yield 5; //stage 5
+                
+            // yield 5; //stage 6
+            Cli::clearLine();
+            yield from Cli::play(5, Cli::color(Cli::emos('hot', 1),'blue').'spoova [preparing to stage files] ... '); //stage 6
             
             $Filemanager->setUrl(docroot);
-            $Filemanager->zipUrl(_core.'custom/spv', ['backup','.git']);      
-              
-            yield 6; //stage 6
+            $i = false;
 
+            $Filemanager->zipProgress(function(FileCompressor $info) use(&$i){
+                
+                if($info->status === 0) Cli::clearLine();
+                Cli::moveStart()->textView(Cli::color(Cli::emos('hot', 1),'blue').'spoova [staging files for compression]['.$info->status.'%] ... ');
+                if($info->status === 100){
+                    Cli::pause(1)->clearLine();
+                    Cli::textView(Cli::color(Cli::emos('hot', 1),'blue').'spoova [repacking process may take a while] ... '.Cli::warn('please wait'));
+                }
+                    
+            });
+            
+            $spv = _core.'custom/spv';
+
+            $Filemanager->removeFile($spv);
+
+            $Filemanager->zipUrl(_core.'custom/spv', ['backup','.git','core/storage']);  
+
+            Cli::clearLine();
+            Cli::textView(Cli::color(Cli::emos('hot', 1),'blue').'spoova repack: '.Cli::valid('process completed').' ... ');
+
+            Cli::pause(2);
+            
+            Cli::clearLine();
+            yield from Cli::play(5, Cli::color(Cli::emos('hot', 1),'blue').'spoova [remapping compiler] ... '); //stage 6
+            $Filemanager->setUrl(_core.'custom/spv.zip'); 
             $Filemanager->moveTo(_core.'custom/', self::crest);
 
             if($Filemanager->fails()) {
@@ -194,13 +270,10 @@ class Root extends Entry{
                 yield false;
                 return false;
             }
-
-            Cli::textView(Cli::emos('checkmark'), 2, 2);
-
-            Cli::textView('updating installer ... ');
-
-            yield 7; //stage 7
-
+            
+            Cli::clearLine();
+            yield from Cli::play(5, Cli::color(Cli::emos('hot', 1),'blue').'spoova [updating configurations] ... '); //stage 7
+            
             //update app installer
             $Filemanager->setUrl(_core.'custom/app');
             $Filemanager->textUpdate(
@@ -213,30 +286,26 @@ class Root extends Entry{
                     'complete'=> 'false',
                 ]);
 
-            Cli::textView(Cli::emos('checkmark'), 2, 2);
-
         }
 
         Cli::animeType('arrows');
-        Cli::textView('finalizing up process ');
+        Cli::clearLine();
+        yield from Cli::play(4, Cli::color(Cli::emos('hot', 1),'blue').'spoova [cleaning redundant files] ... '); //stage 8
 
         //Read from app installer
         $Filemanager->setUrl(_core.'custom/app'); 
         $app = $Filemanager::load(_core.'custom/app');
-
-        yield 1;
- 
+        
+        Cli::clearLine();
+        yield from Cli::play(1, Cli::color(Cli::emos('hot', 1),'blue').'spoova [finalizing process] '); //stage 9
+        Cli::pause(2); Cli::clearLine();
 
         //* Handle incomplete setup
         if(isset($app['root'])) $Filemanager->textDelete(['root']);
 
-        Cli::wait(2);
-
         $this->complete_setup($crest_root);
         
-        Cli::textView(
-            Cli::alert(Cli::emos('hot',1).'spoova repacked successfully'), 2, "2|1", 1 
-        );
+        Cli::textView(Cli::alert(Cli::emos('hot', '1').'spoova repack: ').Cli::valid('successful'));
         
     }
 
@@ -248,7 +317,7 @@ class Root extends Entry{
      */
     private function complete_setup(string $crest_root){
 
-        $Filemanager = new FileManager;
+        $Filemanager = new Filemanager;
         $Filemanager->setUrl(_core.'custom/app'); 
 
         if($crest_root){
@@ -268,6 +337,24 @@ class Root extends Entry{
             'complete'=> 'true',
         ]);
 
+    }
+
+    public static function initalize(array $commands){
+       
+        Cli::cls();
+
+        $command1 = ($commands)? $commands[0] : '';
+        $command2 = $commands[1] ?? '';
+        
+        if($command1 !== 'cli' && (count($commands) > 1)) {
+          Cli::headerView($command1, break: 2);
+          Cli::errorView('no arguments required on this command!', break:1);
+          return; 
+        }
+        
+        $command = $command1 .($command2? ' ' . $command2 : '');
+
+        new Root($command);
     }
 
 }

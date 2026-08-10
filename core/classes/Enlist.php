@@ -4,11 +4,14 @@ namespace spoova\mi\core\classes;
 
 use ErrorException;
 use Exception;
+use Closure;
+use spoova\mi\core\classes\Ghost\GhostFunction;
 
 /**
- * This package is used mainly to rename multiple files at once
+ * This package is provides features such as listing files in a directory, 
+ * renaming multiple files at once and assigning number to file names in a directory.
  * 
- * @author Akinola Saheed <teymss@gmail.com>
+ * @author Akinola Saheed <akinolasaheed001@gmail.com>
  */
 class Enlist{
 
@@ -22,14 +25,40 @@ class Enlist{
 	private array $ext;
 	private int $counter = 1;
 	private $espace = '';
-	private $reNumber = false;
+	private bool|Closure $reNumber = false;
+    private bool $allowProcess = false;
 	public bool $smartUrl = false;
 	public string $session_name;
     public array $backTrace = [];
     public array $result = [];
 
-	private function processUrl($url){
+    /**
+     * Format key names automatically categorized - Optional [none,all,all-dot,hidden,dot-ext,name] with pairable as:
+     *  - all, hidden|dot-ext (i.e specified hidden file names)
+     *  - name(specified), dot-ext|ext(specifed), hidden|dot-ext (i.e specified hidden file names)
+     *  - name, ext|all-dot, hidden | dot-ext (i.e specified hidden file names), 
+     *  - all, hidden | dot-ext (i.e specified hidden file names)
+     *  - name, name-ext, ext, hidden | dot-ext (i.e specified hidden file names), all-dot, 
+     * 
+     * @var array
+     */
+    private array $extFormats = [];
+
+    /**
+     * Validates the file path supplied
+     *
+     * @param string $url
+     * @return void
+     */
+	private function processUrl(string $url){
        
+        if($this->allowProcess){
+            if(!is_dir($url) && !is_file($url)){
+                $this->error("invalid path supplied"); 
+                return false;
+            }
+            return true;
+        }
         if(!is_dir($url)){ 
             $this->active = false;
             $this->error("invalid url supplied"); 
@@ -42,31 +71,125 @@ class Enlist{
 
 	}
 
+    protected function allowProcess(bool $process){
+        $this->allowProcess = $process;
+    }
+
+    /**
+     * Ensures that there are no conflicting extension names. For example using 
+     * '.*' or '*' with normal extension names will return false. 
+     *
+     * @param array $ext
+     * @return boolean
+     *  - FALSE when '.*' or '*'  is used with other extension names.
+     */
     private function validate_extension(array &$ext = []) : bool {
 
         $extCount = count($ext);
+        
+        $namedGroups = [];
+        $pattern1 = '/^(?!.+\.$)(([a-zA-Z0-9_\-]+)?\.(\*|[a-zA-Z0-9_\-]*)|\*|[a-zA-Z0-9_\-]+)$/';
+        $pattern2 = '/^#([a-zA-Z0-9_\-]*)(\.)?([a-zA-Z0-9_\-]*)?$/';
+        $invalid = false;
 
-        if($extCount > 1){
+        $ext = array_map(fn($val) => \strtolower($val), $ext);
+        $ext = \array_unique($ext);
 
-            if(($extCount === 2) && (in_array('*', $ext) && in_array('.', $ext))){
-                $ext = ['.*'];
-            }elseif(in_array('*', $ext) || in_array('.*', $ext)){
-                $this->error('conflicting contents "'.$ext[0].'" with applied extension name');
-                return false;                
+        \array_map(function ($item) use($pattern1, $pattern2, &$invalid, &$namedGroups){
+            
+            $item = trim($item);
+            $matched1 = preg_match($pattern1, $item);
+            $matched2 = preg_match($pattern2, $item);
+
+            if((!$matched1 && !$matched2 && ($item !== '') && ($item !== '*.'))){
+                $invalid = $item; 
+                return;
+            }else{
+                
+                if($item === '' || $item === '#'){
+                    $namedGroups['none'] = true; //  (all files having name without extension)
+                }elseif($item === '*'){
+                    $namedGroups['all'] = $item; // name.ext? (all files having names with or without extension excluding hidden)
+                }else if($item === '*.'){
+                    $namedGroups['all-dot'][] = $item; // name.ext (all files having names with extension excluding hidden)
+                }elseif($item === '.'){
+                    $namedGroups['hidden'] = true; // .ext (all files having hidden extension names)
+                }elseif(\str_starts_with($item, '.')){
+                    $namedGroups['dot-ext'][] = substr($item, 1); // .ext (specified hidden extension names)
+                }elseif(\str_starts_with($item,'#')){
+                    if(\str_ends_with($item,'.')){
+                        $namedGroups['name-ext'][] = \substr($item, 1, -1); // specified file names having extension
+                    }else{
+                        $namedGroups['name'][] = \substr($item, 1); // specified file names having no extension
+                    }
+                }elseif(strpos($item, '.') === false){
+                    $namedGroups['exts'][] = $item; // name (specified file extension names)
+                }
+            }
+        }, $ext);
+
+        // checkd($namedGroups);
+
+        // Ensure real extension names does not end in dot.
+        if($invalid) {
+            $this->error('invalid extension name format "'.$invalid.'" names detected');
+            return false;  
+        }
+
+        // checkd($invalid);
+        // Proceed with other validations 
+
+        if((array_key_exists('hidden',$namedGroups) && array_key_exists('dot-ext',$namedGroups))){
+            $this->error('select all hidden "." and select specified hiddens ".'.implode(', .',$namedGroups['dot-ext']).'" cannot be paired');
+            return false;  
+        }
+
+        $keys = array_keys($namedGroups);
+        $keys_exists = in_array('hidden', $keys) && in_array('all', $keys);
+        
+        if($keys_exists && \count($keys) > 2){
+            $this->error('select all "*" with hiddens "." cannot both be paired with other formats');
+            return false;       
+        }
+
+        if(array_key_exists('all',$namedGroups)){
+
+            if(array_key_exists('all-dot',$namedGroups)){
+                $this->error('extension name formats "*" and "*." cannot be paired');
+                // $this->error('invalid extension name formats "*" and "'.$namedGroups['dot-ext'][0].'" cannot be paired');
+                return false;  
+            }elseif(($test1 = isset($namedGroups['none'])) || isset($namedGroups['name'])){
+                $flag = $test1? '#' : '#'.implode(', #',$namedGroups['name']);
+                $this->error('select all "*" flag and selection having name only flags ('.$flag.') cannot be paired');
+                return false;  
+            }elseif(isset($namedGroups['name-ext'])){
+                $namedGroups['name-ext'] = array_map(fn($val) => "#".$val.'.', $namedGroups['name-ext']);
+                $this->error('select all "*" flag and selection with name flags ('.implode(', ',$namedGroups['name-ext']).') cannot be paired');
+                return false; 
+            }elseif(isset($namedGroups['exts'])){
+                $this->error('select all "*" flag and extension name flags ('.implode(', ',$namedGroups['exts']).') cannot be paired');
+                return false; 
             }
 
         }
 
-        $this->error = '';
-
+        $this->extFormats = $namedGroups;
         return true;
 
     }
 
-    private function exists($item){
+    /**
+     * Detect files selection filters pre-defined with {@see Enlist::source()}
+     *
+     * @return array|string
+     */
+    final public function filters() : array|string {
+        return $this->ext;
+    }
 
-        $ext = $this->ext;
+    private function exists(string $item){
 
+       $ext = $this->ext;
        return in_array(pathinfo($item, PATHINFO_EXTENSION), $ext);
 
     }
@@ -74,16 +197,18 @@ class Enlist{
 	/**
 	 * set source path
 	 *
-	 * @param string source $url
-	 * @param array|string source $ext
+	 * @param string $url source path
+	 * @param array|string $ext sets file extension to be fetched
      *  - Note that the character string '*' is used to denote all extensions.
 	 * @return Enlist
 	 */
-	public function source($url, array|string $ext = '*') : Enlist {
+	public function source(string $url, array|string $ext = '*') : Enlist {
 
        $this->result = [];
+       $this->error = ''; // sets error as null everytime source is applied
+       $this->ext = [];
        
-       if(!$this->processUrl($url)){ return $this; }
+       if(!$this->processUrl($url)) return $this;
 
        $ext = (array) $ext;
 
@@ -105,8 +230,8 @@ class Enlist{
 	}
 
     /**
-     * Returns true is the supplied source url is valid
-     *
+     * Returns true is the supplied source url (directory path) is valid
+     *  - Note that this will not work if the source url is a file path and not a directory path.
      * @return boolean
      */
     public function sourceValid() : bool {
@@ -145,7 +270,7 @@ class Enlist{
 	 * @param string $replace character to be used to replace spaces
 	 * @return Enlist
 	 */
-	public function reSpace(string $replace = null) : Enlist {
+	public function reSpace(?string $replace = null) : Enlist {
 		$replace = ($replace == null)? "_" : $replace;
 		if($replace == "_" || $replace = "-"){
 			$this->espace = $replace;
@@ -170,14 +295,15 @@ class Enlist{
 	 * @param boolean $reNumber
 	 * @return Enlist
 	 */
-	public function reNumber(bool $reNumber = true) : Enlist{
+	public function reNumber(bool|Closure $reNumber = true) : Enlist{
 		$this->reNumber = $reNumber;
         return $this;
 	}
 
 	/**
-	 * Resolve Enlist::rename() mode to return files only without any active renaming process
-	 *
+	 * Configures {@see Enlist::rename()} mode to return files only without any active renaming process. 
+     * This is useful for checking the expected final names of files to be renamed before they are renamed.
+	 * 
 	 * @param bool $bool Setting this as true ensures that no active renaming is done.
 	 * @return Enlist
 	 */
@@ -214,7 +340,6 @@ class Enlist{
     
             $dirFiles = array_merge($dirHidden, $dirNormal);
     
-    
             foreach($dirFiles as $ifile) {
     
                 $baseName = basename($ifile);
@@ -222,11 +347,11 @@ class Enlist{
                 if(!empty($ext) and is_file($ifile)){
                     $fileExt = pathinfo($ifile,PATHINFO_EXTENSION);
                     if(in_array(".*", $ext) || in_array("*", $ext)){
-                        $files[] = ($fullpath === true)? $ifile : str_replace(str_replace("\\","/",__DIR__.'/'), '', $ifile);
+                        $files[] = ($fullpath === true)? $ifile : str_replace(str_replace("\\","/",$url.'/'), '', $ifile);
                     }elseif(in_array($fileExt, $ext)){
-                        $files[] = ($fullpath === true)? $ifile : str_replace(str_replace("\\","/",__DIR__.'/'), '', $ifile);
+                        $files[] = ($fullpath === true)? $ifile : str_replace(str_replace("\\","/",$url.'/'), '', $ifile);
                     }elseif(in_array('.', $ext) && (substr($baseName, 0, 1) === '.')){
-                        $files[] = ($fullpath === true)? $ifile : str_replace(str_replace("\\","/",__DIR__.'/'), '', $ifile);
+                        $files[] = ($fullpath === true)? $ifile : str_replace(str_replace("\\","/",$url.'/'), '', $ifile);
                     }
                 }elseif(empty($ext)){
                     $files[] = $ifile;
@@ -245,13 +370,16 @@ class Enlist{
 	 *
 	 * @param string|boolean $finalExt 
      *  - string is file extension name without a dot prefix
+     * @param array $results references the final path name of expected renamed files.
+     * @param Closure|null $callback callback to run for every renamed file.
      * @throws Exception if extension supplied is not accepted
 	 * @return array|false
      *  - false is returned if error occurs.
 	 */
-	public function rename(string|bool $finalExt = true, &$results = []) : array|false {
+	public function rename(string|bool $finalExt = true, &$results = [], ?Closure $callback = null) : array|false {
 
-        if(!$this->active){ return false; } 
+        if(!$this->active) return false;
+
         $this->result = [];
         $url  = $this->url;
         $ext  = $this->ext;
@@ -262,53 +390,24 @@ class Enlist{
         $espace = $this->espace;
         $reNumber = $this->reNumber;
         $files = []; 
-        $hiddenFiles = []; $hiddenMap = [];
+        $hiddenMap = [];
 
-        $isHidden = false;
-        $hiddenItems = ['.', '.*'];
+        $files = $this->resolveFiles();
 
-        array_map(function($extension)use($hiddenItems, &$isHidden){
-
-            if(in_array($extension, $hiddenItems)) $isHidden = true;
-
-        },$ext);
-
-
-        if($isHidden){
-            //only hidden files (starting with dots)
-            $hiddenFiles = array_filter(glob($url.'/.*') ?? [], 'is_file');
-
-            $counti = 0;
-            if(count($hiddenFiles) > 1){
-                foreach($hiddenFiles as $hiddenFile){
-                    $hiddenMap[$hiddenFile] = pathinfo($hiddenFile, PATHINFO_FILENAME).".".pathinfo($hiddenFile, PATHINFO_EXTENSION)?: $counti;
-                    $counti++;
-                }
-            }
-        }
-
+        // ensure final extension name supplied looks valid without bad characters.
         if(!preg_match('@^[a-zA-Z0-9_]+$@', $finalExt, $matches)){
             $this->error('invalid character file extension "'.$finalExt.'" supplied on "Elist::rename(#1)"'); 
             return false;
         }
 
-
-        $all = glob($url."/*");
-
-        if(in_array("*",$ext) || in_array(".*", $ext)){
-            $files = $all;
-        }else{
-            $files = array_filter($all, [$this, 'exists']);
-        }
-
-        $files = array_merge($hiddenFiles, $files);
-
         natsort($files);
 
         $fUrls = []; $count = 0;
 
+        $countex = 0; $inc = 0;
         foreach ($files as $file) {
 
+            $countex++;
             $file_ext =  pathinfo($file, PATHINFO_EXTENSION);
             $fileExt = ($finalExt === true)? $file_ext : $finalExt;
 
@@ -364,8 +463,19 @@ class Enlist{
                         if(isset($this->session_name)){
                             $_SESSION[$this->session_name][$file] = $newfile;
                         }
+                       if(is_file($file)) {
+                        $inc++;
                         rename($file, $newfile);
+                       }
                     }
+                }
+                if(isset($callback)) {
+                    $GhostFunction = new GhostFunction(['files','renamed','done','status']);
+                    $GhostFunction->files(fn() => count($files));
+                    $GhostFunction->renamed(fn() => $inc); // truly renamed items;
+                    $GhostFunction->done(fn() => $countex === count($files));
+                    $GhostFunction->status(fn() => round(($countex / count($files)) * 100));
+                    $callback($GhostFunction);
                 }
             }elseif(empty($ext)){
 
@@ -401,8 +511,8 @@ class Enlist{
     /**
      * Reverse renamed files through session storage
      *
-     * @param array $reversals
-     * @param array $session_name specify a session name
+     * @param array|null &$reversals
+     * @param string $session_name specify a session name
      * @return void
      */
     public function reverse(array|null &$reversals = [], string $session_name = '') {
@@ -432,7 +542,7 @@ class Enlist{
     /**
      * This returns the last data obtained for dirFiles, rename and reverse method depending on if the 
      * source directory url is valid.
-     *
+     * @param array $data
      * @return void
      */
     public function data(&$data) {
@@ -442,14 +552,14 @@ class Enlist{
     }
 
 	/**
-	 * Sets and returns an error encountered during processing
-	 *
-	 * @param string $error  
+	 * Sets and returns an error encountered during processing for Enlist class
+	 *  
+	 * @param mixed $error  
      *  If argument is supplied, sets $error by overiding last error, if any. 
 	 * @return mixed 
      *  - If not modified, default error is returned as a string.
 	 */
-	public function error($error = null) : mixed {
+	public function error(mixed $error = null) : mixed {
         if(func_num_args() > 0){
 
             $this->error = $error;
@@ -474,8 +584,7 @@ class Enlist{
                 $this->backTrace = ($backTrace);
 
                 if($this->error && ($this->debug === 2)) {
-
-                    throw new ErrorException ($backTrace[0]['object']->error, 0, E_USER_NOTICE, $backTrace[0]['file'], $backTrace[0]['line']);
+                   throw new ErrorException ($backTrace[0]['object']->error, 0, E_USER_NOTICE, $backTrace[0]['file'], $backTrace[0]['line']);
                 }
             }
 
@@ -500,10 +609,10 @@ class Enlist{
     /**
      * Returns all back traces where error exists.
      *
-     * @param boolean $debug array list of debugs
+     * @param array &$debugs array list of debugs
      * @return array
      */
-    public function debugs(&$debugs = []){
+    public function debugs(&$debugs = []) : array {
 
         if(!isset($this->debug)) trigger_error('debug should be turned on before "rename()" to use "all_errors()"');
 
@@ -528,6 +637,170 @@ class Enlist{
         return $debugs = $errors;
 
     }
+
+    /**
+     * Resolves selected files using character patterns 
+     *
+     * @return array
+     */
+    protected function resolveFiles() : array {
+
+        $url  = $this->url;
+        $extFormats = $this->extFormats;
+        $files = [];
+
+        $uri = (\str_ends_with($url,'/'))? $url : $url.'/';
+
+        $allHidden =  $extFormats['hidden'] ?? false;
+        $allNormalFiles =  $extFormats['all'] ?? false; // non hidden 
+
+        if($allHidden && $allNormalFiles){
+            $files = \array_filter(\glob($uri.'{,.}*', \GLOB_BRACE), 'is_file'); // [., *], 
+        }elseif($allNormalFiles || $allHidden){
+
+            if($allNormalFiles){
+                if(isset($extFormats['dot-ext'])){
+                    $namedHiddens = $extFormats['dot-ext'];
+                    $files =  \array_filter(\glob($uri.'*', \GLOB_BRACE), 'is_file');
+                    $hiddenFiles = \array_filter(\glob($uri.'.{'.implode(',', $namedHiddens).'}*', \GLOB_BRACE), 'is_file');
+
+                    $files = \array_merge($files, $hiddenFiles);
+                }else{
+                    $files =  \array_filter(\glob($uri.'*', \GLOB_BRACE), 'is_file');
+                }
+            }else{
+
+                $hasExts = $extFormats['exts'] ?? false; // specified extension names for unhidden files
+                $hasOnlyName = $extFormats['none'] ?? false;
+                $hasNameInc = $extFormats['name'] ?? false;
+                $hasNameExt = $extFormats['name-ext'] ?? false;
+                $hasExtOn = $extFormats['all-dot'] ?? false; // non specified extension names for unhidden files
+                $flags = compact('hasExts','hasExtOn','hasOnlyName','hasNameInc','hasNameExt');
+
+                // [., ext, #|#name], [., ext, #|#name|#name.] [., ext|#|#name|#name.]
+                if(\array_all([$hasExts, $hasExtOn, $hasOnlyName, $hasNameInc, $hasNameExt], fn($value) => $value === false)){
+                    $files = \array_filter(\glob($uri.'.*', \GLOB_BRACE), 'is_file');
+                }else{
+                    $files = \array_filter(\glob($uri.'{,.}*', \GLOB_BRACE), function($file)use($flags){
+                        if(is_file($file)){
+                            if(\str_starts_with(basename($file),'.')) return true;
+                            if($flags['hasOnlyName'] && \pathinfo($file, \PATHINFO_EXTENSION) === '') return true;
+                            if($flags['hasNameInc'] && \pathinfo($file, \PATHINFO_EXTENSION) === '' && in_array(strtolower(basename($file)), $flags['hasNameInc'])) return true;
+                            if($flags['hasNameExt'] && in_array(\strtolower(\pathinfo($file, \PATHINFO_FILENAME)), $flags['hasNameExt'])) return true;
+                            if($flags['hasExts'] && in_array(\strtolower(\pathinfo($file, \PATHINFO_EXTENSION)), $flags['hasExts'])) return true;
+                            if($flags['hasExtOn'] && (pathinfo($file, \PATHINFO_EXTENSION) !== '')) return true;
+                        }
+                        return false;
+                    });
+                }
+            }
+        }else{
+                // other combinations for unhidden files
+                $hasExts = $extFormats['exts'] ?? false; // specified extension names for unhidden files
+                $hasOnlyName = $extFormats['none'] ?? false;
+                $hasNameInc = $extFormats['name'] ?? false;
+                $hasNameExt = $extFormats['name-ext'] ?? false;
+                $hasExtOn = $extFormats['all-dot'] ?? false; // non specified extension names for unhidden files
+                $flags = compact('hasExts','hasExtOn','hasOnlyName','hasNameInc','hasNameExt');
+
+                $files = \array_filter(\glob($uri.'{,.}*', \GLOB_BRACE), function($file)use($flags){
+                    if(is_file($file)){
+                        if(\str_starts_with(basename($file),'.')) return false;
+                        if($flags['hasOnlyName'] && \pathinfo($file, \PATHINFO_EXTENSION) === '') return true;
+                        if($flags['hasNameInc'] && \pathinfo($file, \PATHINFO_EXTENSION) === '' && in_array(strtolower(basename($file)), $flags['hasNameInc'])) return true;
+                        if($flags['hasNameExt'] && in_array(\strtolower(\pathinfo($file, \PATHINFO_FILENAME)), $flags['hasNameExt'])) return true;
+                        if($flags['hasExts'] && in_array(\strtolower(\pathinfo($file, \PATHINFO_EXTENSION)), $flags['hasExts'])) return true;
+                        if($flags['hasExtOn'] && (pathinfo($file, \PATHINFO_EXTENSION) !== '')) return true;
+                        return false;
+                    }
+                    return false;
+                });
+        }
+        
+        return $files;
+    }
+
+    protected function resolveDirectories() : array {
+
+        $url  = $this->url;
+        $extFormats = $this->extFormats;
+        $files = [];
+
+        $uri = (\str_ends_with($url,'/'))? $url : $url.'/';
+
+        $allHidden =  $extFormats['hidden'] ?? false;
+        $allNormalFiles =  $extFormats['all'] ?? false; // non hidden 
+
+        if($allHidden && $allNormalFiles){
+            $files = \array_filter(\glob($uri.'{,.}*', \GLOB_BRACE), fn($file) => is_dir($file) && !in_array(basename($file), ['.','..'])); // [., *], 
+        }elseif($allNormalFiles || $allHidden){
+
+            if($allNormalFiles){
+                if(isset($extFormats['dot-ext'])){
+                    $namedHiddens = $extFormats['dot-ext'];
+                    $files =  \array_filter(\glob($uri.'*', \GLOB_BRACE), fn($file) => is_dir($file) && !in_array(basename($file), ['.','..']));
+                    $hiddenFiles = \array_filter(\glob($uri.'.{'.implode(',', $namedHiddens).'}*', \GLOB_BRACE), fn($file) => is_dir($file) && !in_array($file, ['.','..']));
+
+                    $files = \array_merge($files, $hiddenFiles);
+                }else{
+                    $files =  \array_filter(\glob($uri.'*', \GLOB_BRACE), fn($file) => is_dir($file) && !in_array(basename($file), ['.','..']));
+                }
+            }else{
+
+                $hasExts = $extFormats['exts'] ?? false; // specified extension names for unhidden files
+                $hasOnlyName = $extFormats['none'] ?? false;
+                $hasNameInc = $extFormats['name'] ?? false;
+                $hasNameExt = $extFormats['name-ext'] ?? false;
+                $hasExtOn = $extFormats['all-dot'] ?? false; // non specified extension names for unhidden files
+                $flags = compact('hasExts','hasExtOn','hasOnlyName','hasNameInc','hasNameExt');
+
+                // [., ext, #|#name], [., ext, #|#name|#name.] [., ext|#|#name|#name.]
+                if(\array_all([$hasExts, $hasExtOn, $hasOnlyName, $hasNameInc, $hasNameExt], fn($value) => $value === false)){
+                    $files = \array_filter(\glob($uri.'.*', \GLOB_BRACE), fn($file) => is_dir($file) && !in_array(basename($file), ['.','..']));
+                }else{
+                    $files = \array_filter(\glob($uri.'{,.}*', \GLOB_BRACE), function($file)use($flags){
+                        if(is_dir($file)){
+                            $baseName = basename($file);
+                            if(in_array($baseName,['.','..'])) return false;
+                            if(\str_starts_with($baseName,'.')) return true;
+                            if($flags['hasOnlyName'] && \pathinfo($file, \PATHINFO_EXTENSION) === '') return true;
+                            if($flags['hasNameInc'] && \pathinfo($file, \PATHINFO_EXTENSION) === '' && in_array(strtolower($baseName), $flags['hasNameInc'])) return true;
+                            if($flags['hasNameExt'] && in_array(\strtolower(\pathinfo($file, \PATHINFO_FILENAME)), $flags['hasNameExt'])) return true;
+                            if($flags['hasExts'] && in_array(\strtolower(\pathinfo($file, \PATHINFO_EXTENSION)), $flags['hasExts'])) return true;
+                            if($flags['hasExtOn'] && (pathinfo($file, \PATHINFO_EXTENSION) !== '')) return true;
+                        }
+                        return false;
+                    });
+                }
+            }
+        }else{
+                // other combinations for unhidden files
+                $hasExts = $extFormats['exts'] ?? false; // specified extension names for unhidden files
+                $hasOnlyName = $extFormats['none'] ?? false;
+                $hasNameInc = $extFormats['name'] ?? false;
+                $hasNameExt = $extFormats['name-ext'] ?? false;
+                $hasExtOn = $extFormats['all-dot'] ?? false; // non specified extension names for unhidden files
+                $flags = compact('hasExts','hasExtOn','hasOnlyName','hasNameInc','hasNameExt');
+
+                $files = \array_filter(\glob($uri.'{,.}*', \GLOB_BRACE), function($file)use($flags){
+                    if(is_dir($file)){
+                        $baseName = basename($file);
+                        if(in_array($baseName,['.','..']) || \str_starts_with($baseName,'.')) return false;
+                        if($flags['hasOnlyName'] && \pathinfo($file, \PATHINFO_EXTENSION) === '') return true;
+                        if($flags['hasNameInc'] && \pathinfo($file, \PATHINFO_EXTENSION) === '' && in_array(strtolower(basename($file)), $flags['hasNameInc'])) return true;
+                        if($flags['hasNameExt'] && in_array(\strtolower(\pathinfo($file, \PATHINFO_FILENAME)), $flags['hasNameExt'])) return true;
+                        if($flags['hasExts'] && in_array(\strtolower(\pathinfo($file, \PATHINFO_EXTENSION)), $flags['hasExts'])) return true;
+                        if($flags['hasExtOn'] && (pathinfo($file, \PATHINFO_EXTENSION) !== '')) return true;
+                        return false;
+                    }
+                    return false;
+                });
+        }
+        
+        return $files;
+    }
+
+    
 
 }
 

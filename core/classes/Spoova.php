@@ -2,7 +2,7 @@
 
 namespace spoova\mi\core\classes;
 
-use spoova\mi\core\classes\FileManager;
+use spoova\mi\core\classes\Bundle\Filemanager\Filemanager;
 
 class Spoova{
 
@@ -24,7 +24,7 @@ class Spoova{
      */
     public static function isConfigured(){
 
-        $Filemanager = new FileManager;
+        $Filemanager = new Filemanager;
 
         $Filemanager->setUrl(_icore.'init');
 

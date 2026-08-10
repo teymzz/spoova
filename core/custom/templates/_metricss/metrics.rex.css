@@ -1,0 +1,471 @@
+/* style.........................metrics: */
+body[\:\:sensor-open]{
+    overflow: hidden;
+}
+[\:\:sensor].sensor:not(.minimized) {
+    position: fixed; 
+    top:0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    bottom: 0 !important;
+}
+[\:\:sensor].sensor {
+    padding: 1em;
+    background-color: #3c2148;
+    background-image: linear-gradient(#220e2b, #691168c9);
+    color : #c6a0c7;
+    font-size:initial;
+    z-index: 10000;
+    min-height: 100vh;
+    height: 100%;
+}
+[\:\:sensor].sensor.minimized :where(.sensor-metrics, .pro-analysis-pane) {
+    display: none;
+}
+[\:\:sensor].sensor.minimized {
+    position: fixed; 
+    height: initial;
+    top: 0;
+    left: 90%;
+    bottom: initial;
+    min-height: initial;
+    border-radius: 100vh;
+    background: transparent;
+}
+[\:\:sensor].sensor.minimized .banner{
+    grid-template-columns: auto;
+    padding: 4px;
+    position: fixed;
+}
+[\:\:sensor].sensor.minimized .app-runtime-pane{
+    padding: 30px 20px;
+    border-radius: 15px;
+    outline: rgba(122, 39, 122, 0.698) solid 4px;
+    outline-offset: 4px;
+    position: fixed;
+}
+[\:\:sensor].sensor:not(.minimized) .app-runtime-pane{
+    left: initial !important;
+    top: initial !important;
+    position: relative;
+}
+[\:\:sensor].sensor .app-runtime-pane .bi-arrows-move{
+    display: none;
+}
+[\:\:sensor].sensor.minimized .app-runtime-pane .bi-arrows-move:hover{
+    opacity: .5;
+}
+[\:\:sensor].sensor.minimized .app-runtime-pane .bi-arrows-move:active{
+    opacity: .2;
+}
+[\:\:sensor].sensor.minimized .app-runtime-pane .bi-arrows-move{
+    display: block;  
+    cursor: move;  
+    opacity: .7;
+    z-index: 100;
+}
+[\:\:sensor].sensor .app-runtime{
+    cursor: default;
+    user-select: none;
+}
+[\:\:sensor].sensor.minimized .app-runtime:active{
+    opacity: .5;
+}
+[\:\:sensor].sensor code {
+    border: none;
+}
+[\:\:sensor].sensor .rb {
+    font-size: .85em;
+}
+[\:\:sensor].sensor .rb > *{
+    background-color: #4d1e4e75;
+    color: #e16de5;
+    padding: 6px;
+    border-radius: 5px;
+    box-shadow: #000 #000 #000 inset;
+}
+[\:\:sensor].sensor .banner {
+    display: grid;
+    grid-template-columns: 2fr minmax(400px, 4fr) 2fr;
+    padding: 20px;
+    padding-bottom: 0;
+    border-radius: 2vh;
+    height: 100%;
+}
+[\:\:sensor].sensor:not(.minimized) .banner {
+    position: relative;
+    overflow: hidden;
+}
+[\:\:sensor].sensor .sensor-metrics {
+    width: 100%;
+    position: sticky;
+    top: 0;
+}
+[\:\:sensor].sensor .sensor-header {
+    color: #fe3afb;
+}
+[\:\:sensor].sensor .web-route .bi-nav {
+    font-size: .75em;
+}
+[\:\:sensor].sensor  details.trackers > summary::marker {
+    content: "⦾";
+}
+[\:\:sensor].sensor  details[open].trackers > summary::marker {
+    content: "⦿";
+}
+[\:\:sensor].sensor .app-runtime-pane {
+    padding: 1em;
+    background-image: linear-gradient(#340b3d, #5513560d);
+    border-radius: 5px 5px 0 0;
+}
+[\:\:sensor].sensor .app-runtime  {
+    border:solid 5px #58185a;
+    padding: 2px;
+}
+[\:\:sensor].sensor .app-runtime > * {
+    border-radius: 100vh;
+    border: solid 3px #2a0931;
+    background-color: #fff;
+    color: #e18fb9;
+    background-image: linear-gradient(50deg, #4a0b4c,#581258, #3d1045, #48064e);
+}
+[\:\:sensor].sensor .runtime-circle {
+    display: inline-block;
+    border: dotted 4px #461558;
+    width: 300px;
+    height: 300px;
+    animation: runcircle 2s linear infinite;
+    transform:translate(-35%, -35%);
+    border-radius: 100vh;
+    position: absolute;
+    top:0; 
+    left:0; 
+    z-index: 0; 
+    background-image: radial-gradient(circle, #80008059, #0f051059);
+    background-image: radial-gradient(circle, #3c105059, #42063059);
+    box-shadow: 0px 0px 0px 2px #3e0a46, 0px 6px 8px 5px #29082e inset;
+}
+[\:\:sensor].sensor .runtime-btx{
+    position:absolute; 
+    right:5px; 
+    top:0; 
+    font-size: 11px;
+    background-color:red; 
+    width:20px; 
+    height:20px; 
+    color:white;
+    display: grid;
+    place-items: center;
+    cursor: pointer;
+}
+[\:\:sensor].sensor .runtime-btx:active {
+    background-color: transparent;
+    background-image: none;
+}
+[\:\:sensor].sensor .runtime-btx .bi{
+    position: relative;
+    --top: 1.5px;
+    left: -1px;
+    top: var(--top);
+    color: #f679e0;
+}
+[\:\:sensor].sensor .time-box{
+    font-size: .8em;
+}
+@keyframes runcircle{
+    0% {
+        transform: translate(-35%, -35%) rotate(360deg);
+    }
+    100% {
+        transform: translate(-35%, -35%) rotate(0deg);
+    }
+}
+[\:\:sensor].sensor .trackers-pane {
+    height: auto;
+    background-color: #4a184e59;
+    padding: 10px;
+    border-radius: 5px;
+    box-shadow: 0px 0px 2px 2px #501f61;
+    border: solid 1px #901388;
+    background-image: linear-gradient(#5b145a5c, #330c418a);
+}
+[\:\:sensor].sensor .tracker-count {
+    background-color: rgb(106, 48, 108);
+    border-radius: 2px;
+    background-image: linear-gradient(rgb(102, 18, 106), rgb(61, 16, 62));
+    border: solid 1.8px #780d7861;
+    height: 20px;
+    min-width: 20px;
+    padding: 0 .2em;
+    box-shadow: 0px 0px 8px 0px #1e071e inset;
+}
+[\:\:sensor].sensor .trackers-list-pane{
+    max-height: 90vh;
+    overflow-y: auto;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+[\:\:sensor].sensor .trackers-list-pane::-webkit-scrollbar{
+    display: none;
+}
+[\:\:sensor].sensor .trackers-list{
+    /* border: dashed 1px #6f0a64; */
+    background-color: #49164b;
+    box-shadow: 0px 0px 1px 0px #1d051a;
+    background-image: radial-gradient(circle,#3c1040c9, #4e1053fa);
+    border-radius: 0.2em;
+    padding: .55em;
+}
+[\:\:sensor].sensor .trackers-field{
+    height: 100%;
+}
+[\:\:sensor].sensor .time-box {
+    width: 70px;
+    height: 70px;
+}
+[\:\:sensor].sensor .pro-analysis-pane .pro-analysis-header  {
+    color: #a88c9a;
+    padding-block: .5em;
+    background-image: linear-gradient(#340b3d, #5513560d);
+    border-radius: .2em;
+    font-size: .95em;
+    box-shadow: 0px 0px 4px 0px #2e0537de, 0px 0px 4px 0px #2f0d37cc inset;
+}
+[\:\:sensor].sensor .pro-analysis-pane .pro-analysis  {
+    margin-top: .5em;
+    padding-block: .5em;
+    background-image: linear-gradient(#340b3d, #5513560d);
+    border-radius: .2em;
+    min-height: 250px;
+}
+[\:\:sensor].sensor .pro-analysis-pane .pro-analysis-header > * {
+
+    cursor: pointer;
+    padding-inline: 1em;
+
+}
+[\:\:sensor].sensor .pro-analysis-pane .pro-analysis-header > *:hover {
+
+    opacity: .5;
+
+}
+[\:\:sensor].sensor .pro-analysis-pane .pro-analysis-header > *[checked="checked"] {
+    color: #d472dc;
+}
+[\:\:sensor].sensor .pro-analysis-pane .pro-analysis-header > *:not(:last-child) {
+
+    border-right: groove 2px #332633;
+    
+}
+[\:\:sensor].sensor .pro-analysis-pane .pro-analysis-header > *:active {
+
+    opacity: .2;
+
+}
+[\:\:sensor].sensor .pro-analysis-pane .pro-analysis-header > *[checked="checked"]:hover {
+   
+    opacity: 1; 
+
+}
+[\:\:sensor].sensor .bi-tracked-ico{
+    color: #340738;
+}
+[\:\:sensor].sensor .shutter-info {
+    background-color: #401c42;
+    background-color: #7b1a81;
+    background-image: linear-gradient(#401c4296,#370e3f);
+    box-shadow: 0px 0px 5px 0px #290825;
+    border-radius: .5em;
+}
+[\:\:sensor].sensor .shutter-info > code{
+    background-color:rgb(56, 8, 59);
+}
+[\:\:sensor].sensor .controllers-icon {
+    color: #672e67;
+}
+[\:\:sensor].sensor .indicator-pane .note-box {
+    background-color: rgb(117, 38, 119); 
+    outline: dashed 1px #501e4d; 
+    border-radius: 100vh;
+    outline-offset: .2em;
+    width: 10px;
+    height: 10px;
+}
+[\:\:sensor].sensor .indicator-pane > * {
+    white-space: nowrap;
+}
+[\:\:sensor].sensor .indicator-pane .note-title {
+    color: #bb7eb4;
+}
+[\:\:sensor].sensor .indicator-pane .note-box:where(.db-pane, .map-pane, .shutter-pane) {
+    color:rgb(103, 35, 118);
+    background-color: #310f38;
+    width:auto;
+    height:auto;
+}
+[\:\:sensor].sensor .indicator-pane .note-box:where(.db-pane, .map-pane, .shutter-pane) {
+    outline: dashed 1px transparent; 
+    outline-offset: .2em;
+}
+[\:\:sensor].sensor .indicator-pane .note-box.db-pane[active] {
+    background-color: trasparent;
+}
+[\:\:sensor].sensor .tracked-shutter-pane {
+    display: flex;
+    flex-direction: column;
+    gap: .2em;
+    font-size: .7em;
+    padding: 10px;
+    background-color: #3e1045;
+    border-radius: .5em;
+    box-shadow: 0px 0px 5px 0px #721472 inset;
+    border: solid 1px #470e56;
+    background-image: linear-gradient(#320e3a7a, #42094287);
+}
+[\:\:sensor].sensor .tracked-shutter-pane [view-controller] {
+    width: 20px;
+    height: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    border-radius: 14px;
+    background-color: #751875b5;  
+    background-image: linear-gradient(#d960d91a, #791479);
+    box-shadow: 0px 0px 5px 3px #28092f inset, 0px 0px 3px 0px #621078;
+    color: #4a0d4a;
+    color: #242424;
+}
+[\:\:sensor].sensor .tracked-shutter-pane i[view-controller][checked="checked"] {
+    background-color: #750075b5;
+    background-image: linear-gradient(#d960d91a, #791479);
+    box-shadow: 0px 0px 5px 3px #28092f inset, 0px 0px 3px 0px #621078;
+    color: #ee0ecb;
+}
+[\:\:sensor].sensor .tracked-controller {
+    display: flex;
+    align-items: center;
+    color: #ba94bb;
+    gap: .2em;
+    padding: 1em 0;
+}
+[\:\:sensor].sensor .tracked-shutter-field {
+    background-color: #4d154d;
+    background-image: linear-gradient(#461446,#3c0e3c);
+    box-shadow: 0px 0px 3px 0px #280a30;
+    border-radius: 4px;
+    width: 100%;
+}
+[\:\:sensor].sensor .tracked-shutter {
+    padding: .5em 1em;
+    border-radius: 2px;
+    background-color: #4e0f5352;
+    background-image: linear-gradient(#501a5869,#5b17658a);
+    text-transform: uppercase;
+}
+[\:\:sensor].sensor .tracked-shutter .route-list-pane{
+    text-transform: none;
+    background-color: transparent;
+    background-image: linear-gradient(#5111575e, #1e0a1d5c);
+    padding: 1em;
+}
+[\:\:sensor].sensor .tracked-url {
+    padding: 1.2em;
+}
+[\:\:sensor].sensor .tracked-shutter.shutter-buttons {
+    cursor: pointer;
+    border: solid 1px #460b46;
+    display: flex;
+    gap: .2em;
+}
+[\:\:sensor].sensor .tracked-shutter.shutter-buttons:active {
+    opacity: .5;
+}
+[\:\:sensor].sensor .tracked-shutter.shutter-buttons[checked="checked"] .bi-play{
+    display: inline-flex;
+    height: 17px;
+}
+[\:\:sensor].sensor .controllers-indicator{
+    display: flex;
+    gap: .2em;
+}
+[\:\:sensor].sensor .controllers-indicator .shutter-level{
+    background-color: #43164e; 
+    border-radius: .2em;
+    padding: 2px 6px;
+}
+[\:\:sensor].sensor .indicator-light {
+    width: 25px;
+    height: 6px;
+    padding: .15em;
+    color:rgb(99, 8, 88);
+    border: solid 1px currentColor;
+}
+[\:\:sensor].sensor .indicator-light .indicator{
+    width: 100%;
+    height: 100%;
+    background-color: currentColor;
+}
+[\:\:sensor].sensor .indicator-light[active]{
+    color: orange;
+    border: solid 1px rgb(99, 8, 88);
+}
+[\:\:sensor].sensor .indicator-light.low[active]{
+    color: #df2102;
+}
+[\:\:sensor].sensor .indicator-light.high[active]{
+    color:rgb(17, 223, 2);
+}
+[\:\:sensor].sensor .indicator-light.med[active]{
+    color:rgb(223, 216, 2);
+}
+[\:\:sensor].sensor .indicator-light[active] .indicator{
+    background-color: currentColor;
+}
+[\:\:sensor].sensor .caller-list-pane {
+    font-size: .95em;
+    display: flex;
+    flex-direction: column;
+    gap: .5em;
+}
+[\:\:sensor].sensor .caller-list-pane > [data-role="checkbox-list"] {
+    flex-wrap: wrap; 
+    gap: .2rem !important;
+}
+[\:\:sensor].sensor .metrics-disabled {
+    border-radius: .3em;
+    box-shadow: 0px 0px 7px 4px #000 inset,0px 0px 3px 4px #310c36;
+}
+[\:\:sensor].sensor .metrics-code-help {
+    background-color: #61246100;
+    background-image: linear-gradient(#561e5038 , #4b244e);   
+}
+[\:\:sensor].sensor .metrics-code-help-header {
+    background-color: #551055b5;
+}
+[\:\:sensor].sensor .memory-analysis.shutter-info code {
+    background-color: #331131;
+}
+[\:\:sensor].sensor .sql-info {
+    background-color: #3f1543;
+    outline: solid 1px #67126f;
+    outline-offset: .25em;
+    padding: 4px;
+}
+[\:\:sensor].sensor .sql-info > span:nth-child(2){
+    font-size: .85em;
+}
+[\:\:sensor].sensor .sql-icon {
+    padding: 4px;
+    display: inline-block;
+    background-color: #591b63;
+}
+[\:\:sensor].sensor .bi-arrow-right-short {
+    font-size: 1.5em;
+}
+/* .pro-analysis-pane .pro-analysis-header {
+    margin-top: 2em;
+    background-color: purple;
+    background-image: linear-gradient(purple, purple);
+} */
+/* style.........................metrics; */

@@ -2,7 +2,7 @@
 
 namespace spoova\mi\core\classes\DB;
 
-use spoova\mi\core\commands\Root\Make\MkMigrator;
+use spoova\mi\core\commands\Support\Make\MkMigrator;
 
 class DBMigrate {
 
@@ -15,7 +15,7 @@ class DBMigrate {
 
     }
 
-    public function unmigrate(int $times = null){
+    public function unmigrate(?int $times = null){
 
         $DBMigrator = new DBMigrator;
 
@@ -30,7 +30,7 @@ class DBMigrate {
 
     }
 
-    public function status($args) {
+    public function status(array $args) {
 
         $DBMigrator = new DBMigrator;
 

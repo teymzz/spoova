@@ -2,21 +2,30 @@
  
 namespace spoova\mi\core\tools;
 
+use Exception;
+
 /**
  * This class is a simply used for validating the following lists.
- * strings, bool, integer, email, phone, number, ranges, text 
+ * strings, integer, email, phone, number, ranges, json, text 
  * 
  * For proper validation of mail and phone you may need a more complex solution
  *
- * @author by Akinola Saheed <teymss@gmail.com>
+ * @author by Akinola Saheed <akinolasaheed001@gmail.com>
  */
 
 class Input{
 
   /**
-   * value supplied
+   * Defines the identifier name for the test value
    *
-   * @var [sring | array]
+   * @var string
+   */
+  private $id = '';
+
+  /**
+   * value supplied 
+   *
+   * @var string|array
    */
   private $value;
 
@@ -31,12 +40,12 @@ class Input{
     'length' => null,
   ];
 
-  //Note:: integers are considered as numbers > or < 0
   private const types = [
-    'string', 'text',
-    'integer', 'number',
-    'email', 'phone',
+    'string', 'text', 'json',
+    'integer', 'number','numeric',
+    'email', 'phone', 
     'url', 'pregmatch',
+    'float','decimal'
   ];  
 
   private $type           = null;
@@ -50,39 +59,57 @@ class Input{
   private $error_exists   = false;
 
   private $issue;
-  private $message;
-  private static $voidKey;
+  private $message = '';
+  private static array $voidKey = [];
+
+  private $errors = [];
+
+  
+  /**
+   * Sets the identifier name for the current test value
+   *
+   * @param string $id
+   * @return Input
+   */
+  public function id(string $id) : Input {
+    $this->id = $id;
+    return $this;
+  }
 
   /**
    * sets a value to be validated along with some custom settings
    *
-   * @param string $value
-   * @param array $config 
-   *                [
-   *                 'type'  => @property const types,
-   *                 'range' => [value_a, value_b],
-   *                 'length' =>[min, max],
-   *                 'pregmatch' => 'pattern'
-   *                ]
-   * @param boolean $check_space
-   * @return bool|string
+   * @param string|int|float|bool $value
+   * @param array $config declares the configuration options
+   *                ```[
+   *                 'type'  => Input::types,
+   *                 'range' => [option, option, ...],
+   *                 'length' => [min, max],
+   *                 'pregmatch' => 'pattern',
+   *                 'spaces' => true|false
+   *                ]```
+   * @param boolean $isBool determines if the value returned should be boolean. TRUE sets the mode to boolean while FALSE returns 
+   * the value supplied if validation is successful.
+   * @return mixed
+   *  - If validation fails, a false value is returned. However, if successful, data supplied is returned in string 
+   * or boolean form if $isBool is set as false. 
    */
-  public function set($value, array $config, $check_space = false){
+  public function set($value, array $config = [], bool $isBool = false) : bool|string {
     
     //check for existing errors first
     if($this->error_exists)
-      {
+    {
 
-        $this->setIssue();
-        if($this->strict) return false;
+      $this->setIssue();
+      if($this->strict) return false;
 
-      }
+    }
 
     //check if no value was supplied
-    if(trim($value) == null) return $this->response("no value set"); 
+    if(trim($value) == null) return $this->response("no value set");
 
-    //check if type was set
-    if(!$this->set_type($config['type']??'')) return $this->response("no type set");
+    //check if type was set or regex keys defined
+    if(!$this->set_type($config['type'] ?? 'string')) return $this->response("no type set");
 
     $this->value = $value;
     
@@ -93,7 +120,7 @@ class Input{
 
       if(!$this->validate_length($length)){
         $this->error_exists = true;
-        $this->issue   = "length";
+        $this->issue = "length";
         return false;
       }
 
@@ -116,43 +143,46 @@ class Input{
 
     } 
 
-    //set space checking
-    $check_space = ($check_space === 'no-space')? true : false;
+    $check_space = (($config['spaces']??'') === false); //set space permission
 
-    if($this->findSpace($value,$check_space)) return false;
+    if($this->findSpace($value, $check_space)) return false;
 
     //check for range if supplied
     if(array_key_exists('range', $config)){
       
       $range =  $config['range'];
       $this->range = $range;
-
-      $allow_range = ($range == true)? true : false;
+      $use_range = true;
 
     } else {
 
       $this->range = null;
 
-      $allow_range = ($this->default['range'] != null)? true : false;
+      $use_range = (is_array($this->default['range']));
          
     }
 
-    if($allow_range == true){
+    if($use_range){
 
       if($this->validate_range($value)){
         if($this->strict){
-          return $this->validate();
+          if(!$this->validate()) return false;
         }
+        if($this->id) unset($this->errors[$this->id]);
         return $value;
       }else{
         $this->error_exists = true;
-        $this->issue   = "range";
+        $this->issue = "range";
         return false;
       }
 
     }else{
 
-      return $this->validate();
+      if($this->validate()){
+        if($this->id) unset($this->errors[$this->id]);
+        return $isBool ?: $value;
+      }
+      return false;
 
     }
 
@@ -163,16 +193,15 @@ class Input{
    *
    * @param string $value
    * @param array $config 
-   *                [
-   *                 'type'  => @property const types,
+   *                ```[
+   *                 'type'  => {@see Input::types},
    *                 'range' => [value_a, value_b],
    *                 'length' =>[min, max],
    *                 'pregmatch' => 'pattern'
-   *                ]
-   * @param boolean $check_space
+   *                ]```
    * @return bool|string
    */
-  public function test($value, array $config, $check_space = false) {
+  public function test($value, array $config) : bool|string {
     return $this->set(...func_get_args());
   }
 
@@ -192,7 +221,7 @@ class Input{
    * @param integer|array $length
    * @return void
    */
-  public function default_length($length){
+  public function default_length(int|array $length){
     $this->allow_length = true;
     $this->default['length'] = $length;
   }
@@ -200,22 +229,30 @@ class Input{
   /**
    * sets the default type
    *
-   * @param string $default_type ['number' | 'string' ...]
+   * @param string $default_type optional [string|integer|decimal|number|text|email|phone|url|pregmatch]
    * @return void
    */
   public function default_type($default_type){    
-    $this->default['type'] = $default_type;
+    if($default_type === null) {
+      unset($this->default['type']);
+    }else{
+      $this->default['type'] = $default_type;
+    }
   }
   
   /**
    * sets the default range
    *
-   * @param array|integer $default_range
+   * @param array|string|integer $default_range
    * @return void
    */
-  public function default_range($default_range){
-    $this->allow_range   = true;
-    $this->default['range'] = $default_range;
+  public function default_range(array|string|int|null $default_range = null){
+    if($default_range === null) {
+      $this->allow_range = false;
+    }else{
+      $this->allow_range = true;
+      $this->default['range'] = $default_range;
+    }
   }
 
   public static function arrGetsVoid($data){
@@ -226,31 +263,40 @@ class Input{
     }
     
     $data = (array) $data;
+    $response = false;
     
     foreach($data as $key => $value){
       $value = trim($value);
       if($value == null){
         
-        self::$voidKey = $key; 
+        self::$voidKey[] = $key; 
        
-        return true;
+        $response = true;
       }    
     }
     
-    return false;
+    return $response;
     
   }
   
-  public static function voidKey() {
+  public static function voidKeys() {
     return self::$voidKey;
   }
 
-  private function set_type($type = null){
+  /**
+   * Defines the type of data to be validated
+   *
+   * @param string|null $type optional [string|integer|decimal|bool|number|text|email|phone|url|pregmatch]
+   * 
+   * @return bool true is returned if $type (validation type) exists
+   */
+  private function set_type(?string $type = null) : bool {
 
     $types = self::types;
-    $type  = ($type == null)? strtolower($this->default['type']) : strtolower($type);
 
-    if(in_array($type,$types)){
+    $type  = ($type === null)? strtolower($this->default['type']) : strtolower($type);
+
+    if(in_array($type, $types)){
 
       $this->type  =  $type;
       return true;
@@ -275,82 +321,107 @@ class Input{
     return false;
   }
 
-  private function validate_string(){
+  private function validate_string() : bool {
 
-    $value = $this->value;
-
-    if (is_string($value)) {
-
-      return $value;
-
-    } else {
-
-      return $this->response('value is not a valid string');
-
-    }
+    return is_string($this->value) ?: $this->response('value is not a valid string');
 
   }
 
-  private function validate_text(){
+  private function validate_text() : bool {
 
-    $value = $this->value;
-
-    if(!preg_match('/[^a-zA-Z]/', $value)){
-      return $value;
-    }
-
-    return $this->response('value is not a valid text'); 
+    return !preg_match('/[^a-zA-Z]/', $this->value) ?:  $this->response('value is not a valid text');
 
   }  
 
-  private function validate_integer(){
+  private function validate_integer() : bool {
       
     $value = $this->value;
      
     if(is_numeric($value)) {
 
       //check if the value is not decimal
-      if(is_float($value)) return $this->response('value is not a valid integer');
+      if(is_float($value)) return $this->response('value is not a valid integer'); //returns: false
   
       $nvalue = $value + 0;
 
-      if(!is_int($nvalue)) return $this->response('value is not a valid integer');
+      if(!is_int($nvalue)) return $this->response('value is not a valid integer'); //returns: false
 
       //check if range is set on the value
-      if($this->allow_range == true){
+      if($this->allow_range === true){
 
         $ranges = $this->range;
-        if(is_array($ranges)) {
-          return $this->response('value range is not supplied');
+
+        if(is_array($ranges) && !$ranges) {
+          return $this->response('value range is not supplied'); //returns: false
+        }
+
+        if(in_array($nvalue, $ranges)){
+
+          return $this->response("value in range", true); //returns: true
+
+        }else{
+
+          return $this->response("value not in range"); //returns: false
+
+        }
+
+      }
+
+      //return $nvalue;
+      return $this->response("value is valid", true); //returns: true
+    
+    }else{
+
+      return $this->response('value is not a valid number'); //returns: false
+
+    }
+
+  }
+
+  private function validate_decimal() : bool {
+      
+    $value = $this->value;
+     
+    if(is_numeric($value)) {
+  
+      $nvalue = $value + 0;
+
+      if(!is_float($nvalue)) return $this->response('value is not a valid decimal'); //returns: false
+
+      //check if range is set on the value
+      if($this->allow_range === true){
+
+        $ranges = $this->range;
+        if(is_array($ranges) && !$ranges) {
+          return $this->response('value range is not supplied'); //returns: false
         }
 
         if(in_array($nvalue, $ranges)){
 
           //return true    
-          $this->response("value in range", true);
+          $this->response('value in range', true); //returns: true
           return $value;
 
         }else{
 
-          return $this->response("value not in range");
+          return $this->response('value not in range'); //returns: false
 
         }
       }
-
-      //return true if all data is validated
-      $this->response("value is valid");
-      return $nvalue;
+      
+      // return $nvalue;
+      return $this->response('value is valid', true); //returns: true
     
     }else{
 
-      return $this->response('value is not a valid number');
+      return $this->response('value is not a valid decimal'); //returns: false
 
     }
 
   }
 
   /**
-   * checks if value is within the length(s) supplied
+   * checks if number of characters in test value is within the length(s) supplied
    *
    * @param array|integer $length
    * @return bool
@@ -364,11 +435,11 @@ class Input{
         $len = is_numeric($length)? $length + 0 : $length;
       }else{        
 
+        //set minimum as maximum length
         if(count($length) == 1){ $length[1] = $length[0]; }
 
-        $count = count($length);
-
-        if($count == 2){
+        //define minimum and maximum length variables
+        if(count($length) == 2){
           $len1 = $length[0];
           $len2 = $length[1];
         }
@@ -378,8 +449,8 @@ class Input{
 
     if(isset($len)){
 
-      if(!is_numeric($len)){
-        return $this->response("string length is invalid");
+      if(!is_int($len)){
+        return $this->response('supplied characters length is invalid');
       }
 
       if( (strlen($value) > 0) && (strlen($value) <= $length) && (!is_empty($length)) ){
@@ -391,15 +462,17 @@ class Input{
     }elseif (isset($len1)) {
 
       if(!is_numeric($len1) || !is_numeric($len2)){
-        return $this->response("length range must be numeric");
+        return $this->response("length range must both be numeric."); //returns: false
       }
 
       if($len1 > $len2){
-        return $this->response("range of lengths misplaced");
+        return $this->response("range of lengths misplaced."); //returns: false
       }
 
       if($len1 == $len2){
-        if(strlen($value) != $len1){ return $this->response("value must be $len1 chars in length"); }
+        if(strlen($value) != $len1){ 
+          return $this->response("value must be $len1 chars in length.");  //returns: false
+        }
         return true;
       }
       
@@ -409,16 +482,15 @@ class Input{
         return true;
       }else{
         if(is_array($length)){ $length = $length[0].' - '.$length[1]; }
-        return $this->response("value not in range of $length chars!");     
+        return $this->response("value not in range of $length chars."); //returns: false    
       }
 
     }
     
-    return $this->response("characters length range of undetermined!");
+    return $this->response('defined characters length cannot be resolved.');  //returns: false
 
   }
 
-  //
   /**
    * check if value is not within the supplied range of values
    *
@@ -427,22 +499,19 @@ class Input{
    */
   private function validate_range($value) : bool{
 
-    $range = ($this->range == null)? $this->default['range'] : $this->range;
+    $range = ($this->range === null)? $this->default['range'] : $this->range;
   
-    return in_array($value, $range);
+    return in_array($value, $range) ?: $this->response('value supplied is not within specified options');
 
   }
   
-  private function validate_number(){
+  private function validate_number() : bool {
 
-    $value = $this->value;
-
-    if(is_numeric($value)) return $value;
-    return $this->response('value supplied is not a valid number');
+    return (is_numeric($this->value)) ?: $this->response('value supplied is not a valid number');
 
   }
 
-  private function validate_phone(){
+  private function validate_phone() : bool {
     $value = $this->value;
 
     $phonevalue = ltrim($value, "+ ");
@@ -456,45 +525,46 @@ class Input{
       (substr($phonevalue, 0 , 1) != "-") &&
       (substr($phonevalue, strlen($phonevalue) - 1, 1) != "-")
       ){
-      return $value;
+      return true;
     }
 
-    return $this->response('value supplied is not a valid phone');
+    return $this->response('value supplied is not a valid phone'); //returns: false
 
   }
 
-  private function validate_email(){
+  private function validate_email() : bool {
       
     $value = trim($this->value);
 
-    if($this->findSpace($value,true)) return false;
+    if($this->findSpace($value, true)) return false;
     
     $pattern = "@\b(\b[a-zA-Z0-9.+-_]+\@[a-zA-Z0-9.+-]+[\.]([a-zA-Z]){2,63}\S\b)\b@";
 
-    if(preg_match($pattern,$value)){
+    return preg_match($pattern, $value) ?: $this->response("invalid email supplied"); 
 
-      return $value;
-
-    } 
-     return $this->response("$value is not a valid email");
   }
 
-  private function validate_url(){
-   
-    $value = $this->value;
+  private function validate_json() : bool {
+    
+    try{
+      json_decode($this->value);
+      return true;
+    }catch(Exception $e){
+      return $this->response("invalid json supplied"); 
+    }
 
-    return filter_var($value, FILTER_VALIDATE_URL); 
   }
 
-  private function matched(){
+  private function validate_url() : bool {
+    return filter_var($this->value, FILTER_VALIDATE_URL) ?: $this->response("invalid url supplied"); 
+  }
+
+  private function matched() : bool {
     $value = $this->value;
-    $pattern = '@'.$this->pregmatch.'@';
+    $pattern = $this->pregmatch;
 
-    if(preg_match($pattern, $value)){
-      return $value;
-    } 
-
-     return $this->response("$value does not match specified pattern");
+    return (preg_match($pattern, $value)) ?:
+              $this->response("$value does not match specified pattern");
   }
 
 
@@ -510,7 +580,7 @@ class Input{
     $types = self::types;      
     $type  = strtolower($this->type);
 
-    if(in_array($type,$types)){
+    if(in_array($type, $types)){
       switch($type){
         case "string": 
           return $this->validate_string();
@@ -521,7 +591,10 @@ class Input{
         case "integer":
           return $this->validate_integer();
           break;
-        case "number":
+        case ($type === "float") || ($type === "decimal"):
+          return $this->validate_decimal();
+          break;
+        case ($type === "number") || ($type === "numeric"):
           return $this->validate_number();
           break;
         case "phone":
@@ -529,6 +602,9 @@ class Input{
           break;
         case "email":
           return $this->validate_email();
+          break;                   
+        case "json":
+          return $this->validate_json();
           break;                   
         case "pregmatch":
           return $this->matched();
@@ -539,7 +615,7 @@ class Input{
         default: return false;
       }
     }else{
-      return $this->response("validation cannot be found!");
+      return $this->response("unknown validation rule!");
     }  
   }
 
@@ -565,99 +641,64 @@ class Input{
             $message = ('value set exceed a length of '.$length.' chars');
           break;
           default: $message = $this->message; //'please input a valid value';
-       }
+        }
 
        $this->response($message);
 
-      } else {
+    } else {
 
-        $this->response("",true);
+      $this->response("", true);
 
-      }
+    }
 
-      return false;
+    return false;
   }
 
   /**
-   * set and return message
+   * This method either sets a response message or returns last response message (if defined).
    *
-   * @param [type] $message
-   * @param boolean $return
-   * @return bool, string
+   * @param mixed $message
+   * @param boolean $return defines response to return when $message is not null
+   * @return boolean|string
    */
-  public function response($message = null, bool $return = false){
+  public function response(mixed $message = null, ?bool $return = false) : bool|string {
 
     if(func_num_args() == 0) return $this->message;
 
-    if($message != null){
+    if($message !== null){
 
       $this->message = $message; 
+
+      if($this->id) $this->errors[$this->id] = $message;
 
       $this->error_exists = ($return == false)? true : false;
 
       return $return;
     }
+    return false;
+  }
 
+  /**
+   * Returns true if any error exists during validation
+   *
+   * @return boolean
+   */
+  public function error_exists() : bool {
+    return $this->message ? true : false;
+  }
 
+  /**
+   * Returns true if any error exists during validation
+   *
+   * @param boolean|string $id
+   * @return array|string|false
+   *  - returns array of errors if $id is set as true (default)
+   *  - returns string of error value if error id exists in the list of detected errors.
+   *  - returns false if error id does not exist in the list of errors.
+   */
+  public function error(bool|string $id = true) : array|string|false {
+    if($id === true) return $this->errors;
+   return $this->errors[$id] ?? false;
   }
 
 }
-
-
-/**
- * DOCUMENTATION OF INPUT CLASS
- * 
- * //initialize class
- * $input = new \core\tools\Input;
- * 
- * Example 1:  ............................................
- *  $name = 'grego';
- *  $name = $input->set($name,['type'=>'string',length=>10,range=>['felix','tina','grego']]);
- *    
- *  Explanation 1: The above will:
- *    1: check if $name is a string
- *    2: check if the length is not more than 10
- *    3: check if $name can be found in array ['felix','tina','grego'] 
- *      4: if all validation is successful, the value is returned, else, a null value is returned;
- * 
- * 
- * Example 2:  ............................................
- *  $name = 'russel'; $number = '10';
- * 
- *  $name = $input->set($name,['type'=>'string',length=>[4, 10],range=>['felix','tina','grego']]);
- *  $number = $input->set($number,['type'=>'number',length=>2]); 
- *  
- *    
- *  Explanation 2: In the above,
- * 
- *   - The first $input->set() will:
- *      1: check if $name is a string
- *      2: check if the length is not less than 4 and not more than 10
- *    3: check if $name can be found in array ['felix','tina','grego'] 
- *      4: if all validation is successful, the value is returned, else, a null value is returned;
- * 
- * 
- * Example 3: to prevent the use of spaces .................
- *  $name = 'russel more';
- * 
- *  $name = $input->set($name,['type'=>'string'],'no-space'); 
- * 
- *  In the above, $input->set() will:
- *      1: check if $name is a string
- *      2: check if there is no space in $name
- *      3: if all validation is successful, the value is returned, else, a null value is returned;
- *      4: Since $name contains space, a null value is returned
- * 
- * 
- * SETTING DEFAULTS
- * 
- * You can set defaults configuration by using
- *  $input->default_type()
- *  $input->default_range()
- *  $input->default_length();
- * 
- *  Note: 
- *    1: These methods should be declared before using $input->set() method;
- *    2: Any configuration set within $input->set() will overide the default
- * 
- */

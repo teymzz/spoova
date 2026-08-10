@@ -2,6 +2,10 @@
 
 namespace spoova\mi\core\classes;
 
+use Error;
+use Exception;
+use PDO;
+use Reflection;
 use ReflectionClass;
 use ReflectionMethod;
 use User;
@@ -9,7 +13,7 @@ use User;
 /**
  * class Slicer
  * 
- * @author Akinola Saheed <teymss@gmail.com>
+ * @author Akinola Saheed <akinolasaheed001@gmail.com>
  * @todo add more Isset methods, User calls
  * @todo sort urls
  */
@@ -25,9 +29,31 @@ class Slicer extends Directives{
      /**
       * Router method (post or get)
       *
-      * @var [type]
+      * @var string
       */
      private static $method;
+
+     /**
+      * Template Directives
+      *
+      * @var array
+      */
+     private static $directives = ['default'=>[],'custom'=>[]];
+     
+     /**
+      * Default Directives
+      *
+      * @var array
+      */
+     private static $defaultDirectives = [];
+    
+     
+     /**
+      * Custom Directives
+      *
+      * @var array
+      */
+     private static $customDirectives = [];
     
      private const auth_directives = [
       'Auth'  => '~@Auth:(.*?)?@Auth;~is', //to change this
@@ -70,6 +96,63 @@ class Slicer extends Directives{
      public static function unsort_escapes(&$body){
        self::unsort_excludes($body);
        self::unsort_comments($body);
+     }
+
+     public static function new_directive(string $name, callable $callback){
+
+      $directives = self::directives();
+      if(!$name || (strpos($name, ' ') !== false)) throw new Error('directive name "'.$name.'" is not allowed');
+      $name = strtolower($name);
+      if(in_array($name, $directives)){
+        throw new Error('directive name "'.$name.'" already exists');
+      }
+      
+      self::$customDirectives[$name] = $callback;
+      self::$directives[] = $name;
+
+     }
+
+     /**
+      * Returns all directives
+      * @return array
+      */
+     public static function directives() : array {
+
+      if(empty(self::$defaultDirectives)){
+        $braces = array_keys(self::$pattern);
+        $specials = self::specials;
+        $authDirectives = array_keys(self::auth_directives);
+        $conditionals = [
+          'if','endif','else','endif',
+          'while','endwhile',
+          'for','endfor',
+          'foreach','endforeach',
+          'each','endeach',
+          'loop','endloop',
+          'break','test',
+          'do','switch','endswitch',
+          'case','default'
+        ];
+  
+        $directives = array_merge($braces,$specials,$authDirectives,$conditionals);
+        self::$directives = self::$defaultDirectives = array_map(fn($directive)=>strtolower($directive), $directives);
+        $rc = new ReflectionClass('Rexit');
+        
+        // Rexit directives
+        $statics = $rc->getMethods(ReflectionMethod::IS_PUBLIC | ReflectionMethod::IS_STATIC);
+
+        foreach($statics as $method){
+          if($method->isPublic() && $method->isStatic()){
+            $directiveName = strtolower($method->getName());
+            if(!in_array($directiveName, $directives)){
+              self::$directives[] = $directiveName;
+            }
+          }
+        }
+      }
+
+      return self::$directives;
+
      }
 
      protected function endSlice(){
@@ -129,14 +212,17 @@ class Slicer extends Directives{
           //remove authorized sections off the grid
           self::sort_guest($body);       
           
+          self::sort_x_saved($body);
           self::sort_x_attrs($body);
 
           // //apply directives on body
           self::sort_directives($body);    
+          self::sort_customized($body);
 
           self::sort_styles($body);
 
           self::sort_conditions($body);
+
         }
 
         $body = $body;
@@ -201,6 +287,8 @@ class Slicer extends Directives{
 
       // Replace the pattern with the desired format
       $replacement = '<?php do{$1}while($2); ?>';
+      
+      $replacement = '<?php do{ ?>$1<?php }while($2); ?>';
       $body = preg_replace($pattern, $replacement, $body);
       
       //handle loop statement
@@ -213,10 +301,13 @@ class Slicer extends Directives{
        
       $varOperators = '~@loop\(([^:]+): ?([^ ]+) ([<>]=?|=) (.+)\):~';
       $body = preg_replace($varOperators, '<?php for($1 = $2; $1 $3 $4; $1++): ?>', $body);
-
+ 
       $body = preg_replace('~@endloop;~', '<?php endfor; ?>', $body);
       
-      $body = preg_replace('~@switch\((.*?)\):~', '<?php switch($1): ?>', $body);       
+      $body = preg_replace_callback('~@switch\((.*?)\):~', function($matches){
+         return "<?php switch($matches[1]): ?>";
+      },
+      $body);       
       $body = preg_replace('~@case\((.*?)\):~', '<?php case $1: ?>', $body);       
       $body = preg_replace('~@default:(.*?)~', '<?php default: $1; ?>', $body);       
       $body = preg_replace('~@endswitch;~', '<?php endswitch; ?>', $body);
@@ -250,6 +341,7 @@ class Slicer extends Directives{
  
 
       foreach(self::$excludes as $key => $exclude){
+        
         $rep = $exclude['rep'];
         $fetched = $exclude['fetched'];
         $comment = substr($fetched, 2); 
@@ -271,10 +363,24 @@ class Slicer extends Directives{
      */
     private static function sort_placeholders(&$body){
 
+      //define smart php format
       $body = preg_replace('~{{:\s?(.*?)?\s?}}~is','<?php $1 ?>', $body);
+
+      //define smart break format 
+      $body = preg_replace_callback('~{{\s*(.+?)\s*(:{1,})\s*}}~s', function($matches){
+        $expression = $matches[1];
+        $colons = $matches[2]; 
+        $breaks = str_repeat('<br>', strlen($colons));
+        return "<?php echo ({$expression}) .'{$breaks}' ?>";
+      }, $body);
+
+      //define constant formats
       $body = preg_replace('~{{\s?([a-zA-Z_0-9]+)?\?\s?}}~is','<?= $$1 ?? \'\' ?>', $body);
+
+      //define tenary isset format for variables
       $body = preg_replace('~{{\s?\$([a-zA-Z_0-9]+)?\?\s?}}~is','<?= $$1 ?? \'\' ?>', $body);
     
+      //define other formats 
       $body = preg_replace('~{{\s?(.*?)?\s?}}~is','<?php echo $1; ?>', $body);
 
     }
@@ -294,7 +400,7 @@ class Slicer extends Directives{
       $authsections = ($authtext)?? false;
       if( User::id() ){
 
-        $body = str_replace(['@Auth:','@Auth;'], '', $body);
+        $body = preg_replace('~@Auth:\s*(.*?)\s*@Auth;~is', '$1', $body);
 
       }else{
         if(is_array($authsections)){
@@ -327,50 +433,109 @@ class Slicer extends Directives{
         }
       }else if( !User::id() ) {
         //remove only Guest Pattern
-        $body = str_ireplace(['@Guest:','@Guest;'],'',$body);
+        $body = preg_replace('~@Guest:\s*(.*?)\s*@Guest;~is', '', $body);
       }
       
     }
 
+    private static function xsaver($body) {
+      
+      $pattern = '/<\s*x-save:([a-zA-Z0-9_-]+)(\s+id="(\d+)"\s*)?>([\s\S]*?)<\/\s*x-save:\1\s*>/';
+
+      while (preg_match($pattern, $body)) {
+          $body = preg_replace_callback($pattern, function ($matches) {
+            $mainid = $matches[1];
+            $subid = $matches[3];
+
+            ($subid)? $saves[$mainid][$subid]=[] : $saves[$mainid][]=[];
+            end($saves[$mainid]);          // Move internal pointer to last element
+            $lastKey = key($saves[$mainid]); // Get the key of that element
+
+            $content = self::xsaver($matches[4]); // recursive call
+            $saves[$mainid][$lastKey] = $content;
+
+            if(SETTER::EXISTS('x-save')) {
+              $saved = GET('x-save', 'x-save-list');
+              if(!isset($saved[$mainid])){
+                $saved[$mainid] = $saves[$mainid];
+                SET('x-save', $saved, 'x-save-list'); // create a new storage and store contents.
+              }else{
+                $subsaved = $saved[$mainid]; 
+                if($subid){
+                  if(!array_key_exists($subid, $subsaved)){
+                    $saved[$mainid][$lastKey] = $saves[$mainid][$lastKey];
+                    SET('x-save', $saved, 'x-save-list');
+                  }
+                }else{
+                  $saved[$mainid][] = $content;
+                  SET('x-save', $saved, 'x-save-list');
+                }
+              }
+            } else {
+              SET('x-save', $saves, 'x-save-list');
+            }
+
+            
+            // save items into array format: $array['book']['id'] = 
+            return ''; //str_repeat($content, $count);
+          }, $body);
+      }
+
+      return $body;
+
+    }
+
     /**
-     * Add the guest layout when user is not authenticated
+     * Save a part of template to be reused later
+     *
+     * @param string $body referenced body template
+     * @return void
+     */
+    private static function sort_x_saved(&$body){
+      
+        $pattern = "~<x-attr:[\w+-]+ .*?\s?/>~is";//
+
+        $body = self::xsaver($body);
+      
+    }
+    /**
+     * Save a part of template to be reused later
      *
      * @param string $body referenced body template
      * @return void
      */
     private static function sort_x_attrs(&$body){
       
-       $pattern = "~<x-attr:[\w+-]+ .*?\s?/>~is";//
+        $pattern = "~<x-attr:[\w+-]+ .*?\s?/>~is";
 
-       preg_match_all($pattern, $body, $matches);
+        preg_match_all($pattern, $body, $matches);
+        $matches = $matches[0] ?? [];
 
-       $matches = $matches[0] ?? [];
+        $attrLists = [];
 
-       $attrLists = [];
+        foreach($matches as $match){
 
-       foreach($matches as $match){
+            $value = substr( $match, 8, strlen($match) - 10 );
 
-           $value = substr( $match, 8, strlen($match) - 10 );
+            $value = explode(' ', $value, 2);
 
-           $value = explode(' ', $value, 2);
+            $key   = rtrim($value[0], " '");
+            $attr  = ltrim($value[1], " '");
 
-           $key   = rtrim($value[0], " '");
-           $attr  = ltrim($value[1], " '");
+            $attrLists[$key] = $attr;
 
-           $attrLists[$key] = $attr;
+            $body = str_replace($match, '', $body);
 
-           $body = str_replace($match, '', $body);
-
-           
-       }
-       
-       if(!SETTER::EXISTS('x-attrs')) {
-         SET('x-attrs', $attrLists, 'x-attr-list');
-       } else {
-         $attrs = GET('x-attrs', 'x-attr-list');
-         $newAttrs = array_merge($attrs, $attrLists);
-         SET('x-attrs', $newAttrs, 'x-attr-list');
-       }
+            
+        }
+         
+        if(!SETTER::EXISTS('x-attrs')) {
+          SET('x-attrs', $attrLists, 'x-attr-list');
+        } else {
+          $attrs = GET('x-attrs', 'x-attr-list');
+          $newAttrs = array_merge($attrs, $attrLists);
+          SET('x-attrs', $newAttrs, 'x-attr-list');
+        }
       
     }
 
@@ -399,13 +564,12 @@ class Slicer extends Directives{
      * @return void
      */
     private static function sort_styles(&$body){    
-
       if(SETTER::EXISTS(':STYLES')) {
-       $body = str_ireplace('@styles', GET(':STYLES', '#1234'), $body);
+        $body = str_ireplace('@styles', GET(':STYLES', '#1234'), $body);
       }else{
         $body = str_ireplace('@styles', '', $body);
       }
-      
+      SELF::$PULLSTYLES = false; // reset @styles after resolved
     }
     
 
@@ -448,6 +612,8 @@ class Slicer extends Directives{
         }
 
       }, $directives);
+
+      
       
 
       array_map(function($directive) use(&$body) {
@@ -455,16 +621,37 @@ class Slicer extends Directives{
         if(stripos($body, '@'.$directive) !== false){
 
           $directive = str_replace('-','_', $directive);
-          
           $body = self::directivesController($body, $directive);
           
         }
 
       }, $staticMethods);
 
+    }
 
-      
+    /**
+     * Sort directive patterns using the directives class
+     *
+     * @param string $body referenced body template
+     * @return void
+     */
+    private static function sort_customized(&$body){
+      $pattern = "/\B@(\w+)([ \t]*)(\( ( (?>[^()]+) | (?3) )* \))?/x";
+      $body = preg_replace_callback($pattern, function ($matches) {
+            $name = $matches[1];
+            $expression = $matches[3] ?? '()';
 
+            // 1. Custom directive callback
+            if (isset(self::$customDirectives[$name])) {
+                $response = call_user_func(self::$customDirectives[$name], $expression);
+                if(!is_string($response)) {
+                  throw new Exception('callback for custom directive "'.$name.'" must return a string value');
+                }
+                return $response;
+            }
+
+            return $matches[0]; // No match — leave it untouched
+        }, $body);
     }
 
     /**

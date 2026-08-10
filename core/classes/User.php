@@ -22,7 +22,7 @@ class User extends Session{
      * {@see UserAuth::__construct()}
      * @return UserAuth
      */
-    public static function auth(DB $dbc = null, DBHandler $dbh = null): UserAuth {
+    public static function auth(?DB $dbc = null, ?DBHandler $dbh = null): UserAuth {
         
         return new UserAuth(...func_get_args());
     
@@ -73,9 +73,7 @@ class User extends Session{
         }else{
             $init['SESSION_NAME'] = '';
             $init['COOKIE_NAME']  = '';
-        }  
-
-        $init = self::$init;
+        }
         
         return (func_num_args() > 0)? $init[$param] : $init;
     }
@@ -174,10 +172,10 @@ class User extends Session{
      * Returns UserControl class or triggers error
      *
      * @param string $name datanase table name
-     * @param string $arguments arguments 
+     * @param string|array|null $arguments arguments 
      * @return void|userDB
      */
-    public static function __callStatic($name, $arguments = null)
+    public static function __callStatic($name, string|array|null $arguments = null)
     {
        if(substr($name, 0, 2) === 'DB'){
             $name = substr($name , 2, strlen($name));
@@ -211,6 +209,17 @@ class User extends Session{
 
         return (array_intersect_key(self::$data, array_flip($fields)));
 
+    }
+
+    /**
+     * This method returns the user account when a form data 
+     * has been authenticated through the Form class. This method 
+     * is direcly equivalent to the Form::account() method.
+     *
+     * @return array
+     */
+    final static function account(bool $bindData = false) : array {
+        return Form::account($bindData);
     }
 
     /**

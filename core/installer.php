@@ -2,22 +2,22 @@
 
 use spoova\mi\core\classes\DB;
 use spoova\mi\core\classes\DB\DBConfig;
-use spoova\mi\core\classes\Filemanager;
+use spoova\mi\core\classes\Bundle\Filemanager\Filemanager;
 
 class Installer{
 
-    private $DBKEYS = [];
-    private $DBDEFAULT = [];
-    private $DBDATA = [];
-    private $DBSETS = [];
-    private $DBALL  = [];
-    private $intro;
-    private $refreshBtn;
-    private $content;
-    public $message;
+    private array $DBKEYS = [];
+    private array $DBDEFAULT = [];
+    private array $DBDATA = [];
+    private array $DBSETS = [];
+    private array $DBALL  = [];
+    private string $intro = '';
+    private string $refreshBtn = '';
+    private string $content = '';
+    public string $message;
     public $db;
-    public $fatal_error;
-    public $create_file;
+    public int $fatal_error;
+    public int $create_file;
 
     private $userColumns = [
         'firstname'=> ['len'=> 30, 'type'=> 'varchar'],
@@ -35,8 +35,8 @@ class Installer{
         'added_on'=> ['len'=>'', 'type'=>'timestamp']
     ];
 
-    private $install_status = 0; // 0, 1, 2, 3
-    private $Filemanager;
+    private int $install_status = 0; // 0, 1, 2, 3
+    private Filemanager $Filemanager;
 
     function __construct(){
 
@@ -113,7 +113,6 @@ class Installer{
 
     public function install(){
 
-
         define('spoova', @DomUrl()); 
         
         if($this->done()) redirect(spoova);
@@ -188,8 +187,72 @@ class Installer{
     }
     
     /**
+     * Rewrites a driver's connection error into wording the person running the
+     * installer can act on.
+     *  - Matched on the message text because neither mysqli nor PDO surfaces a
+     *    stable error code through {@see DB::error()}.
+     *  - An unrecognised reason returns an empty string, so the caller falls back
+     *    to the raw text instead of inventing an explanation.
+     *
+     * @param string $reason raw driver reason
+     * @return string plain explanation, or '' when the reason is not recognised
+     */
+    private function explainReason(string $reason) : string {
+
+        $meanings = [
+
+            /* MySQL 8.4+ ships with mysql_native_password disabled. An account that
+               does not exist is answered with a fabricated handshake whose plugin is
+               derived from the user name, so roughly a third of unknown user names
+               fail as a plugin error rather than as "access denied". */
+            'is not loaded'            => 'that database user does not exist on this server',
+
+            'access denied'            => 'the database user name or password was rejected',
+            'unknown database'         => 'that database name does not exist on this server',
+            'no connection parameters' => 'supply at least a database user and server',
+            'actively refused'         => 'nothing is listening on that server and port',
+            'no such host'             => 'that database server address could not be found',
+            'getaddrinfo'              => 'that database server address could not be found',
+            'timed out'                => 'the database server did not respond — check the server and port',
+        ];
+
+        foreach($meanings as $needle => $meaning){
+            if(stripos($reason, $needle) !== false) return $meaning;
+        }
+
+        return '';
+    }
+
+    /**
+     * Explains an installer failure, but only offline.
+     *  - Live environments keep the generic wording so database internals are
+     *    never rendered in the browser.
+     *  - Locally the reason is what makes a failed setup diagnosable, since the
+     *    connection error is otherwise discarded.
+     *  - The raw reason is escaped: it quotes back the user name that was typed
+     *    into the form, and the message is printed into the page unescaped.
+     *
+     * @param string $message message shown on the installer page
+     * @param object $source object exposing an error() reason (DB or DBHandler)
+     * @return string
+     */
+    private function withReason(string $message, object $source) : string {
+
+        if(online) return $message;
+
+        $reason = method_exists($source, 'error')? trim((string) $source->error()) : '';
+
+        if($reason === '') return $message;
+
+        $detail  = '<span class="ins-reason">'.htmlspecialchars($reason, ENT_QUOTES, 'UTF-8').'</span>';
+        $meaning = $this->explainReason($reason);
+
+        return $meaning? $message.' — '.$meaning.$detail : $message.' — '.$detail;
+    }
+
+    /**
      * intall database environment setup
-     * 
+     *
      * @return bool|void config texts
      * @param  string $type[default | custom]
      */
@@ -198,8 +261,6 @@ class Installer{
         $arg = func_get_args()[0]?? false;
    
         if(!isset($_POST['dbconfig']) && ($arg !== 'refresh')) return false;
-        
-        sleep(1);
 
         //all variables initialized
         $dbname_off = $_POST['dbname_off']?? '';
@@ -254,25 +315,25 @@ class Installer{
               $db = $dbcon->openDB('',$dbuser,$dbpass,$dbserver,$dbport,$dbsocket);
   
               if(!$db){
-                  $this->message = " connection parameters failed!!! ";
+                  $this->message = $this->withReason(" connection parameters failed!!! ", $dbcon);
                   return false;
               }
-  
+
               //create a new database
               if(isset($_POST['newdb'])){
                   $db->query("CREATE DATABASE IF NOT EXISTS $dbname CHARACTER SET utf8mb4");
                   if(!$db->process()){
-                      $this->message = 'database cannot be created: '.$db->error();
+                      $this->message = $this->withReason('database cannot be created', $db);
                       return false;
                   }
               }else{
-  
+
                   //test database if supplied and new database is not selected for creation
                   $db = $dbcon->openDB($dbname,$dbuser,$dbpass,$dbserver,$dbport,$dbsocket);
-  
+
                   if(!$db){
-                      $this->message = '"'.$dbname.'" is not a valid mysqli database name';
-                      return false;                    
+                      $this->message = $this->withReason('"'.$dbname.'" is not a valid mysqli database name', $dbcon);
+                      return false;
                   }
               }
   
@@ -286,7 +347,7 @@ class Installer{
               $db = $dbcon->openDB();
   
               if(!$db){
-                    $this->message = 'database connection failed: ';
+                    $this->message = $this->withReason('database connection failed', $dbcon);
                     return false;
               }
   
@@ -308,8 +369,7 @@ class Installer{
         //configure default
         
         if(isset($_POST['use_dbconfig']) || $arg === 'refresh'){
-            sleep(1); 
-            
+
             $onvals = [$dbname_on, $dbuser_on, $dbpass_on, $dbserver_on, $dbport_on, $dbsock_on, $dbsock_on];
             $ofvals = [$dbname_off, $dbuser_off, $dbpass_off, $dbserver_off, $dbport_off, $dbsock_off, $dbsock_off];
             
@@ -328,12 +388,13 @@ class Installer{
            if(is_file(getDefined('_icore').'init')) unlink(_icore.'init');
            $Filemanager = new Filemanager;
            $Filemanager->openFile(true, _icore.'init');
-        } 
-        
-        sleep(1);
-        
-        redirect('install', 'java');      
-    }    
+        }
+
+        // A header redirect keeps the step change instant and makes this a proper
+        // POST/redirect/GET, so a browser refresh cannot resubmit the form. The
+        // script form is only a fallback, since it renders as a blank document.
+        redirect('install', headers_sent()? 'java' : 'header');
+    }
 
     /**
      * dbconfig starter forms
@@ -477,11 +538,11 @@ class Installer{
                     </div>
 
                     <div class="in-flex-full flex-r bc-white-dd pxv-10">
-                        <fielset class="i-flex bc-blue-l bd-f rad-4 c-white font-em-1d2">
+                        <fieldset class="i-flex bc-blue-l bd-f rad-4 c-white font-em-1d2">
                             <button class="flex-btn-full pxs-20 pvs-6 pxv-6 bc-blue-dd c-white rad-r" name="dbconfig">
                                 <span class="bi-install"></span> Install
                             </button>
-                        </fielset>
+                        </fieldset>
                     </div>   
 
                 </form>                
@@ -679,7 +740,7 @@ class Installer{
                 //update table configuration if all goes well and force redirection
                 $Filemanager->textUpdate(['TABLE_CONFIGURATION'=>'2']);
                 sleep(2);
-                redirect('install', false);            
+                redirect('install', headers_sent()? 'java' : 'header');            
             }            
         }else{
             $this->message = '<span class="c-red pvs-6">installation failed!</span>';
@@ -917,7 +978,7 @@ class Installer{
             }else{
                 $Filemanager->textWrite(['TABLE_CONFIGURATION' => 3]); //textWrite('TABLE_CONFIGURATION: 3;',['separator'=>''])
             }
-            redirect('install', false);
+            redirect('install', headers_sent()? 'java' : 'header');
             return true;
         }
     }
@@ -1092,6 +1153,11 @@ class Installer{
             $Filemanager->textUpdate([
                 'RESOURCE_WATCH' => $rWatch,
                 'RESOURCE_META' => $rMeta,
+                // Without this key recall() — which backs @load() in templates —
+                // falls back to the Res handler, whose registry is never populated
+                // (res/res.php pulls core.ress into Ress). Every @load('headers')
+                // would then render nothing and page scripts would go missing.
+                'RESOURCE_HANDLER' => 'Ress',
                 'SETUP_COMPLETE' => 1,
             ]);
 
@@ -1100,7 +1166,7 @@ class Installer{
         if($this->Filemanager->readFile('SETUP_COMPLETE', true)){
             $this->install_status = 4;
         }else if(isset($_POST['complete'])){
-            redirect('install', false);
+            redirect('install', headers_sent()? 'java' : 'header');
         }
         
     }
@@ -1117,65 +1183,610 @@ class Installer{
     }
 
     private function final(){
-       redirect(spoova, 'java');
+       redirect(spoova, headers_sent()? 'java' : 'header');
     }
 
-    public function content() {        
-        
-        $content = $this->content;
-        Res::import('', ":headers", $imports);
-        $htmlcontent = '
+    /**
+     * Installation stages, in order, as shown on the progress rail.
+     * Keys mirror {@see Installer::$install_status}.
+     *
+     * @return array<int,string>
+     */
+    private function stages() : array {
+        return [
+            0 => 'Database',
+            1 => 'User table',
+            2 => 'Columns',
+            3 => 'Resources',
+            4 => 'Finish',
+        ];
+    }
+
+    /**
+     * Builds the step rail that shows how far the installation has progressed.
+     *
+     * @return string
+     */
+    private function progressRail() : string {
+
+        $current = $this->install_status;
+        $items   = '';
+
+        foreach($this->stages() as $index => $label){
+
+            $state = ($index < $current)? 'done' : (($index === $current)? 'current' : 'todo');
+            $mark  = ($state === 'done')? '&#10003;' : ($index + 1);
+
+            $items .= '
+                <li class="ins-step is-'.$state.'">
+                    <span class="ins-step-dot">'.$mark.'</span>
+                    <span class="ins-step-label">'.$label.'</span>
+                </li>';
+        }
+
+        return '
+            <nav class="ins-rail" aria-label="Installation progress">
+                <ol class="ins-steps">'.$items.'</ol>
+            </nav>';
+    }
+
+    /**
+     * Presentation layer for the installer page.
+     *  - Scoped under .ins-page so the framework stylesheet is left untouched.
+     *  - Restyles the markup the stage builders already emit (.dbset, .users-table,
+     *    .form-field, .i-flex ...) rather than requiring those builders to change.
+     *
+     * @return string
+     */
+    private function styles() : string {
+        return <<<'CSS'
+        <style>
+        .ins-page{
+            --ins-bg: #0e0a18;
+            --ins-surface: #171130;
+            --ins-surface-2: #1e1740;
+            --ins-line: rgba(255,255,255,.09);
+            --ins-line-2: rgba(255,255,255,.16);
+            --ins-text: #ece9f7;
+            --ins-muted: #a79fc6;
+            --ins-faint: #7a72a0;
+            --ins-primary: #7c5cff;
+            --ins-primary-d: #674af0;
+            --ins-accent: #ffab45;
+            --ins-danger: #ff7a7a;
+            --ins-ok: #45d9a0;
+            --ins-r: 14px;
+            --ins-r-sm: 9px;
+
+            min-height: 100vh;
+            margin: 0;
+            color: var(--ins-text);
+            background:
+                radial-gradient(1100px 620px at 12% -12%, rgba(124,92,255,.20), transparent 60%),
+                radial-gradient(900px 520px at 92% 8%, rgba(255,171,69,.10), transparent 58%),
+                var(--ins-bg);
+            font-family: "Poppins", "Nunito", -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            font-size: 15px;
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+        }
+        .ins-page *,
+        .ins-page *::before,
+        .ins-page *::after{ box-sizing: border-box; }
+
+        /* ---------------------------------------------------------- brand bar */
+        .ins-top{
+            position: sticky; top: 0; z-index: 20;
+            display: flex; align-items: center; gap: .85rem;
+            padding: .9rem clamp(1rem, 4vw, 2.5rem);
+            background: rgba(14,10,24,.82);
+            border-bottom: 1px solid var(--ins-line);
+            backdrop-filter: blur(10px);
+        }
+        .ins-brand{ display: flex; align-items: center; gap: .7rem; text-decoration: none; color: inherit; }
+        .ins-mark{
+            width: 38px; height: 38px; flex: none;
+            border-radius: 11px;
+            background: linear-gradient(145deg, var(--ins-primary), #4a2fd0);
+            background-size: 60% 60%, cover;
+            background-repeat: no-repeat;
+            background-position: center;
+            box-shadow: 0 6px 18px rgba(124,92,255,.38);
+        }
+        .ins-word{ font-weight: 650; letter-spacing: .16em; font-size: .95rem; }
+        .ins-sub{
+            margin-left: auto;
+            font-size: .74rem; letter-spacing: .13em; text-transform: uppercase;
+            color: var(--ins-faint);
+            border: 1px solid var(--ins-line); border-radius: 100vh;
+            padding: .3rem .8rem;
+        }
+
+        /* ------------------------------------------------------------- layout */
+        .ins-wrap{ max-width: 940px; margin: 0 auto; padding: clamp(1.4rem, 4vw, 2.8rem) clamp(1rem, 4vw, 2rem) 4rem; }
+
+        /* --------------------------------------------------------- step rail */
+        .ins-rail{ margin-bottom: 2rem; }
+        .ins-steps{
+            display: flex; flex-wrap: wrap; gap: .4rem;
+            list-style: none; margin: 0; padding: 0; counter-reset: step;
+        }
+        .ins-step{
+            display: flex; align-items: center; gap: .5rem;
+            flex: 1 1 130px; min-width: 118px;
+            padding: .6rem .8rem;
+            border: 1px solid var(--ins-line);
+            border-radius: var(--ins-r-sm);
+            background: rgba(255,255,255,.02);
+            font-size: .8rem; color: var(--ins-faint);
+        }
+        .ins-step-dot{
+            width: 22px; height: 22px; flex: none;
+            display: grid; place-items: center;
+            border-radius: 50%;
+            border: 1px solid var(--ins-line-2);
+            font-size: .72rem; font-weight: 600; line-height: 1;
+        }
+        .ins-step.is-done{ color: var(--ins-muted); border-color: rgba(69,217,160,.3); }
+        .ins-step.is-done .ins-step-dot{ background: rgba(69,217,160,.16); border-color: rgba(69,217,160,.5); color: var(--ins-ok); }
+        .ins-step.is-current{
+            color: var(--ins-text);
+            border-color: rgba(124,92,255,.55);
+            background: rgba(124,92,255,.11);
+            box-shadow: 0 0 0 1px rgba(124,92,255,.16);
+        }
+        .ins-step.is-current .ins-step-dot{ background: var(--ins-primary); border-color: transparent; color: #fff; }
+        .ins-step-label{ white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+        /* ------------------------------------------------- injected stage markup */
+        .ins-page .installation-pane{
+            display: block !important;
+            padding: 0 !important;
+        }
+        /* intro copy sits above the cards as a lead paragraph */
+        .ins-page .intro{
+            width: 100% !important;
+            max-width: 68ch;
+            margin: 0 0 1.5rem;
+            padding: 0 !important;
+            font-size: 1.02rem !important;
+            color: var(--ins-muted) !important;
+        }
+        .ins-page .intro a{ color: #9d84ff; }
+        .ins-page .intro .c-orange-dd,
+        .ins-page .intro .c-orange-d{ color: var(--ins-accent) !important; }
+        .ins-page .intro .c-silver-dd{ color: var(--ins-text) !important; }
+        /* inline file/path references read as code chips wherever they appear */
+        .ins-page code,
+        .ins-page .intro .c-silver-dd{
+            display: inline-block;
+            background: rgba(124,92,255,.14);
+            border: 1px solid rgba(124,92,255,.32);
+            border-radius: 6px;
+            padding: .06em .5em;
+            margin: 0 .1em;
+            color: #c3b2ff !important;
+            font-family: ui-monospace, "Cascadia Code", Consolas, monospace;
+            font-size: .82em;
+            line-height: 1.5;
+            white-space: nowrap;
+        }
+
+        /* every stage panel becomes a card. Panels are the direct children of the
+           pane: .dbset and .users-table are divs, the column picker is a plain div
+           and the resource step is a form. The refresh toolbar is a direct child
+           form too, so it is excluded and stays a bare right-aligned control. */
+        .ins-page .installation-pane > div,
+        .ins-page .installation-pane > form:not([method="get"]){
+            width: 100% !important;
+            max-width: none !important;
+            margin: 0 0 1.25rem;
+            padding: clamp(1.1rem, 3vw, 1.9rem);
+            background: linear-gradient(180deg, var(--ins-surface-2), var(--ins-surface));
+            border: 1px solid var(--ins-line);
+            border-radius: var(--ins-r);
+            box-shadow: 0 18px 40px -24px rgba(0,0,0,.9);
+        }
+        .ins-page .header,
+        .ins-page .resource-header{
+            font-size: 1.12rem !important;
+            font-weight: 600;
+            color: var(--ins-text);
+            padding: 0 0 .9rem !important;
+            margin-bottom: 1.1rem;
+            border-bottom: 1px solid var(--ins-line);
+        }
+        .ins-page .header .font-em-d85,
+        .ins-page .header > div{
+            font-size: .84rem !important;
+            font-weight: 400;
+            line-height: 1.55;
+            color: var(--ins-muted) !important;
+            margin-top: .5rem;
+        }
+        .ins-page .header .c-red-dd{
+            display: inline-block;
+            color: var(--ins-accent) !important;
+            background: rgba(255,171,69,.1);
+            border: 1px solid rgba(255,171,69,.24);
+            border-radius: 6px;
+            padding: .12rem .5rem;
+            font-family: ui-monospace, "Cascadia Code", Consolas, monospace;
+            font-size: .78rem;
+            margin-bottom: .35rem;
+        }
+
+        /* ------------------------------------------------------------- fields */
+        .ins-page .form-field{ display: block !important; }
+        .ins-page .form-field .i-flex,
+        .ins-page .form-field [role="group"]{
+            display: flex !important;
+            flex-wrap: wrap;
+            align-items: stretch;
+            gap: .5rem;
+            background: none !important;
+            border: 0 !important;
+            border-radius: 0 !important;
+            padding: 0 !important;
+            margin-bottom: .7rem;
+        }
+        .ins-page .form-field .f-col{ flex-direction: column !important; gap: .35rem; }
+
+        /* the leading button/label of a field row acts as its caption */
+        .ins-page .form-field label.flex-ico,
+        .ins-page .form-field button.flex-ico{
+            display: flex !important; align-items: center; gap: .45rem;
+            flex: none;
+            min-width: 132px !important;
+            padding: .55rem .8rem !important;
+            background: rgba(255,255,255,.05) !important;
+            color: var(--ins-muted) !important;
+            border: 1px solid var(--ins-line) !important;
+            border-radius: var(--ins-r-sm) !important;
+            font-size: .8rem; font-weight: 500;
+            text-align: left;
+            cursor: default;
+        }
+        .ins-page .form-field .f-col label.flex-ico{ width: auto !important; background: none !important; border: 0 !important; padding: 0 0 .1rem !important; }
+
+        .ins-page .form-field input[type="text"],
+        .ins-page .form-field input[type="password"],
+        .ins-page .form-field input:not([type]){
+            flex: 1 1 190px;
+            min-width: 0;
+            padding: .58rem .8rem !important;
+            background: rgba(0,0,0,.28) !important;
+            color: var(--ins-text) !important;
+            border: 1px solid var(--ins-line) !important;
+            border-radius: var(--ins-r-sm) !important;
+            font: inherit; font-size: .88rem;
+            transition: border-color .15s, box-shadow .15s, background .15s;
+        }
+        /* stacked rows (.f-col) run on the vertical axis, so the row flex-basis
+           above would become a ~190px HEIGHT — reset it and let width do the work */
+        .ins-page .form-field .f-col input[type="text"],
+        .ins-page .form-field .f-col input[type="password"],
+        .ins-page .form-field .f-col input:not([type]){
+            flex: 0 0 auto !important;
+            width: 100%;
+        }
+        .ins-page .form-field input::placeholder{ color: var(--ins-faint); }
+        .ins-page .form-field input:focus{
+            outline: none;
+            border-color: rgba(124,92,255,.75) !important;
+            background: rgba(0,0,0,.4) !important;
+            box-shadow: 0 0 0 3px rgba(124,92,255,.2);
+        }
+
+        /* checkbox rows */
+        .ins-page .form-field [role="group"] > span,
+        .ins-page .resource-watch [role="group"] > span,
+        .ins-page .resource-meta [role="group"] > span{
+            display: inline-flex !important; align-items: center; gap: .45rem;
+            background: rgba(255,255,255,.04) !important;
+            border: 1px solid var(--ins-line);
+            border-radius: 100vh;
+            padding: .35rem .85rem !important;
+            font-size: .82rem;
+            color: var(--ins-muted) !important;
+        }
+        .ins-page input[type="checkbox"]{
+            accent-color: var(--ins-primary);
+            width: 15px; height: 15px;
+            cursor: pointer;
+        }
+
+        /* ------------------------------------------------------------ buttons */
+        .ins-page .form-field button[name],
+        .ins-page form button[name]{
+            display: inline-flex !important; align-items: center; justify-content: center; gap: .5rem;
+            padding: .68rem 1.5rem !important;
+            background: linear-gradient(180deg, var(--ins-primary), var(--ins-primary-d)) !important;
+            color: #fff !important;
+            border: 0 !important;
+            border-radius: var(--ins-r-sm) !important;
+            font: inherit; font-size: .9rem; font-weight: 600;
+            cursor: pointer;
+            box-shadow: 0 10px 22px -12px rgba(124,92,255,.95);
+            transition: transform .12s, box-shadow .15s, filter .15s;
+        }
+        .ins-page form button[name]:hover{ filter: brightness(1.08); box-shadow: 0 14px 26px -12px rgba(124,92,255,1); }
+        .ins-page form button[name]:active{ transform: translateY(1px); }
+        .ins-page form button[name]:focus-visible{ outline: 2px solid #fff; outline-offset: 2px; }
+        .ins-page form button[name="complete"]{
+            background: linear-gradient(180deg, #3fcf94, #2fae7a) !important;
+            box-shadow: 0 10px 22px -12px rgba(63,207,148,.95);
+        }
+        /* the refresh control is a secondary toolbar, not a stage card */
+        .ins-page .installation-pane > form[method="get"]{
+            display: flex !important;
+            justify-content: flex-end;
+            align-items: center;
+            width: 100% !important;
+            margin: 0 0 .9rem;
+            padding: 0 !important;
+            background: none !important;
+            border: 0 !important;
+            box-shadow: none !important;
+        }
+        .ins-page form button[name="refresh"]{
+            display: inline-flex !important; align-items: center; justify-content: center;
+            gap: .4rem;
+            width: auto !important;
+            min-width: 0 !important;
+            padding: .45rem .85rem !important;
+            background: rgba(255,255,255,.05) !important;
+            color: var(--ins-muted) !important;
+            border: 1px solid var(--ins-line) !important;
+            border-radius: 100vh !important;
+            font-size: .78rem; font-weight: 500;
+            box-shadow: none !important;
+            float: none !important;
+        }
+        .ins-page form button[name="refresh"]:hover{
+            color: var(--ins-text) !important;
+            border-color: var(--ins-line-2) !important;
+            background: rgba(255,255,255,.09) !important;
+            filter: none;
+        }
+        .ins-page form button[name="refresh"]::after{ content: "Restart setup"; }
+
+        /* submit rows */
+        .ins-page .form-field .flex-r,
+        .ins-page .in-flex-full.flex-r{
+            justify-content: flex-end;
+            background: none !important;
+            border-top: 1px solid var(--ins-line);
+            margin-top: 1.2rem;
+            padding: 1.1rem 0 0 !important;
+        }
+        .ins-page fielset,
+        .ins-page fieldset{ border: 0 !important; background: none !important; padding: 0 !important; margin: 0; }
+
+        /* ------------------------------------------------- messages & sections */
+        .ins-page .c-red,
+        .ins-page .c-red-d,
+        .ins-page .c-red-dd:not(.header .c-red-dd){ color: var(--ins-danger) !important; }
+        .ins-page .c-red:not(:empty){
+            display: block;
+            background: rgba(255,122,122,.1);
+            border: 1px solid rgba(255,122,122,.3);
+            border-radius: var(--ins-r-sm);
+            padding: .65rem .9rem;
+            margin-bottom: 1rem;
+            font-size: .86rem;
+        }
+        /* raw driver reason, shown offline only — secondary to the explanation */
+        .ins-page .ins-reason{
+            display: block;
+            margin-top: .4rem;
+            padding-top: .4rem;
+            border-top: 1px dashed rgba(255,122,122,.25);
+            color: var(--ins-faint);
+            font-family: ui-monospace, "Cascadia Code", Consolas, monospace;
+            font-size: .76rem;
+            word-break: break-word;
+        }
+        .ins-page .resource-watch,
+        .ins-page .resource-meta{
+            padding: 1rem 0;
+            border-top: 1px solid var(--ins-line);
+        }
+        .ins-page .resource-header{ border-bottom: 1px solid var(--ins-line); }
+        .ins-page .c-orange-d,
+        .ins-page .c-orange-dd{ color: var(--ins-accent) !important; }
+
+        /* ------------------------------------------ step 3: the column picker */
+        /* a panel whose first block is not .header still needs a card title */
+        .ins-page .installation-pane > div > div:first-child:not(.header):not([role="group"]){
+            font-size: 1.12rem;
+            font-weight: 600;
+            color: var(--ins-text);
+            padding: 0 0 .9rem;
+            margin-bottom: 1.1rem;
+            border-bottom: 1px solid var(--ins-line);
+        }
+        .ins-page .installation-pane > div > div:first-child .font-em-d85{
+            display: block;
+            margin-top: .35rem;
+            font-size: .82rem !important;
+            font-weight: 400;
+            color: var(--ins-muted);
+        }
+
+        /* "varchar fields" / "bit fields" category headings */
+        .ins-page .installation-pane [role="group"].flex-btn-full{
+            display: block !important;
+            background: none !important;
+            border: 0 !important;
+            padding: 1.2rem 0 .5rem !important;
+            margin: 0 !important;
+        }
+        .ins-page .installation-pane [role="group"].flex-btn-full > button{
+            all: unset;
+            display: block;
+            font-size: .72rem;
+            font-weight: 600;
+            letter-spacing: .12em;
+            text-transform: uppercase;
+            color: var(--ins-faint);
+            cursor: default;
+        }
+
+        /* one selectable row per column */
+        .ins-page .installation-pane [role="group"].i-flex-full{
+            display: flex !important;
+            align-items: center;
+            gap: .65rem;
+            background: rgba(255,255,255,.02) !important;
+            border: 1px solid var(--ins-line);
+            border-radius: var(--ins-r-sm);
+            padding: .5rem .8rem !important;
+            margin: 0 0 .35rem !important;
+            transition: background .15s, border-color .15s;
+        }
+        .ins-page .installation-pane [role="group"].i-flex-full:hover{
+            background: rgba(255,255,255,.05) !important;
+            border-color: var(--ins-line-2);
+        }
+        .ins-page .installation-pane [role="group"].i-flex-full:has(input:checked){
+            background: rgba(124,92,255,.1) !important;
+            border-color: rgba(124,92,255,.45);
+        }
+        .ins-page .installation-pane [role="group"].i-flex-full label{
+            flex: 1 1 auto;
+            margin: 0;
+            padding: 0 !important;
+            background: none !important;
+            color: var(--ins-muted) !important;
+            font-size: .85rem;
+            cursor: pointer;
+        }
+        .ins-page .installation-pane [role="group"].i-flex-full:has(input:checked) label{ color: var(--ins-text) !important; }
+        .ins-page .installation-pane [role="group"] .c-orange-d{ color: var(--ins-accent) !important; }
+
+        /* footer row of a stage: right aligned, ruled off from the list above */
+        .ins-page .installation-pane [role="group"]:has(> * button[name]),
+        .ins-page .installation-pane [role="group"]:has(> button[name]){
+            display: flex !important;
+            flex-wrap: wrap;
+            justify-content: flex-end;
+            align-items: center;
+            gap: .75rem;
+            background: none !important;
+            border: 0 !important;
+            border-top: 1px solid var(--ins-line) !important;
+            border-radius: 0 !important;
+            margin: 1.3rem 0 0 !important;
+            padding: 1.1rem 0 0 !important;
+        }
+        /* framework spacer cells carry background classes — drop the empty ones */
+        .ins-page .installation-pane [role="group"] > span:empty{ display: none !important; }
+
+        /* --------------------------------------- step 4: resource configuration */
+        .ins-page .resource-watch > div:first-child,
+        .ins-page .resource-meta > div:first-child{
+            font-size: .95rem !important;
+            font-weight: 600;
+            color: var(--ins-text);
+            padding: 0 0 .25rem !important;
+        }
+        .ins-page .resource-watch > div:nth-child(2),
+        .ins-page .resource-meta > div:nth-child(2){
+            font-size: .82rem !important;
+            color: var(--ins-muted) !important;
+            margin-bottom: .7rem;
+        }
+        .ins-page .resource-watch [role="group"],
+        .ins-page .resource-meta [role="group"]{
+            display: flex !important;
+            flex-wrap: wrap;
+            gap: .5rem;
+            background: none !important;
+            border: 0 !important;
+            padding: 0 !important;
+        }
+        .ins-page .resource-watch [role="group"] > span,
+        .ins-page .resource-meta [role="group"] > span{
+            background: rgba(255,255,255,.04) !important;
+            padding: .4rem .9rem !important;
+        }
+        /* the closing note about the icore folder reads as an aside */
+        .ins-page .installation-pane > form .padd-2{
+            display: block;
+            background: rgba(255,171,69,.07);
+            border: 1px solid rgba(255,171,69,.2);
+            border-left: 3px solid var(--ins-accent);
+            border-radius: var(--ins-r-sm);
+            padding: .8rem .95rem !important;
+            margin: 1.4rem 0 0 !important;
+            font-size: .82rem !important;
+            color: var(--ins-muted) !important;
+            line-height: 1.6;
+        }
+        .ins-page .installation-pane > form .padd-2 b{ color: var(--ins-text); }
+
+        /* --------------------------------------------------------- responsive */
+        @media (max-width: 620px){
+            .ins-page .form-field label.flex-ico,
+            .ins-page .form-field button.flex-ico{ width: 100% !important; min-width: 0 !important; }
+            .ins-page .form-field input[type="text"]{ flex: 1 1 100%; }
+            .ins-step-label{ display: none; }
+            .ins-step{ flex: 1 1 auto; min-width: 0; justify-content: center; }
+        }
+        @media (prefers-reduced-motion: reduce){
+            .ins-page *{ transition: none !important; animation: none !important; }
+        }
+        </style>
+CSS;
+    }
+
+    public function content() {
+
+        $content  = $this->content;
+        $favicon  = DomUrl('res/main/images/icons/favicon.png');
+        $mark     = DomUrl('res/main/images/icons/favicon-white.png');
+        $home     = DomUrl();
+        $headers  = \Ress::import('headers');
+        $styles   = $this->styles();
+        $rail     = $this->progressRail();
+
+        $htmlcontent = <<<HTML
         <!DOCTYPE html>
         <html lang="en">
         <head>
             <meta charset="UTF-8">
             <meta name="viewport" content="width=device-width, initial-scale=1.0">
-            <link rel="icon" href="'.DomUrl('res/main/images/icons/favicon.png').'">
+            <link rel="icon" href="{$favicon}">
             <title>Installer</title>
-            '.$imports.'
-            <style>
-                .fset{
-                    width: 50%; 
-                }
-
-                .form-field label {
-                    background-color: rgba(var(--deep-blue));
-                    color:white;
-                }
-
-                .form-field button {
-                    background-color: rgba(var(--deep-blue));
-                    color:white;
-                }
-                .form-field label + input {
-                    background-color: rgba(var(--deep-blue), var(--bco-7));
-                    color:white;
-                }
-            </style>
-            
+            {$headers}
+            {$styles}
         </head>
-        <body class="font-em-1 c-silver-dd bc-deeper-blue">
-            
-            <header class="bc-deep-blue-dd c-white font-em-2 pxs-20 relative flex-full pxv-10 midv">
-            <div class="box ico-spin rad-r bd-4 bd-orange pxv-2 wid-fit mxr-10">
-                <a href="'.DomUrl().'" class="flex midv pull-left rad-r">
-                <div class="favicon-r px-40 anc-btn-link b-cover ico-spin" style="background-image:url(\'res/main/images/icons/favicon-white.png\')"></div>
+        <body class="ins-page">
+
+            <header class="ins-top">
+                <a href="{$home}" class="ins-brand">
+                    <span class="ins-mark" style="background-image:url('{$mark}')"></span>
+                    <span class="ins-word">SPOOVA</span>
                 </a>
-            </div> 
-            <div class="flex midv fb-7 helvetica nunito relative" style="top:-.1em">SPOOVA</div>
+                <span class="ins-sub">Installer</span>
             </header>
 
-            <div class="content">
-                <section class="installation-pane pxv-10 in-flex-full" style="flex-wrap: wrap;">
+            <div class="ins-wrap">
 
-                    '.$content.'
+                {$rail}
 
-                </section>    
+                <div class="content">
+                    <section class="installation-pane">
+                        {$content}
+                    </section>
+                </div>
+
             </div>
 
         </body>
         </html>
-        ';    
+        HTML;
 
         return $htmlcontent;
 

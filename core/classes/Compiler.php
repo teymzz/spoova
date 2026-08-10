@@ -2,17 +2,41 @@
 
 namespace spoova\mi\core\classes;
 
+use Error;
 use Closure;
+use Throwable;
+use ErrorHandler;
+use ReflectionFunction;
+use spoova\mi\core\classes\Slicer;
+use spoova\mi\core\classes\CompilerManager;
+use spoova\mi\core\classes\Bundle\Filemanager\Filemanager;
 
 class Compiler {
 
-    private $base;
-    private $file;
+    /**
+     * Defines the base dump or storage compilation directory for rex file 
+     *
+     * @var string|boolean
+     *  - FALSE (default) : uses the rex file storage directory (i.e core/storage).
+     *  - TRUE : uses the rex file current directory
+     *  - string: uses the custom directory specified 
+     */
+    private string|bool $base = false;
+    private string $file = '';
     private $content = '';
     private static $addRex = '';
+    private bool $addTemplate = false;
+    private static $rexFile = '';
+    private static $failedRex = '';
     private $activity = 'default';
     private array $args = [];
     private array $rexdata = [];
+
+    /**
+     * Stores internal compiler managers
+     *
+     * @var CompilerManager[]
+     */
     private array $managers = [];
 
     /**
@@ -34,37 +58,72 @@ class Compiler {
         
     }
 
-    function addmanager(CompilerManagers $Manager) {
+    function addmanager(CompilerManager $Manager) {
 
       $this->managers[] = $Manager;
 
     }
     
     /**
-     * This is used to specify the storage path for rex file only. 
-     * This should only be used after Compiler::setFile() is called.
+     * This is used to specify the base or real storage path for the compiled rex file only. 
+     *  - This should only be used after Compiler::setFile() is called.
      *
-     * @param string $filebase storage path for rex file
+     * @param string|bool $filebase storage path for rex file
+     *  - TRUE: specifies the dumping to the same directory as the rex file
+     *  - FALSE or empty string: dumps to the default storage directory
+     *  - '...': ellipses string dumps to the path defined or assumed (from base file) 
+     *    using a global path format (i.e starting from the root of the application)
      * @return Compiler
      */
-    function setBase(string $filebase) : Compiler{
+    function setBase(string|bool $filebase) : Compiler{
         $this->base = $filebase;
         return $this;   
     }
 
     /**
      * This will set the source rex file path and storage path by default.
-     *
-     * @param string $file path of rex file
+     *  - Rex files should not have any dots in their file names except the '.rex.php' reserved extension name.
+     *   
+     * @param string $file path of rex file 
+     *  - By default path supplied is assigned a prefix of 'windows/Rex' directory unless a suffix of three 
+     *    dots '...' is appended on the path forcing the direct use of path supplied.
+     * 
+     * @param string|bool $base compiled file storage path.
+     *  - Storage path for compiled file. 
+     * 
      * @return Compiler
      */
-    function setFile(string $file) : Compiler {
+    function setFile(string $file, string|bool $base = false) : Compiler {
+        self::$rexFile = $file;
         $this->file = $this->base = $file;   
+        $this->base = $base;
         return $this;
+    }
+
+    /**
+     * This will return the rex base file path .
+     *
+     * @return string
+     */
+    function getFile() : string {
+        return $this->file;
+    }
+
+    /**
+     * This will return the source rex file path.
+     *
+     * @return string
+     */
+    static function currentFile() : string { 
+        return self::$rexFile;
+    }
+
+    static function failedRex() : string { 
+        return self::$failedRex;
     }
     
     /**
-     * Instance of compiler
+     * Parses arguments into compiler
      *
      * @param array $args
      * @return Compiler
@@ -72,6 +131,15 @@ class Compiler {
     function setArgs(array $args) : Compiler {
         $this->args = $args;        
         return $this;   
+    }
+    
+    /**
+     * Retrieves arguments parsed into compiler
+     *
+     * @return array
+     */
+    function getArgs() : array {
+        return $this->args ?? [];
     }
 
     /**
@@ -86,7 +154,10 @@ class Compiler {
      */
     function compile(array|string $arg1 = [], array|string $arg2 = ''): Compiler|False {
 
-      //slice data into url ... 
+      // no template compilation / scaffolding / cache-write during a route scan
+      if(RouteInspector::capturing()) return false;
+
+      //slice data into url ...
       $fargs = func_num_args();
 
       if($fargs == 1){
@@ -127,16 +198,27 @@ class Compiler {
     function body(string $content) : Compiler {
       //slice data into url ... 
       $this->setActivity('body');
-
-      foreach($this->managers as $manager) {
-
-        $content = $manager->render($content);
-
-      }
       
       $this->content = $content;
 
       return $this;
+    }
+
+    /**
+     * Defines new custom directives
+     *
+     * @param string $name name of directive
+     * @param callable $callback handler 
+     * @return void
+     */
+    public static function directive(string $name, callable $callback){
+      $directives = Slicer::directives();
+      if(!$name || (strpos($name, ' ') !== false)) throw new Error('directive name "'.$name.'" is not allowed');
+      $directiveName = strtolower($name);
+      if(in_array($directiveName, $directives)){
+        throw new Error('directive name "'.$name.'" already exists');
+      }
+      Slicer::new_directive($name, $callback);
     }
 
     /**
@@ -151,14 +233,14 @@ class Compiler {
 
     }
 
-
     protected function resolve() : string {
 
         $rexFile = $this->rexdata();
 
-        $template = $this->raw($rexFile);
-        
-        //create file, buffer and return data... 
+        self::$rexFile = $rexFile['location'];
+      
+        $template = $this->fetchraw($rexFile);
+       //create file, buffer and return data... 
        return $this->create_storage($rexFile['storage'], $template);
 
     }
@@ -167,6 +249,7 @@ class Compiler {
      * Returns the raw data obtained from template file before processing
      *
      * @return string
+     * 
      */
     public function raw() : string {
       return $this->fetchraw();
@@ -201,21 +284,24 @@ class Compiler {
           $data = file_get_contents(E_CSRF.'.rex.php');
           $template = Slicer::slice($data)->data();  
         }elseif(!$isScreen) {
-          
           if(!is_file($file)) {
-            if(is_dir($fileUrl) && is_file($fileUrl.DS.basename($fileUrl).'.rex.php')){
+            if((Init::key('COMPONENT_DIRECT') === 'FALSE') && is_dir($fileUrl) && is_file($fileUrl.DS.basename($fileUrl).'.rex.php')){
               $file = $fileUrl.DS.basename($fileUrl).'.rex.php';
-            }elseif((Init::key('WEBVIEW') === 'NO_BLANKS') && is_file(_core.'/custom/errors/e-blank')){
+            }elseif((Init::key('COMPONENT_VIEW') === 'NO_BLANKS') && is_file(_core.'/custom/errors/e-blank.rex.php')){
 
-              $file = _core.'/custom/errors/e-blank';
+              self::$failedRex = $file;
+              $file = _core.'/custom/errors/e-blank.rex.php';
 
-            }elseif(self::$addRex){
+            }elseif(self::$addRex || $this->addTemplate){
               //create a rex file if it does not exist (use template or throw error)
               if(!self::useTemplate($file, $fileLoc)) return false;
             }
+          }elseif($this->addTemplate){
+              //create a rex file if it does not exist (use template or throw error)
+              if(!self::useTemplate($file, $fileLoc)) return false;
           }
-            
-            $template = Slicer::slice(Slicer::loadTemplate($file, $args))->data();
+
+          $template = Slicer::slice(Slicer::loadTemplate($file, $args))->data();
 
         }
 
@@ -228,6 +314,7 @@ class Compiler {
       }      
       
       Slicer::unsort_escapes($template);
+
       return $template;
 
     }
@@ -244,7 +331,7 @@ class Compiler {
 
         //push to file and return data 
 
-        $Filemanager = new FileManager;
+        $Filemanager = new Filemanager;
         $realFile    = $storage;
 
         if($Filemanager->openFile(true, $realFile)){
@@ -252,28 +339,31 @@ class Compiler {
             //get lastmodified of $path;
             if(file_exists($realFile)){
             
-            //get contents of real file
-            $realcontents = file_get_contents($realFile);
+              //get contents of real file
+              $realcontents = file_get_contents($realFile);
 
-            clearstatcache(true, $realFile);
-
-            if($realcontents !== $content){
-
-                file_put_contents($realFile, $content);
-
-            }
-
-            //for each
-            foreach($this->args as $arg => $argval){
-              if($arg != 'this'){
-                $$arg = $argval;
+              clearstatcache(true, $realFile);
+              
+              if($realcontents !== $content){
+                  file_put_contents($realFile, $content);
+                  clearstatcache(true, $realFile);
               }
-            }
-                
-            ob_start();
-            include($realFile);
-            $content = ob_get_clean(); //updated content
-            $this->content = $content;
+
+              foreach($this->args as $arg => $argval){
+                if($arg != 'this'){
+                  $$arg = $argval;
+                }
+              }
+              
+              try{
+                ob_start();
+                include($realFile);
+                $content = ob_get_clean();
+              }catch(Throwable $e){
+                ErrorHandler::handleTemplate($e);
+              }
+
+              $this->content = $content;
 
             }
     
@@ -285,10 +375,27 @@ class Compiler {
     private function rexdata() : array {        
         
         $file = $this->file ?: $this->base;
-        $base = to_frontslash($this->base ?: '', true); //storage base
+        $base = $this->base; //storage base
+        if(str_ends_with($file, '....')) throw new Error('invalid rex file path format');
+        $fpath = to_dirslash(trim($file,'./\\'), true);
+        $folderPath = 'default'; // use 'core/storage' default path
+
+        if($base === FALSE){
+          $base = $fpath? $fpath : '';
+        }elseif($base === TRUE){
+          // use current rex path (same)
+          $folderPath = 'same';
+          $prefix = str_ends_with($file,'...')? '' : WIN_REX;
+          $base = $prefix.$fpath; // use same rex folder (default rex path + relative path) ->
+        }elseif(is_string($base)){
+          $folderPath = 'global'; // use the custom path defined along with the file name 
+          $base = trim(to_frontslash($base, true), '/');
+          if($base) $base .= DS;
+          $base .= basename($fpath);
+        }
 
         if(empty($file)){
-          EInfo::trigger('no file supplied for compiler', true);
+          throw new Error('no file supplied for compiler'); // used because EInfo not showing debugger info box
           return [];
         }
 
@@ -300,21 +407,43 @@ class Compiler {
 
         //set default determinant for escaped rex file url
         $escape = false;
+        $createFile = false;
 
         //determine screen and load ... 
-        $isScreen = ((substr($base, 0, 2) === '::') && !in_array($base, $reserved));
+        $isScreen = ((str_starts_with($base, '::')) && !in_array($base, $reserved));
  
-        if($isScreen){ $file = substr($base, 2, strlen($base)); }
+        if($isScreen){ $file = substr($base, 2); }
 
-        $rexpath = rtrim($file,'/');
+        $rexpath = rtrim($file,'./');
         $rexpath = str_replace('.','/', $rexpath);
-        
-        if(strpos($file, docroot, 0) === false){        
-          $file = $fileUrl = docroot.DS.WIN_REX.$rexpath;
+
+        if(($global = str_ends_with($file,'...')) || (str_ends_with($file,'..'))) {
+          if($global){
+            $file = docroot.DS.substr($file, 0, strlen($file) - 3);
+          }else{
+            $file = docroot.DS.WIN_REX.substr($file, 0, strlen($file) - 2);
+          }
+          $file = to_dirslash($file, true);
+          $createFile = true;
+        }
+
+        if(strpos($file, docroot, 0) === false){      
+          $file = $fileUrl = docroot.DS.WIN_REX.ltrim($rexpath,'/\\'); 
         }else{
           //allow full paths
           $file = $fileUrl = $file; $escape = true;
-          $rexpath = explode(docroot, rtrim($file, '.rex.php'), 2)[1];
+          $trimFile = str_ends_with($file, '.rex.php')? substr($file, 0, strlen($file) - 8) : $file;
+          $trimFile = to_frontslash($trimFile);
+
+          $rexPath = to_frontslash(docroot.DS.WIN_REX);
+          $rootPath = to_frontslash(docroot);
+
+          if(str_starts_with($rexPath, $trimFile)){
+            $rexpath = explode($rexPath, $trimFile, 2)[1];
+          }else{
+            $rexpath = explode($rootPath, $trimFile, 2)[1];
+          }
+
         }
 
         if($rexpath == '::404'){
@@ -328,13 +457,26 @@ class Compiler {
         }else{
           $storage = $base;
         }
+        $storage = DS.ltrim($storage, '/\\');
 
-        $storage = _core.'storage/'.$storage.'.php';
-             
+        if($folderPath === 'default'){
+          $storage = _core.'storage'.$storage.'.php';
+        }else{
+          $storage = _root.$storage.'.php';
+        }
+        $storage = to_dirslash($storage);
         //convert file url to full rex file path
-        $file = !$escape? Slicer::sliceUrl($fileUrl): $file;
+        $file = !$escape || $createFile? Slicer::sliceUrl($fileUrl): $file;
 
-        return $this->rexdata = [
+        if($createFile && !is_file($file)){
+          $this->addTemplate = true;
+          $Filemanager = new Filemanager;
+          if(!$Filemanager->openFile(true, $file)){
+            throw new Error('auto template file creation denied.');
+          }
+        }
+   
+        $rexdata = $this->rexdata = [
           'location' => to_dirslash($rexpath), //assumed path of file within rex folder (without extension)
           'path' => to_dirslash($fileUrl), // rex path (rex directory + location)
           'file' => to_dirslash($file),    // rex file (rex path + rex extension)
@@ -342,34 +484,34 @@ class Compiler {
           'format' => $format,
           'storage' => to_dirslash($storage)
         ];
-
+        return $rexdata;
     }
 
     /**
      * Use default template syntax
      *
      * @param string $file
-     * @param string $fileName
-     * @param string $addRex
+     * @param string $rexpath path of rex file 
      * @return bool
      */
     private function useTemplate($file, $rexpath) : bool {
 
         $addRex = self::$addRex;
-  
-        if($addRex){
+        $addRex2 = $this->addTemplate;
+
+        if($addRex || $addRex2){
 
           self::$addRex = false;
+          $this->addTemplate = false;
 
           //create rex file... 
-          $Filemanager = new FileManager;
+          $Filemanager = new Filemanager;
           if($Filemanager->openFile(true, $file)){
   
             $fileName = pathinfo($file, PATHINFO_FILENAME);
             $fileName = substr($fileName, 0, strlen($fileName) - 4);
-  
-            if(is_string($addRex) && is_file(docroot.'/windows/Rex/'.to_frontslash($addRex, true).".rex.php") ) {          
-                      
+            
+            if(is_string($addRex) && ((str_ends_with($addRex,'...') && is_file(_root.substr($addRex, 0, -3).'.rex.php')) || (is_file(_root.'/windows/Rex/'.to_frontslash($addRex, true).".rex.php"))) ) {          
               $template = <<<Template
               @template('$addRex')
   
@@ -377,7 +519,6 @@ class Compiler {
   
               @template;
               Template;
-  
             }  else {
   
               $template = <<<Template
@@ -399,10 +540,11 @@ class Compiler {
             }   
           
             file_put_contents($file, $template);
-  
+            redirect(window('base'));
           }
           monitor();
         }
+        if($addRex2) return false;
         return EInfo::view('Template file: <i><u>'.Slicer::sliceUrl($rexpath).'</u></i> does not exists. Ensure your template file is of php extension within "rex" directory');                
   
       }
@@ -425,22 +567,44 @@ class Compiler {
        * @return Compiler|String
        */
       public static function read(string $path, Closure|False|String $callback = '') : Compiler|String {
-        
+
+        // return nothing during a route scan (no compile/scaffold/cache)
+        if(RouteInspector::capturing()) return '';
+
         if($callback instanceof Closure){
-          $caller = $callback();
+
+          $reflection = new ReflectionFunction($callback);
+          $parameters = $reflection->getParameters();
+          $dependencies = [];
+
+          foreach($parameters as $parameter){
+
+            $dependenceClass = (string) $parameter->getType();
+
+            if(class_exists($dependenceClass) && !in_array($dependenceClass, ['bool','float','int','string', 'mixed'])){
+              $dependencies[] = new $dependenceClass();
+            }
+
+          }
+
+          //execute callback and return value
+
+          $caller = $reflection->invokeArgs($dependencies);
+          
           if($caller instanceof Compiler){
-            $caller->setBase($path);
+            $caller->setFile($path)->setBase(false);
             return $caller; 
           }else{
             $Compiler = new Compiler();
-            $Compiler->setBase($path);
-            $Compiler->body($callback());
+            $Compiler->setFile($path)->setBase(false);
+            $Compiler->body($caller);
             return $Compiler;
           }
+          
         } else if (func_num_args() == 1) {
   
             $Compiler = new Compiler();
-            $Compiler->setBase($path);
+            $Compiler->setFile($path)->setBase(false);
             $Compiler->compile([]);
             return $Compiler;        
   
@@ -448,6 +612,5 @@ class Compiler {
         return '';
         
       }
-
 
 }

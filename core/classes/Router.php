@@ -2,23 +2,25 @@
 
 namespace spoova\mi\core\classes;
 
-use Window;
+use spoova\mi\core\classes\Bundle\Filemanager\Filemanager;
+use spoova\mi\core\classes\Request;
+use spoova\mi\core\classes\Response;
 
 class Router extends Slicer{
 
-    public $request;
-    protected $method;
-    public $response;
-    protected $routes = [];
-    protected $data = '';
+    public ?Request $request = null;
+    protected string $method; // get, post, ...
+    public ?Response $response = null;
+    protected array $routes = [];
+    protected string $data = '';
     protected bool $methodset = false;
-    private $route = []; //details of the current route
-    private $errorFile = '';
+    private array $route = []; //details of the current route
+    private string $errorFile = '';
     
 
     /**
-     * @param \core\classes\Request $request
-     * @param \core\classes\Response $response
+     * @param Request $request
+     * @param Response $response
      * @return void
      */
     public function __construct(Request $request, Response $response)
@@ -81,9 +83,25 @@ class Router extends Slicer{
       return $this->method;
     }
 
+    /**
+     * Strip a trailing ".rex" and/or ".php" extension from a route path.
+     *
+     * Removes the exact suffixes only (".rex.php" -> "", ".php" -> "", ".rex" -> ""),
+     * unlike rtrim() which treats its argument as a character set and would wrongly
+     * shave trailing letters from extensionless paths (e.g. "/help" -> "/hel").
+     *
+     * @param string $path
+     * @return string
+     */
+    public static function stripRexExtension(string $path) : string {
+      if(str_ends_with($path, '.php')) $path = substr($path, 0, -4);
+      if(str_ends_with($path, '.rex')) $path = substr($path, 0, -4);
+      return $path;
+    }
+
     public function resolve(){
-      
-      $path = $this->request->getPath(); //path of file      
+
+      $path = $this->request->getPath(); //path of file
       $request = $this->request;
       $requestMethod  = $request->method();
       $routeMethod    = $this->method();
@@ -99,9 +117,7 @@ class Router extends Slicer{
         //get the first path after slash (/) later!!!
         $pathext = pathinfo($path, PATHINFO_EXTENSION);
 
-        //$epath = ($pathext == '' || $pathext === 'rex')? $path.'.php' : $path;
-        $path = rtrim($path, '.php');
-        $path = rtrim($path, '.rex');
+        $path = self::stripRexExtension($path);
 
         $filePath = $path.".rex.php";
 
@@ -109,7 +125,7 @@ class Router extends Slicer{
 
           //error => file does not exist
 
-          $this->response->setStatusCode(400); 
+          \response(400); 
         
           //if user error file is enabled
           if($this->errorFile && is_file($this->errorFile)){
@@ -179,7 +195,7 @@ class Router extends Slicer{
         $rexfile = str_replace(['/','\\'],'.', $rexfile);
 
         //create path in storage folder
-        $Filemanager = new FileManager;
+        $Filemanager = new Filemanager;
 
         $realFile = docroot.'/core/storage/mvc/'.$rexfile;
 
@@ -237,19 +253,11 @@ class Router extends Slicer{
       $mapper = to_frontslash(WIN_ROUTES).'.map';
 
       if(is_file($mapper)){
-
+        
         $contents = file_get_contents($mapper);
         
         $map = json_decode($contents, true);
-        
         $map = is_array($map)? $map : []; 
-
-        // if(array_key_exists("*", $map) && (count($map) > 1)) {
-
-        //   trigger_error('map file cannot use all "*" directive with other entries');
-        //   return [];
-
-        // }
 
         return $map;
 
@@ -264,14 +272,15 @@ class Router extends Slicer{
      *
      * @param string $url url to be mapped
      * @param array $map if supplied, will be used as map
-     * @return void
+     * @return string
      */
-    static function relate(string $url, array $map = []){
-
-      $url = ($map['*'] ?? '').$url;
-
+    static function relate(string $url, array $map = []) : string {
+      if(($test1 = isset($map['.*'])) || ((isset($map['*']) && $map && is_string($map['*']) && (strrev($map['*'])[0] !== '\\')))){
+        $url = $test1? $map['.*'] : $map['*']; 
+      }else{
+        $url = ($map['*'] ?? '').$url;
+      }
       return ucfirst($url);
-
     }
 
 }

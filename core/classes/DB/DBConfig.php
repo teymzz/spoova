@@ -17,7 +17,7 @@ namespace spoova\mi\core\classes\DB;
  */
 class DBConfig{
     
-    private static $message;
+    private static string|null $message = null;
     
     /**
      * Load the entire contents of the dbconfig file
@@ -42,9 +42,9 @@ class DBConfig{
     /**
      * Returns error message, if any.
      *
-     * @return void
+     * @return string|null
      */
-    static function response() {
+    static function response() : string|null {
         return self::$message;
     }
 
@@ -92,10 +92,11 @@ class DBConfig{
      * Generate a dbconfig build type. 
      *  -    Array values serial order [NAME, USER, PASS, SERVER, PORT, SOCKET] 
      *
-     * @param string $type  optional [icore|core]
-     * @param array $online offline database parameters
-     * @param array $offline online database parameters
+     * @param string $type optional [icore|core]
+     * @param array $online online database parameters
+     * @param array $offline offline database parameters
      * @return string
+     *  - If invalid $type option is entered, an empty string is returned
      */
     static function build(string $type, array $online, array $offline) : string {
 
@@ -130,6 +131,8 @@ class DBConfig{
              // NOTE: This file should not be edited or used for connection, override with custom dbconfig in "icore" directory.           
             CONFIG;
         }
+
+        return '';
 
     }
 

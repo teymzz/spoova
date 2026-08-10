@@ -6,23 +6,24 @@
 /**
  * This class is a used for building and applying meta tags to the pages. When used, it automatical sets the charset as UTF-8. Other values are added manually
  * 
- * @author Akinola Saheed <teymss@gmail.com>
+ * @author Akinola Saheed <akinolasaheed001@gmail.com>
  */
  class Meta{
     
-  	private $charset;
- 	private $rcontents;
- 	private $contents;
-	private $rendering;
-	private $meta_on = false;
+  	private string $charset;
+ 	private array $rcontents = [];
+ 	private array $contents = [];
+	private bool $rendering = false;
+	private bool $meta_on = false;
+	private bool $meta_dump = false;
 
 	/**
 	 * Initializes the meta class
 	 *
-	 * @param boolean $charset character set of meta tag
+	 * @param string $charset character set of meta tag
 	 */
- 	function __construct($charset = false){
- 		(func_num_args() > 0)? $this->charset($charset) :'';
+ 	function __construct(string|false $charset = false){
+ 		(func_num_args() > 0 && is_string($charset))? $this->charset($charset) :'';
  	}
 	
 	/**
@@ -33,7 +34,7 @@
 	 * @param string $charset
 	 * @return void
 	 */
- 	public function charset($charset = 'UTF-8'){
+ 	public function charset(string $charset = 'UTF-8'){
 		$this->meta_on = false;
  		$this->charset = $charset;
  		$this->rcontents[0] = ['meta'=>['charset'=>$charset]]; 
@@ -237,19 +238,23 @@
 	 * return or print saved data
 	 * This function should be used to add meta to page
 	 *
-	 * @param bool $type 
+	 * @param boolean $type 
 	 *   - true prints stored meta
 	 *   - false returns stored meta
+	 * @param boolean $once if set as false, will allow the returning or printing meta more than once
 	 */
-	public function dump(bool $type = false){
+	public function dump(bool $type = false, bool $once = true){
+	   if($this->meta_dump) return false;
 	   $contents = $this->contents;
 	   
 	   $metas = $contents? implode("\n", $contents) : '';
 	   if($type === true){
 		   print $metas;
+		   $this->meta_dump =true;
 		   return;
 	   }
 
+	   $this->meta_dump = true;
 	   $this->meta_on = true;
 	   return $metas;
 	}

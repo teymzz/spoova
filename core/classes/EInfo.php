@@ -27,9 +27,9 @@ class EInfo {
      * trigger error message without file options
      *
      * @param string $message error message
-     * @return boolean false
+     * @return false
      */
-    public static function view(string $message = '') : bool{
+    public static function view(string $message = '') : false {
         ErrorHandler::addFile(false);   
         trigger_error($message);
         return false;

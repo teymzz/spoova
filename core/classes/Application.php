@@ -3,15 +3,16 @@
 namespace spoova\mi\core\classes;
 
 use spoova\mi\core\classes\DB\DBMigrator;
+use spoova\mi\core\classes\Response;
 
 class Application{
    
-   public static $ROOT_DIR;
+   public static string $ROOT_DIR = '';
    private Router $router;
    public Request $request;
    public Response $response;
    public Notice $notice;
-   public static $app;
+   public static Application|null $app = null;
    public Controller $controller;
    public DBMigrator $dbbot;
 
@@ -24,7 +25,7 @@ class Application{
      self::$ROOT_DIR = (func_num_args() == 0)? domroot() : $rootDir;
      self::$app = $this;
      $this->request = new Request();
-     $this->response = new Response(); 
+     $this->response = Response::new(); 
      $this->notice   = new Notice();
      $this->router = new Router($this->request, $this->response);
      $this->setController(new Controller); 

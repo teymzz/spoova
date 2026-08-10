@@ -9,7 +9,7 @@ class FormField {
     private $id = '';    
     private $type = 'text';
     private $attrs = [];
-    private $class = 'i-flex-full';
+    private $class = ''; //field_class : applied on form input field
 
     /**
      * Initialize form class
@@ -57,7 +57,7 @@ class FormField {
             $attributes .= ' '.$attr.'="'.$attrval.'"';
         }
         
-        if($this->class) $class = ' class="'.$this->class.'" ';
+        $class = ($this->class)? ' class="'.$this->class.'" ' : '';
         
         $idattr = ' id="'.$id.'"';
         $attrs = trim($idattr.$attributes.$class, " ");

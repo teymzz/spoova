@@ -9,6 +9,7 @@
 namespace spoova\mi\core\classes;
 
 use spoova\mi\core\classes\DB\DBHandler;
+use spoova\mi\core\classes\Bundle\Filemanager\Filemanager;
 
 /**
  * - Contains information shared by current connection
@@ -30,11 +31,11 @@ abstract class SharedInfo{
    * @param boolean $conn a new DB connection 
    * @param DBHandler $dbhandler
    */
-  function __construct($conn = false, DBHandler $dbhandler = NULL){
+  function __construct($conn = false, ?DBHandler $dbhandler = null){
+
     if($conn === true) {
     
       $dbcon = new DB;
-
       if($dbh = $dbcon->openDB()){
         if($dbcon->active()){
           self::$dbc = $dbcon;
@@ -70,12 +71,12 @@ abstract class SharedInfo{
 
       if( (self::getDefined('_core')) and ($icore = self::getDefined('_icore')) )
       {
-        if(@class_exists(scheme('core\classes\FileManager')))
+        if(@class_exists(scheme('core\classes\Bundle\Filemanager\Filemanager')))
         {
 
             //read file
             self::$init_base = $icore.'init';
-            $fileManager = $this->fileManager = new FileManager;
+            $fileManager = $this->fileManager = new Filemanager;
             $fileManager->setUrl($icore."init");
             $fileManager->openFile($icore."init");
               
@@ -92,7 +93,7 @@ abstract class SharedInfo{
             self::$init = $init;
 
         } else {
-            exit('FileManager is missing!');
+            exit('Filemanager is missing!');
         }
       }
 
@@ -104,11 +105,11 @@ abstract class SharedInfo{
   /**
    * References the instance of current DBHandler and Database Connector Class
    *
-   * @param void $dbh
-   * @param void $dbc
+   * @param DBHandler|null $dbh
+   * @param DB|null $dbc
    * @return bool true if a connection exists
    */
-  public function getConnection(&$dbh, &$dbc = null){
+  public function getConnection(?DBHandler &$dbh = null, ?DB &$dbc = null){
 
     $dbc = self::$dbc;
     $dbh = self::$dbh;
@@ -156,7 +157,7 @@ abstract class SharedInfo{
    *
    * @return string
    */  
-  public static function tableName(){
+  public static function tablename(){
     return self::$init['USER_TABLE']?? '';
   }
 

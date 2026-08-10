@@ -4,17 +4,18 @@ namespace spoova\mi\core\classes\ErrorHandlers;
 
 use ArgumentCountError;
 use ErrorHandler;
-use spoova\mi\core\classes\Init;
+use spoova\mi\core\classes\Debug;
+use Throwable;
 
 class HandleExceptions extends ErrorHandler{
 
-    public function __construct(object $e = null)
+    public function __construct(?Throwable $e = null)
     {
-        if(php_sapi_name() !== 'cli'){
-            $this->handleExceptions(...func_get_args());
-        }else{
-            $this->handleCliExceptions(...func_get_args());
-        }
+        //response(510, 'some error occured', coded:false);
+        SET('spoova-exception', true);
+        self::handleExceptions(...func_get_args());
+        exit;
+        
     }
 
     /**
@@ -23,26 +24,23 @@ class HandleExceptions extends ErrorHandler{
      * @param object $e
      * @return void
      */
-    public static function handleExceptions(object $e = null) {
+    public static function handleExceptions(?Throwable $e = null) {
 
-        if(self::$err_displayed == self::$err_displays) return;
+        if(ob_get_level() > 0) ob_end_clean();
+
+        if(self::$err_displayed === self::$err_displays) return;
 
         // Detect type of error
         $constant = ucfirst(get_class($e)); 
-        $constant = ($constant == 'ParseError')? $constant : 'Error';
-        $exception = self::$exceptions[$constant];
 
+        $constant = ($constant == 'ParseError')? $constant : 'Error'; // Set Throwable name as ParseError or Error
+
+        $exception = self::$exceptions[$constant]; 
+
+        $backTrace = Debug::get(2, true) ?: Debug::traces(); // backtrace from 2 else backtrace all
         // Set error type
-        $error = self::$errors[$exception];
-
-        $err = [
-            'error'    => $error,
-            'message'  => $e->getMessage(),
-            'errfile'  => $e->getFile(),
-            'errline'  => $e->getLine(),
-            'errtrace' => $e->getTrace(), //debug backtrace
-            'handler'  => 'Exception'
-        ];
+        $error = self::errors[$exception];
+        $err = self::formatThrowable($e, ucfirst($error), $backTrace);
 
         // Get the first backtrace item
         $backTrace = (debug_backtrace(DEBUG_BACKTRACE_PROVIDE_OBJECT, 1));
@@ -61,7 +59,7 @@ class HandleExceptions extends ErrorHandler{
                 if($traceBuild['file'] && $traceBuild['line']){
                     $err['errfile'] = $traceBuild['file']; 
                     $err['errline'] = $traceBuild['line'];
-                    $err['errtrace'] = $errorTraces;
+                    $err['errtrace'] = $errorTraces; // modified stack trace
                 }
             }
 
@@ -82,6 +80,7 @@ class HandleExceptions extends ErrorHandler{
         $efile   = $exceptions['errfile']  ?? '';
         $eline   = $exceptions['errline']  ?? '';
         $etraces = $exceptions['errtrace'] ?? [];
+        $btraces = $exceptions['backtrace'] ?? [];
         $message = $exceptions['message']  ?? '';
 
         $traces = [];
@@ -100,27 +99,12 @@ class HandleExceptions extends ErrorHandler{
             }
 
         }, $etraces, array_keys($etraces));
-
-        self::webdisplay($error, $message, $efile, $eline, $traces);
-
-    }
-    
-    /**
-     * Resolve exceptions for cli environment
-     *
-     * @return void
-     */
-    static function handleCliExceptions($e = null){
-        $constant = ucfirst(get_class($e)); 
-        $constant = $constant == 'ParseError'? $constant : 'Error';
-        $exception = self::$exceptions[$constant];
-        $error = self::$errors[$exception];
-
-        $err = self::buildErrors(
-            $error, $e->getMessage(), $e->getFile(), $e->getLine(),
-            $e->getTrace(), 'Exception'
-        );
-        self::clidisplay($err);
+        $info = array_values(Debug::get(2, true));
+        if(count($info) < 2 && count($traces) > 1){
+            $btraces = $traces;
+        }
+        
+        self::webdisplay($exceptions, $error, $message, $efile, $eline, $btraces, $traces);
     }
 
 }

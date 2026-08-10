@@ -11,7 +11,7 @@ interface DBStaticInterface {
 
     public static function insert($data) : bool;
 
-    public static function delete(int $limit = null);
+    public static function delete(?int $limit = null);
 
     public static function tableName() : string;
 

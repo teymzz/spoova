@@ -1,24 +1,32 @@
 <?php
 
 namespace spoova\mi\core;
-use spoova\mi\core\classes\FileManager;
+use spoova\mi\core\classes\Bundle\Filemanager\Filemanager;
+use spoova\mi\core\classes\Bundle\Filemanager\FileTransfer;
+use spoova\mi\core\commands\Root\Cli;
 
 class Spv {
 
     static function init(){
 
-        $dir = './vendor/spoova';
+        $dir = './vendor/spoova/mi';
         
         if(is_dir($dir)){
-            $FileManager = new FileManager;
+            $Filemanager = new Filemanager;
+
+            if(!defined('br')) include_once 'core/basics.php';
     
-            $FileManager->setUrl($dir.'/mi');
+            $Filemanager->source($app, ['*','.']);
     
-            if($FileManager->moveContentsTo('./', ['vendor', 'mi', 'composer.json'])){
-    
-                //$FileManager->deleteFile($dir);
-    
+            $Filemanager->ignoredPaths([$app.'/vendor', $app.'/composer.json']);
+            
+            $Filemanager->moveContentsTo('./', function(FileTransfer $file) use(&$response){ $response = $file; });
+            
+            /** @var FileTransfer $response */
+            if($response->unresolved('count') > 1) {
+                Cli::errorView('some files were unresolved');
             }
+            
 
         }elseif(is_file('core/spoova.php')){
 

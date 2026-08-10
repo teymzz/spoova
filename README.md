@@ -29,17 +29,21 @@ Spoova is a PHP Framework that uses a Window-View-Model (WVM) pattern that is bu
    > Add the _composer.json_ file with the following json sample syntax along with the spoova version required
 
    ```json
-   {    
-        "description": "Spoova Framework",
-        "keywords": ["php framework", "framework", "spoova"],
-        "type": "project",
+   {
+        "name": "spoova/mi",
+        "description": "PHP Framework",
+        "type": "library",
         "license": "MIT",
         "require": {
-            "spoova/mi": "^2.6"
+            "spoova/mi": "^3.0"
         },
-        "require-dev": {
-            "phpunit/phpunit": "^9.5"
-        },
+        "authors": [
+            {
+                "name": "Akinola Saheed",
+                "email": "akinolasaheed001@gmail.com",
+                "role": "Web Developer"
+            }
+        ],
         "autoload": {
             "psr-4": {
                 "spoova\\mi\\": "./"
@@ -50,8 +54,17 @@ Spoova is a PHP Framework that uses a Window-View-Model (WVM) pattern that is bu
                 "php mi"
             ]
         },
-        "minimum-stability": "dev"
-   }
+        "minimum-stability": "dev",
+        "require": {
+            "php": ">=8.4"
+        },
+        "config":{
+            "platform-check": true
+        },
+        "require-dev": {
+            "phpunit/phpunit": "^9.5"
+        }
+    }
    ```
 
    > Run the command
@@ -115,4 +128,4 @@ Deploying a production-ready application requires the use of specially designed 
 
 ##### NOTICE
 
-1. The earlier spoova main project pack versions previously contained offline documentation. Starting from version 2.5, The documentation is now available on [spoova.com](https://www.spoova.com/docs)
+1. Spoova documentation is available on [spoova.com](https://www.spoova.com/docs)

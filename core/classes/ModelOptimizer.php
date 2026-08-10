@@ -3,6 +3,7 @@
 namespace spoova\mi\core\classes;
 
 use spoova\mi\core\classes\Collection;
+use spoova\mi\core\classes\DB\DBCollectors;
 
 class ModelOptimizer{
 
@@ -16,10 +17,11 @@ class ModelOptimizer{
     /**
      * Optimize collected data for get() method
      *
-     * @param Collectibles|Collection $data
+     * @param DBCollectors|Collection $data
+     * @param boolean $strict uses strict optimization.
      * @return ModelOptimizer|Collection
      */
-    static function optimize(Collectibles|Collection $data, bool $strict = true): ModelOptimizer|Collection
+    static function optimize(DBCollectors|Collection $data, bool $strict = true): ModelOptimizer|Collection
     {
         if(!$data->error()){
             return $data;
@@ -28,25 +30,32 @@ class ModelOptimizer{
         }
     }
 
-    function get(int|string $index, int|string|array $value = null) : bool|array {
-        if($value){
+    /**
+     * Undocumented function
+     *
+     * @param integer|string $index
+     * @param integer|string|array|null|null $value
+     * @return boolean|array
+     */
+    // function get(int|string $index, int|string|array|null $value = null) : bool|array {
+    //     if($value){
 
-            if(self::$strict) return false;
+    //         if(self::$strict) return false;
 
-            if(is_array($value)){
-                $valueFlip = array_flip($value);
+    //         if(is_array($value)){
+    //             $valueFlip = array_flip($value);
  
-                return array_map(function($val){
-                    return false;
-                }, $valueFlip);
-            }else{
-                return false;
-            }
-        }elseif(is_array($value)){
-            if(self::$strict) return false;
-            return [];
-        }
-        return false;
-    }
+    //             return array_map(function($val){
+    //                 return false;
+    //             }, $valueFlip);
+    //         }else{
+    //             return false;
+    //         }
+    //     }elseif(is_array($value)){
+    //         if(self::$strict) return false;
+    //         return [];
+    //     }
+    //     return false;
+    // }
 
 }

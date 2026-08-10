@@ -10,6 +10,7 @@ class DBConstruct {
      * Construct database table operation fields from array or string
      *
      * @param array|string $field
+     * @param bool $trailingComma TRUE appends a trailing comma when building fields
      * @return string
      */
     public static function Fields(array|string $field, bool $trailingComma = false) : string {

@@ -6,12 +6,12 @@ use Closure;
 use DBStatus;
 use spoova\mi\core\classes\DB;
 use spoova\mi\core\classes\DB\DBHandler;
-use spoova\mi\core\commands\Cli;
+use spoova\mi\core\commands\Root\Cli;
 
 class DBSCHEMA {
 
-    private static $DRAFT_SQL = '';
-    private static $DRAFT_TABLE = '';
+    private static string $DRAFT_SQL = '';
+    private static string $DRAFT_TABLE = '';
     private static DRAFT $DRAFT;
 
     /**
@@ -26,23 +26,27 @@ class DBSCHEMA {
         self::SET_TABLE($TABLE);
         $DRAFT = self::$DRAFT = new DRAFT('CREATE');
         $STRUCTURE = $FORMAT($DRAFT);
-        
         if(self::GET_DRAFT($NAME, $STRUCTURE)){
             self::DBCONNECT($dbc, $db);
+            
+            if($db){
 
-            $DRAFT = $STRUCTURE::BUILD($NAME);
+                /** @var DBHandler $db */
 
-            if(!DRAFT::hasError()){
-                $db->query($DRAFT);
-
-                if(!$db->process()){ 
-                    self::$DRAFT_SQL = (Cli::warn('DRAFT:', '|1').$DRAFT);
-                    return false;
-                }else{
-                    return true;
-                }      
+                $DRAFT = $STRUCTURE::BUILD($NAME);
+                
+                if(!DRAFT::hasError()){
+                    $db->query($DRAFT);
+    
+                    if(!$db->process()){ 
+                        self::$DRAFT_SQL = (Cli::warn('DRAFT:', '|1').$DRAFT);
+                        return false;
+                    }else{
+                        return true;
+                    }      
+                }
             }
-      
+            
         }
 
         return false;
@@ -58,10 +62,15 @@ class DBSCHEMA {
      * @return boolean
      */
     static function DROP_TABLE(string|object $TABLE) : bool{
+
+        /** @var DBHandler $db */
+        /** @var string $NAME */
+
         self::SET_TABLE($TABLE);
         if(self::GET_DRAFT($NAME)){ 
             if(!DRAFT::hasError()){
                 self::DBCONNECT($dbc, $db);
+
                 return $db->drop($NAME, true);
             }
         }
@@ -77,6 +86,10 @@ class DBSCHEMA {
      * @return void
      */
     static function DROP_FIELD(string|object $TABLE, string $FIELD){
+        
+        /** @var DBHandler $db */
+        /** @var string $NAME */
+
         self::SET_TABLE($TABLE);
         if(self::GET_DRAFT($NAME)){
             if(!DRAFT::hasError()){
@@ -89,6 +102,10 @@ class DBSCHEMA {
     }
 
     static function ALTER(string|object $TABLE, Closure $FORMAT) : bool {
+        
+        /** @var DBHandler $db */
+        /** @var string $NAME */
+
         self::SET_TABLE($TABLE);
         $DRAFT = self::$DRAFT = new DRAFT('ALTER');
         $STRUCTURE = $FORMAT($DRAFT);
@@ -113,8 +130,11 @@ class DBSCHEMA {
     }
 
     /**
-     * setup a new database connection
+     *  setup a new database connection
      *
+     * @param DB|null &$dbc
+     * @param DBHandler|null &$db
+     * @return void
      */
     private static function DBCONNECT(?DB &$dbc = null, ?DBHandler &$db = null){
        
@@ -170,10 +190,10 @@ class DBSCHEMA {
             if(method_exists($TABLE, 'table')){
                 $TABLE = $TABLE->table();
                 if(!is_string($TABLE)){
-                    DRAFT::callError(Cli::error('Schema "table" must be a string'), 0, '|2');         
+                    DRAFT::callError(Cli::error('Schema "table" must be a string'));         
                 }
             }else{
-                return DRAFT::callError(Cli::error('Schema object does not contain a "table" method!'), 0, '|2');
+                return DRAFT::callError(Cli::error('Schema object does not contain a "table" method!'));
             }
         }
         SELF::$DRAFT_TABLE = strtolower($TABLE);

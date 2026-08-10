@@ -1,148 +1,189 @@
-<?php 
+<?php
 
 namespace spoova\mi\core\classes;
 
+use Closure;
+use Exception;
+use ReflectionClass;
 use ReflectionMethod;
+use ReflectionNamedType;
+use ReflectionParameter;
+use ReflectionUnionType;
 
-class ContainerClass {
-
-    private static $class;
+class ContainerClass
+{
+    private static $instance;
     private static $order = 'dependencies';
-    private array $args = [];
+    private $bindings = [];
+    private $resolved = [];
+    private $lastResolvedClass;
+    private array $lastArgs = [];
 
-    function __construct($method, mixed $arguments)
+    // Singleton pattern to ensure only one instance of the container exists
+    public static function instance(): self
     {
+        if (self::$instance === null) {
+            self::$instance = new self();
+        }
+        return self::$instance;
+    }
 
-        $args = [];
+    // Bind services to the container
+    public function bind(string $abstract, $concrete = null, bool $shared = false)
+    {
+        $this->bindings[$abstract] = [
+            'concrete' => $concrete,
+            'shared' => $shared,
+        ];
+    }
 
-        if(method_exists(self::$class, $method)){
-            $Reflection = new ReflectionMethod(self::$class, $method);
-            $parameters = ($Reflection->getParameters());
-
-            $count = 0;
-
-            if(self::$order === 'dependencies'){
-
-                $args1 = [];
-
-                foreach($parameters as $key => $parameter) {
-
-                        $dependenceClass = (string) $parameter->getType();
-
-                        if($dependenceClass && !in_array($dependenceClass, ['bool','float','int','string', 'mixed'])){ 
-                            //add class
-                            $args1[] = new $dependenceClass();
-                        }
-
-                }
-
-                $args = array_merge($args1, $arguments ?? []);
-
-            } else {
-
-                foreach($parameters as $key => $parameter) {
-
-                        $dependenceClass = (string) $parameter->getType();
-
-                        if($dependenceClass){ 
-                            //add class
-                            $args[] = new $dependenceClass();
-                        }else{
-                            if(isset($arguments[$count])) {
-                                //add other arguments based on position
-                                $args[] = $arguments[$count];
-                                $count++; 
-                            }    
-                        }
-
-                }
-                
-                //overwrite parameter with arguments
-                foreach($arguments as $key => $argument) {
-                    $args[$key] = $argument;
-                }
-
-            }
-
+    // Resolve the service (instantiate it or return shared instance)
+    public function make(string $abstract, array $parsedArgs = [])
+    {
+        if (isset($this->resolved[$abstract])) {
+            return $this->resolved[$abstract];
         }
 
-        $this->args = $args; // array_merge($args, $arguments);
+        if (isset($this->bindings[$abstract])) {
+            $concrete = $this->bindings[$abstract]['concrete'];
+            
+            $instance = ($concrete instanceof Closure)
+                ? $concrete($this, $parsedArgs)
+                : $this->resolveClass($concrete, $parsedArgs);
+
+            if ($this->bindings[$abstract]['shared']) {
+                $this->resolved[$abstract] = $instance;
+            }
+
+            return $instance;
+        }
+
+        throw new Exception("Service [{$abstract}] not found in container.");
+    }
+
+    // Resolve a class and inject dependencies
+    private function resolveClass(string $class, array $parsedArgs = [])
+    {
+        $this->lastResolvedClass = $class;
         
+        $reflection = new ReflectionClass($class);
+        $constructor = $reflection->getConstructor();
+        $dependencies = $constructor ? $this->resolveDependencies($constructor->getParameters(), $parsedArgs) : [];
+        
+        $instance = $reflection->newInstanceArgs($dependencies);
+        $this->resolveMethodDependencies($instance);
+        $this->resolveStaticMethodDependencies($class);
+        
+        return $instance;
+    }
+
+    /**
+     * Resolve dependencies for constructor or methods
+     * @param ReflectionParameter[] $parameters
+     * @param array $parsedArgs
+     * @return array
+     */
+    private function resolveDependencies(array $parameters, array $parsedArgs = []): array
+    {
+        $dependencies = [];
+
+        foreach ($parameters as $parameter) {
+            $type = $parameter->getType();
+
+            if ($type instanceof ReflectionUnionType) {
+                // Handle union types, prioritize resolving class types
+                foreach ($type->getTypes() as $unionType) {
+                    if ($unionType instanceof ReflectionNamedType && !$unionType->isBuiltin()) {
+                        $dependencies[] = $this->make($unionType->getName(), $parsedArgs);
+                        continue 2;
+                    }
+                }
+            } elseif ($type instanceof ReflectionNamedType) {
+                if (!$type->isBuiltin()) {
+                    $dependencies[] = $this->make($type->getName(), $parsedArgs);
+                } else {
+                    $dependencies[] = $this->resolveParsedArgument($parameter, $parsedArgs);
+                }
+            } else {
+                $dependencies[] = $this->resolveParsedArgument($parameter, $parsedArgs);
+            }
+        }
+
+        return $dependencies;
+    }
+
+    /**
+     * Resolve primitive arguments (e.g., string, int, bool)
+     */
+    private function resolveParsedArgument(ReflectionParameter $parameter, array $parsedArgs = [])
+    {
+        $paramName = $parameter->getName();
+
+        if (array_key_exists($paramName, $parsedArgs)) {
+            return $parsedArgs[$paramName];
+        }
+
+        if ($parameter->isDefaultValueAvailable()) {
+            return $parameter->getDefaultValue();
+        }
+
+        return null;
+    }
+
+    // Resolve method dependencies (instance methods)
+    private function resolveMethodDependencies($instance)
+    {
+        $reflection = new ReflectionClass($instance);
+        foreach ($reflection->getMethods() as $method) {
+            if (!$method->isStatic() && $method->getNumberOfParameters() > 0) {
+                $methodDependencies = $this->resolveDependencies($method->getParameters());
+                $method->invokeArgs($instance, $methodDependencies);
+            }
+        }
+    }
+
+    // Resolve static method dependencies
+    private function resolveStaticMethodDependencies(string $class)
+    {
+        $reflection = new ReflectionClass($class);
+        foreach ($reflection->getMethods(ReflectionMethod::IS_STATIC) as $method) {
+            if ($method->getNumberOfParameters() > 0) {
+                $methodDependencies = $this->resolveDependencies($method->getParameters());
+                $method->invokeArgs(null, $methodDependencies);
+            }
+        }
     }
 
     /**
      * Set argument priority order
-     *
-     * @param string $order optional [dpendencies|arguments]
-     * @return void
+     * @param string $order [dependencies|arguments]
      */
-    static function setOrder(string $order = 'dependencies'){
-        $orders = ['dependencies', 'arguments'];
-
-        if(in_array($order, $orders)) {
+    public static function setOrder(string $order = 'dependencies')
+    {
+        if (in_array($order, ['dependencies', 'arguments'])) {
             self::$order = $order;
         }
     }
 
-    static function setClass($class) {
-        self::$class = $class;
-    }
-
-    static function getClass() : object {
-        return self::$class;
+    /**
+     * Get the last resolved class
+     */
+    public function getClass(): string
+    {
+        return $this->lastResolvedClass;
     }
 
     /**
-     * Returns true if a class name which is not an empty string has been set
-     *
-     * @return boolean
+     * Get the last parsed arguments
      */
-    static function defined() : bool {
-        $class = isset(self::$class)? self::$class : '';
-
-        if(is_object($class)){ return true; }
-        return (!empty(trim($class)));
+    public function args(): array
+    {
+        return $this->lastArgs;
     }
 
-    function args() : array {
-        return $this->args;
+    // Check if a service is bound
+    public function bound(string $abstract): bool
+    {
+        return isset($this->bindings[$abstract]);
     }
-
-    // private static function getArgs($method, $arguments) : array {
-
-        
-    //     $args = [];
-    //     print "<pre>";
-
-    //     if(method_exists(self::$class, $method)){
-    //         $Reflection = new ReflectionMethod(self::$class, $method);
-    //         $parameters = ($Reflection->getParameters());
-
-    //         $count = 0;
-            
-    //         foreach($parameters as $key => $parameter) {
-
-    //             // if(isset($arguments[$key])){
-    //             //     $args[$key] = $arguments[$key];
-    //             // }else {
-    //                 $dependenceClass = (string) $parameter->getType();
-    //                 //$args[$count] = $arguments[$count] ?? '';
-                    
-    //                 if($dependenceClass){ 
-    //                     $args[] = new $dependenceClass();
-    //                 }else{          
-    //                     $args[] = $arguments[$count] ?? '';
-    //                     $count++; 
-    //                 }
-    //                 // if(isset($arguments[$count])) unset($arguments[$count]);
-    //             // }
-
-    //         }
-
-    //     }
-
-    //     return $args; // array_merge($args, $arguments);
-    // }
-
-
 }

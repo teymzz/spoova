@@ -20,7 +20,7 @@ class IPHandler
       * @param string $type
       * @return void
       */
-     public function clientIP($type=null){
+     public function clientIP(?string $type = null){
           //$type: will be added later
           $this->userIP = $this->get_client_ip();
           return $this->userIP;
@@ -36,25 +36,6 @@ class IPHandler
                return false;
           }
      }
-
-     // /**
-     //  * Returns the information of an ip using geoplugin.net
-     //  *
-     //  * @param string $customIP
-     //  * @return mixed
-     //  */
-     // public function geoInfo($customIP = null){
-          
-     //      $user_ip = !is_empty($customIP)? $customIP : $this->clientIP();
-     //      if(!filter_var($user_ip,FILTER_VALIDATE_IP)){ return false; }
-          
-     //      try{
-     //           $geo = unserialize(@file_get_contents("http://www.geoplugin.net/php.gp?ip=$user_ip"));
-     //           return $geo;
-     //      }catch(\Exception $e){
-     //           return false;
-     //      }
-     // }
 
      private function get_client_ip()
      {
@@ -76,7 +57,8 @@ class IPHandler
 
                     // Header can contain multiple IP-s of proxies that are passed through.
                     // Only the IP added by the last proxy (last IP in the list) can be trusted.
-                    $client_ip = trim(end(explode(",", $_SERVER[$proxy_header])));
+                    $explode = explode(",", $_SERVER[$proxy_header]);
+                    $client_ip = trim(end($explode));
 
                     // Validate just in case
                     if (filter_var($client_ip, FILTER_VALIDATE_IP)) {

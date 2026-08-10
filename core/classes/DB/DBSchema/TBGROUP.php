@@ -2,19 +2,19 @@
 
 namespace spoova\mi\core\classes\DB\DBSchema;
 
-use spoova\mi\core\commands\Cli;
+use spoova\mi\core\commands\Root\Cli;
 
 trait TBGROUP {
 
 
     public static string $LASTCALLED = '';
     
-    protected static $error;
+    protected static string $error = '';
 
     /**
      * Type of DRAFT to be applied (e.g [ [CREATE] | [ALTER] | [ALTER, MODIFY] ]
      *
-     * @var string 
+     * @var array 
      */
     protected static array $TYPE = [];
 
@@ -31,8 +31,6 @@ trait TBGROUP {
      * @var string
      */
     public static string $fieldType = '';
-
-    // public static $formats = [];
 
     protected $uniqueFields = [];
 
@@ -120,14 +118,8 @@ trait TBGROUP {
             self::$TYPE[1] = $function;
         }
 
-        // if(isset(self::$TYPE[1])){
-        //     if(!in_array(self::$TYPE[1], $modifiers)){
-        //         self::$TYPE[1] = 'FIELDS';
-        //     }
-        // }
-
         if(!in_array($function, $accepted)){
-            return self::callError(Cli::error("invalid method [".Cli::warn($function)."] called within DBSCHEMA::{$TYPE}() on DRAFT"), 0, "|2");
+            return self::callError(Cli::error("invalid method [".Cli::warn($function)."] called within DBSCHEMA::{$TYPE}() on DRAFT"));
         }
     }
 
@@ -137,6 +129,7 @@ trait TBGROUP {
      * @return string
      */
     public static function BUILD() : string {
+        
         $TYPE = "BUILD_".(self::$TYPE[0]??'');
         return self::$TYPE(...func_get_args());
     }

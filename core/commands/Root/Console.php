@@ -3,14 +3,17 @@
 
 namespace spoova\mi\core\commands\Root;
 
+use Closure;
+use spoova\mi\core\classes\Bundle\Arr\Arr;
 use spoova\mi\core\commands\Root\Cli;
  
   /**
    * class Console 
    * 
-   * @author Akinola Saheed <teymss@gmail.com>
+   * @author Akinola Saheed <akinolasaheed001@gmail.com>
    * 
-   * Spoova custom console class for logging console
+   * Spoova custom console class for logging console. This class executes all 
+   * spoova's custom commands through the {@see Console::process_commands()} method.
    * 
    * Characters and Meanings.
    *  
@@ -21,6 +24,7 @@ use spoova\mi\core\commands\Root\Cli;
    * ( ++ ) directs console to add a new line (list).
    * 
    * NOTE: All lines added are automatically indented. This may not be accurate in some cases
+   * 
    */
  class Console{
 
@@ -31,7 +35,7 @@ use spoova\mi\core\commands\Root\Cli;
    */
   private static string $appName = '';
 
-  protected static $isLoading;
+  protected static ?bool $isLoading = null;
 
   /**
    * Maximum number of commands
@@ -43,7 +47,7 @@ use spoova\mi\core\commands\Root\Cli;
   /**
    * name of command supplied
    *
-   * @var array
+   * @var string
    */
   protected string $commandName = '';
 
@@ -59,7 +63,7 @@ use spoova\mi\core\commands\Root\Cli;
   /**
    * options of command supplied
    *
-   * @var string
+   * @var array
    */
   protected array $commandOptions = [];
   
@@ -88,13 +92,19 @@ use spoova\mi\core\commands\Root\Cli;
   
   private const base_eol = PHP_EOL.PHP_EOL;
 
-  public function __construct($appName = ''){
+  public function __construct(string $appName = ''){
 
       self::$appName = $appName;
 
   }
 
-  final public function addCommand($name) {
+  /**
+   * Set the name of the command to be added
+   *
+   * @param string $name
+   * @return void
+   */
+  final public function addCommand(string $name) {
     $this->directives[$name]['desc'] = '';
     $this->directives[$name]['options'] = [];
   }
@@ -173,9 +183,9 @@ use spoova\mi\core\commands\Root\Cli;
     $spacer = str_repeat(' ', $spaces[1]);
 
     if($count == 1){
-      print $br.$spacel.$message.$spacer.$br.$br; 
+      print $br.$spacel.$message.$spacer.$br; 
     }else{
-      print $spacel.$message.$spacer.$br.$br; 
+      print $spacel.$message.$spacer.$br; 
     }
 
   }
@@ -206,7 +216,15 @@ use spoova\mi\core\commands\Root\Cli;
 
   }
 
-  final function setInterval($func, $milliseconds){
+  /**
+   * Sets function to be loaded constantly exected as long as 
+   * the function returns a FALSE value.
+   *
+   * @param Closure $func
+   * @param integer $milliseconds
+   * @return void
+   */
+  final function setInterval(Closure $func, int $milliseconds){
     $seconds = (int) $milliseconds / 1000;
     $done = false;
     while(!$done){
@@ -221,7 +239,7 @@ use spoova\mi\core\commands\Root\Cli;
    * @param string $message
    * @return void
    */
-  final public static function notice( string $message = null){
+  final public static function notice(?string $message = null){
     $notice = self::$appName." notice: ";
     self::log(PHP_EOL.$notice.$message);
   }
@@ -233,7 +251,7 @@ use spoova\mi\core\commands\Root\Cli;
    * @param string $name
    * @return void
    */
-  final public static function error( string $message = null, string $name = '' ){
+  final public static function error(?string $message = null, string $name = '' ){
     if(self::$appName) self::$appName = "  ".self::$appName;
     $error = ($name)? self::$appName." error: ($name) " : self::$appName." error: ";
     self::log($error.$message);
@@ -249,7 +267,19 @@ use spoova\mi\core\commands\Root\Cli;
     print str_repeat(PHP_EOL, $breaks);
   }
 
-  final public static function commands($key = '', $name = ''){
+  /**
+   * Undocumented function
+   *
+   * @param string $key
+   * @param string $name
+   * @return array|string|false
+   *  - when no argument is supplied, it returns array of all commands supplied in the console
+   *  - when one argument is supplied, it returns the command at the specified key
+   *  - when two arguments are supplied, it returns the command at the specified key and name
+   *  - when the specified key or name does not exist, it returns false
+    * @notice: This function is used to retrieve commands supplied in the console.
+   */
+  final public static function commands(string $key = '', string $name = '') : array|string|false {
     $argV = ($GLOBALS['argv']);
     $args = func_num_args();
     if(isset($argV[0])){
@@ -268,7 +298,6 @@ use spoova\mi\core\commands\Root\Cli;
     }else{
         return $argV[$key][$name] ?? false;
     }
-    return '';
   }
 
   /**
@@ -354,8 +383,10 @@ use spoova\mi\core\commands\Root\Cli;
     if($args){
       
       array_unshift($args, $method);
-     
-      self::error('command "'.implode(" ", $args).'" not recognized');        
+      
+      $argument = (Arr::inside($args))? [$method] : $args;
+      Cli::infoView(' Spoova ','command "'.Cli::warn(implode(" ", $argument)).'" not recognized on '.Cli::alert(basename(get_class($this))).'.', break: "1|2");
+ 
     }
 
     return;  
@@ -387,9 +418,9 @@ use spoova\mi\core\commands\Root\Cli;
    *
    * @param array $options
    * @param \Closure $callback
-   * @return void
+   * @return string|false
    */
-  final public function prompt(array $options = [], \Closure $callback = null): string {
+  final public function prompt(array $options = [], ?Closure $callback = null): string|false {
 
     $input = trim(fgets(STDIN, 1024));
 
@@ -415,7 +446,7 @@ use spoova\mi\core\commands\Root\Cli;
    * @return void
    */
   final public function cls(){
-    echo chr(27).chr(91).'H'.chr(27).chr(91).'J';
+    echo "\033[2J\033[;H";
   }
 
   /**
@@ -455,6 +486,7 @@ use spoova\mi\core\commands\Root\Cli;
     }
 
     $this->execute(self::commands());
+    
     return true;
 
   }
@@ -468,6 +500,7 @@ use spoova\mi\core\commands\Root\Cli;
    * @return void
    */
   final public function cliRun(){ 
+
 
     if(empty($this->commands)){ 
       if($this->no_arguments_message){

@@ -2,26 +2,36 @@
 
 namespace spoova\mi\core\commands\Root;
 
-use spoova\mi\core\classes\FileManager;
+use spoova\mi\core\classes\Bundle\Filemanager\Filemanager;
 
+/**
+ * This class provides an interface for calibrating the 
+ * project application. It helps developers to determine the 
+ * type of project logic that can be applied.
+ */
 class Welcome {
 
-    protected $ProjectPath;
+    protected string $ProjectPath;
 
-    function __construct($ProjectPath)
+    function __construct(string $ProjectPath)
     {
         $this->ProjectPath = $ProjectPath;
 
     }
 
-    function window($fileName, $logic) : string {
-
+    function window(string $fileName, string $logic) : string {
 
         return ($logic === 'standard')? $this->standardLogic($fileName) : $this->basicLogic($fileName);
 
     }
 
-    function standardLogic($fileName){
+    /**
+     * Set standard logic for file name
+     *
+     * @param string $fileName
+     * @return void
+     */
+    function standardLogic(string $fileName){
 
         return <<<CONTENT
         <?php
@@ -57,7 +67,7 @@ class Welcome {
 
     }
 
-    function basicLogic($fileName){
+    function basicLogic(string $fileName){
 
         return <<<CONTENT
         <?php
@@ -74,7 +84,7 @@ class Welcome {
         
                     self::call(\$this, [
             
-                        lastUrl() => 'root',
+                        lastCall() => 'root',
                     
                     ]);
         
@@ -98,11 +108,7 @@ class Welcome {
 
         CONTENT;
     }
-
-    function logic3(){
-
-    }
-
+    
     function template() : string {
 
         $content = <<<CONTENT
@@ -180,7 +186,7 @@ class Welcome {
         <!DOCTYPE html>
         <html>
              <head> 
-                   @load('headers') <!-- load only 404 resources -->
+                @load('404') <!-- load only 404 resources -->
                 <title>404 Error Page</title>
                 <link rel="shortcut icon" href="@mapp('images/icons/favicon.png')" type="image/x-icon">
                 <style>
@@ -264,7 +270,7 @@ class Welcome {
         if(is_dir($ProjectPath)) {
 
             //delete docs from new project
-            $Filemanager = new FileManager;
+            $Filemanager = new Filemanager;
 
             $removals = ['Rex', 'Routes'];
 

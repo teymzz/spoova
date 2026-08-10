@@ -3,14 +3,18 @@
 namespace spoova\mi\core\classes;
 
 use Iterator;
+use stdClass;
 use ReflectionClass;
 use ReflectionMethod;
-use stdClass;
+use spoova\mi\core\classes\Record;
 
-
+/**
+ * This is a storage class is intended for iterating over an array record list
+ */
 class Collection implements Iterator{ 
 
     private $data = [];
+    private $dataset = [];
 
     /**
      * data keys
@@ -20,8 +24,8 @@ class Collection implements Iterator{
     private $datakeys = [];
     private $iterator = 0;
     private $callables = [];
-    private static $protected = [];
-    public $error;
+    private $protected = [];
+    private $error = false;
 
     private static Collection $container;
 
@@ -32,17 +36,19 @@ class Collection implements Iterator{
      * @param object|null $class
      * @param boolean $callable add callables
      */
-    public function __construct($data, object $class = null, $callable = true)
+    public function __construct($data, ?object $class = null, $callable = true)
     { 
-        $objectData = []; $data = (array) $data;
-        foreach($data as $datakey => $datavalue){
-            $objectData[$datakey] = is_array($datavalue) ? (object) $datavalue : $datavalue;
+        $dataset = []; $data = (array) $data;
+
+        foreach($data as $key => $value){
+            $dataset[$key] = is_array($value) ? new Record($value) : new Record([$value]);
         }
 
         //convert array data to object format
-        $data = $objectData;    
+        $data = $dataset; 
 
         $this->data = $data;
+        $this->dataset = $data;
         $this->datakeys = is_array($data) ? array_keys($data) : [];
 
         $callables = [];
@@ -81,21 +87,32 @@ class Collection implements Iterator{
 
     }
 
-    public function data(){
-        return $this->data;
+    /**
+     * This belongs to the collection class. Returns an array or a record
+     *
+     * @param integer|string|float|null $key
+     *  - If defined returns a record if it exists or returns FALSE
+     * @return mixed|Record
+     *  - Array is returned if no key is supplied
+     *  - FALSE is returned if $key value defined does not exist
+     *  - Other data types returned are dependent upon the value of the data key in a specified array
+     *  - Record is returned if used in a Model context and $key value defined exists as a key in retrieved data record object
+     */
+    public function data(int|string|float|null $key = null): mixed {
+        return is_numeric($key)? $this->data[$key] : $this->data;
     }
 
     public function rewind(): void {
         $this->iterator = 0;
     }
 
-    # [ReturnTypeWillChange]
-    public function current() {
+    #[\ReturnTypeWillChange]
+    public function current() : mixed {
         return $this->data[$this->datakeys[$this->iterator]];
     }
 
-    # [ReturnTypeWillChange]
-    public function key() {
+    #[\ReturnTypeWillChange]
+    public function key() : mixed {
         return $this->iterator;
     }
 
@@ -112,33 +129,33 @@ class Collection implements Iterator{
 
     
     /**
-     * Protect all collected data having specified keys
+     * Belongs to the collection class. Protect all collected data having specified keys
      * 
      * @param array $keys array of keys whose values must be protected
      */
-    public static function protect(array $keys = []){
-        $protected = self::$protected;
-        self::$protected = array_merge($protected, $keys);
+    public function protect(array $keys = []) : Collection {
+        $this->protected = array_merge($this->protected, $keys);
+        return $this;
     }
 
     /**
      * Return protect Collection keys
      */
-    public static function protected(){
-            return self::$protected;
+    public function protected(){
+        return $this->protected;
     }
 
     /**
-     * @todo Unprotect protected collectibles data.
+     * @todo Unprotect protected DBViewer data.
      * 
      * @notice This must be called before data is retrieved from database. Once a data 
      * is retrieved, it cannot be unprotected.
      */
-    public static function unprotected(array $keys){
+    public function unprotected(array $keys){
 
         foreach($keys as $key){  
-            if(in_array($key, static::$protected)){
-                static::$protected = array_delete(static::$protected, $key);
+            if(in_array($key, $this->protected)){
+                $this->protected = array_delete($this->protected, $key);
             }
         }
 
@@ -148,10 +165,10 @@ class Collection implements Iterator{
      * Create a new collection list
      *
      * @param array $data
-     * @return Collectibles
+     * @return Collection
      */
-    public static function list(array $data = []){
-        return (new Collectibles($data))->protect(Collection::protected());
+    public static function list(array $data) : Collection {
+        return new Collection($data);
     }
 
     /**
@@ -160,13 +177,13 @@ class Collection implements Iterator{
      * @param integer|string $index
      * @param integer|string|array $value
      * 
-     * @return bool|stdClass
-     *      - A bool of false is returned if $index does not exist in the data list.
-     *      - A stdClass object is returned if $index exists in data list and $value is not supplied.
+     * @return bool|Record|stdClass|array|string
+     *      - FALSE is returned if $index does not exist in the data list.
+     *      - The Record held at $index is returned if $index exists in data list and $value is not supplied.
      *      - If $value (string) is supplied and $value exist in $index data list, the relative value is returned, else, false is returned.
      *      - If $value (array) is supplied each array values is tested as sub index of $index datalist. If subindex does not exist in $index, a false value is assigned to the index in array data returned
      */
-    public function get(int|string $index, string|array $value = null): stdClass|array|bool|string
+    public function get(int|string $index, string|array|null $value = null): Record|stdClass|array|false|string
     {
         if($value){
             if(is_array($value)){
@@ -197,12 +214,19 @@ class Collection implements Iterator{
     }
 
     /**
-     * Return any database error encountered
-     *
+     * Sets or retrieves a custom collection error message.
+     *   - A predefined custom message will be retrived unless it has been manually modified.
+     * 
+     * @param mixed $message custom error message if defined.
+     * 
      * @return bool|string
      */
-    public function error() : bool|string|null {
-       return property_exists($this, 'error')? $this->error : false;
+    public function error(mixed $message = null) {
+        if(func_num_args() > 0){
+            $this->error = $message;
+        }else{
+            return $this->error;
+        }
     }
 
 }
