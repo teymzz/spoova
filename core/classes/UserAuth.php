@@ -2,13 +2,14 @@
  
  namespace spoova\mi\core\classes;
 
-use spoova\mi\core\classes\DB\DBHandler;
 use \User;
+use spoova\mi\core\classes\Bundle\Str\Str;
+use spoova\mi\core\classes\DB\DBHandler;
 
 /**
  * This class handles user account authentications 
  * 
- * @author Akinola Saheed <teymss@gmail.com>
+ * @author Akinola Saheed <akinolasaheed001@gmail.com>
  */
 class UserAuth extends SharedInfo{
 
@@ -28,8 +29,8 @@ class UserAuth extends SharedInfo{
    * @param DB|null $dbc
    * @param DBHandler|null $dbh
    */
-  function __construct(DB $dbc = null, DBHandler $dbh = null){
-
+  function __construct(?DB $dbc = null, ?DBHandler $dbh = null){
+    
     if(func_num_args() > 0){
       parent::__construct(...func_get_args());  
     }
@@ -39,23 +40,24 @@ class UserAuth extends SharedInfo{
   }
 
   /**
-   * external connection to modify current class default connection
+   * External connection to modify current class default connection
+   *  - This will replace the default connection with a new one
    *
-   * @param  $connection will replace the default connection
+   * @param DB $newdbc
+   * @param DBHandler $newdbh 
    * @return void
    */
-
   public function db(DB $newdbc, DBHandler $newdbh){
     
     // if new connection matches
     if(($newdbc->currentDB() === $newdbh->currentDB()) && $newdbh->currentDB() != ''){           
-          self::$dbc = $newdbc;
-          self::$dbh = $newdbh;
-          self::$dbe = '';
+        self::$dbc = $newdbc;
+        self::$dbh = $newdbh;
+        self::$dbe = '';
     }else{
-          self::$dbc = '';
-          self::$dbh = '';
-          self::$dbe = 'invalid connection or connection mismatch';
+        self::$dbc = null;
+        self::$dbh = null;
+        self::$dbe = 'invalid connection or connection mismatch';
     }
     
   }
@@ -63,7 +65,7 @@ class UserAuth extends SharedInfo{
   /**
    * @return DBHandler|null
    */
-  public function dbh(){
+  public function dbh() : DBHandler|null {
     
     return self::$dbh;
     
@@ -72,19 +74,22 @@ class UserAuth extends SharedInfo{
   /**
    * returns User class for a valid connection
    *
-   * @return void|UserAuth
+   * @return UserAuth|false
    */
-  public function connected() {
+  public function connected() : UserAuth|false {
     if($this->con()){
       return $this;
     }
+    return false;
   }
   
   /**
-   * @param array|void|null
+   * Builds column structure
+   * @param mixed $cols 
+   *  - $cols expects an array argument any other data type will return false
    * @return string
    */
-  private function buildColumns($cols){
+  private function buildColumns($cols) : string|false {
     if(empty($cols)) return false;
     return implode(', ',$cols);
   }
@@ -92,6 +97,8 @@ class UserAuth extends SharedInfo{
   /**
    * Builds fields and store values (if supplied) using “where” query
    * 
+   * @param mixed $fields 
+   *  - $cols expects an array argument any other data type will return false
    * @param string|array
    */
   private function buildFields($fields){
@@ -119,7 +126,7 @@ class UserAuth extends SharedInfo{
       $fieldname = $fieldExp[1]?? $fieldExp[0];
 
       //dealing with or (or: ||)
-      $fieldname = ltrim($fieldname, '|| ');
+      $fieldname = Str::stripStart($fieldname, '||');
       $fieldExp = explode('or:', $fieldname, 2);
       $fieldname = $fieldExp[1]?? $fieldExp[0];      
 
@@ -324,7 +331,7 @@ class UserAuth extends SharedInfo{
   /**
    * sets default database user table password field name
    *
-   * @param string $tablename
+   * @param string $passField database table name for password field.
    * @return UserAuth
    */
   public function passField(string $passField){
@@ -367,9 +374,8 @@ class UserAuth extends SharedInfo{
 
 
   /**
-   * return counts of database from user's table
+   * Return counts of database from user's table
    * 
-   * @param array|string $columns database table columns name
    * @return int
    */
   public function count(){
@@ -383,8 +389,7 @@ class UserAuth extends SharedInfo{
    * execute @property finder
    * Note: more than 1 results fetched will force find to return array
    * 
-   * @param array|string $column columns to be fetched
-   * @param array|string $limit limit of data to be fetched
+   * @param array|string $columns columns to be fetched
    *  
    * @return array|string|false depending on argument supplied or data obtained
    */
@@ -621,7 +626,7 @@ class UserAuth extends SharedInfo{
   /**
    * Returns an authenticated user id
    *
-   * @return string|UserIdResolver
+   * @return string|UserId|false
    */
   public function id() {
 
@@ -674,6 +679,5 @@ class UserAuth extends SharedInfo{
       }elseif($err = DBStatus::err()){
         print $err;
       }
-
 
  */

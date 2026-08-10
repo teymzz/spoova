@@ -2,7 +2,7 @@
 
 namespace spoova\mi\core\classes\DB\DBSchema;
 
-use spoova\mi\core\commands\Cli;
+use spoova\mi\core\commands\Root\Cli;
 
 trait TBCREATE {
 
@@ -23,7 +23,7 @@ trait TBCREATE {
      */
     public static function ID(int $size = 2, string $name = 'id') : DRAFT {
         self::callables(__FUNCTION__);
-        self::field($name, "int");
+        DRAFT::field($name, "int");
 
         self::$CREATE['TABLE']['FIELDS'][$name] = "INT".($size? "({$size})" : '')." NOT NULL AUTO_INCREMENT";
 
@@ -41,15 +41,15 @@ trait TBCREATE {
     public static function BIT(array|string $name) : DRAFT {
         self::callables(__FUNCTION__);
         self::assent_mode(['ALTER','CREATE'], __FUNCTION__, $name);
+        $value = '';
 
         if(is_array($name)){
              $namee = array_keys($name)[0]; //old name
              $value = array_values($name)[0]." "; //new name
              $name = $namee;
         }
-        setVar($value);
 
-        self::field($name, 'bit');
+        DRAFT::field($name, 'bit');
 
         $TYPE = self::$TYPE[0] ?? ''; //CREATE or ALTER
         $MODE = self::$TYPE[1] ?? ''; //MODIFY, CHANGE or FIELDS OR FIELDS
@@ -76,7 +76,7 @@ trait TBCREATE {
      * Creates a binary field
      *
      * @param array|string $name name of field
-     * @param string $default default value
+     * @param int $default default value
      * @return DRAFT
      */
     public static function BINARY(array|string $name, int $default = 0) : DRAFT {
@@ -85,15 +85,15 @@ trait TBCREATE {
 
         $TYPE = self::$TYPE[0] ?? ''; //CREATE or ALTER
         $MODE = self::$TYPE[1] ?? ''; //MODIFY, CHANGE or FIELDS
+        $value = '';
 
         if(is_array($name)){
              $namee = array_keys($name)[0];
              $value = array_values($name)[0]." ";
              $name = $namee;
         }
-        setVar($value);
 
-        self::field($name, 'binary');
+        DRAFT::field($name, 'binary');
         
         if($TYPE === 'ALTER') {
 
@@ -126,15 +126,15 @@ trait TBCREATE {
     public static function BOOL(array|string $name, int $default = 0) : DRAFT {
         self::callables(__FUNCTION__);
         self::assent_mode(['ALTER','CREATE'], __FUNCTION__, $name);
+        $value = '';
 
         if(is_array($name)){
              $namee = array_keys($name)[0];
              $value = array_values($name)[0]." ";
              $name = $namee;
         }
-        setVar($value);
 
-        self::field($name, 'bool');
+        DRAFT::field($name, 'bool');
         
         $TYPE = self::$TYPE[0] ?? ''; //CREATE or ALTER
         $MODE = self::$TYPE[1] ?? ''; //MODIFY, CHANGE or FIELDS
@@ -170,15 +170,15 @@ trait TBCREATE {
     public static function JSON(array|string $name) : DRAFT {
         self::callables(__FUNCTION__);
         self::assent_mode(['ALTER','CREATE'], __FUNCTION__, $name);
+        $value = '';
 
         if(is_array($name)){
              $namee = array_keys($name)[0];
              $value = array_values($name)[0]." ";
              $name = $namee;
         }
-        setVar($value);
 
-        self::field($name, 'json');
+        DRAFT::field($name, 'json');
         
         $TYPE = self::$TYPE[0] ?? ''; //CREATE or ALTER
         $MODE = self::$TYPE[1] ?? ''; //MODIFY, CHANGE or FIELDS
@@ -211,15 +211,15 @@ trait TBCREATE {
     public static function VARCHAR(array|string $name, int $size = 30, string $default = '') : DRAFT {
         self::callables(__FUNCTION__);
         self::assent_mode(['ALTER','CREATE'], __FUNCTION__, $name);
+        $value = '';
 
         if(is_array($name)){
              $namee = array_keys($name)[0];
              $value = array_values($name)[0]." ";
              $name = $namee;
         }
-        setVar($value);
 
-        self::field($name, 'varchar');
+        DRAFT::field($name, 'varchar');
         
         $TYPE = self::$TYPE[0] ?? ''; //CREATE or ALTER
         $MODE = self::$TYPE[1] ?? ''; //MODIFY, CHANGE or FIELDS
@@ -258,14 +258,15 @@ trait TBCREATE {
         self::callables(__FUNCTION__);
 
         if(self::assent_mode(['ALTER','CREATE'], __FUNCTION__, $name)){
+            
+            $value = '';
             if(is_array($name)){
                 $namee = array_keys($name)[0];
                 $value = array_values($name)[0]." ";
                 $name = $namee;
             }
-            setVar($value);
 
-            self::field($name, 'char');
+            DRAFT::field($name, 'char');
             
             $TYPE = self::$TYPE[0] ?? ''; //CREATE or ALTER
             $MODE = self::$TYPE[1] ?? ''; //MODIFY, CHANGE or FIELDS
@@ -307,14 +308,15 @@ trait TBCREATE {
         self::callables(__FUNCTION__);
 
         if(self::assent_mode(['ALTER','CREATE'], __FUNCTION__, $name)){
+            
+            $value = '';
             if(is_array($name)){
                 $namee = array_keys($name)[0];
                 $value = array_values($name)[0]." ";
                 $name = $namee;
             }
-            setVar($value);
 
-            self::field($name, 'enum');
+            DRAFT::field($name, 'enum');
             
             $TYPE = self::$TYPE[0] ?? ''; //CREATE or ALTER
             $MODE = self::$TYPE[1] ?? ''; //MODIFY, CHANGE or FIELDS
@@ -358,14 +360,15 @@ trait TBCREATE {
         self::callables(__FUNCTION__);
 
         if(self::assent_mode(['ALTER','CREATE'], __FUNCTION__, $name)){
+            
+            $value = '';
             if(is_array($name)){
                 $namee = array_keys($name)[0];
                 $value = array_values($name)[0]." ";
                 $name = $namee;
             }
-            setVar($value);
 
-            self::field($name, 'text');
+            DRAFT::field($name, 'text');
             
             $TYPE = self::$TYPE[0] ?? ''; //CREATE or ALTER
             $MODE = self::$TYPE[1] ?? ''; //MODIFY, CHANGE or FIELDS
@@ -391,7 +394,6 @@ trait TBCREATE {
             }
         }
 
-
         return self::$instance;
     }
 
@@ -409,10 +411,12 @@ trait TBCREATE {
         
         if(self::assent_mode(['ALTER','CREATE'], __FUNCTION__, $name)){
             $type = strtoupper($type);
+            $value = '';
 
             if(!array_key_exists($type, self::options('TEXT'))){
-                Cli::textView(Cli::error("invalid option [{$type}] supplied for TEXTFIELD(".implode(', ', func_get_args()).")"), 2, "|2");
-                return self::callError(Cli::error("invalid option [{$type}] supplied for TEXTFIELD(".implode(', ', func_get_args()).")"), 2, "|2");
+                Cli::textView(Cli::error("invalid option [{$type}] supplied for TEXTFIELD(".implode(', ', func_get_args()).")"), '2', "|2");
+                self::callError(Cli::error("invalid option [{$type}] supplied for TEXTFIELD(".implode(', ', func_get_args()).")"));
+                return self::$instance; //inst...
             }else{
                 $type = self::options('TEXT')[$type];
             }
@@ -422,9 +426,8 @@ trait TBCREATE {
                 $value = array_values($name)[0]." ";
                 $name = $namee;
             }
-            setVar($value);
 
-            self::field($name, $type);
+            DRAFT::field($name, $type);
             
             $TYPE = self::$TYPE[0] ?? ''; //CREATE or ALTER
             $MODE = self::$TYPE[1] ?? ''; //MODIFY, CHANGE or FIELDS
@@ -460,22 +463,22 @@ trait TBCREATE {
      *
      * @param array|string $name name of the integer field
      * @param integer $size size of the field
-     * @param string $default the default value of the text field
+     * @param integer $default the default value of the text field
      * @return DRAFT
      */
-    public static function INT(array|string $name, int $size = 2, int $default = null) : DRAFT {        
+    public static function INT(array|string $name, int $size = 2, ?int $default = null) : DRAFT {        
         self::callables(__FUNCTION__);
         
         if(self::assent_mode(['ALTER','CREATE'], __FUNCTION__, $name)){
             
+            $value = '';
             if(is_array($name)){
                 $namee = array_keys($name)[0];
                 $value = array_values($name)[0]." ";
                 $name = $namee;
             }
-            setVar($value);
     
-            self::field($name, 'int');
+            DRAFT::field($name, 'int');
             
             $TYPE = self::$TYPE[0] ?? ''; //CREATE or ALTER
             $MODE = self::$TYPE[1] ?? ''; //MODIFY, CHANGE or FIELDS
@@ -520,9 +523,12 @@ trait TBCREATE {
         if(self::assent_mode(['ALTER','CREATE'], __FUNCTION__, $name)){
 
             $type = strtoupper($type);
+            $value = '';
+
             if(!array_key_exists($type, self::options('INT'))){
-                Cli::textView(Cli::error("invalid option [{$type}] supplied for INTFIELD(".implode(', ', func_get_args()).")"), 2, "|2");
-                return self::callError(Cli::error("invalid option [{$type}] supplied for INTFIELD(".implode(', ', func_get_args()).")"), 2, "|2");
+                Cli::textView(Cli::error("invalid option [{$type}] supplied for INTFIELD(".implode(', ', func_get_args()).")"), '2', "|2");
+                self::callError(Cli::error("invalid option [{$type}] supplied for INTFIELD(".implode(', ', func_get_args()).")"));
+                return self::$instance; //inst...
             }else{
                 $type = self::options('INT')[$type];
             }
@@ -534,7 +540,7 @@ trait TBCREATE {
             }     
             setVar($value);
             
-            self::field($name, strtolower($type));
+            DRAFT::field($name, strtolower($type));
             
             $TYPE = self::$TYPE[0] ?? ''; //CREATE or ALTER
             $MODE = self::$TYPE[1] ?? ''; //MODIFY, CHANGE or FIELDS 
@@ -576,14 +582,14 @@ trait TBCREATE {
         
         if(self::assent_mode(['ALTER','CREATE'], __FUNCTION__, $name)){
             
+            $value = '';
             if(is_array($name)){
                 $namee = array_keys($name)[0];
                 $value = array_values($name)[0]." ";
                 $name = $namee;
             }
-            setVar($value);
     
-            self::field($name, 'serial');
+            DRAFT::field($name, 'serial');
             
             $TYPE = self::$TYPE[0] ?? ''; //CREATE or ALTER
             $MODE = self::$TYPE[1] ?? ''; //MODIFY, CHANGE or FIELDS
@@ -623,26 +629,27 @@ trait TBCREATE {
      * @param integer|null $default
      * @return DRAFT
      */
-    public static function FLOAT(array|string $name, array $size = [], int $default = null){        
+    public static function FLOAT(array|string $name, array $size = [], ?int $default = null){        
         self::callables(__FUNCTION__);
         
         if(self::assent_mode(['ALTER','CREATE'], __FUNCTION__, $name)){
     
+        
+            $value = '';
             if(is_array($name)){
                 $namee = array_keys($name)[0];
                 $value = array_values($name)[0]." ";
                 $name = $namee;
             }
-            setVar($value);
             
-            self::field($name, 'float');
+            DRAFT::field($name, 'float');
     
             $TYPE = self::$TYPE[0] ?? ''; // CREATE or ALTER
             $MODE = self::$TYPE[1] ?? ''; // MODIFY, CHANGE or FIELDS
             
             if(count($size) > 2){
                 Cli::textView(Cli::error("invalid size count for FLOAT(size: [".implode(", ", $size)."])"), 0, "|2");
-                return self::callError(Cli::error("invalid size count for FLOAT(size: [".implode(", ", $size)."])"), 0, "|2");
+                return self::callError(Cli::error("invalid size count for FLOAT(size: [".implode(", ", $size)."])"));
             }
     
             if($TYPE === 'ALTER') {
@@ -679,26 +686,27 @@ trait TBCREATE {
      * @param integer|null $default
      * @return DRAFT
      */
-    public static function DOUBLE(array|string $name, array $size = [], int $default = null) : DRAFT{        
+    public static function DOUBLE(array|string $name, array $size = [], ?int $default = null) : DRAFT{        
         self::callables(__FUNCTION__); 
         
         if(self::assent_mode(['ALTER','CREATE'], __FUNCTION__, $name)){
     
+            $value = '';
             if(is_array($name)){
                     $namee = array_keys($name)[0];
                     $value = array_values($name)[0]." ";
                     $name = $namee;
             }
-            setVar($value);
     
-            self::field($name, 'double');
+            DRAFT::field($name, 'double');
     
             $TYPE = self::$TYPE[0] ?? ''; //CREATE or ALTER
             $MODE = self::$TYPE[1] ?? ''; //MODIFY, CHANGE or FIELDS
             
             if(count($size) > 2){
                 Cli::textView(Cli::error("invalid size count for DOUBLE(size: [".implode(", ", $size)."])"), 0, "|2");
-                return self::callError(Cli::error("invalid size count for DOUBLE(size: [".implode(", ", $size)."])"), 0, "|2");
+                self::callError(Cli::error("invalid size count for DOUBLE(size: [".implode(", ", $size)."])"));
+                return self::$instance; //inst..
             }
     
             if($TYPE === 'ALTER') {
@@ -735,26 +743,27 @@ trait TBCREATE {
      * @param integer|null $default
      * @return DRAFT
      */
-    public static function DECIMAL(array|string $name, array $size = [], int $default = null) : DRAFT{
+    public static function DECIMAL(array|string $name, array $size = [], ?int $default = null) : DRAFT {
         self::callables(__FUNCTION__);
         
         if(self::assent_mode(['ALTER','CREATE'], __FUNCTION__, $name)) {
-    
+            
+            $value = '';
             if(is_array($name)){
                     $namee = array_keys($name)[0];
                     $value = array_values($name)[0]." ";
                     $name = $namee;
             }
-            setVar($value);
     
-            self::field($name, 'decimal');
+            DRAFT::field($name, 'decimal');
     
             $TYPE = self::$TYPE[0] ?? ''; //CREATE or ALTER
             $MODE = self::$TYPE[1] ?? ''; //MODIFY, CHANGE or FIELDS
             
             if(count($size) > 2){
                 Cli::textView(Cli::error("invalid size count for DECIMAL(size: [".implode(", ", $size)."])"), 0, "|2");
-                return self::callError(Cli::error("invalid size count for DECIMAL(size: [".implode(", ", $size)."])"), 0, "|2");
+                self::callError(Cli::error("invalid size count for DECIMAL(size: [".implode(", ", $size)."])"));
+                return self::$instance;
             }
     
             if($TYPE === 'ALTER') {
@@ -791,25 +800,27 @@ trait TBCREATE {
      * @param integer|null $default
      * @return DRAFT
      */
-    public static function REAL(array|string $name, array $size = [], int $default = null) : DRAFT{
+    public static function REAL(array|string $name, array $size = [], ?int $default = null) : DRAFT{
         self::callables(__FUNCTION__);
         
         if(self::assent_mode(['ALTER','CREATE'], __FUNCTION__, $name)){
     
+            $value = '';
             if(is_array($name)){
                     $namee = array_keys($name)[0];
                     $value = array_values($name)[0]." ";
                     $name = $namee;
             }
     
-            self::field($name, 'real');
+            DRAFT::field($name, 'real');
     
             $TYPE = self::$TYPE[0] ?? ''; //CREATE or ALTER
             $MODE = self::$TYPE[1] ?? ''; //MODIFY, CHANGE or FIELDS
             
             if(count($size) > 2){
                 Cli::textView(Cli::error("invalid size count for REAL(size: [".implode(", ", $size)."])"), 0, "|2");
-                return self::callError(Cli::error("invalid size count for REAL(size: [".implode(", ", $size)."])"), 0, "|2");
+                self::callError(Cli::error("invalid size count for REAL(size: [".implode(", ", $size)."])"));
+                return self::$instance; //inst..
             }
     
             if($TYPE === 'ALTER') {
@@ -842,21 +853,21 @@ trait TBCREATE {
      *
      * @param array|string $name name of field
      * @param string $default default date
-     * @return
+     * @return DRAFT
      */
     public static function DATE(array|string $name, string $default = '') : DRAFT{
         self::callables(__FUNCTION__);
         
         if(self::assent_mode(['ALTER','CREATE'], __FUNCTION__, $name)){
     
+            $value = '';
             if(is_array($name)){
                     $namee = array_keys($name)[0];
                     $value = array_values($name)[0]." ";
                     $name = $namee;
             }
-            setVar($value);
     
-            self::field($name, 'date');
+            DRAFT::field($name, 'date');
     
             $TYPE = self::$TYPE[0] ?? ''; //CREATE or ALTER
             $MODE = self::$TYPE[1] ?? ''; //MODIFY, CHANGE or FIELDS
@@ -877,7 +888,7 @@ trait TBCREATE {
     
             }
             
-            if(func_num_args() > 2){
+            if(func_num_args() > 1){
                 self::$$TYPE['TABLE'][$MODE][$name] .= " DEFAULT ".self::format_default($default);
             }
 
@@ -898,15 +909,15 @@ trait TBCREATE {
         self::callables(__FUNCTION__);
         
         if(self::assent_mode(['ALTER','CREATE'], __FUNCTION__, $name)){
-    
+            
+            $value = '';
             if(is_array($name)){
                     $namee = array_keys($name)[0];
                     $value = array_values($name)[0]." ";
                     $name = $namee;
             }
-            setVar($value);
     
-            self::field($name, 'date');
+            DRAFT::field($name, 'datetime');
     
             $TYPE = self::$TYPE[0] ?? ''; //CREATE or ALTER
             $MODE = self::$TYPE[1] ?? ''; //MODIFY, CHANGE or FIELDS
@@ -923,7 +934,7 @@ trait TBCREATE {
     
             }else{
     
-                self::$CREATE['TABLE'][$MODE][$name] = "DATE";
+                self::$CREATE['TABLE'][$MODE][$name] = "DATETIME";
     
             }    
             
@@ -948,15 +959,15 @@ trait TBCREATE {
         self::callables(__FUNCTION__);
 
         if(self::assent_mode(['ALTER','CREATE'], __FUNCTION__, $name)){
-    
+            
+            $value = '';
             if(is_array($name)){
                     $namee = array_keys($name)[0];
                     $value = array_values($name)[0]." ";
                     $name = $namee;
             }
-            setVar($value);
     
-            self::field($name, 'timestamp');
+            DRAFT::field($name, 'timestamp');
     
             $TYPE = self::$TYPE[0] ?? ''; //CREATE or ALTER
             $MODE = self::$TYPE[1] ?? ''; //MODIFY, CHANGE or FIELDS
@@ -998,15 +1009,15 @@ trait TBCREATE {
         self::callables(__FUNCTION__);
         
         if(self::assent_mode(['ALTER','CREATE'], __FUNCTION__, $name)){
-    
+            
+            $value = '';
             if(is_array($name)){
                     $namee = array_keys($name)[0];
                     $value = array_values($name)[0]." ";
                     $name = $namee;
             }
-            setVar($value);
     
-            self::field($name, 'time');
+            DRAFT::field($name, 'time');
     
             $TYPE = self::$TYPE[0] ?? ''; //CREATE or ALTER
             $MODE = self::$TYPE[1] ?? ''; //MODIFY, CHANGE or FIELDS
@@ -1039,7 +1050,7 @@ trait TBCREATE {
      * Set a datetime field
      *
      * @param string $name name of field
-     * @param string $precision option 4 sets the year syntax to 4 digits
+     * @param int $precision option 4 sets the year syntax to 4 digits
      * @param string $default default year
      * @return DRAFT
      */
@@ -1047,15 +1058,15 @@ trait TBCREATE {
         self::callables(__FUNCTION__);
         
         if(self::assent_mode(['ALTER','CREATE'], __FUNCTION__, $name)) {
-
+            
+            $value = '';
             if(is_array($name)){
                  $namee = array_keys($name)[0];
                  $value = array_values($name)[0]." ";
                  $name = $namee;
             }
-            setVar($value);
     
-            self::field($name, 'year');
+            DRAFT::field($name, 'year');
     
             $TYPE = self::$TYPE[0] ?? ''; //CREATE or ALTER
             $MODE = self::$TYPE[1] ?? ''; //MODIFY, CHANGE or FIELDS
@@ -1089,7 +1100,6 @@ trait TBCREATE {
      * Sets a blob field
      *
      * @param array|string $name name of the field
-     * @param integer $size size of the field
      * @param string $default the default value of the field
      * @return DRAFT
      */
@@ -1098,14 +1108,14 @@ trait TBCREATE {
         
         if(self::assent_mode(['ALTER','CREATE'], __FUNCTION__, $name)){
     
+            $value = '';
             if(is_array($name)){
                     $namee = array_keys($name)[0];
                     $value = array_values($name)[0]." ";
                     $name = $namee;
             }
-            setVar($value);
             
-            self::field($name, 'blob');
+            DRAFT::field($name, 'blob');
             
             $TYPE = self::$TYPE[0] ?? ''; //CREATE or ALTER
             $MODE = self::$TYPE[1] ?? ''; //MODIFY, CHANGE or FIELDS
@@ -1148,22 +1158,23 @@ trait TBCREATE {
         
         if(self::assent_mode(['ALTER','CREATE'], __FUNCTION__, $name)){
     
+            $value = '';
             if(is_array($name)){
                     $namee = array_keys($name)[0];
                     $value = array_values($name)[0]." ";
                     $name = $namee;
             }
-            setVar($value);
     
             $type = strtoupper($type);
             if(!array_key_exists($type, self::options('BLOB'))){
-                Cli::textView(Cli::error("invalid option [{$type}] supplied for BLOBFIELD(".implode(', ', func_get_args()).")"), 2, "|2");
-                return self::callError(Cli::error("invalid option [{$type}] supplied for BLOBFIELD(".implode(', ', func_get_args()).")"), 2, "|2");
+                Cli::textView(Cli::error("invalid option [{$type}] supplied for BLOBFIELD(".implode(', ', func_get_args()).")"), '2', "|2");
+                self::callError(Cli::error("invalid option [{$type}] supplied for BLOBFIELD(".implode(', ', func_get_args()).")"));
+                return self::$instance;
             }else{
                 $type = self::options('BLOB')[$type];
             }
             
-            self::field($name, $type);
+            DRAFT::field($name, $type);
             
             $TYPE = self::$TYPE[0] ?? ''; //CREATE or ALTER
             $MODE = self::$TYPE[1] ?? ''; //MODIFY, CHANGE or FIELDS
@@ -1202,7 +1213,7 @@ trait TBCREATE {
     public static function CONSTRAINT($name = '') : DRAFT {
         self::callables(__FUNCTION__);
         
-        self::field($name, '::constraint');        
+        DRAFT::field($name, '::constraint');        
         return self::$instance;      
     }
 
@@ -1236,9 +1247,9 @@ trait TBCREATE {
     }
     
     /**
-     * This constraint comes after the field data type (e.g VARCHAR) is set
-     * This will set a "NOT NULL" constraint. If a default is applied, the default will also be set
-     * @param string $check
+     * This sets "NOT NULL" constraint by default along with a $default value if defined.
+     *  - This constraint should be used after the field data type (e.g VARCHAR) is set
+     * @param string|int $default
      * @return DRAFT
      */
     public function NOT_NULL(string|int $default = '') : DRAFT {
@@ -1254,7 +1265,8 @@ trait TBCREATE {
             (strpos($statementTrim, ' NULL ') !== false) || 
             (strpos($statementTrim, ' NOT NULL ') !== false)){
             Cli::textView(Cli::error("applying NOT NULL or NULL constraints on field more than once is disallowed"));
-            return self::callError(Cli::error("applying NOT NULL or NULL constraints on field more than once is disallowed"));
+            self::callError(Cli::error("applying NOT NULL or NULL constraints on field more than once is disallowed"));
+            return self::$instance;
         }
 
         self::$$TYPE['TABLE'][$MODE][self::$field] .= " NOT NULL";
@@ -1266,9 +1278,9 @@ trait TBCREATE {
     }
     
     /**
-     * This constraint comes after the field data type (e.g VARCHAR) is set
-     * This will set a "NULL" constraint along with a default if applied
-     * @param string $check
+     * This sets a "NULL" constraint along with a default if applied
+     *  - This constraint should be used after the field data type (e.g VARCHAR) is set
+     * @param string|int $default
      * @return DRAFT
      */
     public function NULL(string|int $default = '') : DRAFT {
@@ -1285,7 +1297,8 @@ trait TBCREATE {
             (strpos($statementTrim, ' NULL ') !== false) || 
             (strpos($statementTrim, ' NOT NULL ') !== false)){
             Cli::textView(Cli::error("applying NULL or NOT NULL constraints on field more than once is disallowed"));
-            return self::callError(Cli::error("applying NULL or NOT NULL constraints on field more than once is disallowed"));
+            self::callError(Cli::error("applying NULL or NOT NULL constraints on field more than once is disallowed"));
+            return self::$instance;
         }
 
         self::$$TYPE['TABLE'][$MODE][self::$field] .= " NULL";
@@ -1301,7 +1314,7 @@ trait TBCREATE {
     /**
      * Set default constraint on fields
      *
-     * @param int|string $default optional [NULL|NOT NULL|$default]
+     * @param integer|string $default optional [NULL|NOT NULL|$default]
      *
      * @return DRAFT
      */
@@ -1325,9 +1338,9 @@ trait TBCREATE {
     }
 
     /**
-     * Set default constraint on fields
+     * Set ON_UPDATE constraint on fields
      *
-     * @param int|string $default optional [NULL|NOT NULL|$default]
+     * @param integer|string $value optional [NULL|NOT NULL|<value>]
      *
      * @return DRAFT
      */
@@ -1365,13 +1378,15 @@ trait TBCREATE {
                 //field here means constraint name
                 self::$instance->constraints['UNIQUE'] = [ $field => func_get_args() ];
             } else {
-                Cli::textView(Cli::error('undefined contraint name for unique fields ('.implode(', ', func_get_args()).')'), 2, '|2');
-                return self::callError(Cli::error('undefined contraint name for unique fields ('.implode(', ', func_get_args()).')'), 2, '|2');
+                Cli::textView(Cli::error('undefined contraint name for unique fields ('.implode(', ', func_get_args()).')'), '2', '|2');
+                self::callError(Cli::error('undefined contraint name for unique fields ('.implode(', ', func_get_args()).')'));
+                return self::$instance;
             }
             
         }else{
             if(func_num_args() > 0){
-                return self::callError(Cli::error('no arguments are expected for UNIQUE() method unless chained on CONSTRAINT()', 2, '|2'));
+                self::callError(Cli::error('no arguments are expected for UNIQUE() method unless chained on CONSTRAINT()', 2, '|2'));
+                return self::$instance;
             }
             self::$instance->uniqueFields[] = $currentField[0];
         }
@@ -1394,15 +1409,17 @@ trait TBCREATE {
         $table = array_key_exists('TABLE', self::$$TYPE)? self::$$TYPE['TABLE'] : [];
 
         if(array_key_exists('::PRIMARY_KEY', $table)){
-            Cli::textView(Cli::error('a primary field cannot be set more than once'), 2, '|2');
-            return self::callError(Cli::error('a primary field cannot be set more than once'), 2, '|2');         
+            Cli::textView(Cli::error('a primary field cannot be set more than once'), '2', '|2');
+            self::callError(Cli::error('a primary field cannot be set more than once')); 
+            return self::$instance;        
         }        
 
         if(func_num_args() < 1){
             $currentField = self::$instance->currentField();
             $field = $currentField[0];
             if(!trim($field)){
-                return self::callError(Cli::error('a primary field cannot be an empty value.'), 2, '|2');         
+                self::callError(Cli::error('a primary field cannot be an empty value.'));  
+                return self::$instance;       
             }
         }
         
@@ -1421,6 +1438,8 @@ trait TBCREATE {
         $TYPE = self::$TYPE[0] ?? ''; //CREATE or ALTER
         $MODE = self::$TYPE[1] ?? ''; //MODIFY, CHANGE or FIELDS
 
+        $currentField = self::$instance->currentField();
+        $field = $currentField[0];
         self::$$TYPE['TABLE'][$MODE][$field] .= " AUTO_INCREMENT ";
         
         return self::$instance;
@@ -1449,10 +1468,8 @@ trait TBCREATE {
     }
 
     /**
-     * Sets a foreign key on the current selected table
+     * Sets a CASCADE foreign key constraint on the current selected table
      *
-     * @param string $parentTable name of the parent table
-     * @param array $relation array of foreign key (index) and local key (value) 
      * @return DRAFT
      */
     public function CASCADE(){
@@ -1468,10 +1485,8 @@ trait TBCREATE {
     }
 
     /**
-     * Sets a foreign key on the current selected table
-     *
-     * @param string $parentTable name of the parent table
-     * @param array $relation array of foreign key (index) and local key (value) 
+     * Sets a RESTRICT foreign key constraint on the current selected table
+     * 
      * @return void
      */
     public function RESTRICT(){
@@ -1502,11 +1517,12 @@ trait TBCREATE {
     /**
      * Add a comment to a field white creating (after default, if set)
      *
-     * @param string $check 
+     * @param string $comment 
      * @return DRAFT
      */
     public function COMMENT(string $comment) : DRAFT{
         self::callables(__FUNCTION__);
+        $TYPE = self::$TYPE[0] ?? ''; //CREATE or ALTER
         self::$$TYPE['TABLE']['FIELDS'][self::$field] .= " COMMENT '{$comment}'";
         return self::$instance;
     }
@@ -1542,6 +1558,8 @@ trait TBCREATE {
      * Creates a unique index on a table. This method should not be 
      * called with other methods
      *
+     * @param string $field database table's field on which index is applied 
+     * @param string $indexName name of INDEX to be applied. 
      * @param string $type optional [UNIQUE|BTREE] 
      *  - option "UNIQUE" creates a unique index on the specified $field.
      *  - option "BTREE" creates a unique index on the specified $field using BTREE.
@@ -1567,8 +1585,8 @@ trait TBCREATE {
 
         if(($Table['INDEX']??'') && ($Table['FIELDS']??'')){
 
-            Cli::textView(Cli::error('syntax "CREATE_INDEX" cannot be initialized with table fields!'), 2, '|2');
-            return self::callError(Cli::error('syntax "CREATE_INDEX" cannot be initialized with table fields!'), 2, '|2');
+            Cli::textView(Cli::error('syntax "CREATE_INDEX" cannot be initialized with table fields!'), '2', '|2');
+            return self::callError(Cli::error('syntax "CREATE_INDEX" cannot be initialized with table fields!'));
 
         }elseif($Table['INDEX']??''){
             return self::BUILD_INDEX($TABLE);
@@ -1658,8 +1676,8 @@ trait TBCREATE {
         $useBTREE  = '';
 
         if(!in_array($type, ['', 'UNIQUE', 'BTREE'])){
-            Cli::textView(Cli::error('invalid option supplied on BUILD_INDEX. Option if specified can only be UNIQUE.'), 2, '|2');
-            return self::callError(Cli::error('invalid option supplied on BUILD_INDEX. Option if specified can only be UNIQUE.'), 2, '|2');
+            Cli::textView(Cli::error('invalid option supplied on BUILD_INDEX. Option if specified can only be UNIQUE.'), '2', '|2');
+            return self::callError(Cli::error('invalid option supplied on BUILD_INDEX. Option if specified can only be UNIQUE.'));
         }
 
         if($type == 'BTREE'){
@@ -1677,10 +1695,10 @@ trait TBCREATE {
      *
      * @param array $scopes allowed main scope(s) of call
      * @param string $function
-     * @param string $name
+     * @param string|array|null $name
      * @return boolean 
      */
-    private static function assent_mode(array $scopes,$function, &$name = null) : bool {
+    private static function assent_mode(array $scopes,$function, string|array|null &$name = null) : bool {
 
         $TYPE = self::$TYPE[0] ?? ''; //CREATE or ALTER
         $MODE = self::$TYPE[1] ?? ''; //MODIFY, CHANGE or FIELDS
@@ -1750,7 +1768,6 @@ trait TBCREATE {
         }else{
             $value = "'".$value."'";
         }
-
         return $value;
 
     }

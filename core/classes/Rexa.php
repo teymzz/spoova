@@ -2,7 +2,7 @@
 
 use spoova\mi\core\classes\Init;
 use spoova\mi\core\classes\EInfo;
-use spoova\mi\core\classes\Rescom;
+use spoova\mi\core\classes\Res\Rescom;
 use spoova\mi\core\classes\Attribs;
 use spoova\mi\core\classes\Enums\live;
 
@@ -130,7 +130,7 @@ class Rexa extends Rescom {
       
       if(!defined('_core') || !defined('_icore')) return false;
       if(!defined('online')) return false;  
-      if(!@class_exists(scheme('core\classes\FileManager', false))) return false;
+      if(!@class_exists(scheme('core\classes\Bundle\Filemanager\Filemanager', false))) return false;
       if(!method_exists($this,'watch')) return false;
       
       //read fileManager for resource watching
@@ -236,7 +236,6 @@ class Rexa extends Rescom {
 
                 $self_urls = self::$named_urls;
 
-                // self::$named_urls[$unique] = ['::bind' => true];
                 self::$named_urls[$unique] = [];
                
                 foreach($names as $name){
@@ -247,8 +246,6 @@ class Rexa extends Rescom {
                         }
                     }
                 } 
-                //vdump(self::$named_urls);
-                // self::$named_urls = array_unique(self::$named_urls);
             }else {
                 EInfo::trigger('Resource unique name "'.$unique.'" already exists');
             }
@@ -262,6 +259,7 @@ class Rexa extends Rescom {
     
     /**
      * Binds previously named urls to new named group and flushes the binded values.
+     * @param string $group new group registration name
      * @param String[] $names names of named files
      * @return Rexa
      */
@@ -375,10 +373,10 @@ class Rexa extends Rescom {
     /**
      * Imports all required scripts depending on arguments supplied
      *
-     * @param array $names
+     * @param string|array|null|live $names
      *  - [null]: returns all saved scripts once 
      *  - [string,array]: returns scripts for only specified groups
-     * @return Rexa|null
+     * @return string
      */
     public static function import(string|array|null|live $names = null) : string {
 
@@ -615,7 +613,6 @@ class Rexa extends Rescom {
      * replace script(css, js) urls while online
      *
      * @param string $url
-     * @param string $ext
      * @return string
      */
     private static function domify(string $url){

@@ -2,18 +2,24 @@
 
 namespace spoova\mi\core\classes;
 
-use Form;
 use Res;
-use Session;
-use spoova\mi\core\classes\Hasher;
+use Form;
+use Error;
 use Window;
+use Session;
+use spoova\mi\core\classes\CSREF;
+use spoova\mi\core\classes\Hasher;
+use spoova\mi\core\classes\Request;
+use spoova\mi\core\classes\Ghost\GhostDraft;
+use spoova\mi\core\classes\Ghost\GhostProxy;
+use spoova\mi\core\classes\Ghost\GhostFunction;
 
 /**
  * This class handles CSRF token generation and validations
  * 
- * @author Akinola Saheed <teymss@gmail.com>
+ * @author Akinola Saheed <akinolasaheed001@gmail.com>
  */
-class Csrf {
+class CSRF {
 
      /**
       * Expire time in seconds (Default 10 minutes)
@@ -21,10 +27,8 @@ class Csrf {
       * @param string $type
       * @return string
       */
-     private static $expires = false;
+     private static int|false $expires = false;
      private static $strict = false;
-     private static $isExpired = false;
-     private static $isReferred = false;
      private static $generated = false;
      private static $emessage = [
       'default' => [
@@ -100,7 +104,7 @@ class Csrf {
     /**
      * Returns true if at least one token is generated
      *
-     * @return string old token if it exists else returns an empty string
+     * @return bool
      */
     public static function generated() : bool {
         return self::$generated;
@@ -111,7 +115,7 @@ class Csrf {
      * matches the supplied token string 
      *
      * @param string $csrf token to be matched with session token
-     * @return void
+     * @return bool 
      */
     public static function matches(string $csrf) : bool{
       return ($csrf === (Session::base()->value('CSRF','TOKEN')));
@@ -124,13 +128,13 @@ class Csrf {
      *    -when no argument is supplied, returns the expire time only.
      * @return int
      */
-    public static function expires($time = 600) : int{
+    public static function expires(int|false $time = 600) : int{
      if(func_num_args() > 0) self::$expires = $time;
      return self::$expires;
     }
 
     /**
-     * Checks if a csrf token has expired
+     * Checks if a CSRF token has expired
      * @return bool
      * 
      */
@@ -155,7 +159,7 @@ class Csrf {
     }
 
     /**
-     * Csrf invalid file to be loaded
+     * CSRF invalid file to be loaded
      *
      * @return string
      */
@@ -171,7 +175,7 @@ class Csrf {
      */
     public static function block() {
       if(self::$expires && self::hasExpired()){
-          $type = !self::errorType()? self::setError('expired') : self::setError(self::errorType());
+          !self::errorType()? self::setError('expired') : self::setError(self::errorType());
           $error = self::getError('expired');
           Form::setError('title', $error['title']);
           Form::setError('info', $error['info']);
@@ -187,14 +191,14 @@ class Csrf {
     }
 
     /**
-     * Set csrf authentication as strict type while returning the 
+     * Set CSRF authentication as strict type while returning the 
      * instance of the same class. Strict types automatically display 
-     * error pages when Csrf::auth() is called and validation fails.
+     * error pages when CSRF::auth() is called and validation fails.
      *
      * @param boolean $strict
-     * @return Csrf
+     * @return CSRF
      */
-    public static function strict(bool $strict = true) : Csrf {
+    public static function strict(bool $strict = true) : CSRF {
      self::$strict = $strict;
      return new self;
     }
@@ -240,40 +244,47 @@ class Csrf {
      * pushed forward to external route and pulled back through window::pushFormData() 
      * to the current route .
      *
-     * @return object
+     * @return CSREF anonymous proxy object
      */
-    public static function ref() : object {
+    public static function ref() : CSREF {
       
       $default = [
-        'VALID'  => false, 
         'valid'  => false,
-        'isValid'=> false,
         'time'   => '0000000000',
-        'TIME'   => '0000000000' 
       ];
 
-      if(isset($_ENV[':FORM'])){
+      if(isset($_ENV[':FORM'])){ 
         $csrf = $_ENV[':FORM']['CSRF_REF'] ?? [];
       }else{
         $csrf = [];
       }
 
       $ref = $csrf ?: $default;
-      return (object) $ref;
+
+      $Ghost = new GhostFunction(['ghostData']);
+
+      // Define method to access value of required variables.
+      $Ghost->ghostData(function($key) use($ref){
+          if(array_key_exists(strtolower($key), $ref)) return $ref[$key];
+          throw new Error('"$'.$key.'" value is not available for CSREF method');
+      });
+
+      GhostProxy::new($Ghost, fn(GhostDraft $draft) => new class($draft) extends CSREF{});
+
+      return  GhostProxy::object();
 
     }
 
     /**
-     * Authenticate csrf. When Csrf is set as strict type, if 
+     * Authenticate CSRF. When CSRF is set as strict type, if 
      * authentication fails, an error page is automatically displayed. 
      * Non-strict type will return false instead.
      *
      * @param string $csrfToken token to be validated
-     *  - Token must be supplied if the request data pulled from external redirect.
-     * @param integer $expires in seconds defines the token expiry time
-     * @return void|bool
+     *  - Token must be supplied if the request (POST or GET) data is not pulled from external redirect.
+     * @return bool
      */
-    public static function auth(string $csrfToken = '') {
+    public static function auth(string $csrfToken = '') : bool {
 
       if(self::isReferred()) {
         //run this if form data is pulled from a push request
@@ -286,10 +297,10 @@ class Csrf {
           $method = &$_GET;
         }
         
-        if(!Csrf::ref()->valid){
+        if(!CSRF::ref()->valid){
           $method = [];
           self::setError('invalid');
-          if(Csrf::isStrict()) self::block();
+          if(CSRF::isStrict()) self::block();
           return false;
         }
 
@@ -303,7 +314,7 @@ class Csrf {
         
       }
 
-      if(self::$expires && Csrf::hasExpired()) {
+      if(self::$expires && CSRF::hasExpired()) {
         $method = [];
         self::setError('expired');
         if(self::isStrict()) self::block();
@@ -312,6 +323,19 @@ class Csrf {
 
       return true;
       
+    }
+
+    /**
+     * Return CSRF token html input field
+     *
+     * @return string
+     */
+    public static function field(bool $new = true) : string {
+      static $count = 0;
+      $count++;
+
+      $token = $new ? (($count > 1)? self::old() : self::token()) : self::old();
+      return ($token)? '<input hidden name="CSRF_TOKEN" value="'.$token.'">' : '';
     }
 
     /**
@@ -332,7 +356,7 @@ class Csrf {
      *  -If array, accepted array keys: [title|info]
      * @return void
      */
-    public static function setError(string $type, $custom = ''){
+    public static function setError(string $type, array|string $custom = ''){
       if(is_string($custom)){
         if(func_num_args() > 1){
           if($custom) self::$emessage[$type]['info'] = $custom;
@@ -347,7 +371,7 @@ class Csrf {
     }
 
     /**
-     * Set error response
+     * Get custom error response
      *
      * @param string $type [optional] - [default|invalid|expired]
      * @return null|string
@@ -357,7 +381,7 @@ class Csrf {
     }
 
     /**
-     * Returns the last error type as default, invalid or expired
+     * Returns the last error type as one of the options [default|invalid|expired]
      *
      * @return string
      */

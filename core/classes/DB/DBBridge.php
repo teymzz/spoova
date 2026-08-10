@@ -1,4 +1,5 @@
 <?php
+
 namespace spoova\mi\core\classes\DB;
 
 /**
@@ -9,9 +10,10 @@ namespace spoova\mi\core\classes\DB;
  */
 abstract class DBBridge implements DBInterface, DBHelpers{
   
-  protected static $baseerror;
-  protected static $basequery;
-  protected static $basequeryerr; 
+  protected static string $baseerror = '';
+  protected static string $basequery = '';
+  protected static ?string $basequeryerr = null; 
+  protected static array $dbqueries = []; 
   
   /**
    * To  identify when a connection 
@@ -24,58 +26,58 @@ abstract class DBBridge implements DBInterface, DBHelpers{
   /**
    * Database connection variable
    *
-   * @var mixed database connection variable
+   * @var object|null|false database connection variable
    */
-  protected $conn = false;
+  protected object|null|false $conn = false;
 
   /**
    * Tells when a connection has failed
    *
    * @var boolean
    */
-  protected $isFailed = false;
+  protected bool $isFailed = false;
 
   /**
    * Tells theh handler to use the setData method
    *
    * @var boolean
    */
-  protected $useData = true;
+  protected bool $useData = true;
 
   /**
    * The connection class name
    *
    * @var string
    */
-  protected $conName;
+  protected string|null $conName = '';
 
   /**
    * The connection name
    *
    * @var string
    */
-  protected $conType;
+  protected string|null $conType;
 
   /**
    * Currently selected database name
    *
    * @var string
    */
-  protected $currentDB = '';
+  protected string $currentDB = '';
 
   /**
    * anchors the last sql query executed
    *
    * @var string
    */
-  protected $last_query = '';
+  protected string $last_query = '';
 
   /**
    * completed sql query string
    *
-   * @var string
+   * @var string|null
    */
-  protected $dataString;
+  protected string|null $dataString;
 
   /**
    * data to be binded
@@ -93,17 +95,17 @@ abstract class DBBridge implements DBInterface, DBHelpers{
   protected $binder;
   protected $num_rows = 0; //0 in MiSQL
   protected $error;
-  protected $full_error;
+  protected string $full_error;
   protected $affectedRows;
-  protected $previousLimit;
+  protected string $previousLimit;
   protected $limit;
-  protected $conResponse;
-  protected $DBSERVER = DBSERVER; 
-  protected $DBPORT   = DBPORT;
-  protected $DBSOCKET = DBSOCKET;
-  protected $DBUSER   = DBUSER;
-  protected $DBPASS   = DBPASS;
-  protected $DBNAME   = DBNAME;
+  protected string $conResponse;
+  protected string|null $DBSERVER = DBSERVER; 
+  protected string|null $DBPORT   = DBPORT;
+  protected string|null $DBSOCKET = DBSOCKET;
+  protected string|null $DBUSER   = DBUSER;
+  protected string|null $DBPASS   = DBPASS;
+  protected string|null $DBNAME   = DBNAME;
   protected bool $dbConnection;
 
   /**
@@ -117,30 +119,64 @@ abstract class DBBridge implements DBInterface, DBHelpers{
    * @param string $dbsocket - optional database socket
    */
   function __construct(
-    $dbname   = null, 
-    $dbuser   = null, 
-    $dbpass   = null, 
-    $dbserver = null, 
-    $dbport   = null, 
-    $dbsocket = null
+    $dbname = null, 
+    string|null $dbuser   = null, 
+    string|null $dbpass   = null, 
+    string|null $dbserver = null, 
+    string|null|int $dbport   = null, 
+    string|null $dbsocket = null
     ){ 
     if(count(func_get_args()) > 0){
       $this->setDB($dbname, $dbuser, $dbpass, $dbserver, $dbport, $dbsocket);
     }
     return $this->open_connection(); 
   }
+  
+  /**
+   * Makes an explicitly supplied port authoritative by forcing a TCP connection.
+   *
+   *  - Both mysqli and PDO treat the host name "localhost" as a request for the
+   *    local unix socket (a named pipe on Windows) and silently ignore the port.
+   *    A wrong port therefore reads back as a successful connection, which hides
+   *    misconfiguration instead of reporting it.
+   *  - Swapping in the loopback address makes the supplied port take effect, so a
+   *    port that is genuinely wrong fails as the caller would expect.
+   *  - A configured socket always wins: that is an explicit request for a
+   *    non-TCP connection and must not be overridden.
+   *
+   * Applied here rather than in a driver so {@see DBM\MiSQL} and {@see DBM\MiPDO}
+   * share one behaviour.
+   *
+   * @param string|null $dbserver referenced server name, rewritten in place
+   * @param string|int|null $dbport port supplied alongside the server
+   * @param string|null $dbsocket socket supplied alongside the server
+   * @return void
+   */
+  protected static function normalizeHost(&$dbserver, int|string|null $dbport, string|null $dbsocket = null) : void {
 
-  protected function setDB($dbname,$dbuser,$dbpass,$dbserver,$dbport,$dbsocket){
+    if(trim((string) $dbsocket) !== '') return;                          // socket beats TCP
+    if(strtolower(trim((string) $dbserver)) !== 'localhost') return;     // only "localhost" is ambiguous
+
+    $dbport = trim((string) $dbport);
+
+    if($dbport === '' || !ctype_digit($dbport) || ((int) $dbport < 1)) return;
+
+    $dbserver = '127.0.0.1';
+  }
+
+  protected function setDB(string|array|null $dbname, string|null $dbuser, string|null $dbpass, string|null $dbserver, int|string|null $dbport, string|null $dbsocket){
     $dbserver = isset($dbserver)? $dbserver : DBSERVER;
 
     if($dbname === ":tool"){
-      $this->DBNAME = ''; 
-      return null;     
+      $this->DBNAME = '';
+      return null;
     }
-           
+
     if(!isset($dbname, $dbuser, $dbpass)){
       return false;
     }
+
+    self::normalizeHost($dbserver, $dbport, $dbsocket);
 
     $this->DBSERVER = $dbserver;
     $this->DBSOCKET = $dbsocket;      
@@ -154,18 +190,18 @@ abstract class DBBridge implements DBInterface, DBHelpers{
    * Return the object instance of the current connection
    * This can be mysqli or pdo
    *
-   * @return object
+   * @return object|false|null
    */
-  public function dbcon(){
+  public function dbcon() : object|false|null {
      return $this->conn;
   }
 
   //* All Helper methods---------------------------------
-  public function conName(){
+  public function conName() : string {
       return $this->conName;
   }
 
-  public function conType(){
+  public function conType() : string {
       return $this->conType;
   }  
 
@@ -175,7 +211,7 @@ abstract class DBBridge implements DBInterface, DBHelpers{
    *
    * @return string connection response
    */
-  public function conResponse(){
+  public function conResponse() : string {
     return $this->conResponse;
   } 
 
@@ -188,38 +224,36 @@ abstract class DBBridge implements DBInterface, DBHelpers{
     return $this->currentDB;
   }
 
-  public function isConnected(){
-    if($this->conn != false && isset($this->dbConnection)){
-        return true;
-    }else{
-        return false;
-    }
+  public function isConnected() : bool {
+    return ($this->conn != false && isset($this->dbConnection));
   }
 
   /**
    * Switch to a new database using current or new connection
    *
    * @param string $dbname (required)
-   * @param string $dbuser (optional)
-   * @param string $dbpass (optional)
-   * @param string $dbserver (optional)
-   * @param string $dbport (optional)
-   * @param string $dbsocket (optional)
+   * @param string|null $dbuser (optional)
+   * @param string|null $dbpass (optional)
+   * @param string|null $dbserver (optional)
+   * @param string|null|int $dbport (optional)
+   * @param string|null $dbsocket (optional)
    * @return true if connection successful
    */
   public function switchDB(
     
     $dbname, 
-    $dbuser   = null ,
-    $dbpass   = null, 
-    $dbserver = null, 
-    $dbport   = null, 
-    $dbsocket = null
+    string|null $dbuser   = null ,
+    string|null $dbpass   = null, 
+    string|null $dbserver = null, 
+    string|null|int $dbport   = null, 
+    string|null $dbsocket = null
 
     ){
 
+      self::normalizeHost($dbserver, $dbport, $dbsocket);
+
       return $this->newConnection($dbname, $dbuser, $dbpass, $dbserver, $dbport, $dbsocket);
-    
+
   }
 
   /**
@@ -313,39 +347,38 @@ abstract class DBBridge implements DBInterface, DBHelpers{
    * @param string $sql sqlquery
    * @return bool true is returned if query ran successfully
    */
-  abstract public function process_query($sql) : bool;
+  abstract public function process_query(string $sql) : bool;
 
   /**
    * Performs insert query
    *
-   * @param string $sql sqlquery
+   * @param array $sql sqlquery
    * @return bool true if insertion was done successfully
    */
-  abstract public function insert_query($sql) : bool;
+  abstract public function insert_query(array $sql) : bool;
 
   /**
    * Fetches data from the database
    *
-   * @param string $sql sqlquery
-   * @return void
+   * @param array $sql sqlquery
    */
-  abstract public function fetch_array($sql);
+  abstract public function fetch_array(array $sql);
   
   /**
    * updates database using supplied query
    *
-   * @param string $sql
+   * @param array $sql
    * @return bool
    */
-  abstract public function update_query($sql) : bool;
+  abstract public function update_query(array $sql) : bool;
 
   /**
    * deletes data from the database
    *
-   * @param string $sql
+   * @param array $sql
    * @return bool
    */
-  abstract public function delete_query($sql) : bool;
+  abstract public function delete_query(array $sql) : bool;
 
   /**
    * sort or creates binded parameters syntax
@@ -354,13 +387,20 @@ abstract class DBBridge implements DBInterface, DBHelpers{
    * @param string $sqL raw sql query supplied
    * @return bool
    */
-  abstract public function buildBind(&$data, $sqL) : bool;
+  abstract public function buildBind(&$data, string $sqL) : bool;
+
 
   /**
-   * This method defines a new connection parameters 
-   * {@see DBBridge::switchDB()}
-   * 
-   * @return bool true if connection is successful
+   * This method defines a new connection parameters {@see DBBridge::switchDB()}
+   *
+   * @param string $dbname
+   * @param string|null $dbuser
+   * @param string|null $dbpass
+   * @param string|null $dbserver
+   * @param string|null $dbport
+   * @param string|null $dbsocket
+   * @return bool
+   *  - True : if connection is successful
    */
   abstract protected function newConnection($dbname, $dbuser, $dbpass, $dbserver, $dbport, $dbsocket);
 
@@ -378,7 +418,7 @@ abstract class DBBridge implements DBInterface, DBHelpers{
    */
   abstract public function close_connection();
     
-  protected function buildError($error, $custom_error){
+  protected function buildError(string $error, $custom_error){
 
     self::$baseerror = $error;
 
@@ -393,12 +433,12 @@ abstract class DBBridge implements DBInterface, DBHelpers{
   /**
    * Build the limit used. Supports only a maximum of two limits range
    *
-   * @param array|bool(false) $limit [from to]. 
-   *      - when array is supplied, the first index value should be lesser than the second index value
-   *  -
-   * @return bool|string string of limit is returned onl if it matches proper structure
+   * @param array|false $limit [from to]. 
+   *    - when array is supplied, the first index value should be lesser than the second index value
+   *    - false: usents the limit
+   * @return string|false|null string of limit is returned only if it matches proper structure
    */
-  public function buildLimit($limit){
+  public function buildLimit(array|false $limit) : string|false|null {
     
     if($limit === false){ $this->limit = null; return null; }
     if(!is_array($limit)) return false;
@@ -409,13 +449,14 @@ abstract class DBBridge implements DBInterface, DBHelpers{
     }
    
     if(count($limit) > 0){
-    
+
+      $text = [];
       foreach ($limit as $key => $value) {
         $text[] = $limit[$key];
       }
 
-      $implode = " , ";
-      $newdataString = implode(" $implode " , $text);
+      $separator = " , ";
+      $newdataString = implode($separator , $text);
       $this->limit = " limit ".$newdataString;
 
       return $this->limit;

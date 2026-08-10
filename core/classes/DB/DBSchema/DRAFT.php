@@ -26,7 +26,7 @@ final class DRAFT {
      * @param string $type type of the field
      * @return void
      */
-    private static function field($name, $type){
+    protected static function field($name, $type){
         self::$field = $name;
         self::$fieldType = $type;
         $type = self::$TYPE[1]?? '';
@@ -37,15 +37,15 @@ final class DRAFT {
     }
 
     public static function hasError() : bool {
-        return self::$error? true : false;
+        return (isset(self::$error) && self::$error) ? true : false;
     }
 
 
     public static function err() : string {
-        return self::$error;
+        return isset(self::$error) ? self::$error : '';
     }
 
-
+    // USAGE FORMATS .........................................................................
 
     // $this->ID('size', 'custom_name').  //id int auto_increment not null [signed|unsigned]              
 

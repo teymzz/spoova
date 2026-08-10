@@ -21,10 +21,10 @@ class UserHandler {
     /**
      * Selects some specific fields from database.
      *
-     * @param array|string $arg1 
+     * @param array|string $fields 
      *      -When argument supplied is one and $arg1 is integer, sets data limit
      *      -When argument supplied is string or array sets field to be returned
-     * @param array|integer $limit limits of data to be returned
+     * @param array|integer $limits limits of data to be returned
      * @return void
      */
     public function data($fields, $limits = []){

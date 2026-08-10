@@ -3,12 +3,12 @@
 //include core framework
 include_once 'icore/filebase.php';
 
+use spoova\mi\core\commands\Root\Cli\CliCat;
 use spoova\mi\core\commands\Root\Root;
 use spoova\mi\core\commands\Root\Entry;
-use spoova\mi\core\commands\Root\Syntax;
 use spoova\mi\core\commands\Root\Cli;
-use spoova\mi\core\classes\FileManager;
-use spoova\mi\core\classes\Init;
+use spoova\mi\core\commands\Root\MiServer;
+use spoova\mi\core\commands\Root\MiSupport;
 
 class spoova extends Entry{
 
@@ -21,7 +21,6 @@ class spoova extends Entry{
      * @param string $appName
      */
     public function __construct($appName = '') {
-
         clearstatcache();
 
         if(!isCli()) redirect('/');
@@ -35,61 +34,13 @@ class spoova extends Entry{
                 return;
 
             }else{
-                $this->cls();
-
-                (new Root('version')); 
-
-                Cli::clearUp(2);
-                
-                Cli::textView('Type '.self::mi('cli','','').' to see a list of commands', 0, 2, 3).Cli::break(2);
+                Cli::cls();
+                Cli::cls(); (new Root('version'));
             }
         }
 
     }
-
-    /**
-     * start development server
-     *
-     * @return void
-     */
-    private function start(){
-
-        $document_root = dirname(__DIR__);
-        
-        self::log('..spoova started successfully');
-        
-        //fetch configuration
-        $FileManager = new FileManager;
-
-        $FileManager->setUrl(self::init_url());
-        
-        if($FileManager->openFile()){
-
-            //read the init file
-            
-            $init_config = $FileManager->readFile(
-                ['RESOURCE_WATCH', 'SETUP_COMPLETE']
-            );
-            
-            $watch  = (int) $init_config['RESOURCE_WATCH'];
-            $status = (int) $init_config['SETUP_COMPLETE']; 
-
-            $watchdog = ($watch == 1) ? ('offline (enabled)') : (($watch === 2)? 'online (enabled)' : 'disabled'); 
-            
-            $watch  = "  live server mode : ".$watchdog;
-
-            $status = "  setup status : ".$status;
-        
-            self::log(' ');
-            self::log($watch);
-            self::log($status);
-            self::log(' '); //add line break
-        }
-
-        //start development server
-        exec('php -S localhost:8080 -t '.$document_root, $output);
-    }
-
+    
     /**
      * execute commands
      *
@@ -101,165 +52,30 @@ class spoova extends Entry{
         $command = ($commands)? $commands[0] : '';
         $tolower = strtolower((string)$command);
 
+        /* Handle Cat Commands */
         $catDescs = ['cati::','catd::','catx::'];
+        if(($isCat = str_starts_with($command, 'cat::')) || in_array(($catx = substr($command, 0, 6)), $catDescs)){
 
-        if(($isCat = (substr($command, 0, 5) === 'cat::')) || in_array(($catx = substr($command, 0, 6)), $catDescs)){
+            $cat = ($isCat)? 'cat::' : ($catx ?? '');
 
-            $cat = ($isCat)? 'cat::' : $catx;
+            new CliCat($cat, $command, $commands);
 
-            $base = $command;
-            $command = explode($cat, $command, 2)[1] ?? '';
-            $command = ucfirst($command);
+            return;
 
-            //invalid control directories ...
-            $reserved_directories = ['core','icore','migrations','res','vendor','windows'];
-
-            $commands_directory = Init::key('CONSOLE_DIRECTORY', 'commands');
-
-            $control_directory = docroot.DS.$commands_directory.DS;
-
-            if(in_array($commands_directory, $reserved_directories)) {
-                
-                Cli::clearUp();
-                Cli::break(2);
-                Cli::textView(Cli::error('commands directory "'.Cli::warn($commands_directory).'" is reserved.'));
-                Cli::break(2);
-
-            }else if(is_dir($control_directory)){
-                
-                $controlSpace = scheme('commands');
-
-                $appSpace = $commands_directory.'\\'.$command;
-                $controller = $controlSpace.'\\'.$command;
-
-                if(appExists($appSpace)) {
-                    //parse other arguments ...
-
-                    $args = $commands;
-
-                    //resort arguments ... 
-                    unset($args[0]); $args = array_values($args);
-
-                    if(method_exists($controller, 'setCat')){
-                        $controller::setCat($cat);
-                    }
-
-                    if(method_exists($controller, 'validate_console') && method_exists($controller, 'isAuto')){
-                        
-                        if($controller::isAuto()){
-                            if($method = $controller::validate_console($args)){
-                                $arg = $args[count($args)-1];
-    
-                                $class = new $controller();
-    
-                                if(is_array($method)){
-                                    $args = $method;
-                                    $method = $args[0];
-                                    unset($args[0]); array_values($args);
-                                    if(method_exists($controller, $method)){
-                                        $class->$method($args);
-                                    }else{
-                                        Cli::textView(Cli::error('missing control method('.Cli::warn($method).') for "'.Cli::warn($arg).'"'));
-                                        Cli::break(2);
-                                    }
-                                }elseif(method_exists($controller, $method)){
-                                    $class->$method($arg);
-                                } else {
-                                    Cli::textView(Cli::error('missing control method('.Cli::warn($method).') for "'.Cli::warn($arg).'"'));
-                                    Cli::break(2);
-                                    return;
-                                }
-                            }else{
-                                return;
-                            }
-                        } else {
-                            $class = new $controller($args);
-                            $cats = $class->getCats();
-                            $cat = substr($cat, 0, -2);
-             
-                            $method  = $cats[$cat] ?? '';
-
-                            if(!method_exists($class, $method)){
-                                $meth = $method ? '('.Cli::warn($method).')' : '';
-                                Cli::break();
-                                Cli::textView(Cli::error('missing controller method'.$meth.' for "'.Cli::warn($base).'"'));
-                                Cli::break(2);
-                                return;
-                            }
-                            $class->$method($args);
-
-                        }
-                    }else{
-                        $class = new $controller($args);
-                    }
-
-                } else {
-
-                        
-                    Cli::clearUp();
-                    Cli::break(2);
-                    Cli::textView(Cli::danger(Cli::emo('point-list').' php mi '.Cli::warn($base)));
-                    Cli::break(2);
-                    Cli::textView(Cli::error('unrecognized command ['.Cli::warn($base).']'));
-                    Cli::break(2);
-
-                }
-
-            } else {
-                Cli::clearUp();
-                Cli::break(2);
-                Cli::textView(Cli::error('commands directory "'.Cli::warn($commands_directory).'" does not exist.'));
-                Cli::break(2);
-            }
-
-            
-            return ;
         }
 
         /* Handle Root Commands */
-        if(in_array($tolower, self::root)){
-
-            if($command == 'cli' && count($commands) == 2){
-
-                if($commands[1] == '-lists'){
-
-                    $this->cls();
-
-                    new Syntax(['-lists']);
-                    return;
-
-                }
-
-            } else if(count($commands) > 1) {
-                $this->display('Error: Invalid argument count!', 2);
-                return;
-            } else {
-
-                $this->cls();
-               
-                new Root($commands[0]);
-
-                return;
-
-            }
-        }
+        if(in_array($tolower, self::root)) return Root::initalize($commands);
 
         if($command){
-            $this->cls();
+            Cli::clearUp(1000);
 
-            if(in_array($tolower, self::main)){
-            
+            if(in_array($tolower, self::main)) {
                 array_shift($commands);
-                $arguments = array_values($commands);
-                
-                $class = scheme('core\commands\Root\\'.$command, false);
+                $command = $command === 'use'? 'Make\MkUse' : $command;
+                $class = scheme('core\commands\Support\\'.$command, false);
 
-                if(@class_exists($class)){
-                    (new $class($arguments));
-                    return;
-                }
-                $this->addError('command '.implode(' ', $commands).' cannot be executed');
-            
+                if(@class_exists($class)) return MiSupport::initialize($class, $commands, $command);
             }   
 
             if(strpos($command,":") != false) {
@@ -270,39 +86,40 @@ class spoova extends Entry{
                     $command = $exp[0];
                 }
             }
-
+            
+            /* Handle support commands through MiSupport class */
             array_shift($commands);
-            $arguments = array_values($commands);
-            $class = scheme('core\commands\Root\\'.$command);
-        
-            if(@class_exists($class)){
-                (new $class($arguments));
-                return;
-            } else {
-                if($command) array_unshift($commands, $command);
-        
-                if($commands){
-                    $this->display(Cli::warning(' command "'.Cli::warn(implode(' ', $commands)).'" not recognized', 2));
-                    $this->display('Type'.self::mi('cli -lists', '', '', '').' to see a list of available commands.', 4);
-                }
-            }            
+            $class = scheme('core\commands\Support\\'.$command);
+            if(@class_exists($class)) return MiSupport::initialize($class, $commands, $command);
+
+            /* Display error for other unsupported commands */
+            if($command) array_unshift($commands, $command);
+    
+            if($commands){
+                Cli::textView(Cli::warning(' command "'.Cli::warn(implode(' ', $commands)).'" not recognized'), break: '1|1');
+                $this->display('Type:'.self::mi('cli -lists', '', '', '').' to see a list of available commands.', 4);
+            }
         }
         
             
     }
 
+
     /**
-     * @inheritDoc \core\commands\Root\console
+     * @inheritDoc spoova\mi\core\commands\Root\console
      *
      * @return void
      */
     public function run(){
-        /* start development server */
-        if(self::commands(0) == 'start'){
-            self::start(); 
+
+        $command = self::commands(0) ?? '';
+
+        // Check and run development server syntax first 
+        if(in_array($command, ['start', 'stop'])){
+            new MiServer($command);
             return;
-        } 
-        parent::cliRun();        
+        }
+        parent::cliRun();  // Console::cliRun(), self::execute().    
     }
 
 }

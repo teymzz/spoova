@@ -26,9 +26,11 @@ final class UserId extends User{
      * Return primary id of a user field in database 
      * This function can only be used if user primary key field name is set as "id"
      *
-     * @return string|bool(false)
+     * @return string|false 
+     *  - FALSE only if database error occurs
+     *  - String (empty or non-empty) if no error occurs.
      */
-    public function primary() {
+    public function primary(): string|false {
         
         $data = self::data();
 
@@ -47,7 +49,6 @@ final class UserId extends User{
             }
 
         }
-
 
         return $data['id'] ?? '';
 

@@ -6,7 +6,7 @@ use DBStatus;
 use spoova\mi\core\classes\DB;
 use spoova\mi\core\classes\DB\DBSchema\DBSCHEMA;
 use spoova\mi\core\classes\DB\DBSchema\DRAFT;
-use spoova\mi\core\classes\FileManager;
+use spoova\mi\core\classes\Bundle\Filemanager\Filemanager;
 use spoova\mi\core\commands\Root\Cli;
 use User;
 
@@ -22,7 +22,7 @@ class DBMigrator
 
     public function __construct(){
 
-        $auth = \User::auth();
+        $auth = User::auth();
         $dbc = $auth->dbc();
         $dbh = $auth->dbh();
 
@@ -42,14 +42,15 @@ class DBMigrator
         if($this->createMigrationsTable()){
             $appliedMigrations = $this->getAppliedMigrations();
 
-            $migrationsFolder = docroot.'/migrations';
-            $migrationSpace   = scheme("migrations\\", false);
+            $migrationsFolder = docroot.'/db/migrations';
+            $migrationSpace   = scheme("db\migrations\\", false);
 
-            $Filemanager = new FileManager;
-            $Filemanager->setUrl($migrationsFolder);
+            $Filemanager = new Filemanager;
+            $Filemanager->source($migrationsFolder);
             $files = $Filemanager->getFiles(false, false);
             
             $newMigrations = array_diff($files, $appliedMigrations);
+
 
             $aborted = !($newMigrations); //aborted as true if no new migrations files found
 
@@ -62,7 +63,9 @@ class DBMigrator
                 $migration = pathinfo($migration, PATHINFO_FILENAME);
                 $migrationClass = $migrationSpace.'\\'.$migration;
 
-                // instantiate migration file
+                /**
+                 * This is handled by the DBMigrator class
+                 */
                 $migrator = new $migrationClass;
                 
                 Cli::textView("Applying migration ........ ".Cli::warn($migration), 0, '|2');
@@ -71,9 +74,9 @@ class DBMigrator
 
                 if(!DBStatus::err() && !DRAFT::hasError()){
                     //save migration file...
-
+                    
                     if($this->saveMigrations([$migration])){
-                        print (br("[".date('Y-m-d H:i:s')."] ..... ".Cli::alert($migration. Cli::emo('checkmark', 1)), 2));
+                        print (br("[".date('Y-m-d H:i:s')."] ..... ".Cli::alert($migration. Cli::emo('checkmark', '1')), '2'));
                     }else{
 
                         $migrator->down(); 
@@ -116,22 +119,22 @@ class DBMigrator
                     
                 }
 
-                Cli::textView(Cli::alert("{$totalApplied} new ".inflect('migration', $totalApplied)." implemented out of {$totalFiles}"), 0, '|2');
+                Cli::textView(Cli::alert("{$totalApplied} new ".inflect('migration', $totalApplied)[0]." implemented out of {$totalFiles}"), 0, '|2');
 
             }else{
-                Cli::textView(Cli::color("migrations:",'green', '|1')."no new migration files found", 2, '|2');
+                Cli::textView(Cli::color("migrations:",'valid')." no new migration files found", 2, '|2');
             }
 
         } else {
 
-            Cli::textView(Cli::error("migration table does not exist in database ".Cli::warn(User::config('DBNAME')).""), 2, '|2');
-            Cli::textView(Cli::error(DBStatus::err()), 2, '|2');
+            Cli::textView(Cli::error("migration table does not exist in database ".Cli::warn(User::config('DBNAME')).""), '2', '|2');
+            Cli::textView(Cli::error(DBStatus::err()), '2', '|2');
 
         }
        
     }
 
-    public function migrate_down(int $times = null){
+    public function migrate_down(?int $times = null){
 
         if(func_get_args() > 0);
 
@@ -146,10 +149,10 @@ class DBMigrator
 
             $migrations = array_column($dbh->results(), 'migration');
             
-            $migrationSpace   = scheme("migrations", false)."\\";
+            $migrationSpace   = scheme("db\migrations", false)."\\";
 
             if($error = $dbh->error()){
-                Cli::textView(Cli::error("{$error}"), 0, '|2');
+                Cli::textView(Cli::error("{$error}"), break: '|2');
                 exit();
             }
 
@@ -174,7 +177,7 @@ class DBMigrator
                     }
 
                     //get migration file 
-                    $path = docroot."/migrations/".$migration.'.php';
+                    $path = docroot."/db/migrations/".$migration.'.php';
 
                     if(is_file($path) && class_exists($migrationSpace.$migration)){
 
@@ -186,13 +189,13 @@ class DBMigrator
                         
                         if(DBStatus::err() || DRAFT::hasError()){
                             $aborted = true;
-                            Cli::textView(Cli::error("migration was aborted because error was found in \"".Cli::warn("{$migrationClass}")."\""), 0, '|2');
-                            if(DBStatus::err()) Cli::textView(Cli::danger("Sql error:",'|1').DBStatus::err(), 2, '|2');
+                            Cli::textView(Cli::error("migration was aborted because error was found in \"".Cli::warn("{$migrationClass}")."\""), break: '|2');
+                            if(DBStatus::err()) Cli::textView(Cli::danger("Sql error:",'|1').DBStatus::err(), '2', '|2');
                             
                             if(DRAFT::hasError()){
-                                Cli::textView(DRAFT::err(), 0, '|2');
+                                Cli::textView(DRAFT::err(), break: '|2');
                             }
-                            if(DBSCHEMA::DRAFT_SQL()) Cli::textView(DBSCHEMA::DRAFT_SQL(), 2, '|2');
+                            if(DBSCHEMA::DRAFT_SQL()) Cli::textView(DBSCHEMA::DRAFT_SQL(), '2', '|2');
                             break;
                         }else{
                             //remove migration from database
@@ -200,8 +203,8 @@ class DBMigrator
 
                             if(!$dbh->delete()){
                                 $aborted = true;
-                                Cli::textView(Cli::error("migration reversal discontinued because error was found in [".Cli::warn($migration)."")."] ", 2, '|2');
-                                Cli::textView(Cli::danger("Sql error:",'|1').$dbh->error(), 2, '|2');
+                                Cli::textView(Cli::error("migration reversal discontinued because error was found in [".Cli::warn($migration)."")."] ", '2', '|2');
+                                Cli::textView(Cli::danger("Sql error:",'|1').$dbh->error(), '2', '|2');
                                 break;                             
                             }
 
@@ -211,7 +214,7 @@ class DBMigrator
 
                     }else {
 
-                        Cli::textView(Cli::error("migration file [".Cli::warn($migration)."")."] missing", 2, '|2');
+                        Cli::textView(Cli::error("migration file [".Cli::warn($migration)."")."] missing", '2', '|2');
                         exit();
 
                     }
@@ -219,22 +222,22 @@ class DBMigrator
                 }
 
                 if( ($times === $totalApplied) && ($times === 0)){
-                    Cli::textView(Cli::alert("no migrations reversed out of {$totalFiles}", '|1'), 2, '|2');
+                    Cli::textView(Cli::alert("no migrations reversed out of {$totalFiles}", '|1'), '2', '|2');
                 }elseif( ($times === $totalApplied) ){
-                    Cli::textView(Cli::alert("{$totalApplied} recent migrated ".inflect('file', $totalApplied)." successfully reversed out of {$totalFiles} ".inflect('migration', $totalFiles), '|1'), 2, '|2');
+                    Cli::textView(Cli::alert("{$totalApplied} recent migrated ".inflect('file', $totalApplied)[0]." successfully reversed out of {$totalFiles} ".inflect('migration', $totalFiles)[0], '|1'), '2', '|2');
                 }else if(($times != $totalApplied)){
                     if($times > $totalFiles) $times = $totalFiles;
-                    Cli::textView(Cli::alert("{$totalApplied} recent migrated ".inflect('file', $totalApplied)." reversed out of {$times} ".inflect('migration', $totalFiles), '|1'), 2, '|2');
+                    Cli::textView(Cli::alert("{$totalApplied} recent migrated ".inflect('file', $totalApplied)[0]." reversed out of {$times} ".inflect('migration', $totalFiles), '|1')[0], '2', '|2');
                 }
 
 
             }else{
-                Cli::textView(Cli::color("migrations:",'green', '|1')."no reversible migrations found", 2, '|2');
+                Cli::textView(Cli::color("migrations:",'green')." no reversible migrations found", '2', '|2');
             }
 
         } else {
 
-            Cli::textView(Cli::error("migration table does not exist in database ".Cli::warn(User::config('DBNAME')).""), 2, '|2');
+            Cli::textView(Cli::error("migration table does not exist in database ".Cli::warn(User::config('DBNAME')).""), '2', '|2');
 
         }
        
@@ -274,9 +277,9 @@ class DBMigrator
         
     }
 
-    public function migrate_status($args){
+    public function migrate_status(array $args){
         if($args){
-            Cli::textView(Cli::error("no arguments expected on syntax"), 0, "|2");
+            Cli::textView(Cli::error("no arguments expected on syntax"), break: "|2");
             return false;
         }
 
@@ -287,8 +290,8 @@ class DBMigrator
 
         if(!$dbh->table_exists('migrations')){
             
-            Cli::textView(Cli::error('migration table does not exist'), 0, "|2");
-            Cli::textView('Trying to generate one', 0, "|2");
+            Cli::textView(Cli::error('migration table does not exist'), break: "|2");
+            Cli::textView('Trying to generate one', break: "|2");
             Cli::wait(1);
 
             $this->createMigrationsTable();
@@ -306,9 +309,9 @@ class DBMigrator
 
         }
 
-        $migrationsFolder = docroot.'/migrations';
+        $migrationsFolder = docroot.'/db/migrations';
 
-        $Filemanager = new FileManager;
+        $Filemanager = new Filemanager;
         $Filemanager->setUrl($migrationsFolder);
         $files = $Filemanager->getFiles(false, false);
         
@@ -335,7 +338,7 @@ class DBMigrator
             
             if(!$value){
                 $value = Cli::emo('crossmark', '|1').'Not available ';
-                $table .= "| ".limitChars($value, $lim2).Cli::dots($lim2 + 2, $value, " ")."|".br(); 
+                $table .= "| ".limitChars($value, $lim2).Cli::dots($lim2, $value, " ")."|".br(); 
             }else{
                 
                 $table .= "| ".limitChars($value, $lim2).Cli::dots($lim2, $value, " ")."|".br(); 

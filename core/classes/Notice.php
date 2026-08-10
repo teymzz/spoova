@@ -76,9 +76,11 @@ class Notice
      * if $key exists, returns $inline_message or default message set 
      *
      * @param string $key flash key
-     * @return string
+     * @param string $inline_message message returned if flash key exist 
+     *  - When defined, this will override the default flash key message.
+     * @return string flash key message or empty string
      */    
-    public function flash($key, $inline_message = '') : string {
+    public function flash(string $key, string $inline_message = '') : string {
 
         if(Session::base()->has(self::FLASH_KEY, $key)){
             if(func_num_args() < 2) {
@@ -92,6 +94,11 @@ class Notice
         return '';
     }
 
+    /**
+     * Returns all data existing inside the current session flash key
+     *
+     * @return array
+     */
     public static function flashes() : array{
         if(Session::base()->has(self::FLASH_KEY)){
             $flashes = Session::base()->value(self::FLASH_KEY);

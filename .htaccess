@@ -1,17 +1,19 @@
 <IfModule mod_rewrite.c>
-    #Header add Access-Control-Allow-Origin: "*"
-    #Header add Access-Control-Allow-Methods: "GET,POST,OPTIONS,DELETE,PUT"
-    #Header add Access-Control-Allow-Headers: "Content-Type"
     
     #Basic Options -------------------------------------------------
+    Options -Multiviews
     RewriteOptions inherit
     RewriteEngine on
 
     #ErrorDocuments: caution!!!
-    ErrorDocument 404 /spoova/res/errors/404.php
+    # ErrorDocument 404 /spoov/res/errors/404.php
 
     #Advanced Options ----------------------------------------------
 
+    # Block direct access to ALL php files
+    # RewriteCond %{THE_REQUEST} \.php [NC]
+    # RewriteRule ^ - [R=404,L]
+      
     #remove php file extension 
     RewriteCond %{REQUEST_FILENAME} !-d
     RewriteCond %{THE_REQUEST} ^[A-Za-z]{3,}\s([^.]+)\.php [NC]
@@ -21,7 +23,7 @@
     RewriteCond %{REQUEST_FILENAME} !-d
     RewriteCond %{REQUEST_FILENAME}.php -f
     RewriteRule ^(.*?)/?$ $1.php [L]   
-      
+
     # Secure all directories - exempted directories must be ignored
     RewriteCond %{REQUEST_FILENAME} !-f
     RewriteRule ^([\/A-Za-z0-9][\/A-Za-z0-9-_\.]*?(^(.js))*?)$ index.php [NC,L]    
@@ -29,14 +31,14 @@
     # Secure and Re-Route resource folder php files only  
     RewriteRule ^(res/(.*\.php)?)$ index.php [NC,L]  
     RewriteRule ^(mi) index.php [NC,L]
-    RewriteRule ^(composer\.json) index.php [NC,L]
+    RewriteRule ^(composer\.json|composer\.lock) index.php [NC,L]
 
     # Ignore public folder and other file extensions
     RewriteRule ^(res)($|//) - [L]
     RewriteRule ^(\*\.!(php))($|//) - [L]
     
     # Secure specific core directories and its entire contents
-    RewriteRule ^((core|icore|windows)(//.*?)?) index.php [NC,L]
+    RewriteRule ^((core|icore|windows|commands|notes)(//.*?)?) index.php [NC,L]
 
     # Send all directories to the router file
     RewriteRule ^((//.*?)?([\/0-9a-zA-Z-_]*)?\.php) index.php [NC,L]   
@@ -44,4 +46,16 @@
     setEnv HTACCESS on
     setEnv LAUNCHER main
     setEnv ENVIRONMENT offline
+</IfModule>
+
+<IfModule headers.c>
+    
+    #Header add Access-Control-Allow-Origin: "*"
+    #Header add Access-Control-Allow-Methods: "GET,POST,OPTIONS,DELETE,PUT"
+    #Header add Access-Control-Allow-Headers: "Content-Type"
+    Header set X-Frame-Options "SAMEORIGIN"
+    Header set X-Content-Type-Options "nosniff"
+    Header set X-XSS-Protection "1; mode=block"
+    Header set X-Transport-Security "max-age=31536000; includeSubDomains; preload"
+
 </IfModule>

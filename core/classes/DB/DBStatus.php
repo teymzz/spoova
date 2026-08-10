@@ -25,7 +25,7 @@ class DBStatus extends DBBridge{
    */
   static function err(string $custom_error = '', bool $update = false){
 
-    $error = self::$baseerror;
+    $error = self::$baseerror ;
     if($error && $custom_error){
       if(!empty(trim($custom_error))) self::$baseerror = $custom_error;
     }

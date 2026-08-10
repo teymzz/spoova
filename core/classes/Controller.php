@@ -73,6 +73,16 @@ class Controller{
     return static::$routes;
   }
 
+ /**
+  * Alias for {@see Controller::addRoutes()}. This defines or returns a list of named routes
+  *
+  * @param array $routes list of named routes
+  * @return array
+  */
+  public static function nameRoutes(array $routes = []): array{
+    return self::addRoutes(...func_get_args());
+  }
+
   /**
    * Returns Defined lists of named routes
    *
@@ -87,7 +97,7 @@ class Controller{
    *
    * @return array
    */
-  final static public function loadRoutes(Controller $Class = null) : array {
+  final static public function loadRoutes(?Controller $Class = null) : array {
 
     if(!$Class) { $Class = "Window"; }
    

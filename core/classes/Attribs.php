@@ -74,7 +74,7 @@ class Attribs {
      *
      * @param array $oldList Default keys to be updated
      * @param string|array $newList string attributes or arrays of keys to be replaced or added
-     * @param bool $return_array determines if array should be returned or string.
+     * @param bool $is_array determines if array should be returned or string.
      * @return array|string
      */
     static function update(array $oldList, array|string $newList, bool $is_array = false) : array|string {

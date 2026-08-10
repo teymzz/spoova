@@ -6,4 +6,7 @@
  */
 class Route extends Window{
 
+    public function __construct()
+    {}
+
 }

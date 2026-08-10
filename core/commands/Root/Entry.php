@@ -3,12 +3,15 @@
 namespace spoova\mi\core\commands\Root;
 
 use spoova\mi\core\commands\Root\Cli;
-use spoova\mi\core\classes\FileManager;
+use spoova\mi\core\classes\Bundle\Filemanager\Filemanager;
+
+/** Used in documentation of @see Entry::directives */ 
+use spoova\mi\core\commands\Support\Info;  
 
 /**
  * class Entry
  * 
- * @author Akinola Saheed <teymss@gmail.com>
+ * @author Akinola Saheed <akinolasaheed001@gmail.com>
  * 
  * Entry point for all spoova commands
  */
@@ -16,13 +19,18 @@ class Entry extends Console{
 
     protected const max_commands_level = 6;
 
+    protected const bool latent_mode = false;
+
     protected const spack = 'spack_';
     protected const crest = self::spack.SP_VERSION;
 
-    protected const root = [ 'version', 'support', 'features', 'cli', 'functions', 'classes', 'repack', ':wiz' ];
+    /**
+     * List of commands that may be applied directly
+     */
+    protected const root = [ 'mi', 'version', 'support', 'features', 'cli', 'functions', 'classes', 'repack', ':wiz', ':wizi' ];
 
     /**
-     * commands for configurations
+     * List of commands for configurations
      */
     protected const config = [
         'dbonline', 'dboffline', 'users_table', 'cookie_field', 'watch', 'meta', 'watch status'
@@ -30,7 +38,7 @@ class Entry extends Console{
 
 
     /**
-     * commands for installations
+     * List of commands for installations
      */
     protected const install = [
         'install', 'install app', 'install db', 'install dbname'
@@ -40,11 +48,11 @@ class Entry extends Console{
      * Contain the list of acceptable first argument directives
      */
     protected const main = [
-        'install', 'config', 'project'
+        'install', 'use', 'config', 'project'
     ];
 
     /**
-     * list of directives (commands) and their functions
+     * list of directives (commands) and their function. INFO available {@see Info} .
      */
     protected const directives = [     
         
@@ -53,6 +61,7 @@ class Entry extends Console{
         '   features'  => 'returns a list of spoova features',
         '   support'   => 'returns supports',
         '   cli'       => 'returns list of supported commands',
+        '   use'       => 'determines a list of files to be used',
         '   functions' => 'return list of custom functions and a brief description'.PHP_EOL,
         '   classes'   => 'return list of classes',
         '   class_methods <\'classnamespace\'>'   => 'return list of class methods. (Note the single quotes)',
@@ -94,7 +103,7 @@ class Entry extends Console{
     ];
     
     //list of usable methods in directives;
-    protected static $syntaxes = [
+    protected static array $syntaxes = [
 
         'config' => [ 
             'dbonline' => ' empty field should be replaced with dash "-" <optional_path>  >> config dboffline \'dbuser dbpass dbserver dbport dbsocket\' \'optional_directory\' ', //done
@@ -108,7 +117,6 @@ class Entry extends Console{
 
     ];
 
-
     public static function init_url(): string {
         return getDefined('docroot')."/icore/init";
     }
@@ -118,17 +126,17 @@ class Entry extends Console{
     }        
 
     public static function get_init(){
-    
+
         $init_url = self::init_url();
-        $FileManager = new FileManager;
-        $FileManager->setUrl($init_url);
+        $Filemanager = new Filemanager;
+        $Filemanager->setUrl($init_url);
         
-        if(!$FileManager->openFile()){
+        if(!$Filemanager->openFile()){
             Console::log('init file is missing << create init file in the root icore folder');
             return false;
         }
 
-        return $FileManager;
+        return $Filemanager;
 
     }
 
@@ -142,21 +150,30 @@ class Entry extends Console{
      * @param string $pointer main left pointer 
      * @return string
      */
-    static function mi($code, $desc = '', $divider = 'infinite-arrow', $pointer = 'ribbon-arrow'){
+    static function mi($code, $desc = '', $divider = 'infinite-arrow', $pointer = 'bullet'){
 
         $divider = !$divider? 'infinite-arrow' : $divider;
 
         $pointer = $pointer == '' ? '' : Cli::emo($pointer);
         return $pointer.
-               Cli::btn(consoler, '1|1').
-               Cli::color($code, 'blue').
-               ($desc? Cli::emox($divider, 1).' '.$desc : '');
+               Cli::color(Cli::style(fn() => ' ['.consoler.'] ', ['']), 'inverse').
+               Cli::color(Cli::style(fn() => $code, ['italic']), 'alert').
+               ($desc? Cli::emox($divider, 1).' '.$desc.' ' : ($code? ' ' : ''));
 
     }
 
-    static function commandTitle($title, int $pause = 0){
+    /**
+     * Display the title of a command. This is similar to {@Cli::headerView()} method 
+     * and may be used to declare the title of a command. Headers are displayed by default using 
+     * suitable icons.
+     *
+     * @param string $title
+     * @param integer $pause delay after title is printed.
+     * @return void
+     */
+    static function commandTitle(string $title, int $pause = 0){
 
-        Cli::textView(Cli::danger(Cli::emo('point-list').' '.$title.' '));
+        Cli::headerView($title);
         Cli::pause($pause);
         Cli::break();
 

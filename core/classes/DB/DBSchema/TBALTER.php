@@ -3,7 +3,7 @@
 namespace spoova\mi\core\classes\DB\DBSchema;
 
 use Closure;
-use spoova\mi\core\commands\Cli;
+use spoova\mi\core\commands\Root\Cli;
 
 trait TBALTER {
 

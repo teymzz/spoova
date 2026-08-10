@@ -10,9 +10,40 @@ class DB implements DBHelpers{
   
   private ?DBBridge $conn = null; //dbconnection
   private ?DBHandler $dbh = null; //dbhandler
-  private $conName;
+  private ?array $connections = [];
+
+  private const conNamesmap = [
+      'mysqli' => 'MiSQL', 
+      'misqli' => 'MiSQL', 
+      'misql'  => 'MiSQL',
+      'pdo'    => 'MiPDO',
+      'mipdo'  => 'MiPDO'
+  ];
+  
+  /**
+   * Specifies the connection handler class name (e.g MiSQL, MiPDO)
+   *
+   * @var string
+   */
+  private ?string $conName;
+
+  /**
+   * Static alias for {@see DB::$conName}
+   *
+   * @var string
+   */
+  private static ?string $conNameStatic = null;
+
+  /**
+   * Static lists of all specified connection handler classes names (e.g MiSQL, MiPDO)
+   *
+   * @var array 
+   */
+  private static ?array $DBCON = [];
+
   private $currentDB;
   private $isConnected = false;
+  private const DBCON = DBCON;
 
   protected $newState;
   protected $error;
@@ -21,29 +52,32 @@ class DB implements DBHelpers{
   protected $conType;
   
   /**
-   * creates an instance of a new DB 
+   * creates an instance of a DB class. This does NOT create a new database connection. 
    *
    * @param string $conName connection class name (MiSQL, MiPDO, ...)
    * 
    */
-  function __construct(string $conName = ''){
+  function __construct(string $conName = DBCON){
      
-    $conName = trim($conName);  
+    $conName = $this->mapConnName(trim($conName));  
 
+    // allow only default supported connection names here.
     if(in_array($conName, self::conNames, true)){
+      $conName = strtoupper($conName);
+      self::$conNameStatic = $conName;
+      if(!in_array($conName, self::$DBCON)) self::$DBCON[] = $conName;
       $this->newState = $conName; 
     }
 
   }
   
   /**
-   * This method takes the database root 
-   * query handler class name (MiSQL, MiPDO, ...)
+   * This method takes the database root query handler class name (MiSQL, MiPDO, ...)
    *
    * @param string $conName name of connector class
    * @return object of the connection
    */
-  public function open(string $conName = null){
+  public function open(?string $conName = null){
    return $this->open_connection($conName);
   }
 
@@ -53,10 +87,8 @@ class DB implements DBHelpers{
    * @param string $conName connector class Name
    * @return string
    */
-  private function reloadName($conName = ''){
-    if(strtolower($conName) === 'misqli') $conName = 'MiSQL';
-    if(strtolower($conName) === 'pdo')    $conName = 'MiPDO';
-    return $conName;
+  private function mapConnName($conName = ''){
+    return self::conNamesmap[strtolower($conName)] ?? $conName;
   }
 
   /**
@@ -74,13 +106,13 @@ class DB implements DBHelpers{
 
   	}else{
 
-      $conName = in_array($this->reloadName($conName), self::conNames, true) ? $conName : DBCON;	
+      $conName = in_array($this->mapConnName($conName), self::conNames, true) ? $conName : DBCON;	
 
   	}
     
-    $conName = $this->reloadName($conName);
+    $conName = $this->mapConnName($conName);
 
-  	$conClass =  __NAMESPACE__ ."\DB\\". $conName;
+  	$conClass =  __NAMESPACE__ ."\DB\DBM\\". $conName;
 
     if( @class_exists($conClass) ) {
 
@@ -96,8 +128,31 @@ class DB implements DBHelpers{
   }
 
   //* All Helper methods------------(specific to current class)
+
   public function conName(){
       return $this->conName;
+  }
+
+  /**
+   * Returns all or currently detected database connection handler names (e.g MySQL, PDO)
+   *
+   * @param boolean $current TRUE returns only the current database connection name while FALSE returns all names.
+   * @return array|string
+   */
+  public static function DBCON(bool $current = false) : array|string {
+
+    
+      $conNames = ($current)? [self::$conNameStatic] : self::$DBCON;
+
+      $conNames = array_unique(array_map(fn($conName) => strtolower($conName) , $conNames));
+      $names = [];
+      foreach($conNames as $conName){
+        if(isset(self::conNamesmap[$conName])) $conName = self::conNamesmap[$conName];
+        if(($name = array_search($conName, self::conNamesmap))!==false){
+          $names[] = strtoupper($name);
+        }
+      }
+      return $current? join('',$names) : $names;
   }
 
   public function conType(){
@@ -156,7 +211,7 @@ class DB implements DBHelpers{
    * @param DBBridge $connection
    * @return null|DBHandler
    */
-  private function selfUpdate($connection){
+  private function selfUpdate($connection) : null|DBHandler {
 
     $this->conName     = $connection->conName();
     $this->isConnected = $connection->isConnected();
@@ -174,12 +229,12 @@ class DB implements DBHelpers{
   }
 
   /**
-   * open a new database connection with default configurations or
-   * with new configurations when parameters are supplied
+   * Open a new database connection with default configurations or
+   * with new configurations when parameters are supplied.
    *
-   * @param string|array $dbname
+   * @param string|array|null $dbname database name or full database connection parameters.
    * 
-   *    @param array $dbname: (indexed array must have least 4 keys in the order below)
+   * - $dbname (array): (indexed array must have least 4 keys in the order below)
    *      <pre>
    *         (array) => [
    *                     '[ 0 | NAME   | DBNAME ]'     => (string) DB NAME. Optional
@@ -197,25 +252,25 @@ class DB implements DBHelpers{
    * @param string $dbserver  Required
    * @param string $dbport    Required (if using port)
    * @param string $dbsocket  Optional
-   * @return void|DBHandler
+   * @return null|DBHandler
    */
   public function openDB(
-    $dbname = null,
+    array|string|null $dbname = null,
     string $dbuser = '', 
     string $dbpass = '', 
     string $dbserver = '',
     string $dbport = '', 
     string $dbsocket = ''
-    )
+    ): null|DBHandler
   {
 
     if(isset($this->newState)){
-      $conName = in_array($this->reloadName($this->newState), self::conNames, true) ? $this->newState : DBCON;
+      $conName = in_array($this->mapConnName($this->newState), self::conNames, true) ? $this->newState : DBCON;
     }else{
       $conName = DBCON; 
     }
 
-    $conName = $this->reloadName($conName);
+    $conName = $this->mapConnName($conName);
 
     $dbconfig = $dbname; //note (dbname is modified below)      
 
@@ -228,16 +283,16 @@ class DB implements DBHelpers{
       $dbsocket = $dbconfig[5]?? $dbconfig['DBSOCKET'] ?? $dbconfig['SOCKET'] ?? null;
     }
 
+
     //test socket connetions when paramters are only four
     if($this->testSock($dbport)){
       $dbsocket = $dbport;
       $dbport = '';
     }
 
-    $conClass =  __NAMESPACE__ ."\DB\\". $conName;
+    $conClass =  __NAMESPACE__ ."\DB\DBM\\". $conName;
     
     $params = [];
-
     if(func_num_args() > 0){ 
        
        //if only database name is supplied, use default connection parameters
@@ -254,6 +309,46 @@ class DB implements DBHelpers{
 
      return $this->dbh = $this->selfUpdate($conn);
            
+  }
+
+  
+  /**
+   * Alias to {@see DB::openDB()}. Static method to open a new database connection with default configurations or
+   * with new configurations when parameters are supplied.
+   *
+   * @param string|array|null $dbname database name or full database connection parameters.
+   * 
+   * - $dbname (array): (indexed array must have least 4 keys in the order below)
+   *      <pre>
+   *         (array) => [
+   *                     '[ 0 | NAME   | DBNAME ]'     => (string) DB NAME. Optional
+   *                     '[ 1 | USER   | DBUSER ]'     => (string) DB USER. Required
+   *                     '[ 2 | PASS   | DBPASS ]'     => (string) DB PASS. Required
+   *                     '[ 3 | SERVER | DBSERVER ]'   => (string) DB SERVER. Required
+   *                     '[ 4 | PORT   | DBPORT ]'     => (string) DB SERVER. Required (if using port)
+   *                     '[ 5 | SOCKET | DBSOCKET ]'   => (string) DB SOCKET. Optional
+   *               ]
+   *      </pre>
+   * 
+   * @param string $dbname    Optional
+   * @param string $dbuser    Required
+   * @param string $dbpass    Required
+   * @param string $dbserver  Required
+   * @param string $dbport    Required (if using port)
+   * @param string $dbsocket  Optional
+   * @return null|DBHandler
+   */
+  public static function boot(
+    array|string|null $dbname = null,
+    string $dbuser = '', 
+    string $dbpass = '', 
+    string $dbserver = '',
+    string $dbport = '', 
+    string $dbsocket = ''
+    ): null|DBHandler
+  {
+    $db = new DB();
+    return $db->openDB(...func_get_args());
   }
 
   /**
@@ -276,15 +371,15 @@ class DB implements DBHelpers{
    * @param string $dbsocket  Optional
    * @return null|DBHandler
    */
-  public function openTool(string|array $dbuser = '', string $dbpass = '', string $dbserver = '', string $dbport = '', string $dbsocket = ''){
+  public function openTool(string|array $dbuser = '', string $dbpass = '', string $dbserver = '', string $dbport = '', string $dbsocket = '') : DBHandler|null {
 
     if(isset($this->newState)){
-      $conName = in_array($this->reloadName($this->newState), self::conNames, true) ? $this->newState : DBCON;
+      $conName = in_array($this->mapConnName($this->newState), self::conNames, true) ? $this->newState : DBCON;
     }else{
       $conName = DBCON; 
     }
 
-    $conName = $this->reloadName($conName);
+    $conName = $this->mapConnName($conName);
 
     if(is_array($dbuser)){
       if(func_num_args() > 1) {
@@ -303,7 +398,7 @@ class DB implements DBHelpers{
        return false;
     }
 
-    $conClass =  __NAMESPACE__ ."\DB\\". $conName;
+    $conClass =  __NAMESPACE__ ."\DB\DBM\\". $conName;
 
     if(count(func_get_args()) > 0){ 
       $conn = new $conClass('', $dbuser, $dbpass, $dbserver, $dbport, $dbsocket);
@@ -329,7 +424,7 @@ class DB implements DBHelpers{
    *
    * @param string $dbname
    * @param  $handler reference variable that will anchor @core/classes/DBHandler
-   * @return boolean|@\core\classes\handler
+   * @return boolean
    */
   public function newDB(string $dbname, &$handler ){
     
@@ -369,14 +464,68 @@ class DB implements DBHelpers{
     
   }
 
-  //switch connection type //This may be removed in future version
+  //switch connection type //This may be removed in future versions
   public function misql(){
     $this->switchTo("MiSQL");
   }
 
-  //switch connection type //This may be removed in future version
+  //switch connection type //This may be removed in future versions
   public function mipdo(){
     $this->switchTo("MiPDO");
+  }
+
+  /**
+   * Sets or formats a query to be executed
+   *
+   * @param array|string $query
+   * @param array $data binded data or binded key and value pairs
+   * @param boolean $usedata enables the use of data set pairs.
+   * @return DBHandler|null 
+   */
+  public static function query(array|string $query, $data = [], bool $usedata = false): DBHandler|null {
+    $db = new DB();
+    $db = $db->openDB();
+    if($db){
+      return $db->query(...func_get_args());
+    }
+    return null;
+  }
+
+
+  /**
+   * Creates a new connection instance using default configuration or newly supplied configuration parameters
+   *
+   * @param array|string|null|null $dbname
+   * @param string $dbuser
+   * @param string $dbpass
+   * @param string $dbserver
+   * @param string $dbport
+   * @param string $dbsocket
+   * @return DBHandler|False
+   */
+  public static function connection(
+    array|string|null $dbname = null,
+    string $dbuser = '', 
+    string $dbpass = '', 
+    string $dbserver = '',
+    string $dbport = '', 
+    string $dbsocket = ''
+    ): DBHandler|False  {
+    $db = new DB();
+    return $db->openDB() ?? false;
+  }
+
+  /**
+   * sets permission for enabling metrics or returns metrics data using  {@see DBHandler::metrics()}
+   *
+   * @param integer $mode optional [0|1|2]
+   *  - 0: returns metrics data 
+   *  - 1: enables simple metrics analysis 
+   *  - 2: enable advanced metrics analysis
+   * @return array
+   */
+  public static function metrics(int $mode = 0) : array {
+    return DBHandler::metrics($mode);
   }
   
 }

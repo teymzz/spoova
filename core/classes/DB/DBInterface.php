@@ -9,11 +9,11 @@
          */
         function __construct(
             $dbname   = null, 
-            $dbuser   = null, 
-            $dbpass   = null, 
-            $dbserver = null, 
-            $dbport   = null, 
-            $dbsocket = null
+            string|null $dbuser   = null, 
+            string|null $dbpass   = null, 
+            string|null $dbserver = null, 
+            string|null|int $dbport   = null, 
+            string|null $dbsocket = null
         );
         
         /**
@@ -22,48 +22,48 @@
          * @param string $sql sql query
          * @return bool|array
          */
-        public function process_query($sql);
+        public function process_query(string $sql);
 
         /**
          * sort or creates binded parameters syntax
          *
-         * @param array $data parameters to be binded to query supplied
+         * @param array &$data parameters to be binded to query supplied
          * @param string $sqL raw sql query supplied
          * @return void
          */
-        public function buildBind(&$data, $sqL);
+        public function buildBind(&$data, string $sqL);
         
         /**
          * executes insert queries
          *
-         * @param string $sql
+         * @param array $sql
          * @return void
          */
-        public function insert_query($sql);
+        public function insert_query(array $sql);
         
         /**
          * executes fetch queries
          *
-         * @param string $sql
+         * @param array $sql
          * @return void
          */
-        public function fetch_array($sql);
+        public function fetch_array(array $sql);
         
         /**
          * executes update query
          *
-         * @param string $sql
+         * @param array $sql
          * @return void
          */
-        public function update_query($sql);
+        public function update_query(array $sql);
         
         /**
          * executes delete query
          *
-         * @param string $sql
+         * @param array $sql
          * @return void
          */
-        public function delete_query($sql);
+        public function delete_query(array $sql);
 
         /**
          * returns the insert id

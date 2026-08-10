@@ -1,11 +1,11 @@
 <?php
-use spoova\mi\core\classes\Resin;
 use spoova\mi\core\classes\Notice;
 use spoova\mi\core\classes\Router;
-use spoova\mi\core\classes\Resource;
+use spoova\mi\core\classes\Res\Resin;
+use spoova\mi\core\classes\Res\Resource;
+use spoova\mi\core\classes\Res\Rex;
 use spoova\mi\core\classes\Application;
-use spoova\mi\core\classes\FileManager;
-use spoova\mi\core\classes\Rex;
+use spoova\mi\core\classes\Bundle\Filemanager\Filemanager;
 
 /**
  * This class is an extension of Resource class
@@ -15,22 +15,12 @@ use spoova\mi\core\classes\Rex;
 final class Res extends Resource implements Resin{
 
     private static ?Res $self = null;
-    private static $body;
-    private static $storepath = '';
-    private static $content;
-    private static $inload;
+    private static string $body = '';
+    private static string $storepath = '';
+    private static string $content = '';
+    private static bool $inload = false;
     private static ?Router $router = null;
     private static ?Application $app = null;
-    private static $parse;
-    private static $method;
-
-    /**
-     * This defines that a rex file should be created if it does not exist. 
-     * String argument should be an existing rex file that should be imported through the template directive.
-     *
-     * @var boolean|string
-     */
-    private static bool|string $addRex = false;
     
     /**
      * store local varibles for use
@@ -38,9 +28,8 @@ final class Res extends Resource implements Resin{
     public static array $locals = [];
 
     /**
-     * initialize notice with Res Instance
-     * 
-     * @return void
+     * Initializes the Res class. 
+     *  - Note that this will also initialize the integrated {@see Notice} class.
      */
     public function __construct(){
       parent::__construct();
@@ -58,24 +47,15 @@ final class Res extends Resource implements Resin{
         Res::noheaders();      
     }
 
-    /**
-     * Start a live server extension
-     *
-     * @param string $param options
-     * @return void
-     */
-    public static function live($param = '::watch'){
-      parent::live($param);
-    }  
-
 
     /**
-     * Returns the instace of application
+     * Creates an instance of {@see Router} if it does not already exists and returns an 
+     * initialized Router object.
      * Note: Application handles router
      *
-     * @return @core\classes\router
+     * @return Router
      */
-    public static function router(){
+    public static function router() : Router {
       return self::app(...func_get_args());
     }
     
@@ -83,9 +63,9 @@ final class Res extends Resource implements Resin{
      * Initializes the application class and 
      * returns router class
      *
-     * @return \core\classes\router
+     * @return Router
      */
-    public static function app(){
+    public static function app() : Router {
       
         self::init();
         if(!self::$router instanceof Router){
@@ -100,7 +80,7 @@ final class Res extends Resource implements Resin{
     /**
      * creates an instance of the notice class
      *
-     * @return \core\classes\notice
+     * @return spoova\mi\core\classes\notice
      */
     public static function notice(){
       return (new Notice());
@@ -146,8 +126,10 @@ final class Res extends Resource implements Resin{
     /**
      * Saves stored template into a storage file
      *
-     * @param string $storage template storage file path
      * @param array $args template arguments
+     *  - Note that the template arguments are usually used as variables within the template file. 
+     *  - To use template arguments as variables within the template file, the argument key name is used as variable name and the argument value is used as variable value.
+     *  - Arguments parsed will override previously defined local variables if the same name is used as local variable name.
      * @return string
      */
     public static function build(array $args = []) : string {
@@ -165,7 +147,7 @@ final class Res extends Resource implements Resin{
       $content = self::$body;
 
       //create path in storage folder
-      $Filemanager = new FileManager;
+      $Filemanager = new Filemanager;
       $realFile    = docroot.'/core/storage/'.to_frontslash($storage).'.php';
 
       if($Filemanager->openFile(true, $realFile)){
@@ -196,7 +178,7 @@ final class Res extends Resource implements Resin{
     }
 
     /**
-     * Determines if the template content is returned or printed on page
+     * Determines if a rendered template content through Res class is returned or printed on web page
      *
      * @param boolean $display
      * @return string
@@ -212,7 +194,6 @@ final class Res extends Resource implements Resin{
         return self::$content;
 
        }
-
     }
 
     /**

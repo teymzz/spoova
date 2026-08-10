@@ -2,44 +2,49 @@
 
 namespace spoova\mi\core\classes\DB;
 
-use spoova\mi\core\classes\Collectibles;
+use spoova\mi\core\classes\DB\DBViewer;
+use spoova\mi\core\classes\DB\DBDeleter;
 
+/**
+ * This interface contains basic database operators 
+ * useful for navigating how records are retrieved or processed by the database. 
+ */
 interface DBOperators {
 
     /**
      * Sets "where" condition on modek sql structure
      *
-     * @return DBCollection|DBCollectibles
+     * @return DBCollectors|DBMediators
      */
-    static function where(string $where, array $params = []) : DBCollection|DBCollectibles;
+    static function where(string $where, array $params = []) : DBCollectors|DBMediators;
 
     /**
      * Read from database
      *
-     * @return DBCollection|DBCollectibles
+     * @return DBViewer
      */
-    static function read(array $fields = [], array $limit = []) : DBCollection|DBCollectibles|Collectibles;
+    static function read(array $fields = [], array $limit = []) : DBViewer;
 
     /**
      * delete from database
      *
-     * @return bool
+     * @return DBDeleter|bool
      */
-    static function delete(int $limit = null) : bool; 
+    static function delete(?int $limit = null) : DBDeleter|bool; 
 
     /**
      * Update dabase
      *
-     * @return bool
+     * @return DBUpdater|bool
      */
-    static function update(array $fields) : bool;
+    static function update(array $fields) : DBUpdater|bool;
 
     /**
      * A relationship based on the current session id
      *
-     * @return DBCollection|DBCollectibles
+     * @return DBCollectors|DBMediators
      */
-    static function ofUser(int $userid, string $ForeignKey = null): DBCollection|DBCollectibles;
+    static function ofUser(int $userid, ?string $ForeignKey = null): DBCollectors|DBMediators;
 
     /**
      * This relationship selects data owned by an another table where $ownerTB is the owner 
@@ -48,8 +53,8 @@ interface DBOperators {
      * @param string $ownerTB name of database table
      * @param string|int|null $ForeignId a model foreignId if not default 
      * @param string|int|null $ForeignKey a new model foreignkey if not default 
-     * @return DBCollectibles
+     * @return DBMediators
      */
-    static function of(string $ownerTB, string $ForeignId = null, string $ForeignKey = null) : DBCollection|DBCollectibles;
+    static function of(string $ownerTB, ?string $ForeignId = null, ?string $ForeignKey = null) : DBCollectors|DBMediators;
 
 }

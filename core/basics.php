@@ -9,4 +9,5 @@
   
   //include accessory files  controller
   require_once docroot.'/core/custom/base-files.php'; 
+  require_once docroot.'/core/functions/Functions.php'; 
   require_once docroot.'/core/server/Server.php'; 

@@ -1,9 +1,16 @@
 <?php
 
 /* Custom stand-alone core functions. Do not Remove*/
+
+use spoova\mi\core\classes\Bundle\Arr\Arr;
+use spoova\mi\core\classes\Attribs;
 use spoova\mi\core\classes\Dumper;
+use spoova\mi\core\classes\EInfo;
+use spoova\mi\core\classes\Enums\inflect;
+use spoova\mi\core\tools\Inspector;
 
 /**
+ * (Spoova 3 &gt;= 3.0.0) <br/>
  * prints a break tag or PHP_EOL to the page
  * All arrays are converted to json format
  *
@@ -16,30 +23,128 @@ function br($var = '', int $break = 1) : string {
   $var = is_array($var)? json_encode($var) : $var;
 
   //isCli is defined in settings
-  $br = isCli() ? PHP_EOL : "<br>";
+  $br = isCli() ? (isTerminal(['prompt','powershell','wsl'])? "\r\n" : "\n") : "<br>";
 
   return  $var.str_repeat($br, $break);
   
 }
 
 /**
- * variable dump 
- * @param mixed $var
+ * (Spoova 3 &gt;= 3.0.0) <br/>
+ * Use htmlentities
  */
-function vdump($var){
+function entify(string $string) { 
 
-   Dumper::vdump(...func_get_args())->exit();
+  $string = htmlentities(trim($string));
+
+  echo $string."\n";
   
 }
 
 /**
- * Execute a list of function sequentially
+ * (Spoova 3 &gt;= 3.0.0) <br/>
+ * variable dump 
+ * @param mixed $var
+ */
+function vdump($var){
+   monitor();
+   Dumper::vdump(...func_get_args());
+}
+
+/**
+ * (Spoova 3 &gt;= 3.0.0) <br/>
+ * variable dump 
+ * @param mixed $var
+ */
+function ddump($var){
+   monitor();
+   Dumper::vdump(...func_get_args())->exit();
+}
+
+/**
+ * (Spoova 3 &gt;= 3.0.0) <br/>
+ * This function in used to inspect values
+ * @param mixed[] $values
+ */
+function inspect($values){
+  return Inspector::inspect(...func_get_args());
+}
+
+/**
+ * (Spoova 3 &gt;= 3.0.0) <br/>
+ * @uses var_dump()
+ * Dumps a value within a html pre tag
+ */
+function preFormat(mixed $value) : void{
+  print "<pre>";
+  var_dump($value);
+  print "</pre>";
+}
+
+/**
+ * (Spoova 3 &gt;= 3.0.0) <br/>
+ * This function in used to inspect values with defaultly expanded 
+ * data types for strings, booleans, integers, double and null values
+ * @param mixed[] $values
+ */
+function check($values){
+  Inspector::expand();
+  return Inspector::inspect(...func_get_args());
+}
+
+/**
+ * (Spoova 3 &gt;= 3.0.0) <br/>
+ * This function inspects values similar to {@see check()} while terminating the script
+ * @param mixed[] $values
+ */
+function checkd($values){
+  Inspector::expand();
+  Inspector::inspect(...func_get_args());
+  die();
+}
+
+/**
+ * (Spoova 3 &gt;= 3.0.0) <br/>
+ * This function in used to inspect values while terminating the page
+ * @param mixed[] $values
+ */
+function dissect($values){
+  Inspector::inspect(...func_get_args());
+  die();
+}
+
+
+/**
+ * variable dump 
+ * @param array $args array key names and their respective values
+ * @param array $titles
+ * @param false $headers defines if headers are supported
+ * @return never
+ */
+function vlist(array $args, array $titles = [], false $headers = false){
+
+  Dumper::vlist(...func_get_args())->exit();
+ 
+}
+
+/**
+* variable dump 
+* @param array|string $args array key names and their respective values
+*/
+function vdiv(array|string $args){
+   $args = (array) $args;
+   return Dumper::vdiv($args);
+}
+
+/**
+ * (Spoova 3 &gt;= 3.0.0) <br/>
+ * Execute a list of functions sequentially
  *
  * @param array $processes
- * @param boolean $isArray if set as false, array is returned, else last response is obtained.
+ * @param boolean $series if set as false, array is returned, else last response is obtained.
  * @return bool|array
  */
-function step_run(array $processes, bool $isArray = false) : mixed {
+function step_run(array $processes, bool $series = false) : mixed {
 
   $response = []; $result = '';
 
@@ -49,25 +154,26 @@ function step_run(array $processes, bool $isArray = false) : mixed {
 
       $response[$function] = $result = $process();
 
-      if(!$isArray && ($result === false)) {
+      if(!$series && ($result === false)) {
         return false;
       }
 
     } else {
-      if(!$isArray && ($process === false)) {
+      if(!$series && ($process === false)) {
         return false;
       }      
     }
 
   }
 
-  if(!$isArray)  return $result;
+  if(!$series)  return $result;
 
   return $response;
 
 }
 
 /**
+ * (Spoova 1 &gt;= 1.0.0) <br/>
  * Declares / initializes non existing variable
  *
  * @param mixed $value
@@ -122,16 +228,17 @@ function setVar( &$value, $custom = '', $replace = false ){
 }
 
 /**
- * 1. Prepares / Initiaizes a non existing variable
- * 2. Trims string variables supplied
- * 3. Returnn $return if $param not initially defined && $return is not empty
+ * (Spoova 1 &gt;= 1.0.0) <br/>
+ * 1. Prepares / Initiaizes a non existing variable <br/>
+ * 2. Trims string variables supplied <br/>
+ * 3. Returnn $return if $param not initially defined && $return is not empty <br/>
  * 4. similar to setvar function but with little differences
  * 
  * @param mixed $param
  * @param mixed $return alternate value returned if $param no defined
  * @return mixed
  */
-function myIsset( &$param, $return = null ){
+function myIsset( &$param, mixed $return = null ){
   if(isset($param)){
     return is_string($param)? trim($param) : $param;
   }elseif(!empty($return)){
@@ -143,10 +250,14 @@ function myIsset( &$param, $return = null ){
  * check if a url string starts with http
  *
  * @param string $url
+ * @param boolean $strict determines strictness of validation. 
+ *  - FALSE : returns true for both 'https' and 'http'
+ *  - TRUE : returns true for only 'http'
  * @return boolean
  */
-function isHTTP(string $url = ''){
-  return (substr($url, 0, 4) == 'http' && filter_var($url, FILTER_VALIDATE_URL));
+function isHTTP(string $url = '', $strict = false) : bool {
+  if($strict && str_starts_with($url,'https')) return false;
+  return (str_starts_with($url,'http') && filter_var($url, FILTER_VALIDATE_URL));
 }
 
 /**
@@ -155,22 +266,23 @@ function isHTTP(string $url = ''){
  * @param string $url
  * @return boolean
  */
-function isHTTPS(string $url){
-  return (substr($url, 0, 5) == 'https' && filter_var($url, FILTER_VALIDATE_URL))? true : false;
+function isHTTPS(string $url) : bool {
+  return (str_starts_with($url,'https://') && filter_var($url, FILTER_VALIDATE_URL))? true : false;
 }
 
 /**
  * If a trimmed value is not empty, returns another value
  * This act as a proof against empty spaces.
  * 
- * @return string
+ * @return mixed
  */
-function refil(string $value, $return){
+function refil(string $value, mixed $return){
   if( trim($value) ) return $return;
   return $value;
 }
 
 /**
+ * (Spoova 1 &gt;= 1.0.0) <br/>
  * clean base64_encode without trailing equal sign
  *
  * @param string $string
@@ -182,6 +294,7 @@ function base_encode(string $string){
 }
 
 /**
+ * (Spoova 1 &gt;= 1.0.0) <br/>
  * clean base64_decode without trailing equal sign
  *
  * @param string $string
@@ -192,24 +305,24 @@ function base_decode(string $string){
 }
 
 /**
- * Shorthand function for json_encode
- *
- * @param mixed $args argument accepted by json_encode
- * @return string
+ * Alias for {@see json_encode()}
+ * @return string|false
  */
-function toJson($args){
+function toJson(mixed $value, int $flags = 0, int $depth = 512) : string|false {
   return json_encode(...func_get_args());
 }
 
 /**
- * Shorthand function for converting json to array
- * 
- * @notice All std are converted to array by default
+ * Shorthand function for decoding a json string
+ *  - Note: all stdClass objects are converted to array by default
  *
- * @param mixed $args argument accepted by json_encode
- * @return object|array
+ * @param string $value JSON string
+ * @param boolean $bool associative
+ * @param int $depth 
+ * @param int $flags
+ * @return mixed
  */
-function fromJson($value, bool $bool = true){
+function fromJson($value, bool $bool = true, int $depth = 512, int $flags = 0){
   if(func_num_args() > 2){
     $args = func_get_args();
   }else{
@@ -236,6 +349,22 @@ if(!function_exists('toSingular')){
   }
 }
 
+if(!function_exists('toSuffix')){
+
+  /**
+   *  Adds a suffix based on minimum threshold value
+   *
+   * @param array|string $string string to add suffix
+   * @param string $suffix string to add suffix
+   * @param integer $min minumum threshold of $value before suffix is added to string
+   * @param integer $value test value which must be greater than $min before suffix is added
+   * @return string
+   */
+  function toSuffix(string $string, string $suffix, int $min, int $value) : string {
+    return $string .= ($value > $min)? $suffix : '';
+  }
+}
+
 if(!function_exists('enplode')){
 
   /**
@@ -254,8 +383,8 @@ if(!function_exists('enplode')){
       
     $container = (array) $separator;
     $divider = (string) $container[0];
-    $wrapper1 = (string) $container[1]?? '';
-    $wrapper2 = (string) $container[2]?? $wrapper1;
+    $wrapper1 = (string) ($container[1]?? '');
+    $wrapper2 = (string) ($container[2]?? $wrapper1);
 
     if(count($container) > 3){
         trigger_error('maximum array count of 3 for argument(#1)  on enplode() exceeded!');
@@ -269,6 +398,43 @@ if(!function_exists('enplode')){
   }
 }
 
+if(!function_exists('trimJoin')){
+
+  /**
+   * Join array element with a string and wrap string within a defined character while triming excess spaces.
+   *
+   * @param array|string $separator [optional]
+   *  - array should contain two values : a separator, then followed by a wrapper character
+   *  - string as separator character
+   * @param array|null $array The array of strings to implode
+   * @param bool $strict 
+   *  A bool of true includes wrapper even if the array is empty 
+   *  A bool of false removes wrapper if the array is empty 
+   * @return string
+   */
+  function trimJoin(array|string $separator="", ?array $array = [], bool $strict = false) : string {
+      
+    $container = (array) $separator;
+    $divider = (string) $container[0];
+    $wrapper1 = (string) ($container[1]?? '');
+    $wrapper2 = (string) ($container[2]?? $wrapper1);
+
+    if(count($container) > 3){
+        trigger_error('maximum array count of 3 for argument(#1)  on enplode() exceeded!');
+        return '';
+    }
+
+    $implode = implode($divider, $array);
+
+    // remove execess spaces 
+    $implode = preg_replace('/\s+/',' ', $implode);
+
+    return ($implode || $strict)? $wrapper1.$implode.$wrapper2 : '';
+
+  }
+}
+
+
 if(!function_exists('inflect')){
   /**
    * Add or remove trailing letter "s" to string 
@@ -277,7 +443,7 @@ if(!function_exists('inflect')){
    * @param array|string $text
    * 
    * @param int $count 
-   * @param boolean $strict defines extra functionality
+   * @param boolean|inflect $strict defines extra functionality
    * 
    *  - If $strict is false, a character "s" will only be appended to $text if $count > 1.
    *  - If $strict is true and $count > 1, a character "s" is added to $text only if $text does not have character "s" or "S" as the lasting character.
@@ -285,64 +451,112 @@ if(!function_exists('inflect')){
    * 
    * @return array|string
    */
-  function inflect(array|string $text, int $count, bool $strict = false){
+  function inflect(array|string $text, int $count, bool|inflect $strict = false){
 
-    $arrText = (array) $text;
-   
-    if($strict){
-      
-      if($count < 2){
+    $result = match($strict){
 
-        $result = array_map(function($value){
-          if(is_string($value)) return ((strtolower(substr($value, -1)) === 's')? substr($value, 0, strlen($value) - 1) : $value);
-        }, $arrText);
+      0, false, inflect::default, inflect::soft => function() use($text, $count) {
+        
+        $arrText = (array) $text;
+          
+        if($count != 1){
+            $result = $arrText;
+        }else{
+          $result = array_map(function($value){
+            return ((strtolower(substr($value, -1)) !== 's')? $value."s" : $value);
+          }, $arrText);        
+        }
 
-      }else{
+        return $result;
 
-        $result = array_map(function($value){
 
-          if( is_string($value) ) {
+      },
 
-            if((strtolower(substr($value, -1)) !== 's')){
+      1, true, inflect::hard => function() use($text, $count) {
 
-              if( $value === strtoupper($value) ) {
-                
-                return $value."S";
+          $arrText = (array) $text;
 
-              }else{
-                return $value."s";
+          if($count < 2){
+
+            $result = array_map(function($value){
+              if(is_string($value)) return ((strtolower(substr($value, -1)) === 's')? substr($value, 0, strlen($value) - 1) : $value);
+            }, $arrText);
+    
+          }else{
+    
+            $result = array_map(function($value){
+    
+              if( is_string($value) ) {
+    
+                if((strtolower(substr($value, -1)) !== 's')){
+    
+                  if( $value === strtoupper($value) ) {
+                    
+                    return $value."S";
+    
+                  }else{
+                    return $value."s";
+                  }
+    
+                } else{
+                  return $value;
+                }
+    
               }
+    
+            }, $arrText);        
+          } 
 
-            } else{
-              return $value;
-            }
+          return $result;
+  
+      },
 
-          }
+      inflect::smart => function() use($text, $count) {
 
-        }, $arrText);        
-      } 
+        if(!is_array($text)){
+          return EInfo::trigger('invalid string argument(#1) supplied for inflect::smart. Argument must be an array.');
+        }
 
-    }else{
-      
-      if($count < 2){
-          $result = $arrText;
-      }else{
-        $result = array_map(function($value){
-          return ((strtolower(substr($value, -1)) !== 's')? $value."s" : $value);
-        }, $arrText);        
-      }
+        if(count($text) !== 2){
+          return EInfo::trigger('invalid array count argument(#1) supplied for <u>inflect::smart</u> flag. Argument must be an array of two counts');
+        }
 
-    }
+        $singular = $text[0];
+        $plural   = $text[1];
+        $absCount = abs($count);
 
-    if(is_string($text)||(is_array($text) && (count($text) < 2))){
-      return implode("", $result);
-    }else{
-      return $result;
-    }
+        return ($absCount === 1)? $singular : $plural;
+        
+      },
+
+
+    };
+
+    return $result();
 
   }
 }
 
+if(!function_exists('toUnitCase')){
+
+  /**
+   * Convert a string's unit part to desired case
+   *
+   * @param string $separator part separator
+   * @param string $text
+   * @param Closure $callback applied on each part division
+   * @return string
+   */
+  function toUnitCase(string $separator, string $text, Closure $callback) : string {
+
+    $parts = explode($separator, $text);
+
+    $parts = array_map(fn($value) => $callback($value), $parts);
+
+    return implode($separator, $parts);
+  }
+
+}
 
 /**
  * Returns the current script name
@@ -396,12 +610,10 @@ function inRange($value, $min, $max): bool {
  * 1. checks for empty values in either arrays or single values to return either true or false
  *  
  * @param mixed $var
- * @param mixed $inclusion value to be included as part of null
+ * @param mixed $inclusion value to be assumed as empty values
  * @return boolean
  */
-function is_empty( $var, $inclusion = null ){
-
-  //$inclusion should contain array of values to be counted as empty strings
+function is_empty( $var, mixed $inclusion = null ){
 
    $inclusion = (array) $inclusion;
 
@@ -424,14 +636,28 @@ function is_empty( $var, $inclusion = null ){
 }
 
 /**
- * Reverse of @see is_empty()
+ * Reverse of {@see \is_empty()}
  *
  * @param mixed $var
  * @param mixed $inclusion
  * @return boolean
  */
-function not_empty( $var, $inclusion = null ){
-  return is_empty($var)? false : true;
+function not_empty($var, mixed $inclusion = null) : bool {
+
+  $inclusion = (array) $inclusion;
+
+   if(!is_array($var)){
+      $var = trim($var);
+      if(($var != null) || (empty($var) && in_array($var, $inclusion, true))) return true;
+      return false;
+   }else{
+     foreach($var as $val){
+      if(!is_array($val)){ $val = trim($val); }
+      if((empty($val) && in_array($val, $inclusion, true)) || ($val != null)) return true;
+     } 
+     return false;
+   }
+
 }
 
 /**
@@ -455,7 +681,7 @@ function compare( $arg1 = '', $arg2 = '' ) : bool {
  * @param string $keyspace keys to be used for hashing
  * @return string
  */
-function randice(int $length = 4, string $keyspace = null){ 
+function randice(int $length = 4, ?string $keyspace = null){ 
   if($length < 1) { return false; }
 
   if(func_num_args() < 2){
@@ -475,7 +701,7 @@ function randice(int $length = 4, string $keyspace = null){
  * @param string $path
  * @return boolean
  */
-function isAbsolutePath(string $path = null) : bool {
+function isAbsolutePath(?string $path = null) : bool {
   if (!is_string($path)) {
       return false;
   }
@@ -507,7 +733,6 @@ function isAbsolutePath(string $path = null) : bool {
  * @return bool
  */
 function arrInside(array $value) : bool{
-  //check if array exists inside another $value
   foreach ($value as $val) {
     if(is_array($val)) return true;
   }
@@ -591,23 +816,11 @@ function array_get(array $array, string $arraykey = ''){
   return array_key_exists($arraykey, $array)? $array[$arraykey] : false;
 }
 
-// /**
-//  * Converts an array to object format
-//  * @param array $array
-//  * @return object
-//  */
-// function array_object(array $array) : stdClass {   
-  
-//   $newarray = new stdClass();
-//   foreach($array as $array_keys => $array_vals){
-//      $newarray->$array_keys = $array_vals;
-//   }
-//   return $newarray;
-
-// }
-
 /**
- * Converts an array to object format
+ * Converts an array to object format recursively while 
+ * other data types are returned in their supplied form.
+ *  - spoova modified function 
+ * 
  * @param array $array
  * @return string|int|float|bool|stdClass
  */
@@ -628,8 +841,10 @@ function array_object($array) {
 
 /**
  * Converts an array to object format
+ *  - spoova modified function
  * @param array $array
  * @return stdClass
+ * @uses array_object()
  */
 function toStdClass(array $array) : stdClass {   
   return array_object($array);
@@ -637,6 +852,7 @@ function toStdClass(array $array) : stdClass {
 
 /**
  * This trims, then removes empty strings from supplied array
+ *  - spoova modified function 
  * 
  * @param array   $param
  * @param boolean $sort true return indexed array, false keeps array keys
@@ -661,17 +877,13 @@ function arrSort(array $param, $sort = false ){
  * This function is used to regroup multiple file uploads $_FILE 
  * For two dimentional arrays of equal values
  * 
- * - AN ARRAY FORMAT:
- *    - $_FILES['name'][0] = 'fileName0';
- *    - $_FILES['desc'][0] = 'describe0';
- *    - $_FILES['name'][1] = 'fileName1';
- *    - $_FILES['desc'][1] = 'describe1';
- * -
- * - BECOMES: 
- *    - $_FILES[0]['name'] = 'fileName0';
- *    - $_FILES[0]['desc'] = 'describe0';
- *    - $_FILES[1]['name'] = 'fileName1';
- *    - $_FILES[1]['desc'] = 'describe1';
+ * - SAMPLE ARRAY FORMAT:
+ *   ```$_FILES['name'][0], $_FILES['tmp'][0]; ```
+ *   ```$_FILES['name'][1], $_FILES['tmp'][1]; ```
+ * 
+ * - SAMPLE RESULT FORMAT: 
+ *   ```$_FILES[0]['name'], $_FILES[0]['tmp']; ```
+ *   ```$_FILES[1]['name'], $_FILES[1]['tmp']; ```
  * 
  *
  * @param array $item
@@ -698,7 +910,7 @@ function reItemize(array $item): array {
 
 /**
  * Returns the number of array values
- *
+ *  - spoova modified function
  * @param array $param
  * @return array|bool(false)
  */
@@ -712,20 +924,19 @@ function array_count($param){
 
 /**
  * Deletes the first index of a value from an array
- *
+ *  - spoova modified function 
+ * 
  * @param array  $array
  * @param mixed  $value
  * @return array
  */
 function array_delete(array $array, $value){  
-  $val = array_search($value,$array);
-  unset($array[$val]);
-  return $array;
+  return Arr::delete($array, $value);
 }
 
 /**
  * Removes the all keys having a declared value from an array
- *
+ *  - spoova modified function
  * @param array  $array
  * @param string $value
  * @param bool $series
@@ -735,26 +946,12 @@ function array_delete(array $array, $value){
  * @return array
  */
 function array_unset(array $array, $value, bool $series = false) : array {
-
-  if(is_array($value) && $series){
-    foreach ($array as $key => $val) {
-      if(in_array($val, $value)){
-        unset($array[$key]);
-      }
-    }
-  }else{
-    foreach ($array as $key => $val) {
-      if($val === $value){
-        unset($array[$key]);
-      }
-    }    
-  }
-  return $array;  
+  return Arr::unset(...func_get_args());
 }   
 
 /**
- * Combines a string or array into the second defined array
- *
+ * Combines a string or array into the second defined array variable
+ *  - spoova modified function 
  * @param string|array $array1
  * @param array        $array2
  * @return array
@@ -763,15 +960,16 @@ function array_unset(array $array, $value, bool $series = false) : array {
 function combine($array1, array &$array2){
   //combine $array2 and $array1 into $array2
   $array1 = (array) $array1;
-  $combiner = array_combine($array2,$array1);
-  $array2 = $combiner ;
+
+  foreach($array1 as $value){
+    $array2[] = $value;
+  }
 }  
 
 // ---------------------------------------------------------------- Script functions
 
 /** 
- * For testing purposes
- * javascript alert. To be used within html body
+ * Javascipt powered function for testing purposes.
  *
  * @param array|string $value
  * @return string
@@ -785,9 +983,9 @@ function alert( $value = '' ){
 }
 
 /**
- * For testing purposes
- * prints a detail in the javascript browser console
- *
+ * Javascipt powered browser console function for testing purposes.
+ *  - spoova modified function
+ * 
  * @param array|string[] $vals
  * @return string
  */
@@ -800,19 +998,26 @@ function javaconsole( $vals = [] ){
     $vals[] = $iVal;
   }
 
-  $format = "<script>";
-  foreach($vals as $val){
-   $format .= "console.log(".json_encode($val).") \n";
+  if(isCli()){
+    foreach($vals as $val){
+     print_r($val);
+    }
+  }else{
+    $format = "<script>";
+    foreach($vals as $val){
+     $format .= "console.log(".json_encode($val).") \n";
+    }
+    $format .= "</script>";   
+    echo $format; 
   }
-  $format .= "</script>";   
-  echo $format; 
+
 
 }
 
 /**
- * For testing purposes
- * Adds a javascript tag or code to a page 
- *
+ * Javascipt powered function for testing scripts.
+ *  - spoova modified function
+ * 
  * @param string  $text, javascript url or javascript text
  * @param boolean $print print directly
  * @return string 
@@ -841,7 +1046,8 @@ function script( string $text, bool|int $print = false ){
 
 /**
  * Simple function to Replace angle brackets to &gt; and &lt; in a string
- *
+ *  - spoova modified function 
+ * 
  * @param string $item
  * @return string
  */
@@ -852,23 +1058,49 @@ function to_lgts(string $item){
 /**
  * Convert all urls in a string to clickable links having classes 'ref-link'
  * Output is stored in the defined wrapper (tag) which can contain attributes
+ *  - spoova modified function 
  * 
  * @param string $input
  * @param string $wrapper
+ * @param boolean $track FALSE disables overidding active URL pointer.
  * 
  * @return string
  */
-function href(string $input, string $wrapper = 'span'){ 
+function href(string $input, string $attrs = '', bool $track = true){ 
   //replace a url within a string with link
-  $pattern = '@(http(s)?://)(([a-zA-Z0-9])([-\w]+\.)+([^\s\.]+[^\s]*)+[^,.\s])@';
-  $output = preg_replace($pattern, "<a href='http$2://$3' class='ref-link'>$0</a>", $input);
-  $wrapper = $wrapper? ['<'.$wrapper.'>', '</'.explode(" ", $wrapper)[0].'>'] : ['', ''];
-  return $wrapper[0].$output.$wrapper[1];
+
+  $hrefData = explode('::',$input, 2);
+  $name = ''; $named = false; $link = $input;
+
+  if(count($hrefData) === 2){
+    $name = $hrefData[0];
+    $link = $hrefData[1];
+    $named = true;
+  }
+
+  $link = domUrl($link, $track);
+  
+  $pattern = '~(http(s)?://)(([a-zA-Z0-9])([:\w+]+)([^\s\.]+[^\s]*)+[^,.\s])~';
+
+  $attribs = Attribs::split($attrs);
+
+  $output = preg_replace_callback($pattern, function($matches) use($name, $named, $attribs){
+
+    $name = ($named) ? $name : $matches[0];  
+    $secure = $matches[2];
+    $link = $matches[3];
+
+    return "<a href='http$secure://$link'$attribs>$name</a>";
+
+  }, $link);
+
+  return $output;
 }
 
 /**
  * Truncates the words in a text to defined limit and appends suffix ...
- *
+ *  - spoova modified function 
+ * 
  * @param string $text
  * @param int    $limit
  * @return string
@@ -885,12 +1117,13 @@ function limitText( string $text, $limit ) : string {
 
 /**
  * Truncates characters in a text to defined limit and appends suffix ...
- *
- * @param string $text
- * @param int    $limit
+ *  - spoova modified function 
+ * 
+ * @param string $string text whose character's is to be limited.
+ * @param int $limit limit to be applied
  * @return string
  */
-function limitChars( $string, $limit ){
+function limitChars(string $string, int $limit){
 
   $oldstring = trim( $string );
   $strlen = strlen( $oldstring );
@@ -905,8 +1138,8 @@ function limitChars( $string, $limit ){
 
     $expOld = explode( ' ', $oldstring ); 
     $expNew = explode( ' ', $newstring );    
-    $expOldText = $expOld[ $strwords2 - 1 ];  //get last word of old string supplied
-    $expNewText = $expNew[ $strwords2 - 1 ];  //get last word of new string generated
+    $expOldText = $expOld[ $strwords2 - 1 ] ?? '';  //get last word of old string supplied
+    $expNewText = $expNew[ $strwords2 - 1 ] ?? '';  //get last word of new string generated
 
     $oldStrlen = strlen( trim($expOldText) );
     $newStrlen = strlen( trim($expNewText) );
@@ -941,12 +1174,13 @@ function limitChars( $string, $limit ){
 
 /**
  * Complex function that truncates the characters of a string to a better $length
- *
- * @param string $string Text to be truncated
- * @param int $length
+ *  - spoova modified function 
+ * 
+ * @param string $string text to be truncated
+ * @param int|string|null $length numeric length
  * @return string
  */
-function limitWord( string $string, $length = null ){
+function limitWord(string $string, int|string|null $length = null) : string {
   
   $textString = '';
   $length = ($length == null)? 30 : $length;
@@ -998,8 +1232,9 @@ function limitWord( string $string, $length = null ){
 }
 
 /**
- * Checks if a number is integer and also a number
- *
+ * Checks if a value is integer and also a number
+ *  - spoova modified function 
+ * 
  * @param mixed $value
  * @return bool
  */

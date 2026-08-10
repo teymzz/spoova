@@ -13,7 +13,7 @@ class Bolt {
      *
      * @return bool|string
      */
-    static function request($request_name, $reqest_key) {
+    static function request(string $request_name, string $reqest_key) {
 
         if(isset(${'_'.$request_name})){
             return (${'_'.$request_name}[$reqest_key])?? false;

@@ -1,6 +1,6 @@
 <?php
 
-use spoova\mi\core\classes\Csrf;
+use spoova\mi\core\classes\CSRF;
 use spoova\mi\core\classes\EInfo;
 use spoova\mi\core\classes\Request;
 use spoova\mi\core\classes\Sessionbase;
@@ -9,7 +9,7 @@ use spoova\mi\core\classes\SharedInfo;
 /**
  * Manage and Control session
  * 
- * @author Akinola Saheed <teymss@gmail.com>
+ * @author Akinola Saheed <akinolasaheed001@gmail.com>
  */
 class Session extends SharedInfo {
   
@@ -19,7 +19,7 @@ class Session extends SharedInfo {
   private $logid;
   private $autoRedirect = false;
   private $algo  = 'sha1';
-  private static ?Session $stream;
+  private static ?Session $stream = null;
   private static $secure = false;
 
   /**
@@ -88,13 +88,13 @@ class Session extends SharedInfo {
     'httponly' => true
   ];  
 
+
   /**
    * automatically initialize session  
    * 
-   * @param string $sessionName, account key name. This will be assumed as the session ($_SESSION) access key
-   * @param string $cookieName, a default cookieName. This will be assumed as the cookie ($_COOKIE) access key
-   * @param bool $secure, This will strictly unset a session if the session's userid stored, does exist in the default 
-   * configured user id field name set in the icore/init file
+   * @param string $sessionName Session account access key name. This will be assumed as the session ($_SESSION) access key
+   * @param string $cookieName A default cookieName. This will be assumed as the cookie ($_COOKIE) access key
+   * @param bool $secure This is used to authenticate a session userid key that must exist in session data. This userid value must match the icore/init USER_ID_FIELDNAME field's value in database.
    */
   function __construct(string $sessionName = '', string $cookieName = '',  bool $secure = false){
     
@@ -249,6 +249,7 @@ class Session extends SharedInfo {
    *
    * @param string $expire expire time 
    * @param string $path session file path
+   * @param boolean $domain 
    * @param boolean $secure 
    * @param boolean $httponly
    *   - @notice: $expire time (lifetime) should be left as zero
@@ -262,7 +263,7 @@ class Session extends SharedInfo {
       'path'   => $path,
       'domain' => $domain, 
       'secure' => $secure,
-      'httponly' => $secure,
+      'httponly' => $httponly,
     ];
 
   }
@@ -331,6 +332,7 @@ class Session extends SharedInfo {
    * logout user
    * 
    * @param string $url redirection url
+   * @param boolean $destroyCookie TRUE destroys while FALSE ignores.
    * @return void
    */
   public function logoutUser(string $url = '', bool $destroyCookie = false){ 
@@ -344,6 +346,7 @@ class Session extends SharedInfo {
    *
    * @param array $logdata data to be stored in $sessionName
    * @param string|false $url, redirection url (if false, no auto redirection is done)
+   * @param integer $lifeTime expiry time
    * @return bool
    */
   protected function loginUser(array $logdata, string|false $url = false, $lifeTime = 86400) : bool{
@@ -357,8 +360,8 @@ class Session extends SharedInfo {
    * Sets the user data internally
    *
    * @param array $logdata user session data
-   * @param string|false $url
-   * @param integer $lifetime
+   * @param string|false $url redirection url
+   * @param integer $lifeTime expiry time
    * @return bool
    */
   protected function internalLogin(array $logdata, string|false $url, $lifeTime = 86400) : bool{
@@ -368,8 +371,8 @@ class Session extends SharedInfo {
       trigger_error('login failed: login data must contain userid key');
       return false;
     }
-    if(!is_string($logdata['userid'])){
-      trigger_error('userid must be a string');
+    if(!is_string($logdata['userid']) && !is_integer($logdata['userid'])){
+      trigger_error('userid must be of a valid string or integer format');
       return false;    
     }
     
@@ -502,7 +505,7 @@ class Session extends SharedInfo {
    * @param string $url
    * @return void
    */
-  private function autoLogin(string $url = null){
+  private function autoLogin(?string $url = null){
 
     if(isset(self::$sessionName)){
       $this->checkSession();
@@ -516,7 +519,7 @@ class Session extends SharedInfo {
     }
   }
 
-  private function autoLogout($url = null){
+  private function autoLogout(?string $url = null){
      $sessionName = $this->checkSession();
      if($url === null) $url = self::$logoutUrl;
 
@@ -556,7 +559,7 @@ class Session extends SharedInfo {
    * @param string $cookieName
    * @return void
    */
-  public static function cookieName(string $cookieName = null){
+  public static function cookieName(?string $cookieName = null){
     if((empty($cookieName)) and (func_num_args() > 0)) trigger_error('cookie name cannot be void', E_USER_ERROR);
     if(func_num_args() === 0){ return self::$cookieName; }
     self::$cookieName = $cookieName;
@@ -637,7 +640,7 @@ class Session extends SharedInfo {
    * @param boolean|null $secure
    * @return bool|null
    */
-  public static function secure(bool $secure = null){
+  public static function secure(?bool $secure = null){
 
     if(func_num_args() > 0){
       self::$secure = $secure;
@@ -688,7 +691,6 @@ class Session extends SharedInfo {
     /* ensure that cookie key is not null */
     if(isset($_COOKIE[$cookieKey]) && $_COOKIE[$cookieKey]){
 
-      //$security = $this->algo;//$security();
       $usercookie = $_COOKIE[$cookieKey]; 
  
       if(!isset(self::$dbh)){
@@ -723,8 +725,6 @@ class Session extends SharedInfo {
 
       }
 
-    }else{
-        //$this->loginUser(['userid'=>$userid]);
     }
 
   }
@@ -739,7 +739,7 @@ class Session extends SharedInfo {
    * Return true if the session storage contains a particular root key or a root key's direct subkey
    *
    * @param string $key a session key to be checked. 
-   * @param string $subkey a subkey of session key (i.e $key) to be checked. 
+   * @param string $value a subkey of session key (i.e $key) to be checked. 
    * @return boolean
    */
   public static function has(string $key, string $value = '') : bool{
@@ -757,7 +757,7 @@ class Session extends SharedInfo {
   }
 
   public static function save(string $key, mixed $value){
-    $session = $_SESSION ?? [];
+    $session = &$_SESSION ?? [];
 
     $session[$key] = $value;
 
@@ -874,7 +874,7 @@ class Session extends SharedInfo {
       $session = Session::base()->value();
   
       if($session){
-        if(!Csrf::generated() && Session::base()->has('CSRF')){
+        if(!CSRF::generated() && Session::base()->has('CSRF')){
           unset($session['CSRF']);
           Session::base()->overwrite($session);
         }  

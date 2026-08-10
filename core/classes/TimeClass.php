@@ -32,7 +32,9 @@ class TimeClass{
    */
   public function setTime($first, $last, string  $type = 'date'){
 
-    if($type !== 'date' and $type !== 'timestamp') trigger_error('type must be date or timestamp', E_USER_ERROR);
+    if($type !== 'date' and $type !== 'timestamp') trigger_error('$type must be date or timestamp', E_USER_ERROR);
+    $this->firstTime = $first;
+    $this->lastTime = $last;
     $this->type  = $type;
 
   }
@@ -83,7 +85,7 @@ class TimeClass{
    * This is used to determine if the time range between two date times does not exceed the number of 
    * minutes supplied.
    *
-   * @param integer $num minutes from range of 1-59
+   * @param integer $minute minutes from range of 1-59
    * @return void
    */
   public function valid_minute($minute){
@@ -223,4 +225,3 @@ class TimeClass{
 //$Timer->setTime(first,last)
 //$Timer->getDifference(second || minute || hour || day || month || year || all)
 //$Timer->convert_time(&$date) coverts date using the present moment as the difference //result(yr|mth|sec|mins ago)
-?>

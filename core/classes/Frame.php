@@ -2,12 +2,10 @@
 
 namespace spoova\mi\core\classes;
 
-use Window;
+use spoova\mi\core\classes\FrameAbstract;
 
-abstract class Frame extends Window {
+class Frame extends FrameAbstract {
 
-
-    abstract public function onFrame();
-
+    public function onFrame(){ }
 
 }

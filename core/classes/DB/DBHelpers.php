@@ -21,8 +21,7 @@ Interface DBHelpers{
         ['MySQLi', 'PDO'];  
 
     /**
-     * return the current connection database class name
-     *  (MiSQL, MiPDO)
+     * Returns the current connection database class name (MiSQL, MiPDO)
      *
      * @return string 
      */
@@ -30,23 +29,22 @@ Interface DBHelpers{
 
 
     /**
-     * return the real current connection database of the current connection
-     *  (MySQLi, PDO)
+     * Returns the real current connection database manager name for the current connection (MySQLi, PDO)
      * 
      * @return string 
      */
     public function conType();
 
     /**
-     * returns the last database connection response
-     * This message is returned only when database connection failed
+     * Returns the last database connection response.
+     * This message is returned only when database connection fails
      *
      * @return string
      */
     public function conResponse();
     
     /**
-     * return the currently selected database name
+     * Return the currently selected or active database name within a database manager
      *
      * @return string 
      */
