@@ -108,13 +108,20 @@ class Info extends Entry{
 
             #---------------------           
             'add:route'      => 'Adds a new route file into the "window/Routes" directory
-            
- '.Cli::emo('ribbon-arrow').' Syntax :'.self::mi('add:route','','','').Cli::warn('<dir/?><name>', '1').Cli::danger('[-O]').Cli::br(2)
- .Cli::textIndent(Cli::warn('dir').' ...... optional: directory of route file within \'windows/Routes\' directory ', '1').Cli::br(2)
- .Cli::textIndent(Cli::warn('name').' ..... name of route file (or class) ', '1').Cli::br(2)
- .Cli::textIndent(Cli::danger('-O').' ....... overwrite existing file', '1').Cli::br(2)
 
- .Cli::textIndent(Cli::alert('Note :').' Paths can be supplied using dots while the last name is assumed to be file (or class) name', '1'),
+ '.Cli::emo('ribbon-arrow').' Syntax :'.self::mi('add:route','','','').Cli::warn('<dir/?><name>', '1').Cli::textIndent(Cli::color('[extends?]', 'purple'), '1').Cli::textIndent(Cli::alert('[--live|--load]'), '1').Cli::danger('[-O]', '1').Cli::br(2)
+ .Cli::textIndent(Cli::warn('dir').' ......... optional: directory of route file within \'windows/Routes\' directory ', '1').Cli::br(2)
+ .Cli::textIndent(Cli::warn('name').' ........ name of route file (or class) ', '1').Cli::br(2)
+ .Cli::textIndent(Cli::color('extends', 'purple').' ..... optional: extend route class to a frame file', '1').Cli::br(2)
+ .Cli::textIndent(Cli::alert('--live').' ...... enable the template loader and write a template that uses '.Cli::warn('@live'), '1').Cli::br(2)
+ .Cli::textIndent(Cli::alert('--load').' ...... enable the template loader without the '.Cli::warn('@live').' directive', '1').Cli::br(2)
+ .Cli::textIndent(Cli::danger('-O').' .......... overwrite existing file', '1').Cli::br(2)
+
+ .Cli::textIndent(Cli::alert('Note 1 :').' Paths can be supplied using dots while the last name is assumed to be file (or class) name', '1').Cli::br(2)
+ .Cli::textIndent(Cli::alert('Note 2 :').' Without'.Cli::alert('--live', '1').' or'.Cli::alert('--load', '1').', the '.Cli::warn('self::load()').' call is written commented out', '1').Cli::br(2)
+ .Cli::textIndent(Cli::alert('Note 3 :').' Either directive also writes the rex template the loader points at.', '1').Cli::br(2)
+ .Cli::textIndent(Cli::textIndent('An existing template is left untouched unless'.Cli::danger('-O', '1').' is supplied.', '1'), '1').Cli::br(2)
+ .Cli::textIndent(Cli::alert('Note 4 :').Cli::alert('--live', '1').' and'.Cli::alert('--load', '1').' cannot be combined.', '1'),
             
  
             #---------------------            
@@ -363,6 +370,23 @@ class Info extends Entry{
             'project'        => 'Creates a new project application
             
  Syntax :'.self::mi('project','','','').Cli::warn('<project name>'),
+            #---------------------
+            'project sanitize' => 'Prepares the project app for online deployment
+
+ Syntax :'.self::mi('project','','','').Cli::warn('sanitize').Cli::textIndent(Cli::alert('[-w|-r?]'), '1').Cli::textIndent(Cli::alert('[-s?]'), '1').Cli::br(2)
+ .Cli::textIndent(Cli::alert('-w').' ...... apply the changes (default reports only)', '1').Cli::br(2)
+ .Cli::textIndent(Cli::alert('-r').' ...... restore config files from '.Cli::warn('backup/'), '1').Cli::br(2)
+ .Cli::textIndent(Cli::alert('-s').' ...... safe mode: leave the database config files untouched', '1').Cli::br(2)
+ .Cli::textIndent(Cli::textIndent('credentials are still reported, and '.Cli::warn('-s').' cannot be combined with '.Cli::warn('-r').'.', '1'), '1').Cli::br(2)
+
+ .Cli::textIndent(Cli::alert('Reports :'), '1').Cli::br(2)
+ .Cli::textIndent(Cli::emo('bullet').' class files the autoloader will miss on a case-sensitive (online) filesystem', '2').Cli::br(2)
+ .Cli::textIndent(Cli::emo('bullet').' offline database credentials still left in '.Cli::warn('icore/dbconfig.php'), '2').Cli::br(2)
+ .Cli::textIndent(Cli::emo('bullet').' storage files that are regenerated online', '2').Cli::br(2)
+
+ .Cli::textIndent(Cli::alert('Note :').' originals are copied to '.Cli::warn('backup/').' before anything is overwritten', '1').Cli::br(2)
+ .Cli::textIndent('add that folder to '.Cli::warn('.gitignore').'.', '2'),
+
 
             #---------------------
             'version'        => 'displays the current spoova version
@@ -419,9 +443,12 @@ class Info extends Entry{
  Cli::bgWarn(' Syntax ').Cli::textBuild(Cli::underline('mi'), '1|1').Cli::alert('ss', '|1').Cli::danger('compile').Cli::warn('dest::path --module', 1),
 
             #---------------------
-            'start'        => 'start development server on port 8080
-            
- Syntax :'.self::mi('start','','','').'',
+            'start'        => 'start the development server
+
+ Syntax :'.self::mi('start','','','').Cli::warn('[port?]').Cli::br(2)
+ .Cli::textIndent(Cli::warn('port').' ..... optional: port to listen on. Defaults to '.Cli::alert('8080'), '1').Cli::br(2)
+ .Cli::textIndent(Cli::alert('Note 1 :').' any whole number from '.Cli::warn('1').' to '.Cli::warn('65535').' is accepted', '1').Cli::br(2)
+ .Cli::textIndent(Cli::alert('Note 2 :').' ports below '.Cli::warn('1024').' are privileged and may need elevated rights', '1'),
 
             #---------------------
             'watch'        => 'Handles watch related commands.

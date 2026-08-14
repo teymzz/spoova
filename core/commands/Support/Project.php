@@ -15,6 +15,7 @@ use spoova\mi\core\commands\Root\Cli;
 use spoova\mi\core\commands\Root\Cli\CliPrompt;
 use spoova\mi\core\commands\Root\Entry;
 use spoova\mi\core\commands\Root\Welcome;
+use spoova\mi\core\commands\Support\Handlers\Sanitize;
 use spoova\mi\core\commands\Support\Map;
 use ZipArchive;
 
@@ -28,6 +29,14 @@ class Project extends Entry{
      * @param array $args
      */
     function __construct($args = []) {
+
+        /* sanitize reports rather than builds, so it is handled before the project
+           builder claims the first argument as a new project name */
+        if(strtolower((string) ($args[0] ?? '')) === 'sanitize'){
+            array_shift($args);
+            new Sanitize(array_values($args));
+            return;
+        }
 
         Cli::animeType('roller');
         Cli::runAnime([[$this, 'build'], $args]);

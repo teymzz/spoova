@@ -17,9 +17,14 @@ use spoova\mi\core\classes\Bundle\Filemanager\Filemanager;
  */
 abstract class SharedInfo{
   
-  protected static ?DB $dbc = null;
-  protected static ?DBHandler $dbh = null;
-  protected static $dbe;
+  protected static DB|false|null $dbc = null;
+  protected static DBHandler|false|null $dbh = null;
+  /* Needs an explicit default. A typed static without one is *uninitialized* rather
+     than null, and Session::__construct() reads this while deciding whether to open
+     a connection — before anything has assigned it. Reading it in that state is a
+     fatal Error, so the CLI died on boot. The untyped declaration this replaced
+     defaulted to null implicitly, which is what kept it working. */
+  protected static string|false|null $dbe = null;
   protected static array $init = [];
   protected static $init_base;
   protected $fileManager;
@@ -59,10 +64,10 @@ abstract class SharedInfo{
         if($conn->currentDB() === $dbhandler->currentDB()){
           self::$dbc = $conn;
           self::$dbh = $dbhandler;
-          self::$dbe = '';
+          self::$dbe = false;
         }else{
-          self::$dbc = '';
-          self::$dbh = '';
+          self::$dbc = false;
+          self::$dbh = false;
           self::$dbe = 'no database name selected';
         }
     } 

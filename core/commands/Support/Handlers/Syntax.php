@@ -77,7 +77,7 @@ class Syntax extends Entry{
             'add:api'        => 'add:api <path> [extends?] [\subdir] [-O?]',
             'add:frame'      => 'add:frame <path> [extends?] [-O?]',
             'add:model'      => 'add:model <path> [-O]',
-            'add:route'      => 'add:route <path> [extends?] [\subdir] [-O?]',
+            'add:route'      => 'add:route <path> [extends?] [\subdir] [--live|--load?] [-O?]',
             'add:rex'        => 'add:rex [path.?]<filename>',
             'add:window'     => 'add:window <path> [extends?] [-O?]',
             'add:migator'    => 'add:migrator <name>',
@@ -122,8 +122,9 @@ class Syntax extends Entry{
             'install dbname' => 'install dbname [folder?]',
 
             'project'        => 'project <project_name>',
+            'project sanitize' => 'project sanitize [-w|-r?] [-s?]',
             
-            'start'          => 'start',
+            'start'          => 'start [port?]',
             'support'        => 'support',
             
             'use'            => 'use',

@@ -1,0 +1,270 @@
+.spui::before{
+    --sp-icon : url("icons/android.svg");
+}
+.spui::before{
+    --sp-icon : url("icons/android2.svg");
+}
+.spui::before{
+    --sp-icon : url("icons/app-indicator.svg");
+}
+.spui::before{
+    --sp-icon : url("icons/arrow-clockwise.svg");
+}
+.spui::before{
+    --sp-icon : url("icons/arrow-counterclockwise.svg");
+}
+.spui::before{
+    --sp-icon : url("icons/arrow-down-short.svg");
+}
+.spui::before{
+    --sp-icon : url("icons/arrow-left-short.svg");
+}
+.spui::before{
+    --sp-icon : url("icons/arrow-right-short.svg");
+}
+.spui::before{
+    --sp-icon : url("icons/arrow-up-short.svg");
+}
+.spui::before{
+    --sp-icon : url("icons/bell-fill.svg");
+}
+.spui::before{
+    --sp-icon : url("icons/bell.svg");
+}
+.spui::before{
+    --sp-icon : url("icons/braces-asterisk.svg");
+}
+.spui::before{
+    --sp-icon : url("icons/braces.svg");
+}
+.spui::before{
+    --sp-icon : url("icons/bug-fill.svg");
+}
+.spui::before{
+    --sp-icon : url("icons/bug.svg");
+}
+.spui::before{
+    --sp-icon : url("icons/chevron-down.svg");
+}
+.spui::before{
+    --sp-icon : url("icons/chevron-left.svg");
+}
+.spui::before{
+    --sp-icon : url("icons/chevron-right.svg");
+}
+.spui::before{
+    --sp-icon : url("icons/chevron-up.svg");
+}
+.spui::before{
+    --sp-icon : url("icons/clipboard-check.svg");
+}
+.spui::before{
+    --sp-icon : url("icons/clipboard.svg");
+}
+.spui::before{
+    --sp-icon : url("icons/clock-history.svg");
+}
+.spui::before{
+    --sp-icon : url("icons/clock.svg");
+}
+.spui::before{
+    --sp-icon : url("icons/code-square.svg");
+}
+.spui::before{
+    --sp-icon : url("icons/code.svg");
+}
+.spui::before{
+    --sp-icon : url("icons/cursor.svg");
+}
+.spui::before{
+    --sp-icon : url("icons/database-fill-lock.svg");
+}
+.spui::before{
+    --sp-icon : url("icons/database-fill.svg");
+}
+.spui::before{
+    --sp-icon : url("icons/database.svg");
+}
+.spui::before{
+    --sp-icon : url("icons/exclamation-circle-fill.svg");
+}
+.spui::before{
+    --sp-icon : url("icons/exclamation-circle.svg");
+}
+.spui::before{
+    --sp-icon : url("icons/exclamation-lg.svg");
+}
+.spui::before{
+    --sp-icon : url("icons/feather.svg");
+}
+.spui::before{
+    --sp-icon : url("icons/file-earmark-code.svg");
+}
+.spui::before{
+    --sp-icon : url("icons/file-earmark-text.svg");
+}
+.spui::before{
+    --sp-icon : url("icons/file-earmark.svg");
+}
+.spui::before{
+    --sp-icon : url("icons/file-zip.svg");
+}
+.spui::before{
+    --sp-icon : url("icons/filetype-css.svg");
+}
+.spui::before{
+    --sp-icon : url("icons/filetype-exe.svg");
+}
+.spui::before{
+    --sp-icon : url("icons/filetype-html.svg");
+}
+.spui::before{
+    --sp-icon : url("icons/filetype-js.svg");
+}
+.spui::before{
+    --sp-icon : url("icons/filetype-json.svg");
+}
+.spui::before{
+    --sp-icon : url("icons/filetype-mp4.svg");
+}
+.spui::before{
+    --sp-icon : url("icons/filetype-pdf.svg");
+}
+.spui::before{
+    --sp-icon : url("icons/filetype-php.svg");
+}
+.spui::before{
+    --sp-icon : url("icons/filetype-png.svg");
+}
+.spui::before{
+    --sp-icon : url("icons/film.svg");
+}
+.spui::before{
+    --sp-icon : url("icons/folder.svg");
+}
+.spui::before{
+    --sp-icon : url("icons/folder2.svg");
+}
+.spui::before{
+    --sp-icon : url("icons/gear.svg");
+}
+.spui::before{
+    --sp-icon : url("icons/gem.svg");
+}
+.spui::before{
+    --sp-icon : url("icons/globe.svg");
+}
+.spui::before{
+    --sp-icon : url("icons/house.svg");
+}
+.spui::before{
+    --sp-icon : url("icons/image-fill.svg");
+}
+.spui::before{
+    --sp-icon : url("icons/image.svg");
+}
+.spui::before{
+    --sp-icon : url("icons/journal-text.svg");
+}
+.spui::before{
+    --sp-icon : url("icons/lightning-charge.svg");
+}
+.spui::before{
+    --sp-icon : url("icons/link-45deg.svg");
+}
+.spui::before{
+    --sp-icon : url("icons/patch-exclamation-fill.svg");
+}
+.spui::before{
+    --sp-icon : url("icons/patch-exclamation.svg");
+}
+.spui::before{
+    --sp-icon : url("icons/pause-circle-fill.svg");
+}
+.spui::before{
+    --sp-icon : url("icons/pause-circle.svg");
+}
+.spui::before{
+    --sp-icon : url("icons/pause-fill.svg");
+}
+.spui::before{
+    --sp-icon : url("icons/pause.svg");
+}
+.spui::before{
+    --sp-icon : url("icons/pencil-square.svg");
+}
+.spui::before{
+    --sp-icon : url("icons/person-add.svg");
+}
+.spui::before{
+    --sp-icon : url("icons/play-circle.svg");
+}
+.spui::before{
+    --sp-icon : url("icons/play-fill.svg");
+}
+.spui::before{
+    --sp-icon : url("icons/play.svg");
+}
+.spui::before{
+    --sp-icon : url("icons/plug.svg");
+}
+.spui::before{
+    --sp-icon : url("icons/plugin.svg");
+}
+.spui::before{
+    --sp-icon : url("icons/plus-lg.svg");
+}
+.spui::before{
+    --sp-icon : url("icons/plus.svg");
+}
+.spui::before{
+    --sp-icon : url("icons/record-circle.svg");
+}
+.spui::before{
+    --sp-icon : url("icons/record-fill.svg");
+}
+.spui::before{
+    --sp-icon : url("icons/record.svg");
+}
+.spui::before{
+    --sp-icon : url("icons/record2-fill.svg");
+}
+.spui::before{
+    --sp-icon : url("icons/record2.svg");
+}
+.spui::before{
+    --sp-icon : url("icons/search.svg");
+}
+.spui::before{
+    --sp-icon : url("icons/shield-fill.svg");
+}
+.spui::before{
+    --sp-icon : url("icons/shield-lock-fill.svg");
+}
+.spui::before{
+    --sp-icon : url("icons/shield-lock.svg");
+}
+.spui::before{
+    --sp-icon : url("icons/shield.svg");
+}
+.spui::before{
+    --sp-icon : url("icons/speedometer.svg");
+}
+.spui::before{
+    --sp-icon : url("icons/speedometer2.svg");
+}
+.spui::before{
+    --sp-icon : url("icons/stack.svg");
+}
+.spui::before{
+    --sp-icon : url("icons/terminal-plus.svg");
+}
+.spui::before{
+    --sp-icon : url("icons/truck.svg");
+}
+.spui::before{
+    --sp-icon : url("icons/x-circle.svg");
+}
+.spui::before{
+    --sp-icon : url("icons/x.svg");
+}

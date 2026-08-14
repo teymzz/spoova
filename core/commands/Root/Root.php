@@ -15,16 +15,11 @@ use spoova\mi\core\commands\Support\Handlers\Syntax;
  */
 class Root extends Entry{
 
-    /* consider removing this... Already defined in Entry as Entry::root */
-    // public const commands = [
-    //     'version','support','cli','repack','features'
-    // ];
     public const commands = Entry::root;
 
     function __construct(string $command)
     {
         
-
         if($command === ':wizi') return new CastConsole;
         if($command === ':wiz') return new InteractiveConsole;
 
@@ -72,7 +67,7 @@ class Root extends Entry{
 
        Cli::break(2);
                 
-       Cli::textView('| Type '.Cli::bgWarn(' mi ').' '.Cli::warn('cli -list').' to see a list of commands', pause: '3', break: 1, spacing: '2');
+       Cli::textView('| Type '.Cli::bgWarn(' mi ').' '.Cli::warn('cli -lists').' to see a list of commands', pause: '3', break: 2, spacing: '2');
 
     }
 

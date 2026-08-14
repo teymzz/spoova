@@ -1,0 +1,217 @@
+/* -- basic theme -- */
+
+[basic] {
+    width: 20px;
+    height: 20px;
+}
+
+[basic][checked="unchecked"] {
+    background-color: white;
+}
+
+[basic][checked="checked"] {
+    background-color: lime;
+}
+
+/* -- bass theme  --*/
+
+[bass] > div {
+    width: 20px; 
+    height:20px;
+    border-radius: 100vh;
+    animation: limeGlow 2s;
+    border: solid 4px transparent;
+}
+
+[bass] > div [marker] {
+    border-radius: inherit;
+}
+
+[bass]:where([checked="unchecked"]) > div{
+    box-shadow: 0 0 5px 2px red, 0 0 5px 2px red;
+}
+
+[bass][checked="checked"] > div {
+    box-shadow:0 0 3px 1px rgb(99, 219, 45), 0 0 3px 1px rgb(99, 219, 45);
+}
+
+[bass] > div:active {
+    box-shadow: none;
+}
+
+/* -- spinner theme -- */
+[spinner][checker] [marker] {
+    background-color: rgba(119, 110, 110, 0.188);
+}
+
+[spinner][checker] [marker] .spin{
+    content: "";
+    width: 100%;
+    height: 100%;
+    display: inline-block;
+    border-radius: 100vh;
+}
+
+[spinner][checker] [marker]:nth-child(1) .spin {
+    outline-offset: -4px;
+    outline: dotted 2px #f60000;
+}
+
+[spinner][checker] [marker]:nth-child(2) .spin {
+    outline-offset: -4px;
+    outline: dotted 2px #35f600;
+}
+
+/* -- fan icon theme -- */
+
+[fan]:active{
+    opacity: .2;
+}
+
+[fan] > [checker] + input + [data-access="label"]::before{
+
+    content: "";
+    width: 10px;
+    height: 10px;
+    border-radius: 100vh;
+    display: block;
+    background-color: #443a57;
+    transition: background-color .2s ease, box-shadow 0s;
+}
+
+[fan] > [checker] + input:checked + [data-access="label"]::before{
+    background-color: currentColor;
+    transition: background-color .2s ease, box-shadow .3s;
+    box-shadow: 0 0 3px 0px currentColor;
+}
+
+.f-icon, .f-icon > .bi{
+    display: flex; 
+    width:100%; 
+    height:100%; 
+    align-items: center; 
+    justify-content: center;
+}
+
+/* -- switch theme -- */
+
+[switch] [checker] {
+    border-radius: 5px;
+    overflow: hidden;
+    background-color: transparent !important;
+    outline: solid 2px #443a57;
+    outline-offset: .1em;
+}
+[switch] [checker] [marker] {
+    color: white;                    
+    padding: .9em 1.5em;
+    transition: background-color .5s ease-in-out;
+}
+[switch] [checker][checked="checked"] [marker]:nth-child(1) {
+    background-color: rgb(81, 78, 102);
+}
+[switch] [checker][checked="checked"] [marker]:nth-child(2) {
+    background-color: rgb(8, 190, 8); color:white
+}
+[switch] [checker][checked="unchecked"] [marker]:nth-child(1) {
+    background-color: rgb(207, 8, 8)
+}
+[switch] [checker][checked="unchecked"] [marker]:nth-child(2) {
+    background-color: rgb(81, 78, 102);
+}
+
+/* --slide theme -- */
+
+[slide]{
+    position: relative;
+}
+[slide] [checker] {
+    border-radius: 5px;
+    overflow: hidden;
+    background-color: transparent !important;
+    outline: solid 2px #443a57;
+    outline-offset: .1em;
+}
+[slide] [checker] [marker] {
+    color: white;                    
+    padding: .9em 1.5em;
+    transition: background-color .5s ease-in-out;
+}
+[slide] [checker][checked="checked"] [marker]:nth-child(1) {
+    background-color: rgb(81, 78, 102);
+}
+[slide] [checker] [marker] {
+    cursor: pointer;
+    user-select: none;
+}
+[slide] [checker][checked="checked"] [marker]:nth-child(2) {
+    background-color: rgb(8, 190, 8); color:white
+}
+[slide] [checker][checked="unchecked"] [marker]:nth-child(1) {
+    background-color: rgb(207, 8, 8)
+}
+[slide] [checker][checked="unchecked"] [marker]:nth-child(2) {
+    background-color: rgb(81, 78, 102);
+}
+[slide] [checker] + input + span::after {
+    content: "";
+    display: block;
+    box-shadow: 0 0 10px 0px #28253b;
+    background-color: rgba(58, 52, 70, 0.36);
+    position: absolute;
+    right: 4px;
+    top:0;
+    bottom: 0;
+    width: 0px;
+    transition: width .2s;
+    border-top-right-radius: inherit;
+    border-bottom-right-radius: inherit;
+}
+[slide] [checker] + input + span::before {
+    content: "";
+    display: block;
+    box-shadow: 0 0 10px 0px #28253b;
+    background-color: rgba(58, 52, 70, 0.338);
+    position: absolute;
+    left: 0px;
+    top:0;
+    bottom: 0;
+    width: 0px;
+    transition: width .2s;
+    border-top-left-radius: inherit;
+    border-bottom-left-radius: inherit;
+}
+
+[slide] [checker][checked="checked"] + input + span::after {
+    width: 50%;
+    transition: width .2s;
+}
+[slide] [checker][checked="unchecked"] + input + span::before {
+    width: 50%;
+    transition: width .2s;
+}
+
+
+[polar] [marker]{                    
+    border-radius: 100vh;
+    background-color: #180b2b;
+}
+[polar] [marker]:nth-child(1){
+    background-color: rgb(255, 0, 120);
+}
+[polar] [marker]:nth-child(2){
+    background-color: rgb(31, 162, 168);
+}
+[polar][checked="checked"] [marker]:nth-child(1){
+    background-color: rgba(255, 0, 120, 0.3);
+}
+[polar][checked="unchecked"] [marker]:nth-child(2){
+    background-color: rgb(31, 162, 168, 0.3);
+}
+
+/* -- cool animation themes -- */
+
+.cool [marker] {
+    width: auto;
+    height: auto;
+}

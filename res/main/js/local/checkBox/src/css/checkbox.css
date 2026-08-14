@@ -1,0 +1,204 @@
+/* -- custom checkbox designs -- */
+
+[checkbox], [marker] {
+    user-select: none;
+}
+
+[checkbox] [marker] {
+    width: 20px;
+    height: 20px;
+}
+
+[checked] [marker] {
+    width: 20px;
+}
+
+[data-role="checkbox-list"]{
+    display: flex;
+    gap: .5em;
+}
+
+[data-role="checkbox"]{
+    align-items: center; 
+    gap: .2em;
+}
+
+.basic[checkbox] {
+    width: 20px;
+    height: 20px;
+}
+
+.basic[checkbox][checked="unchecked"] {
+    background-color: white;
+}
+
+.basic[checkbox][checked="checked"] {
+    background-color: lime;
+  }
+
+.checkers{
+    margin: .5em;
+    margin-left: 0;
+}
+
+.checkers.box {
+    background-color: #28253b;
+}
+
+.checkers.box > div:nth-child(1) {
+    padding: 4px; 
+    background-color: #3a3446
+}
+
+.checkers.box > div:nth-child(2) {
+    padding: .5em; 
+    display:flex; 
+    align-content: center;
+}
+
+.checkers.box .box.wrap{
+    display:inline-flex; 
+    align-content: center;
+}
+
+.box{
+    display: inline-block;
+}
+
+.flex, .flex-full {
+    display: flex;
+}
+
+.in-flex {
+    display: inline-flex;
+    float: left;
+}
+
+.flex-full, .wid-full {
+    width: 100%;
+}
+
+.flex.even{
+    gap: .5em;
+}
+
+.flex.even > div {
+    width: 100%;
+    margin-right: 0;
+    margin-left: 0;
+}
+
+.grow {
+  flex-wrap: wrap;
+}
+
+.grow > * {
+  flex-grow: 1;
+}
+
+.center {
+    display: grid;
+    place-items: center;
+}
+
+.mid {
+    justify-content: center;
+    align-items: center;
+    gap: .2em;
+}
+
+.mid-v {
+    align-items: center;
+}
+
+.wrap {
+    border: solid 2px #3a3446;
+}
+
+.wrap > *{
+    border: solid 4px transparent;
+}
+
+.fit {
+    width: 100%;
+    height: 100%;
+}
+
+.rad-r, .rad-r > *{
+    border-radius: 100vh;
+    overflow: hidden;
+}
+
+.mvt-10{
+    margin-top:10px;
+}
+
+.sample-box{
+    align-items: center; 
+    padding: 10px; 
+    background-color: #36324c;
+    white-space: nowrap;
+}
+
+input[type="password"], input[type="text"]{
+    font-size:.75em; 
+    border:none; 
+    background-color: rgb(57, 53, 83); 
+    color:white; 
+    padding:.5em;
+}
+
+:is(input[type="text"], input[type="password"], input:not([type])) {
+    outline: solid 2px #3b3758;
+    outline-offset: 2px;
+}
+
+/* --applied colors-- */
+.lime {
+    color: lime;
+}
+
+.red {
+    color: red;
+}
+
+.green {
+    color: red;
+}
+
+.currentColor {
+    color: currentColor;
+}
+
+/* --applied background colors-- */
+.b-lime {
+    background-color: lime;
+}
+
+.b-green {
+    background-color: green;
+}
+
+.b-red {
+    background-color: red;
+}
+
+.b-currentColor {
+    background-color: currentColor;
+}
+
+/* -- defined clockwise animation -- */
+
+.spin{
+    display: inline-block;
+    animation: spin 4s 0s linear infinite;
+}
+
+@keyframes spin {
+    from{
+        transform: rotate(0deg);
+    }
+    to{
+        transform: rotate(360deg);
+    }
+}

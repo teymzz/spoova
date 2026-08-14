@@ -335,9 +335,33 @@ abstract class DBBridge implements DBInterface, DBHelpers{
    *
    * @return bool
    */
-  public function error_exists() : bool{  
+  public function error_exists() : bool{
     return $this->error? true : false;
-  }  
+  }
+
+  /**
+   * Forget the last error recorded against this connection.
+   *
+   * The error is held on the connection rather than on the handler that produced
+   * it, and connections are shared — DBHandler::clone() copies the handler but not
+   * the connection underneath it. Without this, a failed query left its error in
+   * place and DBHandler::process() read it back on the *next* query, reporting a
+   * perfectly good statement as failed. A probe such as table_exists() against a
+   * missing table would therefore break every query that followed it.
+   *
+   * Called at the start of each query, so an error only ever describes the query
+   * that is running now.
+   *
+   * @return void
+   */
+  public function clearError() : void {
+
+    $this->error = null;
+    $this->full_error = '';
+
+    self::$baseerror = '';
+
+  }
 
   //* abstract methods
 

@@ -1,7 +1,10 @@
 <?php
 
 use spoova\mi\core\classes\CSRF;
+use spoova\mi\core\classes\DB\DBSessionHandler;
 use spoova\mi\core\classes\EInfo;
+use spoova\mi\core\classes\Init;
+use spoova\mi\core\classes\RedisSessionHandler;
 use spoova\mi\core\classes\Request;
 use spoova\mi\core\classes\Sessionbase;
 use spoova\mi\core\classes\SharedInfo;
@@ -20,6 +23,12 @@ class Session extends SharedInfo {
   private $autoRedirect = false;
   private $algo  = 'sha1';
   private static ?Session $stream = null;
+  /**
+   * Overrides the SESSION_HANDLER init key when set.
+   *
+   * @var string|null
+   */
+  private static ?string $handler = null;
   private static $secure = false;
 
   /**
@@ -146,11 +155,20 @@ class Session extends SharedInfo {
       self::$session_params['secure'] = function_exists('isSecure')? isSecure() : self::$session_params['secure'];
       $session_params = array_values(self::$session_params);
       if(!headers_sent()){
+
+        /* Without strict mode PHP adopts whatever session id it is handed, including
+           one it never issued. That is what makes a fixed id usable in the first
+           place, so it is set before the session is opened rather than after. */
+        @ini_set('session.use_strict_mode', '1');
+
+        //register a storage handler when one has been configured
+        self::attachHandler();
+
         session_set_cookie_params(...$session_params);
-        //set storage name 
+        //set storage name
         session_name(Session::storage_key());
         session_start();
-        return true;  
+        return true;
       }
     } 
 
@@ -461,14 +479,183 @@ class Session extends SharedInfo {
     }else {
 
       if(!Session::has(self::$sessionName)){
+
+        /* A visitor's session id must not survive the moment they become somebody.
+           Anyone who planted or observed the id beforehand would otherwise hold a
+           logged-in session — session fixation. Issued before the account data is
+           written, so the credentials only ever exist under the new id. */
+        self::renewId();
+
         Session::save(self::$sessionName, $logdata);
         if($url === '') $url = self::$loginUrl;
         if($url !== false) $this->autoLogin($url);
       }
 
-      return true;     
+      return true;
 
     }
+
+  }
+
+  /**
+   * Register a session storage handler, when one has been asked for.
+   *
+   * The store is named by the SESSION_HANDLER init key. "files" is PHP's own
+   * handler and needs nothing registered, which is why it is also the default:
+   * a project that has not chosen keeps working exactly as before.
+   *
+   *   files     — PHP's filesystem handler (default, fastest, single server only)
+   *   database  — the project's database, so several servers share one store
+   *   redis     — an in-memory store, if the redis extension is installed
+   *
+   * Anything that cannot be set up falls back to the filesystem rather than
+   * failing the request: a session store that is momentarily unreachable should
+   * log people out, not take the site down.
+   *
+   * @return string the handler actually in use
+   */
+  public static function attachHandler() : string {
+
+    $handler = strtolower(trim((string) (self::handlerName())));
+
+    if($handler === '' || $handler === 'files' || $handler === 'file') return 'files';
+
+    if($handler === 'database' || $handler === 'db'){
+
+      if(!class_exists(DBSessionHandler::class)) return 'files';
+
+      try{
+        return session_set_save_handler(new DBSessionHandler(), true)? 'database' : 'files';
+      }catch(\Throwable){
+        return 'files'; // no database yet, or it is unreachable
+      }
+
+    }
+
+    if($handler === 'redis'){
+
+      if(!RedisSessionHandler::available()){
+        EInfo::view('SESSION_HANDLER is set to redis but the redis extension is not installed.');
+        return 'files';
+      }
+
+      try{
+        $redis = new RedisSessionHandler();
+        // a store that cannot be reached must not take the site down with it
+        if(!$redis->open('', '')) return 'files';
+        return session_set_save_handler($redis, true)? 'redis' : 'files';
+      }catch(\Throwable){
+        return 'files';
+      }
+
+    }
+
+    EInfo::view('Unknown SESSION_HANDLER "'.$handler.'". Falling back to file storage.');
+
+    return 'files';
+
+  }
+
+  /**
+   * Choose the session store at runtime, overriding whatever the configuration says.
+   *
+   *   Session::use('redis');      // default | files | database | redis
+   *
+   * Nothing above this changes. Handlers are registered with PHP itself, so
+   * Session::save(), Session::remove(), User::login() and User::logout() keep
+   * writing through $_SESSION exactly as before and land in whichever store is
+   * active — the storage is a deployment choice, not something application code is
+   * written against.
+   *
+   * Because the framework opens a session as it loads, this usually arrives after
+   * the session is already running. It therefore migrates a live session rather
+   * than refusing: the contents are carried across, the id is kept, and the old
+   * store's copy is left to expire.
+   *
+   * @param string $handler default, files, database or redis
+   * @return bool TRUE when the store is in use
+   */
+  public static function use(string $handler) : bool {
+
+    $handler = strtolower(trim($handler));
+
+    $known = ['default', 'files', 'file', 'database', 'db', 'redis'];
+
+    if(!in_array($handler, $known, true)){
+      EInfo::view('Session::use() expects one of '.implode(', ', $known).'.');
+      return false;
+    }
+
+    self::$handler = ($handler === 'default')? 'files' : $handler;
+
+    // not started yet — start() will pick this up when it registers the handler
+    if(session_status() !== PHP_SESSION_ACTIVE) return true;
+
+    if(headers_sent()){
+      EInfo::view('Session::use() cannot change the session store after output has been sent.');
+      return false;
+    }
+
+    /* Carried across by hand: the data belongs to the old store, and once the new
+       handler is registered nothing would go back for it. */
+    $data = $_SESSION ?? [];
+
+    session_write_close();
+
+    $applied = self::attachHandler();
+
+    session_start();
+
+    $_SESSION = $data;
+
+    return $applied === self::$handler;
+
+  }
+
+  /**
+   * The session store currently in use.
+   *
+   * @return string
+   */
+  public static function using() : string {
+
+    $handler = self::handlerName();
+
+    return ($handler === '' || $handler === 'file')? 'files' : $handler;
+
+  }
+
+  /**
+   * The configured storage handler name.
+   *
+   * @return string
+   */
+  private static function handlerName() : string {
+
+    if(self::$handler !== null) return self::$handler;
+
+    // Init needs the project's icore directory, so it can only be asked once booted
+    if(!defined('_icore') || !class_exists(Init::class)) return '';
+
+    return (string) (Init::key('SESSION_HANDLER') ?: '');
+
+  }
+
+  /**
+   * Issue a new session id, carrying the current data across to it.
+   *
+   * Called whenever the identity behind a session changes, which is the point at
+   * which an id an attacker may already know has to stop being valid.
+   *
+   * @return bool TRUE when a new id was issued
+   */
+  public static function renewId() : bool {
+
+    // nothing to renew before a session exists, and no way to send the new cookie afterwards
+    if(session_status() !== PHP_SESSION_ACTIVE || headers_sent()) return false;
+
+    // TRUE deletes the old record, so the previous id cannot be resumed
+    return session_regenerate_id(true);
 
   }
 
@@ -478,6 +665,10 @@ class Session extends SharedInfo {
 
     Session::save($sessionName, []);
     Session::remove($sessionName);
+
+    /* Logging out is the same change of identity in reverse. Renewing here stops a
+       logged-out id from being reused for the next sign in on a shared machine. */
+    self::renewId();
 
     if(isset(self::$cookieName)){
       $cookieName = self::$cookieName;
