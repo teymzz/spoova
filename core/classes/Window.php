@@ -1,8 +1,6 @@
 <?php
 
-use Session;
 use spoova\mi\core\classes\Bundle\API\API;
-use spoova\mi\core\classes\Bundle\API\APIResponse;
 use spoova\mi\core\classes\constants\CASTED;
 use spoova\mi\core\classes\Container\Container;
 use spoova\mi\core\classes\ContainerFunction;
@@ -385,7 +383,7 @@ class Window extends WindowBase{
    * 
    * @return void
    */
-  final protected static function rootcall(Window $instance, array $windows = [], bool|SHUTTER $close = true){               
+  final protected static function rootcall(Window $instance, array $windows = [], bool|shutter $close = true){               
     
     if($instance->resolved()) return;
 
@@ -523,7 +521,7 @@ class Window extends WindowBase{
    * 
    * @return void|bool
    */
-  final protected static function pathcall(Window $instance, array $windows = [], bool|SHUTTER $close = true){
+  final protected static function pathcall(Window $instance, array $windows = [], bool|shutter $close = true){
 
     if(RouteInspector::capturing()){ RouteInspector::capture(get_class($instance), __FUNCTION__, $windows); return; }
 
@@ -727,7 +725,7 @@ class Window extends WindowBase{
    * 
    * @return void|bool
    */
-  final protected static function call(Window $instance, array $windows = [], bool|SHUTTER $close = true){
+  final protected static function call(Window $instance, array $windows = [], bool|shutter $close = true){
 
     if(RouteInspector::capturing()){ RouteInspector::capture(get_class($instance), __FUNCTION__, $windows); return; }
 
@@ -1351,7 +1349,7 @@ class Window extends WindowBase{
    * 
    * @return void|bool
    */
-  final public static function smartcall(Window $instance, array $windows = [], bool|SHUTTER $close = true){
+  final public static function smartcall(Window $instance, array $windows = [], bool|shutter $close = true){
 
     if(RouteInspector::capturing()){ RouteInspector::capture(get_class($instance), __FUNCTION__, $windows); return false; }
 
@@ -2022,9 +2020,9 @@ class Window extends WindowBase{
 
   function __destruct()
   {
-    $session = Session::base()->value();
+    $session = \Session::base()->value();
     if(isset($session[Notice::FLASH_KEY])) {
-        Session::base()->remove(Notice::FLASH_KEY);
+        \Session::base()->remove(Notice::FLASH_KEY);
     }
   }
 

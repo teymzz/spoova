@@ -1,14 +1,30 @@
 <?php
 
-namespace core\classes;
+namespace spoova\mi\core\classes;
 
 /**
  * This class is for handling IPAddresses
- * 
+ *
+ * The client address is only ever taken from a proxy header when the request
+ * actually arrived from a proxy that has been named as trusted. Any client can
+ * put whatever it likes in X-Forwarded-For, so reading it unconditionally would
+ * let a caller hand itself a new identity on every request — which is exactly
+ * what defeats anything keyed on the address, rate limits included.
  */
 class IPHandler
 {
      public string $userIP;
+
+     /**
+      * Addresses of proxies whose forwarded-for header may be believed.
+      *
+      * Plain addresses and CIDR ranges are both accepted, e.g.
+      * ```['10.0.0.0/8', '2001:db8::1']```. Anything set here takes precedence
+      * over the configured value.
+      *
+      * @var array|null
+      */
+     public static ?array $trustedProxies = null;
 
      public function localIP(){
           return $this->get_local_ip();
@@ -17,13 +33,100 @@ class IPHandler
      /**
       * Get client ip
       *
-      * @param string $type
-      * @return void
+      * @param string|null $type reserved
+      * @return string the client address, or an empty string when none can be
+      *   established — $userIP is typed, so the internal FALSE arrives here as ''.
       */
      public function clientIP(?string $type = null){
           //$type: will be added later
           $this->userIP = $this->get_client_ip();
           return $this->userIP;
+     }
+
+     /**
+      * Proxies whose forwarded-for header may be believed.
+      *
+      * Read from the property when it is set, otherwise from the TRUSTED_PROXIES
+      * init key as a comma separated list. The default is none: with no proxy
+      * named, REMOTE_ADDR is the only address ever used, which is the setting a
+      * project wants until it genuinely sits behind a load balancer.
+      *
+      * @return array
+      */
+     public static function trustedProxies() : array {
+
+          if(is_array(self::$trustedProxies)) return self::$trustedProxies;
+
+          /* Init reads the project's icore directory, so it can only be asked once the
+             framework has been bootstrapped. Outside that — a unit test, a script — the
+             answer is simply that no proxy is trusted. */
+          $configured = (defined('_icore') && class_exists(Init::class))
+               ? (string) (Init::key('TRUSTED_PROXIES') ?: '')
+               : '';
+
+          if(trim($configured) === '') return [];
+
+          return array_values(array_filter(array_map('trim', explode(',', $configured)), 'strlen'));
+
+     }
+
+     /**
+      * Whether an address belongs to one of the trusted proxies.
+      *
+      * @param string $address
+      * @return bool
+      */
+     private function isTrustedProxy(string $address) : bool {
+
+          foreach(self::trustedProxies() as $trusted){
+
+               if(!str_contains($trusted, '/')){
+                    if($address === $trusted) return true;
+                    continue;
+               }
+
+               if(self::inRange($address, $trusted)) return true;
+
+          }
+
+          return false;
+
+     }
+
+     /**
+      * Whether an address falls inside a CIDR range.
+      *
+      * Compared on the raw packed bytes so that one routine answers for both IPv4
+      * and IPv6 rather than needing a separate path for each.
+      *
+      * @param string $address
+      * @param string $range CIDR notation, e.g. 10.0.0.0/8
+      * @return bool
+      */
+     private static function inRange(string $address, string $range) : bool {
+
+          [$subnet, $bits] = array_pad(explode('/', $range, 2), 2, null);
+
+          $ip     = @inet_pton($address);
+          $net    = @inet_pton($subnet);
+          $bits   = (int) $bits;
+
+          // different families never match, and neither does anything unparseable
+          if($ip === false || $net === false || strlen($ip) !== strlen($net)) return false;
+
+          if($bits < 0 || $bits > (strlen($ip) * 8)) return false;
+
+          $whole = intdiv($bits, 8);
+          $rest  = $bits % 8;
+
+          if($whole > 0 && strncmp($ip, $net, $whole) !== 0) return false;
+
+          if($rest === 0) return true;
+
+          $mask = chr((0xFF << (8 - $rest)) & 0xFF);
+
+          return (($ip[$whole] & $mask) === ($net[$whole] & $mask));
+
      }
 
      private function get_local_ip(){
@@ -47,11 +150,12 @@ class IPHandler
           // Header that is used by the trusted proxy to refer to the original IP
           $proxy_header = "HTTP_X_FORWARDED_FOR";
 
-          // List of all the proxies that are known to handle 'proxy_header' in known, safe manner
-          $trusted_proxies = array("2001:db8::1", "192.168.50.1");
+          /* The list used to be two hardcoded documentation addresses, which no real
+             request ever arrives from — so the header was in practice never read, and
+             a project genuinely behind a proxy had to edit this file to change that.
+             It is configuration now: see IPHandler::trustedProxies(). */
+          if ($this->isTrustedProxy($_SERVER['REMOTE_ADDR'])) {
 
-          if (in_array($_SERVER['REMOTE_ADDR'], $trusted_proxies)) {
-               
                // Get IP of the client behind trusted proxy
                if (array_key_exists($proxy_header, $_SERVER)) {
 

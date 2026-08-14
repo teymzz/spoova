@@ -44,8 +44,37 @@ if( !defined('server') ) {
 
 	$_ENV['online'] = online; //set online value
 
-	//apply errors for environment
-	ini_set('display_errors', offline);
+	/* Apply errors for environment.
+	 *
+	 * "offline" is inferred from REMOTE_ADDR, which is the *client's* address — so a
+	 * production server sitting behind a same-host reverse proxy (nginx to php-fpm,
+	 * a local tunnel, Apache mod_proxy) sees 127.0.0.1 for every visitor, reads
+	 * itself as offline, and turns error display on for the public. An empty
+	 * DOCUMENT_ROOT, which some FPM configurations produce, does the same.
+	 *
+	 * A machine can therefore say what it is, and that declaration wins over the
+	 * guess. Without one the previous behaviour stands. */
+	/* getenv() reads the real process environment only — a value placed in a .env
+	   file and read back through Filemanager::loadenv() lands in $_ENV and would
+	   never be seen here. Both are consulted, in the order they become available. */
+	$declaredEnv = '';
+
+	foreach(['SPOOVA_ENV', 'APP_ENV'] as $envKey){
+		$declaredEnv = (string) (getenv($envKey) ?: ($_ENV[$envKey] ?? $_SERVER[$envKey] ?? ''));
+		if($declaredEnv !== '') break;
+	}
+
+	$declaredEnv = strtolower(trim($declaredEnv));
+
+	if($declaredEnv !== ''){
+		$showErrors = !in_array($declaredEnv, ['production','prod','live','online'], true);
+	}else{
+		$showErrors = (bool) offline;
+	}
+
+	// ini_set() wants a string; a bare FALSE arrives as '' and reads as unset
+	ini_set('display_errors', $showErrors? '1' : '0');
+	ini_set('display_startup_errors', $showErrors? '1' : '0');
 
 	//check secure protocols
 	function isSecure() {

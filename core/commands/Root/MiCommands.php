@@ -12,7 +12,7 @@ use spoova\mi\core\commands\Root\Entry;
 class MiCommands {
 
     /**
-     * Undocumented function
+     * Assign handlers for resolving mi commands.
      *
      * @param mixed $commands commands parsed
      * @param array $types retrieved from {@see Entry::main} and {@see Entry::root}

@@ -116,62 +116,245 @@ class Welcome {
         <html lang="en">
         <head>
             <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
             @meta('dump')
             @load('headers')
             @load('animateCSS')
             <title>{{ \$title ?? 'Hello!'}}</title>
             @live
-            <style> 
-                :root {
-                    --em-2 : 2em;
-                }           
+            <style>
+                /* The welcome page carries its own styling so that a new project renders
+                   correctly before any project stylesheet has been written. */
+                :root{
+                    --ink        : #eef1ff;
+                    --ink-soft   : #9aa4d2;
+                    --accent     : #f0883e;
+                    --accent-2   : #5aa9ff;
+                    --ring       : rgba(90,169,255,.30);
+                    --panel      : rgba(255,255,255,.045);
+                    --panel-line : rgba(255,255,255,.09);
+                    --code-line  : #202942;
+                    --mark-bg    : #0a081e;
+                    --mark-pad   : 14px;
+                    /* the disc, not the roller — the roller is this less the padding */
+                    --logo       : 150px;
+                }
+
+                *,*::before,*::after{ box-sizing:border-box; }
+
                 body{
-                    font-size: 10px;
-                    transition: font .2s;
+                    margin:0;
+                    min-height:100vh;
+                    display:grid;
+                    place-items:center;
+                    padding:2rem 1.25rem;
+                    background:#0a0f2b;
+                    /* two soft lights over a deep base, so the panel has something to sit on */
+                    background-image:
+                        radial-gradient(ellipse 80% 60% at 50% -10%, rgba(90,169,255,.20), transparent 60%),
+                        radial-gradient(ellipse 60% 50% at 85% 110%, rgba(240,136,62,.14), transparent 60%);
+                    color:var(--ink);
+                    font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+                    -webkit-font-smoothing:antialiased;
                 }
-                .overlay{
-                    z-index: 1; 
-                    color:#202dd5; 
-                    color:white; 
+
+                .stage{
+                    width:100%;
+                    max-width:560px;
+                    text-align:center;
+                    user-select:none;
                 }
-                .px-80 {
-                    width: var(--em-2);
-                    height: var(--em-2);
+
+                /* ---- the rolling icon ---- */
+
+                /* The padding is what sets the roller in from the edge of the disc. Both
+                   layers are stacked in the one grid cell rather than being positioned
+                   absolutely, because an absolute inset:0 resolves against the padding
+                   box and would spill back over that inset. */
+                .mark{
+                    position:relative;
+                    width:var(--logo);
+                    height:var(--logo);
+                    margin:0 auto 2rem;
+                    padding:var(--mark-pad);
+                    display:grid;
+                    place-items:center;
+                    background-color:var(--mark-bg);
+                    border-radius:100vh;
                 }
-                .ct-1{
-                    color:847b95;
+
+                /* the ring rolls; the crest inside it must not, so they stay separate layers */
+                .mark-ring{
+                    grid-area:1/1;
+                    width:100%;
+                    height:100%;
+                    border-radius:50%;
+                    background-repeat:no-repeat;
+                    background-position:center;
+                    background-size:contain;
+                    opacity:.92;
+                    filter:drop-shadow(0 0 18px var(--ring));
                 }
-                @media (min-width:1000px) {
-                    body{
-                        font-size: initial;
-                    }
+
+                .mark-crest{
+                    grid-area:1/1;
+                    width:44%;
+                    height:44%;
+                    background-repeat:no-repeat;
+                    background-position:center;
+                    background-size:contain;
+                }
+
+                /* A quiet halo that breathes, to keep the mark alive while the ring turns.
+                   The disc is opaque, so this now reads as a glow around it rather than
+                   behind it — which is why it is inset negatively. */
+                .mark::after{
+                    content:"";
+                    position:absolute;
+                    inset:-18%;
+                    border-radius:50%;
+                    background:radial-gradient(circle,var(--ring),transparent 70%);
+                    animation:pulse 3.2s ease-in-out infinite;
+                    z-index:-1;
+                }
+
+                @keyframes pulse{
+                    0%,100%{ transform:scale(.92); opacity:.45; }
+                    50%    { transform:scale(1.06); opacity:.85; }
+                }
+
+                /* ---- wordmark ---- */
+
+                .greeting{
+                    font-size:.95rem;
+                    letter-spacing:.14em;
+                    text-transform:uppercase;
+                    color:var(--ink-soft);
+                    margin:0 0 .55rem;
+                }
+
+                .greeting b{ color:var(--accent); font-weight:600; }
+
+                .wordmark{
+                    margin:0;
+                    font-size:clamp(2.6rem,11vw,4.2rem);
+                    font-weight:800;
+                    letter-spacing:.02em;
+                    line-height:1;
+                    background:linear-gradient(100deg,var(--accent-2),#c9d8ff 55%,var(--accent));
+                    -webkit-background-clip:text;
+                    background-clip:text;
+                    color:transparent;
+                }
+
+                .tagline{
+                    margin:.85rem 0 0;
+                    font-size:.98rem;
+                    color:var(--ink-soft);
+                }
+
+                /* ---- status ---- */
+
+                .status{
+                    display:inline-flex;
+                    align-items:center;
+                    gap:.5rem;
+                    margin-top:1.6rem;
+                    padding:.42rem .95rem;
+                    font-size:.83rem;
+                    border-radius:999px;
+                    border:1px solid var(--panel-line);
+                    background:var(--panel);
+                    color:var(--ink-soft);
+                }
+
+                .status .dot{
+                    width:7px;
+                    height:7px;
+                    border-radius:50%;
+                    background:#3ddc97;
+                    box-shadow:0 0 0 3px rgba(61,220,151,.18);
+                }
+
+                .status.is-idle .dot{ background:var(--ink-soft); box-shadow:none; }
+
+                /* ---- next steps ---- */
+
+                .steps{
+                    margin:2.4rem auto 0;
+                    padding:1.1rem 1.25rem;
+                    max-width:420px;
+                    text-align:left;
+                    border:1px solid var(--panel-line);
+                    border-radius:14px;
+                    background:var(--panel);
+                }
+
+                .steps-title{
+                    margin:0 0 .7rem;
+                    font-size:.72rem;
+                    letter-spacing:.16em;
+                    text-transform:uppercase;
+                    color:var(--ink-soft);
+                }
+
+                .steps ul{ margin:0; padding:0; list-style:none; }
+
+                .steps li{
+                    display:flex;
+                    gap:.6rem;
+                    padding:.3rem 0;
+                    font-size:.87rem;
+                    color:var(--ink-soft);
+                }
+
+                .steps code{
+                    font-family:ui-monospace,SFMono-Regular,Consolas,monospace;
+                    font-size:.85em;
+                    color:var(--accent-2);
+                    white-space:nowrap;
+                    /* the padding and radius are what stop the border sitting hard against
+                       the glyphs — the border alone reads as a box drawn round the text */
+                    padding:.14em .45em;
+                    border:solid 1px var(--code-line);
+                    border-radius:5px;
+                }
+
+                @media (prefers-reduced-motion:reduce){
+                    .ico-spin,.mark::after{ animation:none !important; }
                 }
             </style>
         </head>
         <body>
-            <div class="centre vhm-full bc-deeper-blue-dd fb-6 font-em-3 c-white">
-                
-                <div class="in-flex pxv-10 no-select">
-                <div class="in-flex midv">
-                        <div class="">
-                            <span class="c-orange">Hello!</span> 
-                            <span class="{{ spoovaLoaded('c-sea-blue','ct-1') }}">From</span> 
-                        </div>
-                        <div class="animate__animated animate__rubberBand flex-icon mxs-10 mid pxv-10 theme-btn box bd bd-silver rad-r anc-btn-link flow-hide bc-deeper bc-deeper-blue ripple relative">
-                                <div class="flex px-80 bc-deeper-blue-dd rad-r">
-                                    <div class="rad-r px-full bc-deeper-blue-dd b-cover ico-spin" data-src="@mapp('images/icons/favicon-white-full.png')"></div>
-                                    <div class="overlay flex mid">
-                                        <div class="px-30 b-fluid" data-src="@mapp('images/icons/S.png')"></div>
-                                    </div>
-                                </div>
-                        </div>
-                        <div href="@Domurl()" class="in-flex f-col">
-                            <div class="flex midv fb-9 font-menu font-em-1d2 {{ spoovaLoaded('c-sea-blue','ct-1') }}">POOVA</div>
-                            <div class="font-em-d2 absolute pxs-6 c-sky-blue" @onShow('spoovaLoaded', 'true')>app connected <span class="bi bi-check"></span></div>
-                        </div>
-                    </div>
+            <main class="stage animate__animated animate__fadeIn">
+
+                <div class="mark">
+                    <div class="mark-ring ico-spin" data-src="@mapp('images/icons/favicon-white-full.png')" data-lqip="@lqip()"></div>
+                    <div class="mark-crest" data-src="@mapp('images/icons/S.png')" data-lqip="@lqip()"></div>
                 </div>
-            </div>
+
+                <p class="greeting"><b>Hello!</b> &mdash; welcome aboard</p>
+
+                <h1 class="wordmark">SPOOVA</h1>
+
+                <p class="tagline">Your application is up and running.</p>
+
+                <div class="status {{ spoovaLoaded('','is-idle') }}">
+                    <span class="dot"></span>
+                    <span>{{ spoovaLoaded('app connected','awaiting configuration') }}</span>
+                    <span class="bi bi-check" @onShow('spoovaLoaded', 'true')></span>
+                </div>
+
+                <section class="steps">
+                    <p class="steps-title">Next steps</p>
+                    <ul>
+                        <li>&rsaquo; <span>Edit this view in <code>windows/Rex/index.rex.php</code></span></li>
+                        <li>&rsaquo; <span>Add a route with <code>mi add:route &lt;name&gt; --live</code></span></li>
+                        <li>&rsaquo; <span>Configure the app with <code>mi config:all</code></span></li>
+                    </ul>
+                </section>
+
+            </main>
         </body>
         </html>
         CONTENT;

@@ -5,7 +5,9 @@ use spoova\mi\core\classes\Controller;
 use spoova\mi\core\classes\CSRF;
 use spoova\mi\core\classes\DomUrl;
 use spoova\mi\core\classes\Init;
+use spoova\mi\core\classes\Lqip;
 use spoova\mi\core\classes\Request;
+use spoova\mi\core\classes\SETTER;
 
 class Rexit {
 
@@ -307,6 +309,64 @@ class Rexit {
         $url = 'main/'.ltrim($url, '/');
         $replacement = ress($url);
         return $replacement;
+    }
+
+    /**
+     * Returns a Low Quality Image Placeholder for an image
+     *
+     * The placeholder is a base64 data URI of a scaled-down copy of the image,
+     * small enough to inline. Paired with a blur in css it stands in for the real
+     * image while that one loads.
+     *
+     * Called with no path, it places the last resource resolved through
+     * {@see \domUrl()} — which is every one of @mapp, @mass, @src, @ress and
+     * @domurl — so the image path is written once:
+     *
+     *   <img data-src="@mapp('images/hero.jpg')" data-lqip="@lqip()">
+     *
+     * That works because directives are compiled to `<?= Rexit::..() ?>` and run
+     * in source order at render time, so the @mapp alongside it has already
+     * tracked its path. A path given explicitly needs no such ordering, and may
+     * be prefixed "main:", "assets:" or "res:" to name a root outright.
+     *
+     * @param string|int $url path of the image, or the placeholder width when it
+     *   is the only argument given. An empty path uses the last tracked resource.
+     * @param int|null $width width of the placeholder in pixels
+     * @return string data URI, or an empty string if no placeholder could be made
+     */
+    static function lqip(string|int $url = '', ?int $width = null) {
+
+        // @lqip(32) — a width on its own, over the last tracked resource
+        if(func_num_args() === 1 && is_numeric($url)){
+            $width = (int) $url;
+            $url = '';
+        }
+
+        if(trim((string) $url) === '') $url = self::lqipTracked();
+
+        return Lqip::uri(Lqip::locate((string) $url), $width);
+
+    }
+
+    /**
+     * The last resource path tracked by {@see \domUrl()}, if there is one.
+     *
+     * Read directly, a tracker holding nothing reports through EInfo, which would
+     * put a notice on the page over a missing placeholder. Nothing tracked simply
+     * means no placeholder here.
+     *
+     * @return string
+     */
+    private static function lqipTracked() : string {
+
+        $name = DomUrl::Name();
+
+        if(!SETTER::EXISTS($name)) return '';
+
+        $tracked = DomUrl::last();
+
+        return is_string($tracked) ? $tracked : '';
+
     }
 
     /**

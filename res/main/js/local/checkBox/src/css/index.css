@@ -1,0 +1,415 @@
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background-color: rgba(17, 11, 28);
+    color:white;
+    font-family: Calibri, 'Trebuchet MS', sans-serif;
+    font-size: clamp(calc(14px + .5vw), calc(10px + 1vw), calc(10px + 1vw));
+    padding: 0 2%;
+}
+
+.code-x {
+  display : flex;
+  align-items: stretch;
+  gap: .5em;
+}
+
+.code-x > span {
+  padding: 2px 6px;
+  border-radius:5px;
+  background-color: #1d1f28;
+  display: flex;
+  align-items: center;
+}
+
+.code-x > strong {
+  display: flex;
+  align-items: center;
+}
+
+i[class=""] {
+  font-style: normal;
+}
+
+.code-x > span .bi-window{
+  display: flex;
+  align-items: center;
+}
+
+.code-btn.active{
+  background-color: #4c5768;
+}
+
+
+.code pre {
+  display : none;
+}
+.code pre.active {
+  display : block;
+}
+.code pre.view {
+  white-space : normal;
+}
+.checkbox-field{
+  padding : 10px;
+}
+
+/* -- special notice colors -- */
+a, a:visited{
+    color: #c066b2;
+}
+
+section.side-bar {
+    position: fixed;
+    left: -300px;
+    z-index: 1;
+    transition: left .2s;
+    height: 100vh;
+}
+
+section.side-bar.active {
+    left: 0;
+    transition: left .2s;
+}
+
+.side-bar > .side-bar-fit{
+    background-color: #282138;
+    padding: 20px;
+    border-radius: 10px;
+    height: 100%; 
+    overflow-y: auto
+}
+
+section.side-bar .side-bar-fit{
+    position : relative;
+}
+
+section.side-bar .close{
+    position : absolute;
+    height: 50px;
+    width: 50px;
+    background-color : #3c3c5ce0;
+    display: grid;
+    place-items: center;
+    right: 20px;
+    top: 20px;
+    border-radius: 100vh;
+    z-index: 1;
+}
+
+section.side-bar a{
+    text-decoration: none;
+}
+
+section.side-bar.active::after{
+    content: " ";
+    display: block;
+    position: fixed;
+    width:100%;
+    height:100%;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    left: 0;
+    inset: 0 0 0 0;
+    background-color: #211f3bb7;
+    z-index: -1;
+}
+
+section.side-bar .nav-list{
+    margin:10px 0;
+    color: #8266c0;
+}
+section.side-bar .nav-list.active{
+    margin:10px 0;
+    color: #5c5c5c;
+}
+
+section.side-bar .nav-list a{
+    color:inherit;
+}
+
+section.side-bar .nav-list a::before{
+    content: " ";
+    position: relative;
+    display: inline-block;
+    margin-right: 10px;
+    border:solid 2px currentColor;
+    border-radius: 100vh;
+    top: -2px;
+    width: 5px;
+    height: 5px;
+    background-color: transparent;
+}
+
+.nav-pane {
+  position: fixed;
+  width: 100%;
+  bottom : 0;
+  left:0;
+  right:0;
+  background-color: #fafafa;
+  padding: 0px;
+}
+
+.nav-pane ul {
+  width: 0;
+  height: 0;
+  overflow: hidden;
+  transition: width .5s, height .5s ease-in-out;
+  position: absolute;
+  bottom: 50px;
+  background-color : #3e3a51; 
+  border-radius : 5px;
+  overflow-y: scroll;
+}
+
+.nav-pane ul.open{
+  width: fit-content;
+  height: 80vh;
+}
+
+.nav-pane ul li {
+  margin: 1px 0;
+  padding: 6px;
+  list-style: none;
+  background-color: #272636;
+}
+
+.nav-pane ul li a{
+  text-decoration: none;
+  padding: 4px;
+}
+
+/* set navigation buttons */
+a[class*=nav-btn]{
+    color : #646464;
+    border:none; 
+    border-radius: 5px; 
+    padding:14px 20px;
+    text-decoration: none;
+}
+
+a.nav-btn-lt {
+    float: left;
+    margin-right: 4px;
+}
+
+a.nav-btn-rt {
+    float: right;
+}
+
+h1{
+    color: rgb(244, 118, 238)
+}
+
+.c-note{
+    color: #e3d382;
+}
+
+.c-bool{
+    color: #f05b94;
+}
+
+.c-attr{
+    color: #8782e3;
+}
+
+.c-func{
+    color: #82e3ac;
+}
+
+.c-var{
+    color: rgb(98, 204, 215);
+}
+
+/* --code field designs-- */
+code.bc {
+  font-size: .75em;
+  padding: .2em .6em;
+}
+
+.code{
+    background-color: rgb(40, 37, 59);
+}
+
+
+code.bcr {
+    font-size: .75em;
+    padding: .2em .2em;
+    border-radius: 10px;
+}
+
+.bcr {
+    display: inline-block;
+    width: fit-content;
+    padding: 2px 4px;
+    background-color: #1e1a31;
+    margin: 4px 0;
+}
+
+.code .copy-btn {
+    border: solid 1px #151326;
+    border-radius: .2em;
+    padding: 5px;
+    color: #f2c93f;
+    background-color: #231d36;
+    /* box-shadow: 0 0 3px 0px #0d0c1c; */
+    box-shadow: 0 0 3px 0px #171531, 0 0 6px 0px #372546 inset;
+    font-size:.85em;
+    user-select: none;
+}
+
+.code .copy-btn:hover {
+    background-color: #191527;
+    opacity: .8;
+}
+
+.code .copy-btn:active {
+    background-color: #191527;
+    opacity: .5;
+}
+
+.code > div.flex > *:first-child {
+    width: 100%;
+}
+
+.code > div.flex {
+    align-items: center;
+    justify-content: center;
+}
+
+.code pre{
+    overflow-x: auto;
+    font-size: .95em;
+}
+
+.code > div:first-child {
+    padding: 10px;
+    background-color: #3a3446;
+}
+
+.code > div:first-child code {
+    background-color: #4d455c;
+    padding: 0 4px;
+    border-radius: 5px;
+    font-size: .85em;
+    color:#dea1de;
+}
+
+.config-keys > .key > code:first-child{
+    padding: 5px 10px;
+    min-width: 80px; 
+    display: inline-flex;
+    background-color: #1e1a31;
+    margin: 5px 0;
+}
+
+.bc {
+    display: inline-block;
+    width: fit-content;
+    padding:2px 4px;
+    background-color: #1e1a31;
+    margin: 4px 0;
+}
+
+pre{
+    padding: 1em;
+}
+
+pre .tag {
+    color: rgb(255, 86, 58);
+}
+
+pre .func {
+    color: rgb(240, 203, 56);
+}
+
+pre .key {
+    color: rgb(232, 75, 156);
+}
+
+pre .var {
+    color: rgb(98, 204, 215);
+}
+
+pre .arg {
+    color: rgb(228, 131, 226);
+}
+
+pre .val {
+    color: rgb(200, 154, 120);
+}
+
+pre .bool {
+    color: rgb(255, 143, 125);
+}
+
+pre .string {
+    color: rgb(150, 176, 119);
+}
+
+pre .braces {
+    color: rgb(191, 191, 191);
+}
+
+pre .comment {
+    color: rgb(166, 166, 166);
+    font-style: italic;
+}
+
+@media (min-width: 1000px) {
+    body{
+        /* padding: 0 20%; */
+        padding:0; 
+        display: flex;
+    }
+
+    section.side-bar{
+        display: block;
+        width:300px; 
+        height: 100vh;  
+        padding: 20px; 
+        position: fixed; 
+        top:0; 
+        left:0; 
+        font-size: 20px;
+    }
+    
+    section.side-bar .close{
+        display: none;
+    }
+    
+    section.side-bar.active::after{
+        display:none;
+    }
+
+    body section:nth-child(2) {
+        width:calc(100% - 320px);
+        position: relative; 
+        left:300px;
+    }
+    
+    .nav-pane {
+        position: relative;
+        width: 100%;
+        bottom : 0;
+        left:0;
+        right:0;
+        background-color: #fafafa;
+        padding: 0px;
+    }
+
+    a[class*=nav-btn]{
+        background-color: #3e3a51;
+        color: white;
+    }
+
+    .nav-pane ul {
+        bottom: 10px;
+    }
+}

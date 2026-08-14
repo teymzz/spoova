@@ -45,9 +45,12 @@ tests/
     │   ├── CollectionTest.php        # Collection + Record: iteration, columns, protection
     │   ├── HasherTest.php            # credential signing, hash chain, random keys
     │   ├── JsonfyTest.php            # array/JSON editor: add, update, delete, read
+    │   ├── LqipTest.php              # blur-up placeholder generation and caching
     │   └── TimeTest.php              # secondsTo() scales and rounding, "time ago"
-    └── Cli/
-        └── CliArgsTest.php           # declarative CLI argument parser
+    ├── Cli/
+    │   └── CliArgsTest.php           # declarative CLI argument parser
+    └── Commands/
+        └── SanitizeAuditTest.php     # project sanitize: PSR-4 casing + credential rules
 ```
 
 Test classes are namespaced under `spoova\mi\tests\...` to match the project's
@@ -77,6 +80,8 @@ Classes:
   `**protected**` masking that keeps a column out of a response.
 - `Time` — `secondsTo()` scales, spelling equivalence, rounding modes and the
   values that report `FALSE`; `distanceFrom()` "time ago" rendering.
+- `Lqip` — placeholder generation (scaling, aspect ratio, alpha), the inline size
+  budget, unreadable sources degrading to no placeholder, and mtime-keyed caching.
 - `Benchmark` — timing accuracy, the results table, baselines and export.
 - `Activity` — activity log naming and writing.
 
@@ -85,6 +90,12 @@ CLI:
 - `CliArgs` ([core/commands/Root/Cli/CliArgs.php](../core/commands/Root/Cli/CliArgs.php)) — a
   declarative argument parser (positionals, flags, value-options, strict
   unknown-directive rejection) intended to replace hand-rolled `$args[n]` parsing in commands.
+- `SanitizeAudit` ([core/commands/Support/Handlers/SanitizeAudit.php](../core/commands/Support/Handlers/SanitizeAudit.php)) —
+  the rules behind `php mi project sanitize`: tokenizer-based class discovery, PSR-4
+  path resolution, which naming faults count as findings (and which co-located
+  declarations deliberately do not), and offline-credential detection. These rules
+  cannot be verified by running the command on Windows — `is_file()` there is
+  case-insensitive — so they are asserted against synthetic trees instead.
 
 ## Regressions these tests pin down
 

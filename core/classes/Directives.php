@@ -1211,6 +1211,13 @@ abstract class Directives{
     }
 
     private static function directivesMapError(array $array = [], $body = ''){
+        // Development-only diagnostics: missing layout/asset notices are a
+        // build-time signal for the developer, never something a visitor should
+        // see. On a live (online) site we suppress them silently — the caller
+        // still strips the broken directive, so the page renders without it.
+        if(defined('online') && online){
+          return '';
+        }
         if(func_num_args() > 0){
           $arg = $array;
 

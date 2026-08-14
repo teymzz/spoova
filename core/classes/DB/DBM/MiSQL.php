@@ -6,7 +6,6 @@ use spoova\mi\core\classes\DB\DBBridge;
 
 use mysqli;
 use mysqli_sql_exception;
-use spoova\mi\core\commands\Root\Cli;
 
 class MiSQL extends DBBridge{
 
@@ -32,7 +31,7 @@ class MiSQL extends DBBridge{
     try{
       $this->isFailed = false;
 
-      mysqli_report(MYSQLI_REPORT_STRICT);
+      \mysqli_report(MYSQLI_REPORT_STRICT);
 
       $configs = [$this->DBSERVER, $this->DBUSER, $this->DBPASS, $this->DBNAME, $this->DBSOCKET];
 

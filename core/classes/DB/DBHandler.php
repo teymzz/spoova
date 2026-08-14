@@ -394,6 +394,12 @@ trait DBQuery{
    */
   public function query($query, array $data = [], $usedata = false){
     $this->freeVars();
+
+    /* freeVars() deliberately skips "conn", so the error the connection is carrying
+       from a previous query survives into this one — and process() reads it back,
+       failing a statement that actually ran. A new query starts with a clean slate. */
+    if(isset($this->conn) && method_exists($this->conn, 'clearError')) $this->conn->clearError();
+
     $this->sqlquery = $query;
     $this->data     = $data;
 

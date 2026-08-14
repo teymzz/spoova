@@ -1,0 +1,83 @@
+/* spoova lqip — blur-up placeholders for [data-src] lazy loading
+ *
+ * Driven by the classes loadImages.js puts on an element:
+ *
+ *   .lqip          the element is showing an inlined placeholder
+ *   .lqip-loading  the real image is on its way
+ *   .lqip-loaded   the real image is attached and decoded
+ *   .lqip-failed   the real image never arrived
+ *   .lqip-none     no placeholder was available for this element
+ */
+
+/* ---- images ---- */
+
+/* An <img> holds the placeholder in src, so it is blurred directly. The slight
+   scale hides the transparent fringe blur() leaves around the edges — without it
+   the border of every image fades out while it loads. */
+img.lqip {
+    filter: blur(12px);
+    transform: scale(1.03);
+    transition: filter .45s ease-out, transform .45s ease-out;
+}
+
+img.lqip.lqip-loaded {
+    filter: blur(0);
+    transform: none;
+}
+
+/* ---- background images ---- */
+
+/* Anything that is not an <img> carries the placeholder as a background, and may
+   well have children — blurring the element itself would blur its text too. The
+   placeholder is blurred on a ::before layer underneath instead, and that layer
+   is faded out once the real background is in place. */
+.lqip:not(img) {
+    position: relative;
+    isolation: isolate;
+}
+
+.lqip:not(img)::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background-image: inherit;
+    background-size: inherit;
+    background-position: inherit;
+    background-repeat: inherit;
+    filter: blur(12px);
+    transform: scale(1.05);
+    opacity: 1;
+    transition: opacity .45s ease-out;
+    pointer-events: none;
+}
+
+.lqip:not(img).lqip-loaded::before {
+    opacity: 0;
+}
+
+/* ---- no placeholder ---- */
+
+/* Without a placeholder there is nothing to blur up from, so the image fades in
+   from nothing rather than snapping in. */
+.lqip-none {
+    opacity: 0;
+    transition: opacity .3s ease-out;
+}
+
+.lqip-none.lqip-loaded,
+.lqip-none.lqip-failed {
+    opacity: 1;
+}
+
+/* ---- reduced motion ---- */
+
+/* The blur-to-sharp transition is motion. Readers who have asked for less of it
+   still get the placeholder — it just resolves without animating. */
+@media (prefers-reduced-motion: reduce) {
+    img.lqip,
+    .lqip:not(img)::before,
+    .lqip-none {
+        transition: none;
+    }
+}

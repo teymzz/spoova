@@ -1,0 +1,15 @@
+[data-nav="spoova"] {
+    margin: 0;
+}
+
+[data-nav="spoova"] ul {
+    margin: 0;
+}
+
+[data-nav="spoova"] li {
+    list-style: none;
+}
+
+[data-nav="spoova"][class*='in-flex'] {
+    align-items: center;
+}

@@ -100,6 +100,20 @@ class Entry extends Console{
         '   <name>'      => 'Create a new project file',                                    
         '   backup_file <filepath>'   => 'backup update project installer file path :dev',                                    
         '   backup_folder <filepath>' => 'backup update project installer folder :dev',                                    
+        '   sanitize' => 'prepares project app for online deployment :
+
+                                     reports class files the autoloader will miss on a
+                                     case-sensitive (online) filesystem, offline database
+                                     credentials still in icore/dbconfig.php, and storage
+                                     files that are regenerated online.
+
+                                     <option> :  \'-w\' apply changes (default reports only)
+                                                 \'-r\' restore config files from backup/
+                                                 \'-s\' leave database config files untouched
+
+                                     originals are copied to backup/ before anything is
+                                     overwritten — add that folder to .gitignore.
+                                    ',
     ];
     
     //list of usable methods in directives;

@@ -1,6 +1,6 @@
 <?php
 
-namespace spoova\mi\core\classes\Json;
+namespace spoova\mi\core\classes\Bundle\Json;
 
 use Closure;
 use JsonException;

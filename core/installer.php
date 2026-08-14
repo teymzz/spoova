@@ -827,12 +827,22 @@ class Installer{
                         <input type="text" class="flex-full pxv-10" id="cookie_field" name="cookie_field" placeholder="cookie field name (e.g cookie)" value="'.$uCookie.'">
                     </div>
 
+                    <div class="ins-note" role="note">
+                        <span class="ins-note-title"><span class="bi-info-circle mxr-4"></span>No migration is recorded here</span>
+                        Populating runs the <span class="bold">create</span> (or <span class="bold">alter</span>) statement straight
+                        against the database. Nothing is written to <span class="bold">db/migrations</span>, so this change cannot be
+                        replayed on another environment or rolled back with <span class="bold">migrate down</span>.
+                        To have a migration file instead, leave this step and run:
+                        <code>mi add:migrator create_'.htmlspecialchars(trim((string) $uFieldName) ?: 'users', ENT_QUOTES).'</code>
+                        <code>mi migrate up</code>
+                    </div>
+
                     <div class="in-flex-in bd-f rad-4 anc-btn-link mid">
                         <button class="flex-btn-full bh-deep-blue-d mid pxv-14 c-white" name="populate">
                             <span class="bi-ui-checks-grid mxr-4"></span> <span>Populate</span>
-                        </button> 
+                        </button>
                     </div>
-                </form>        
+                </form>
             </div>
         ');
     }
@@ -1595,6 +1605,39 @@ class Installer{
         .ins-page .resource-header{ border-bottom: 1px solid var(--ins-line); }
         .ins-page .c-orange-d,
         .ins-page .c-orange-dd{ color: var(--ins-accent) !important; }
+
+        /* ------------------------------------------------- advisory callout */
+        /* Used where the installer does something the CLI would record differently,
+           so the reader is told before they commit rather than after. */
+        .ins-page .ins-note{
+            margin: .2rem 0 .4rem;
+            padding: .7rem .85rem;
+            border: 1px solid rgba(255,171,69,.28);
+            border-left: 3px solid var(--ins-accent);
+            border-radius: var(--ins-r-sm);
+            background: rgba(255,171,69,.06);
+            color: var(--ins-muted);
+            font-size: .82rem;
+            line-height: 1.55;
+        }
+        .ins-page .ins-note-title{
+            display: block;
+            margin-bottom: .3rem;
+            color: var(--ins-accent);
+            font-weight: 600;
+        }
+        .ins-page .ins-note code{
+            display: inline-block;
+            margin-top: .35rem;
+            padding: .16em .45em;
+            border: 1px solid var(--ins-line-2);
+            border-radius: 5px;
+            background: rgba(0,0,0,.25);
+            color: var(--ins-text);
+            font-family: ui-monospace, "Cascadia Code", Consolas, monospace;
+            font-size: .95em;
+            white-space: nowrap;
+        }
 
         /* ------------------------------------------ step 3: the column picker */
         /* a panel whose first block is not .header still needs a card title */

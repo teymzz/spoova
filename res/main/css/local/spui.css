@@ -1,0 +1,52 @@
+[spui] {
+    width: 2em;
+    height: 2em;
+    position: relative;
+    padding: 5px;
+    display: inline-block;
+}
+[spui]::before {
+    content: '';
+    display: inline-block;
+    background: currentColor;
+    position: absolute;
+    inset: 0%;
+    aspect-ratio: 16 / 9;
+    font-size: inherit;
+    color: currentcolor;
+    --webkit-mask: var(--spui) center / cover no-repeat;
+    mask: var(--spui) center / cover no-repeat;
+}
+[spui~="boxed"] {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 4px;
+}
+[spui~="circled"] {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 100vh;
+    padding: 4px;
+}
+
+/* default listed icons */
+[spui~="record2"]::before{
+    --spui : url("icons/record2.svg");
+}
+[spui="chevron-left"]::before{
+    --spui : url('icons/chevron-left.svg');
+}
+[spui="chevron-right"]::before{
+    --spui : url('icons/chevron-right.svg');
+}
+[spui="exclamation-triangle"]::before{
+    --spui : url('icons/exclamation-triangle.svg');
+}
+[spui="info-circle"]::before{
+    --spui : url('icons/info-circle.svg');
+}
+[spui="middot"]::before{
+    --spui : url('icons/middot.svg');
+}

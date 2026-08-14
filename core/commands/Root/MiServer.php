@@ -28,9 +28,26 @@ class MiServer extends Entry {
 
         $port = self::commands(1)?: 8080;
 
-        if(!(is_numeric($port) && (strlen($port) === 4))){
+        /* Any port the operating system can bind is accepted. The previous check
+           allowed four digit numbers only, which turned away every valid port
+           below 1000 (80, 443 ...) and every one above 9999. */
+        $portNumber = filter_var((string) $port, FILTER_VALIDATE_INT, [
+            'options' => ['min_range' => 1, 'max_range' => 65535]
+        ]);
+
+        if($portNumber === false){
             Cli::textView(Cli::error('server port('.$port.') denied!'), '', '1|1');
+            Cli::textView(Cli::warn('a port must be a whole number between 1 and 65535'), '', '|1');
             return;
+        }
+
+        $port = $portNumber;
+
+        /* Ports under 1024 are reserved and normally need elevated rights, so the
+           bind can still fail after this point — said once here rather than leaving
+           the developer to read a bare PHP error. */
+        if($port < 1024){
+            Cli::textView(Cli::alert('Notice:','|1').Cli::warn('port '.$port.' is privileged and may require elevated rights'), '', '|1');
         }
 
         // project root (where the real index.php lives) — this file sits at
@@ -81,14 +98,10 @@ class MiServer extends Entry {
             //start development server
             exec($command, $output);
         }else{
-            // $silent = '> /dev/null 2>&1 & echo $!';
-            // $command = "php -S {$host}:{$port} {$router} $silent";
             $command = "php -S {$host}:{$port} {$router}";
 
             //start development server
             exec($command, $output);
-            // Init::set('NETWORK_ID', $output[0]);
-            // Cli::textView('WEB SERVER: '.Cli::bgAlert('ENABLED') )->break(2);
         }
         
     }
