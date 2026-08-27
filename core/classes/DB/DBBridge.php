@@ -97,7 +97,10 @@ abstract class DBBridge implements DBInterface, DBHelpers{
   protected $error;
   protected string $full_error;
   protected $affectedRows;
-  protected string $previousLimit;
+  /* Holds whatever $limit was, and $limit is null for a query that carries no LIMIT — which
+     is most of them. Typed as a plain string, every such query died on the assignment with
+     "Cannot assign null to property ... of type string", taking update() down with it. */
+  protected ?string $previousLimit = null;
   protected $limit;
   protected string $conResponse;
   protected string|null $DBSERVER = DBSERVER; 

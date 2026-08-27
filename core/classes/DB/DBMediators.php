@@ -9,6 +9,7 @@ use spoova\mi\core\classes\DB\DBViewer;
 use spoova\mi\core\classes\DB\DBDeleter;
 use spoova\mi\core\classes\DB\DBUpdater;
 use spoova\mi\core\classes\DB\DBConstruct;
+use spoova\mi\core\classes\Paginator;
 
 /**
  * This class contains custom database operators that directly 
@@ -349,6 +350,31 @@ class DBMediators implements DBOperators {
 
 
         return (new DBViewer($rebuild, $tthis, self::$model, $modelName, true));
+
+    }
+
+    static function paginate(int $perPage = 15, ?int $page = null) : Paginator {
+
+        return new Paginator(self::$tthis, $perPage, $page);
+
+    }
+
+    public function count() : int {
+
+        $query = "SELECT COUNT(*) AS paginator_total FROM {$this->sql['BASE_TABLE']}";
+        $query .= $this->sql['JOIN'].$this->sql['QUERY'].$this->sql['WHERE'];
+
+        $db = self::$dbh;
+        $db->query($query, $this->sql['PARAMS'])->read();
+        $results = $db->results();
+
+        if($db->error(true) || !isset($results[0]['paginator_total'])){
+            $this->DBError = $db->error(true) ?: 'unable to count query results';
+            return 0;
+        }
+
+        $this->DBError = false;
+        return (int) $results[0]['paginator_total'];
 
     }
 

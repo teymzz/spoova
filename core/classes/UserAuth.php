@@ -277,20 +277,21 @@ class UserAuth extends SharedInfo{
 
   /**
    * checks a password field
-   * caution: This method is under development. 
    */
   private function verify(){
-    
-    $table = $this->dbtable;   
+
+    $table = $this->dbtable;
     $fields = $this->fields;
     $values = $this->values;
     $passField = $this->passField;
-    
+
     if($table == '') trigger_error('invalid table');
     if($fields == '') trigger_error('invalid fields');
     if($passField == '') trigger_error('invalid column name');
-    
+
     $db = self::$dbh;
+
+    if(!$db) return $this->error_mess('no database connection');
 
     $db->query("SELECT {$passField} FROM $table $fields", $values);
     $db->saveState('query1');
@@ -418,17 +419,30 @@ class UserAuth extends SharedInfo{
 
 
   /**
-   * password fetch is disabled by default. 
+   * password fetch is disabled by default.
    * This method makes it possible to verify password
-   * 
-   * Caution: This method is under development and should not be used
-   * 
-   * @param string $password
+   *
+   * @param string $password the raw password supplied by the user
+   * @param \Closure|null $callback optional handler that receives the stored database value and
+   * returns the verification result. This mirrors the {@see \Form::auth()} callback contract
+   * (e.g fn($password) => password_verify($raw, $password)).
+   *  - When no callback is supplied, the stored value is treated as a hash and read with password_verify().
+   *
+   * @notice A password stored in plain text will never verify. Passwords are expected to be
+   * hashed (i.e password_hash()) before they are saved.
    * @return bool
    */
-  public function verifies($password){
+  public function verifies($password, ?\Closure $callback = null) : bool {
+
     $this->verify();
-    return ($password === $this->password);
+
+    $stored = $this->password;
+
+    if(!is_string($stored) || $stored === '') return false;
+
+    if($callback) return (bool) $callback($stored);
+
+    return password_verify((string) $password, $stored);
   }
 
   /**
@@ -558,16 +572,26 @@ class UserAuth extends SharedInfo{
         return $thiss->error_mess('invalid user field');
       }
 
-      if(!User::id()) return false;
-      
-      $columns = implode(" = ? ", $columns).' = ? ';
-          
-      $values = array_values($newdata);
-      
+      /* User::id() hands back a UserId object which is always truthy, so the id is
+         resolved to its string form before it is tested and before it is used. */
+      $userId = (string) User::id();
+
+      if($userId === '') return false;
+
       $conn = User::auth()->con();
 
-      $conn->query("UPDATE {$userTable} SET {$columns} WHERE {$userField} = '".User::id()."'", $values);
-      
+      if(!$conn) return $thiss->error_mess('no database connection');
+
+      // "a = ?, b = ?" — without the comma the statement was invalid for more than one column
+      $columns = implode(" = ?, ", $columns).' = ? ';
+
+      $values = array_values($newdata);
+
+      // the id is bound rather than quoted into the statement
+      $values[] = $userId;
+
+      $conn->query("UPDATE `{$userTable}` SET {$columns} WHERE `{$userField}` = ?", $values);
+
       return $conn->update() ;
 
   }

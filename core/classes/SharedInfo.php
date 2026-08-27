@@ -176,22 +176,40 @@ abstract class SharedInfo{
   } 
 
   /**
-   * Update the user data in the user configuration (or supplied) table
+   * Update the data of the currently signed in user in the user configuration (or supplied) table
    *
    * @param array $data new data to be supplied
-   * @param string $table - opitional custom database table name 
-   * @return DBHandler
+   * @param string $table - opitional custom database table name
+   * @notice The update is scoped to the current session's user id. Nothing is updated when no
+   * user session is active.
+   * @return DBHandler|null
    */
   public static function update(array $data, string $table = ''){
 
     $db = self::$dbh;
 
-    $table = (func_num_args() === 2)? self::$init['USER_TABLE'] : $table;
-    
-    $newdata = array_keys($data);
-    $fields = implode(' = ? ', $newdata);
+    if(!$db) return $db;
 
-    $db->query('update '.$table.' set '.$fields, $data);
+    // a supplied table wins, the configured user table is the fallback (this test was inverted)
+    $table = (trim($table) !== '')? trim($table) : (self::$init['USER_TABLE'] ?? '');
+
+    $idField = self::$init['USER_ID_FIELDNAME'] ?? '';
+
+    if(!$data || $table === '' || $idField === '') return $db;
+
+    /* Scoped to one account on purpose. The statement carried no WHERE clause before,
+       so a single call rewrote the supplied columns for every row in the table. */
+    $userId = (string) \User::id();
+
+    if($userId === '') return $db;
+
+    // "a = ?, b = ?" — without the comma the statement was invalid for more than one column
+    $fields = implode(' = ?, ', array_keys($data)).' = ? ';
+
+    $values = array_values($data);
+    $values[] = $userId;
+
+    $db->query('UPDATE `'.$table.'` SET '.$fields.' WHERE `'.$idField.'` = ?', $values);
     $db->update();
     return $db;
 

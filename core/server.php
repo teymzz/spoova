@@ -202,8 +202,15 @@ if( !defined('server') ) {
 
 	 }
 
-	function server() {
-		return Server::run();
+	/**
+	 * Starts the application from the router file (i.e "index.php")
+	 *
+	 * @param string $logic optional application logic [basic|index|standard (default)]
+	 * @return void|false FALSE where the request is for a public file the web server
+	 * should serve itself, which is what the router file returns to it.
+	 */
+	function server(string $logic = '') {
+		return Server::run(...func_get_args());
 	}
 	
 }

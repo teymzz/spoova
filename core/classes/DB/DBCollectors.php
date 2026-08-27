@@ -7,6 +7,7 @@ use DBStatus;
 use spoova\mi\core\classes\DB\DBViewer;
 use spoova\mi\core\classes\DB\DBMediators;
 use spoova\mi\core\classes\Model;
+use spoova\mi\core\classes\Paginator;
 
 /**
  * DBCollectors are essential parts of model that contains operators available for 
@@ -86,6 +87,12 @@ abstract class DBCollectors implements DBOperators {
     static function read(array $fields = [], array $limit = []) : DBViewer {
         
         return self::DBMediators()->read($fields, $limit);
+
+    }
+
+    static function paginate(int $perPage = 15, ?int $page = null) : Paginator {
+
+        return self::DBMediators()->paginate($perPage, $page);
 
     }
 

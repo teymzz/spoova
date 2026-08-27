@@ -264,10 +264,30 @@ function PHPInput(?Closure $callback = null) {
             throw new InvalidArgumentException('data type hint must be an array or string if defined');
         }
     }
-    if(!empty(file_get_contents('php://input'))){
-        $data = file_get_contents('php://input');
-        $data = ($type === 'string')? $data :  @json_decode($data, true);
-        return $callback($data);
+    $input = (string) file_get_contents('php://input');
+
+    if($input === ''){
+        /**
+         * Fall back on a request payload rebound after a route to route redirection
+         * for body carried methods {@see \spoova\mi\core\classes\WindowBase::bindFormData()}
+         */
+        $restored = $_ENV[':FORM'][':INPUT'] ?? null;
+        if(is_array($restored) && $restored) $input = (string) json_encode($restored);
+    }
+
+    if($input !== ''){
+        if($type === 'string') return $callback? $callback($input) : $input;
+
+        $data = json_decode($input, true);
+
+        if(!is_array($data)){
+            // body is not json encoded (e.g "application/x-www-form-urlencoded")
+            parse_str($input, $data);
+        }
+
+        $data = is_array($data)? $data : [];
+
+        return $callback? $callback($data) : $data;
     }
     return ($type === 'string')? '' : [];
 }

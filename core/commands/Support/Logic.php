@@ -65,20 +65,17 @@ class Logic extends Entry{
 
                 Cli::clearUp()->pulseView('Generating server file ...')->pulseToggle(3, 7, 100000);
                 if(touch($LOGIC_FILE)){
+                    /* server() carries the router file's return value back to the web server,
+                       and decides for itself whether a request is for a public file */
+                    $logicArg = in_array($logic, ['', 'standard'], true)? '' : "'".$logic."'";
+
                     file_put_contents($LOGIC_FILE, <<<LOGIC
                     <?php
-                    
-                    if (php_sapi_name() === 'cli-server') {
-                        \$path = parse_url(\$_SERVER['REQUEST_URI'] ?? '/', PHP_URL_PATH) ?? '/';
-                        \$file = __DIR__ . urldecode(\$path);
-                        if (\$path !== '/' && is_file(\$file) && !preg_match('/\.php$/i', \$file)) {
-                            return false; // let the built-in server serve the asset as-is
-                        }
-                    }
 
                     include 'icore/filebase.php';
 
-                    Server::run('$logic');
+                    return server($logicArg);
+
                     LOGIC);
                     Cli::pulseClear()->textPlain(Cli::success(''))->pulseView('server file generated.', 100)->break(1);
                     Cli::pulseClear()->textPlain(Cli::success(''))->pulseView('server file configured as (', 100)->textView(Cli::warn($newLogic).')')->break(2);
@@ -163,20 +160,15 @@ class Logic extends Entry{
             
             Cli::clearUp(3)->hideCursor(function()use($logic, $LOGIC_FILE){
                 Cli::pulseView('Updating logic ...')->pulseToggle(3, 10);
+                $logicArg = ($logic === '')? '' : "'".$logic."'";
+
                 file_put_contents($LOGIC_FILE, <<<LOGIC
                 <?php
 
-                if (php_sapi_name() === 'cli-server') {
-                    \$path = parse_url(\$_SERVER['REQUEST_URI'] ?? '/', PHP_URL_PATH) ?? '/';
-                    \$file = __DIR__ . urldecode(\$path);
-                    if (\$path !== '/' && is_file(\$file) && !preg_match('/\.php$/i', \$file)) {
-                        return false; // let the built-in server serve the asset as-is
-                    }
-                }
-
                 include 'icore/filebase.php';
 
-                Server::run('$logic');
+                return server($logicArg);
+
                 LOGIC);
                 Cli::pulseToggle(3, 10)->pulseClear('Updating logic ...');
 

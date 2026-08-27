@@ -4,6 +4,7 @@ namespace spoova\mi\core\classes\DB;
 
 use spoova\mi\core\classes\DB\DBViewer;
 use spoova\mi\core\classes\DB\DBDeleter;
+use spoova\mi\core\classes\Paginator;
 
 /**
  * This interface contains basic database operators 
@@ -24,6 +25,8 @@ interface DBOperators {
      * @return DBViewer
      */
     static function read(array $fields = [], array $limit = []) : DBViewer;
+
+    static function paginate(int $perPage = 15, ?int $page = null) : Paginator;
 
     /**
      * delete from database

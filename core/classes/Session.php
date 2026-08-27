@@ -31,6 +31,9 @@ class Session extends SharedInfo {
   private static ?string $handler = null;
   private static $secure = false;
 
+  /** how long a rotated remember me cookie is kept for, matching the login default */
+  private const REMEMBER_LIFETIME = 86400;
+
   /**
    * properties for remeber me
    *
@@ -410,59 +413,39 @@ class Session extends SharedInfo {
       $userIdFieldName = User::idField();
       $userTableName = User::tableName();
 
-      $dbh = self::$dbh; 
-      
-      $checkCookieField = true; //check if an old cookie field existed
+      $dbh = self::$dbh;
 
       if(!$dbh->column_exists($userTableName, $cookieFieldName)) {
 
         //try to create a column
         $dbh->addColumn([$userTableName => $cookieFieldName], 'varchar(200)', '|password', 'NOT NULL', '');
-        $checkCookieField = false;
       }
-
-      $cookie = ''; $setCookie = true; $addNewCookie = false;
 
       //check if column exists
       if($dbh->column_exists($userTableName, $cookieFieldName)) {
 
-        //get the value of the user cookie
+        /* A token is issued on every login that asks to be remembered. The stored value is
+           only ever a hash of it, so there is no earlier token to hand back: the token
+           itself lives in the visitor's browser and nowhere else. One account therefore
+           holds one active token, and signing in elsewhere retires the previous one. */
+        $cookie = self::rememberToken();
 
-        if($checkCookieField){
+        /* The row being given this token must be named. Without the WHERE clause every
+           account in the table received the same value, so the cookie no longer identified
+           anybody: remUser() looks a user up by that value alone and would sign the
+           returning visitor in as whichever row matched first, while every other user's
+           remember-me token was destroyed on each login. */
+        $dbh->query(
+          "UPDATE `{$userTableName}` SET `{$cookieFieldName}` = ? WHERE `{$userIdFieldName}` = ?",
+          [self::rememberHash($cookie), $logdata['userid']]
+        );
 
-          $dbh->query("SELECT `{$cookieFieldName}` FROM `{$userTableName}` WHERE `{$userIdFieldName}` = ?", [$logdata['userid']]);
-
-          if($dbh->read(1)){
-            $cookie = $dbh->results(0)[$cookieFieldName];
-            if(!$cookie) $addNewCookie = true;
-          }else{
-            $setCookie = false;
-          }
-
-        }else{
-          
-          $addNewCookie = true;
-
+        if(!$dbh->update()) {
+          Form::setError($dbh->error());
+          return false;
         }
 
-       
-        if($addNewCookie) {   
-          
-          //generate a new cookie value and insert into database... 
-          $cookie = base_encode(randice(20));
-
-          
-          //update with a new cookie 
-          $dbh->query("UPDATE $userTableName SET {$cookieFieldName} = ?", [$cookie]);
-           
-          if(!$dbh->update()) {
-            Form::setError($dbh->error());
-            return false;
-          }
-          
-        }
-
-        if($setCookie) $this->cookie($cookie, $lifeTime);
+        $this->cookie($cookie, $lifeTime);
         Session::save(self::$sessionName, $logdata);
 
         if($url === '') $url = self::$loginUrl;
@@ -663,6 +646,12 @@ class Session extends SharedInfo {
     $this->checkSession();
     $sessionName  = self::$sessionName;
 
+    /* Whose token is being revoked has to be established before the session is cleared.
+       Matching on the cookie the browser presented is not enough: a visitor arriving on a
+       remember me token is given a fresh one on the way in, so by the time they reach a
+       logout the value they arrived with is no longer the value stored. */
+    $accountId = $destroyCookie? (string) User::id(true) : '';
+
     Session::save($sessionName, []);
     Session::remove($sessionName);
 
@@ -673,7 +662,12 @@ class Session extends SharedInfo {
     if(isset(self::$cookieName)){
       $cookieName = self::$cookieName;
       if(isset($_COOKIE[$cookieName])){
-        $this->cookie($cookieName, time() - 3600);
+
+        /* cookie() takes the value first and counts the expiry from now, so passing the
+           cookie's own name and a past timestamp handed it a junk value with an expiry
+           decades ahead instead of removing it. Zero is what ends a cookie here. */
+        $this->cookie('', 0);
+
         if($destroyCookie) {
 
           //update database and remove cookie
@@ -681,9 +675,22 @@ class Session extends SharedInfo {
            $dbh = self::$dbh;
            $cookieFieldName = User::config('COOKIE_FIELDNAME');
            $userTableName = User::tableName();
+           $userIdFieldName = User::idField();
 
-           //update with a new cookie 
-           $dbh->query("UPDATE $userTableName SET {$cookieFieldName} = ?", [''])->update();
+           /* One account's token, and only that one. Without a WHERE clause at all, a single
+              logout cleared the remember-me token of every user in the table. Where the
+              account could not be established, the token presented is the next best match. */
+           if($accountId !== ''){
+             $dbh->query(
+               "UPDATE `{$userTableName}` SET `{$cookieFieldName}` = ? WHERE `{$userIdFieldName}` = ?",
+               ['', $accountId]
+             )->update();
+           }else{
+             $dbh->query(
+               "UPDATE `{$userTableName}` SET `{$cookieFieldName}` = ? WHERE `{$cookieFieldName}` = ?",
+               ['', self::rememberHash($_COOKIE[$cookieName])]
+             )->update();
+           }
 
         }
       }
@@ -900,14 +907,29 @@ class Session extends SharedInfo {
           return false;
         }
   
-        $db->query('SELECT `'.$cookieF.'`, `'.$sessionF.'` FROM '.$dbTable.' WHERE '.$cookieF.' = ? ',[$usercookie]);
+        // only the hash of a token is stored, so the cookie is matched in that same form
+        $presented = self::rememberHash($usercookie);
+
+        $db->query('SELECT `'.$cookieF.'`, `'.$sessionF.'` FROM '.$dbTable.' WHERE '.$cookieF.' = ? ',[$presented]);
         $db->read(1);
         if($userdetails = $db->results(0)) {
-          
-            $userid = $userdetails[$this->idField()];
-  
+
+            $userid = $userdetails[$sessionF] ?? $userdetails[$this->idField()] ?? '';
+
+            /* A token is spent once it has been used. The visitor leaves with a new one, so
+               a copy taken from their browser stops working the moment they return, and a
+               token that turns up twice is no longer a token this account answers to. */
+            $token = self::rememberToken();
+
+            $db->query(
+              'UPDATE `'.$dbTable.'` SET `'.$cookieF.'` = ? WHERE `'.$cookieF.'` = ?',
+              [self::rememberHash($token), $presented]
+            )->update();
+
+            $this->cookie($token, self::REMEMBER_LIFETIME);
+
             $this->loginUser(['userid'=>$userid]);
-  
+
         }else if($db->error_exists()) {
   
           trigger_error($db->error());
@@ -917,6 +939,36 @@ class Session extends SharedInfo {
       }
 
     }
+
+  }
+
+  /**
+   * Returns a new remember me token.
+   *
+   * The token is the credential that signs a visitor back in, so it is drawn from the
+   * system's cryptographic source. randice(), which stood here, is built on rand(), whose
+   * next value can be worked out from the ones before it.
+   *
+   * @return string
+   */
+  private static function rememberToken() : string {
+
+    return bin2hex(random_bytes(32));
+
+  }
+
+  /**
+   * Returns the form a remember me token is stored in.
+   *
+   * Only the hash of a token is kept, so a copy of the user table cannot be used to sign in
+   * as anybody: the token itself exists in the visitor's browser and nowhere else.
+   *
+   * @param string $token
+   * @return string
+   */
+  private static function rememberHash(string $token) : string {
+
+    return hash('sha256', $token);
 
   }
 

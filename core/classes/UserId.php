@@ -7,8 +7,6 @@ use Session;
 use User;
 
 final class UserId extends User{
-    
-    private static $userid;
 
     /** prevent parent call */
     public function __construct(){}
@@ -55,25 +53,26 @@ final class UserId extends User{
     }
 
     public function main() {
-        if(isset(self::$userid) && self::$userid) return self::$userid;
 
         if(Session::has(SELF::$sessionName, 'userid')){
 
             $userid = Session::value(SELF::$sessionName, 'userid');
 
-            // validate user id
+            /* Session::secure() adds a database re-check of the stored id, it does not
+               decide whether the id is readable. Returning inside this test meant that
+               every project that had not called secure() got an empty user id. */
             if(Session::secure()){
-                if(!User::hasUserData()){ 
-                   self::authenticate_session($userid); 
+                if(!User::hasUserData()){
+                   self::authenticate_session($userid);
                 }
-                return Session::value(SELF::$sessionName, 'userid');               
             }
 
+            return (string) $userid;
 
         }
 
-        return '';        
-           
+        return '';
+
     }
 
 }

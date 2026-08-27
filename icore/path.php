@@ -58,7 +58,52 @@ if(!defined('basefolder') || empty($_SERVER['DOCUMENT_ROOT'])){
     return is_file(realpath(dirname($directory))."/core/custom/base.php")?
       realpath(dirname($directory)).'/core/custom/base.php' : domroot().'icore/filebase.php';
   }
-  
+
+  /**
+   * Determines whether a request is for a public file the web server should serve itself.
+   *
+   * A real web server answers a request for an existing file before the application is ever
+   * reached, and the rewrite rules in ".htaccess" decide what may be reached at all. PHP's
+   * built-in server has neither, so every request arrives at the router file and this is the
+   * only place the two rules can be applied: hand over the public files, and keep the
+   * application's own files off the web.
+   *
+   * @return bool TRUE when the file exists and may be served directly
+   */
+  function staticRequest() : bool {
+
+    if(php_sapi_name() !== 'cli-server') return false;
+
+    $path = parse_url($_SERVER['REQUEST_URI'] ?? '/', PHP_URL_PATH) ?? '/';
+    $path = trim(urldecode($path), '/');
+
+    if($path === '') return false;
+
+    // a php file is the application itself and is never handed over
+    if(preg_match('/\.php$/i', $path)) return false;
+
+    $segments = explode('/', str_replace('\\', '/', $path));
+
+    foreach($segments as $segment){
+      // dot files (i.e ".htaccess", ".env") and any attempt to climb out of the project
+      if($segment === '' || $segment === '.' || $segment === '..') return false;
+      if(str_starts_with($segment, '.')) return false;
+    }
+
+    // directories holding the framework, the project's code and its configuration
+    $reserved = ['core', 'icore', 'windows', 'commands', 'notes', 'migrations', 'tests', 'vendor'];
+
+    if(in_array(strtolower($segments[0]), $reserved, true)) return false;
+
+    // and the files that belong to the project rather than to its visitors
+    $private = ['mi', 'composer.json', 'composer.lock', 'phpunit.xml'];
+
+    if((count($segments) === 1) && in_array(strtolower($segments[0]), $private, true)) return false;
+
+    return is_file(dirname(__DIR__).DIRECTORY_SEPARATOR.str_replace('/', DIRECTORY_SEPARATOR, $path));
+
+  }
+
 }
 
 

@@ -135,9 +135,9 @@ class MkRoute extends MkBase{
 
                     public function __construct(){
 
-                        self::call(\$this,
+                        self::smartcall(\$this,
                             [
-                                lastCall() => '$rexName'
+                                '' => '$rexName'
                             ]
                         );
 

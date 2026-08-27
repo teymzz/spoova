@@ -3,17 +3,34 @@
 namespace spoova\mi\core\classes;
 
 use ReflectionClass;
+use ReflectionMethod;
 use ReflectionProperty;
+use Session;
 use spoova\mi\core\classes\Container\Container;
 use Dom\HTMLDocument;
 use Dom\Element;
 
-abstract class BondComponent{ 
+abstract class BondComponent{
 
     private static $body = '';
     private static $bondAjax = [];
     private static BondComponent $instance;
     protected $bondID;
+
+    /**
+     * Session key holding every bond state belonging to the current visitor.
+     *
+     * State used to travel in a "bondJS" cookie which the client could rewrite at will,
+     * so any public property of a bond was effectively client supplied. It is kept on the
+     * server now and the browser only ever sees the bond's id.
+     */
+    private const STATE_KEY = ':BONDS';
+
+    /** state entry holding the token a bond request is verified with */
+    private const TOKEN_KEY = ':token';
+
+    /** how many bond states are retained before the oldest are dropped */
+    private const STATE_LIMIT = 60;
 
     /** field messages set by a handler through addError() */
     private array $bondErrors = [];
@@ -94,12 +111,15 @@ abstract class BondComponent{
     /**
      * Resolve bond
      *
-     * @param string $space Bond controller space within windows\Bond environment
+     * @param string $space Bond controller space within the windows\Bonds namespace
      * @param array $args
+     * @param string $key optional name that identifies this bond among others of the same
+     * controller. Supply one where the same controller is rendered more than once on a page
+     * and the order it is rendered in can change.
      * @return string
      */
-    final public function resolve($space, array $args = []) : string {
-        static $id = 0; $id++;
+    final public function resolve($space, array $args = [], string $key = '') : string {
+        $id = self::bondIdentity($space, $key);
         $namespace = to_frontslash('windows.Bonds.'.$space, true);
         $bondClass = scheme($namespace);
 
@@ -174,6 +194,13 @@ abstract class BondComponent{
                     // Set custom attribute
                     $rootItem->setAttribute('bond:root', $id);
 
+                    /* bond.js reads this back off the root and returns it with every call, so a
+                       page from another origin cannot drive a bond method: it can post to the
+                       url but cannot read the token out of the response. It is a session value
+                       of its own rather than the form CSRF token, which rotates whenever a
+                       template renders @csrf and would leave the attribute stale. */
+                    $rootItem->setAttribute('bond:csrf', self::bondToken());
+
                     /* CSS selectors rather than XPath.
 
                        Dom\HTMLDocument places every element in the XHTML namespace, so an
@@ -188,7 +215,7 @@ abstract class BondComponent{
                        reports their checked state, which setFieldValue() restores. */
                     $fields = $rootItem->querySelectorAll(self::FIELDS);
 
-                    $bondArgs = $this->bondArguments('data');
+                    $bondArgs = $class->bondArguments('data');
 
                     if ($bondArgs && $fields->length) {
 
@@ -263,10 +290,10 @@ abstract class BondComponent{
     /**
      * Stores the id of a rendered bond
      *
-     * @param int $id incrementing id, also written to the bond:root attribute
+     * @param string $id the bond's identity, also written to the bond:root attribute
      * @return void
      */
-    final public function setBond(int $id){
+    final public function setBond(string $id){
         $this->bondID = $id;
     }
 
@@ -366,7 +393,7 @@ abstract class BondComponent{
     /**
      * Returns the id of the bond root element
      *
-     * @return int
+     * @return string
      */
     final public function bondID(){
        return $this->bondID;
@@ -380,65 +407,255 @@ abstract class BondComponent{
      */
     final public function bondArguments($key) : array {
 
-        return self::$bondAjax[$key] ?? [];
+        return self::$bondAjax[(string) $this->bondID][$key] ?? [];
 
     }
 
-    private function bindAjax(Bond $class, $id, &$args) {
-        
-        $bondName = 'bondJS';
+    /**
+     * Restores a bond's state, runs the method a request asked for and stores the state back.
+     *
+     * A bond request addresses exactly one component. Every bond on the page is resolved on
+     * the way to rendering the response, so each one has to establish whether the request was
+     * meant for it before touching anything: without that check a method name was run on every
+     * bond that happened to define it, and one component's submitted fields were written onto
+     * another's.
+     *
+     * @param BondComponent $class the bond being resolved
+     * @param string $id the bond's identity
+     * @param array $args properties handed on to the template
+     * @return void
+     */
+    private function bindAjax(BondComponent $class, string $id, &$args) {
 
-        $cookie = $_COOKIE[$bondName] ?? '';
-
-        $fulldata = (json_decode($cookie,true));
-        
-        $data = $fulldata[$class->bondID()] ?? [];
-
-        if(Ajax::isAjax()){
-
-            $post = $_POST;
-
-            // $action = $_POST['postdata'] ?? '[]';
-            // $action = json_decode($action, true) ?? [];
-            // $action = $post['action'];
-
-            $bondData = $post['data'] ?? '[]';
-            $bondData = json_decode($bondData, true) ?? [];
-            self::$bondAjax['data'] = $bondData;
-
-            self::$bondAjax['action'] = $post['action'] ?? '';
-
-            $method = $post['call'];
-
-            foreach($data as $oldprop => $val) {
-                $class->$oldprop = $val;
-            }
-
-            $class->$method();
-
-            $props = $class->bondProperties($class);
-
-            foreach($props as $prop => $value) {
-                $data[$prop] = $class->$prop;
-            }
-            
-            $fulldata[$class->bondID()] = $args = $data;
-
-            setcookie($bondName, json_encode($fulldata), [
-                "secure" => true,
-                'samesite' => "None",
-                'httponly' => true,
-            ]);
-
-        } else {
-
-            setcookie($bondName, '[]', [
-                'expires'  => -36000,
-                'secure'   => true,
-                'samesite' => "None"
-            ]);
-
+        if(!Ajax::isAjax()){
+            // a fresh page load starts the component from its own defaults
+            self::forgetState($id);
+            return;
         }
+
+        if(!self::addresses($id)) return; // the request belongs to another bond
+
+        // restore the state the component was left in, limited to its declared public properties
+        $state = self::readState($id);
+
+        foreach($class->bondProperties($class) as $prop => $default){
+            if(array_key_exists($prop, $state)) $class->$prop = $state[$prop];
+        }
+
+        /* only the addressed bond sees the payload, so the fields of one component can no
+           longer be written back onto another's inputs by matching name */
+        self::$bondAjax[$id] = [
+            'data'   => json_decode($_POST['data'] ?? '[]', true) ?: [],
+            'action' => $_POST['action'] ?? '',
+        ];
+
+        $method = (string) ($_POST['call'] ?? '');
+
+        if($method !== '' && self::isBondAction($class, $method)){
+            Container::instance()->callMethod($class, $method);
+        }
+
+        $state = [];
+
+        foreach($class->bondProperties($class) as $prop => $default){
+            $state[$prop] = $class->$prop;
+        }
+
+        self::writeState($id, $state);
+
+        $args = $state;
+
+    }
+
+    /**
+     * Returns a bond's identity, which is stable across the renders of a page.
+     *
+     * The id used to be an incrementing counter, so a bond that was rendered conditionally
+     * shifted the id of every bond after it and the stored state of one component was read
+     * back into another. The identity is derived from the controller and its position among
+     * the bonds of that same controller instead, or from $key where one is supplied.
+     *
+     * @param string $space bond controller space
+     * @param string $key optional author supplied name
+     * @return string
+     */
+    private static function bondIdentity(string $space, string $key = '') : string {
+
+        static $counts = [];
+
+        if($key === ''){
+            $counts[$space] = ($counts[$space] ?? -1) + 1;
+            $key = (string) $counts[$space];
+        }
+
+        return substr(hash('sha256', $space.'@'.$key), 0, 16);
+
+    }
+
+    /**
+     * Determines whether the current request addresses the bond supplied.
+     *
+     * @param string $id bond identity
+     * @return bool
+     */
+    private static function addresses(string $id) : bool {
+
+        $sent = (string) ($_POST['bondId'] ?? '');
+
+        if($sent === '' || !hash_equals($id, $sent)) return false;
+
+        // the request must also carry the token that was written onto the rendered bond
+        $token = (string) ($_POST['bondToken'] ?? '');
+
+        return ($token !== '') && hash_equals(self::bondToken(), $token);
+
+    }
+
+    /**
+     * Determines whether a method name received from a request may be called on a bond.
+     *
+     * The name arrives from the browser, so it is only honoured for a method the controller
+     * declares itself. Anything inherited from this class (render, mount, resolve, the error
+     * helpers) stays unreachable, as does anything static, magic or expecting arguments.
+     *
+     * @param BondComponent $class the bond the call was made on
+     * @param string $method requested method name
+     * @return bool
+     */
+    private static function isBondAction(BondComponent $class, string $method) : bool {
+
+        if($method === '' || str_starts_with($method, '__')) return false;
+
+        if(in_array(strtolower($method), self::reservedMethods(), true)) return false;
+
+        if(!method_exists($class, $method)) return false;
+
+        $reflection = new ReflectionMethod($class, $method);
+
+        if(!$reflection->isPublic() || $reflection->isStatic()) return false;
+
+        if($reflection->getNumberOfRequiredParameters() > 0) return false;
+
+        $declaring = $reflection->getDeclaringClass()->getName();
+
+        return !in_array($declaring, [self::class, Bond::class], true);
+
+    }
+
+    /**
+     * Returns the lower cased names of every method this class and Bond provide.
+     *
+     * @return array
+     */
+    private static function reservedMethods() : array {
+
+        static $reserved = null;
+
+        if($reserved !== null) return $reserved;
+
+        $reserved = [];
+
+        foreach([self::class, Bond::class] as $base){
+            foreach((new ReflectionClass($base))->getMethods() as $method){
+                $reserved[] = strtolower($method->getName());
+            }
+        }
+
+        return $reserved = array_values(array_unique($reserved));
+
+    }
+
+    /**
+     * Returns the token a bond request is verified with, generating one where none exists.
+     *
+     * @return string
+     */
+    private static function bondToken() : string {
+
+        $store = self::stateStore();
+
+        $token = $store[self::TOKEN_KEY] ?? '';
+
+        if(!is_string($token) || $token === ''){
+            $token = bin2hex(random_bytes(16));
+            $store[self::TOKEN_KEY] = $token;
+            Session::base()->save(self::STATE_KEY, $store);
+        }
+
+        return $token;
+
+    }
+
+    /**
+     * Returns every stored bond state belonging to the current visitor
+     *
+     * @return array
+     */
+    private static function stateStore() : array {
+
+        $store = Session::base()->value(self::STATE_KEY);
+
+        return is_array($store)? $store : [];
+
+    }
+
+    /**
+     * Returns the stored state of a single bond
+     *
+     * @param string $id bond identity
+     * @return array
+     */
+    private static function readState(string $id) : array {
+
+        $state = self::stateStore()[$id]['props'] ?? [];
+
+        return is_array($state)? $state : [];
+
+    }
+
+    /**
+     * Stores the state of a single bond
+     *
+     * @param string $id bond identity
+     * @param array $state the bond's public property values
+     * @return void
+     */
+    private static function writeState(string $id, array $state) : void {
+
+        $store = self::stateStore();
+
+        $store[$id] = ['props' => $state, 'time' => time()];
+
+        /* a visitor moving through a site would otherwise accumulate a state entry for every
+           bond they ever loaded, so the least recently used entries are dropped */
+        $states = array_filter($store, fn($key) => $key !== self::TOKEN_KEY, ARRAY_FILTER_USE_KEY);
+
+        if(count($states) > self::STATE_LIMIT){
+            uasort($states, fn($a, $b) => ($b['time'] ?? 0) <=> ($a['time'] ?? 0));
+            $states = array_slice($states, 0, self::STATE_LIMIT, true);
+            $states[self::TOKEN_KEY] = $store[self::TOKEN_KEY] ?? '';
+            $store = $states;
+        }
+
+        Session::base()->save(self::STATE_KEY, $store);
+
+    }
+
+    /**
+     * Discards the stored state of a single bond
+     *
+     * @param string $id bond identity
+     * @return void
+     */
+    private static function forgetState(string $id) : void {
+
+        $store = self::stateStore();
+
+        if(!array_key_exists($id, $store)) return;
+
+        unset($store[$id]);
+
+        Session::base()->save(self::STATE_KEY, $store);
 
     }
 
@@ -451,18 +668,22 @@ abstract class BondComponent{
      */
     final public function bondProperties(object $class) : array {
 
-        $vars = get_class_vars($class::class);
-
-        $rc = new ReflectionClass($class);
-        $propLists = $rc->getProperties(ReflectionProperty::IS_PUBLIC);
         $props = [];
-        foreach($propLists as $propList){
-            $props[] = $propList->getName();
-        }
-        
-        $publics = (array_intersect_key($vars, array_flip($props)));
 
-        return $publics;
+        foreach((new ReflectionClass($class))->getProperties(ReflectionProperty::IS_PUBLIC) as $property){
+
+            if($property->isStatic()) continue;
+
+            /* the live value is read from the instance rather than the class defaults, so a
+               property first given a value in mount() is carried like any other. A typed
+               property that has not been given one yet has no value to read at all. */
+            if(!$property->isInitialized($class)) continue;
+
+            $props[$property->getName()] = $property->getValue($class);
+
+        }
+
+        return $props;
 
     }
 
