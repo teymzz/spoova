@@ -17,6 +17,5 @@
         "psr-4": {
             "spoova\\mi\\": "./"
         }
-    },
-    "minimum-stability": "dev"
+    }
 }
