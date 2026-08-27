@@ -17,9 +17,9 @@ export class Bond {
     constructor() {
         SScripts.requires(['Interval']);
         this.url = window.location.href;
-        this.events = ['click','load','keydown','hover'];
-        this.scriptsAnchor = []; 
-        this.sequentials = {}; 
+        this.scriptsAnchor = [];
+        this.executedScripts = new Set(); // scripts already run, so a re-render cannot repeat them
+        this.sequentials = {};
         this.defaults = {
             bind: {
                 onloaded() {}, 
@@ -30,8 +30,10 @@ export class Bond {
                 onsuccess() {},
             }
         };
-        this.iroot = '';
-        this.emitTrack = {}; // To track emit states
+        this.emitTrack = new WeakMap(); // per element emit counts, so triggers without an id stay apart
+        /* morphing keeps the existing elements alive, so their listeners survive a re-render
+           and binding the same element twice would fire one request per listener */
+        this.bound = new WeakSet();
     }
 
     request() {
@@ -47,15 +49,29 @@ export class Bond {
         });
     }
 
+    /**
+     * Collects the elements inside a bond that belong to it rather than to a nested bond.
+     *
+     * A nested component has a root of its own and is bound separately, so selecting
+     * straight through the subtree gave its elements a listener from each root and fired
+     * one request per listener.
+     */
+    own(root, selector) {
+        let rootSelector = '[' + CSS.escape('bond:root') + ']';
+        return Array.from(root.querySelectorAll(selector))
+                    .filter(item => item.closest(rootSelector) === root);
+    }
+
     bind(root) {
         let $this = this;
-        let bondEvents = root.querySelectorAll('[bond\\:event]');
-        let bondForms = root.querySelectorAll('form');      
-        let avertedForms = root.querySelectorAll('form[bond\\:action="avert"]');      
+        let bondEvents = this.own(root, '[bond\\:event]');
+        let avertedForms = this.own(root, 'form[bond\\:action="avert"]');
         let rootIndex = root.getAttribute('bond:root');
 
         function preventDefaultAction(buttons){
             buttons.forEach(button => {
+                if($this.bound.has(button)) return;
+                $this.bound.add(button);
                 button.addEventListener('click', e => e.preventDefault());
             });
         }
@@ -66,6 +82,9 @@ export class Bond {
         });
 
         bondEvents.forEach((item, itemIndex) => {
+            if($this.bound.has(item)) return; // already carries its listener from an earlier bind
+            $this.bound.add(item);
+
             let config = {
                 event: item.getAttribute('bond:event'),
                 bond: item.getAttribute('bind'),
@@ -106,9 +125,9 @@ export class Bond {
         if(item.getAttribute('bond-status') === 'live') return;
         const emitLimit = item.getAttribute('emit');
         if(emitLimit) {
-            let count = this.emitTrack[config.id] || 0;
+            let count = this.emitTrack.get(item) || 0;
             if(count >= parseInt(emitLimit)) return;
-            this.emitTrack[config.id] = count + 1;
+            this.emitTrack.set(item, count + 1);
         }
 
         let $this = this;
@@ -154,6 +173,12 @@ export class Bond {
         params.append('CSRF_TOKEN', config.post?.CSRF_TOKEN || '');
         if(config.post) params.append('postdata', JSON.stringify(config.post));
 
+        /* which bond this call is for, and the token proving it came from a page that was
+           able to read the bond. Both are read off the root at request time rather than at
+           bind time, so a re-rendered root supplies the current values. */
+        params.append('bondId', config.rootIndex);
+        params.append('bondToken', config.rootElement.getAttribute('bond:csrf') || '');
+
         // --- Trigger 'sent' callback if specified ---
         let triggers = config.bondTrigger;
         let sentTrigger, doneTrigger;
@@ -169,7 +194,7 @@ export class Bond {
 
         if(sentTrigger && typeof window[sentTrigger] === 'function') {
             let rootItem = item.closest('['+CSS.escape('bond:root')+']');
-            window[sentTrigger]({bond : rootItem, item : rootItem.querySelectorAll(`#${item.id}`)});
+            window[sentTrigger](this.triggerRef(rootItem, item));
         }
 
         xhr.onload = () => {
@@ -185,23 +210,26 @@ export class Bond {
                 $this.scriptsAnchor = [];
 
                 if (target) {
-                    let strippedHtml = $this.stripScripts(target.innerHTML);
-                    let oldHTML = contentField.innerHTML;
+                    let incoming = document.createElement('div');
+                    incoming.innerHTML = $this.stripScripts(target.innerHTML);
 
                     setTimeout(()=>{
 
-                        if(strippedHtml !== oldHTML) {
-                            contentField.innerHTML = strippedHtml; //content field updated, item lost
-                            $this.runScriptBlock();
-                            item.setAttribute('bond-status', 'closed');
-                            $this.bind(contentField, config.rootIndex);
-                        } else {
-                            $this.runScriptBlock();
-                        }
-    
-                        if(sentTrigger && typeof window[doneTrigger] === 'function') {
-                            let obj = {bond : contentField, item : contentField.querySelectorAll(`#${item.id}`)}
-                            window[doneTrigger](obj);
+                        /* The subtree is updated in place instead of being reassigned through
+                           innerHTML. Replacing it discarded and rebuilt every node, which threw
+                           away the caret and focus of whatever field was being typed in, the
+                           scroll position of anything scrollable, running CSS transitions and
+                           the state of any widget another script had set up. */
+                        $this.morphChildren(contentField, incoming);
+
+                        $this.runScriptBlock();
+
+                        if(item.isConnected) item.setAttribute('bond-status', 'closed');
+
+                        $this.bind(contentField);
+
+                        if(doneTrigger && typeof window[doneTrigger] === 'function') {
+                            window[doneTrigger]($this.triggerRef(contentField, item));
                         }
 
                     }, delay)
@@ -219,6 +247,139 @@ export class Bond {
         for(const [key, value] of Object.entries(headers)) {
             xhr.setRequestHeader(key, value);
         }
+    }
+
+    /**
+     * Builds the {bond, item} object handed to a trigger callback.
+     *
+     * An element without an id used to produce the selector "#undefined", which is invalid
+     * and throws before the callback is ever reached.
+     */
+    triggerRef(root, item) {
+        let id = item && item.id;
+        return {
+            bond: root,
+            item: id? root.querySelectorAll('#' + CSS.escape(id)) : (item? [item] : [])
+        };
+    }
+
+    /**
+     * Identifies a child across renders, so an element keeps its place in the DOM even when
+     * the ones around it are added or removed. An author supplied bond:key wins over an id.
+     */
+    morphKey(node) {
+        if(node.nodeType !== Node.ELEMENT_NODE) return null;
+        return node.getAttribute('bond:key') || node.getAttribute('id') || null;
+    }
+
+    /**
+     * Brings the children of "from" in line with the children of "to", reusing the nodes
+     * already in the page wherever they correspond.
+     */
+    morphChildren(from, to) {
+        let keyed = new Map();
+
+        Array.from(from.childNodes).forEach(child => {
+            let key = this.morphKey(child);
+            if(key !== null) keyed.set(key, child);
+        });
+
+        let existing = from.firstChild;
+
+        Array.from(to.childNodes).forEach(incoming => {
+            let key = this.morphKey(incoming);
+            let match = null;
+
+            if(key !== null && keyed.has(key)){
+                match = keyed.get(key);
+                keyed.delete(key);
+            } else if(existing && this.morphable(existing, incoming) && this.morphKey(existing) === null){
+                match = existing;
+            }
+
+            if(match){
+                if(match !== existing) from.insertBefore(match, existing);
+                if(match === existing) existing = existing.nextSibling;
+                this.morphNode(match, incoming);
+            } else {
+                from.insertBefore(incoming.cloneNode(true), existing);
+            }
+        });
+
+        // whatever the response no longer contains is dropped
+        while(existing){
+            let next = existing.nextSibling;
+            from.removeChild(existing);
+            existing = next;
+        }
+
+        keyed.forEach(node => { if(node.parentNode === from) from.removeChild(node); });
+    }
+
+    /** TRUE when two nodes are alike enough to be updated into one another */
+    morphable(a, b) {
+        return a.nodeType === b.nodeType && a.nodeName === b.nodeName;
+    }
+
+    /** Updates a single node in place from its counterpart in the response */
+    morphNode(from, to) {
+        if(from.nodeType !== Node.ELEMENT_NODE){
+            if(from.nodeValue !== to.nodeValue) from.nodeValue = to.nodeValue;
+            return;
+        }
+
+        this.morphAttributes(from, to);
+
+        // a field's live state is a property, not an attribute, so it is carried over separately
+        this.morphFieldState(from, to);
+
+        this.morphChildren(from, to);
+    }
+
+    morphAttributes(from, to) {
+        Array.from(to.attributes).forEach(attribute => {
+            if(from.getAttribute(attribute.name) !== attribute.value){
+                from.setAttribute(attribute.name, attribute.value);
+            }
+        });
+
+        Array.from(from.attributes).forEach(attribute => {
+            if(!to.hasAttribute(attribute.name)) from.removeAttribute(attribute.name);
+        });
+    }
+
+    /**
+     * Carries a field's value across a re-render.
+     *
+     * The field the visitor is presently in is left untouched: overwriting it would drop
+     * whatever was typed between the request being sent and the response arriving.
+     */
+    morphFieldState(from, to) {
+        let tag = from.tagName;
+
+        if(tag !== 'INPUT' && tag !== 'TEXTAREA' && tag !== 'SELECT') return;
+        if(from === document.activeElement) return;
+
+        let type = (from.type || '').toLowerCase();
+
+        if(type === 'checkbox' || type === 'radio'){
+            from.checked = to.hasAttribute('checked');
+            return;
+        }
+
+        if(tag === 'SELECT'){
+            let selected = to.querySelector('option[selected]');
+            if(selected) from.value = selected.hasAttribute('value')? selected.getAttribute('value') : selected.textContent;
+            return;
+        }
+
+        if(tag === 'TEXTAREA'){
+            if(from.value !== to.textContent) from.value = to.textContent;
+            return;
+        }
+
+        let value = to.getAttribute('value');
+        if(value !== null && from.value !== value) from.value = value;
     }
 
     stripScripts(s) {
@@ -247,6 +408,12 @@ export class Bond {
 
     runScriptBlock() {
         this.scriptsAnchor.forEach(scriptObj => {
+            /* the same script arrives again with every re-render, and running it each time
+               stacked up duplicate listeners, timers and re-fetched external files */
+            let signature = JSON.stringify(scriptObj);
+            if(this.executedScripts.has(signature)) return;
+            this.executedScripts.add(signature);
+
             let script = document.createElement('script');
             Object.entries(scriptObj).forEach(([key, value]) => {
                 if(key === 'script') {
@@ -264,8 +431,6 @@ export class Bond {
     resolveEvent(item, config){
         let $this = this;
         let resolve = data => {
-            
-            if (!$this.checkEmitLimit(item, config.emitLimit)) return;
 
             config.post = data || false;
 
@@ -333,14 +498,6 @@ export class Bond {
                 if(action !== 'reset') resolve(FormObject);
             });
         }
-    }
-
-    checkEmitLimit(item, max) {
-        if (!max) return true;
-        let count = this.emitTracker.get(item) || 0;
-        if (count >= max) return false;
-        this.emitTracker.set(item, count + 1);
-        return true;
     }
 
     isBtn(item) {

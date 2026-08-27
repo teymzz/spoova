@@ -68,7 +68,11 @@ class MiCommands {
      */
     private function handle_roots(string $command, array $commands) : bool {
 
-            if($command !== 'cli' && count($commands) > 1) {
+            /* the code channels take arguments of their own, so that a one-liner can
+               be run with -e without opening a session */
+            $channels = [':wiz', ':wizi'];
+
+            if(!in_array($command, $channels, true) && $command !== 'cli' && count($commands) > 1) {
                 return Cli::response(false, 'Invalid argument count!', 'Error');
             }
 
@@ -82,8 +86,8 @@ class MiCommands {
                 }
             }
             Cli::clearUp(1000)->cls();
-            
-            new Root($commands[0]);
+
+            new Root($commands[0], array_slice($commands, 1));
 
             return true;
     }

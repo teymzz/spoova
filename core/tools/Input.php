@@ -149,9 +149,9 @@ class Input{
 
     //check for range if supplied
     if(array_key_exists('range', $config)){
-      
+
       $range =  $config['range'];
-      $this->range = $range;
+      $this->range = $this->range_options($range);
       $use_range = true;
 
     } else {
@@ -221,7 +221,14 @@ class Input{
    * @param integer|array $length
    * @return void
    */
-  public function default_length(int|array $length){
+  public function default_length(int|array|null $length = null){
+    if($length === null){
+      // a default length is removed by supplying null, like the other default_* methods
+      $this->allow_length = false;
+      $this->default['length'] = null;
+      return;
+    }
+
     $this->allow_length = true;
     $this->default['length'] = $length;
   }
@@ -249,9 +256,15 @@ class Input{
   public function default_range(array|string|int|null $default_range = null){
     if($default_range === null) {
       $this->allow_range = false;
+      /* The stored range goes as well. set() decides whether a default range applies by
+         looking at this value, so leaving it behind meant every later value was still
+         checked against a range the caller had just removed. */
+      $this->default['range'] = null;
     }else{
       $this->allow_range = true;
-      $this->default['range'] = $default_range;
+      /* stored as a list, so that a single option supplied on its own is applied like any
+         other range rather than being passed over by the array test in set() */
+      $this->default['range'] = $this->range_options($default_range);
     }
   }
 
@@ -263,18 +276,28 @@ class Input{
     }
     
     $data = (array) $data;
+
+    /* The keys belong to the data being checked, so the list starts afresh. It used to be
+       added to, which left a later check reporting keys an earlier one had found. */
+    self::$voidKey = [];
+
     $response = false;
-    
+
     foreach($data as $key => $value){
-      $value = trim($value);
-      if($value == null){
-        
-        self::$voidKey[] = $key; 
-       
+
+      /* A request value can itself be an array (i.e a "name[]" field), which trim() cannot
+         take, and the documented use passes request data straight in. An array holding
+         nothing counts as empty like any other empty value. */
+      $isVoid = is_array($value)? ($value === []) : (trim((string) $value) === '');
+
+      if($isVoid){
+
+        self::$voidKey[] = $key;
+
         $response = true;
-      }    
+      }
     }
-    
+
     return $response;
     
   }
@@ -453,7 +476,11 @@ class Input{
         return $this->response('supplied characters length is invalid');
       }
 
-      if( (strlen($value) > 0) && (strlen($value) <= $length) && (!is_empty($length)) ){
+      /* The is_empty() test that stood here is a framework helper, which made a length of
+         one number fatal wherever this class was used on its own. It could not change the
+         outcome either: $length has just been established as an integer, and a length of
+         zero is already turned away by the character count above it. */
+      if( (strlen($value) > 0) && (strlen($value) <= $length) ){
         return true;
       }else{
         return $this->response("string maximum length ($length chars) exceeded !");
@@ -500,8 +527,27 @@ class Input{
   private function validate_range($value) : bool{
 
     $range = ($this->range === null)? $this->default['range'] : $this->range;
-  
+
+    $range = $this->range_options($range);
+
     return in_array($value, $range) ?: $this->response('value supplied is not within specified options');
+
+  }
+
+  /**
+   * Returns a range as the list of options a value is matched against.
+   *
+   * A range holding a single option may be supplied on its own (i.e 'range' => 'yes')
+   * rather than as a list, and no range at all matches nothing.
+   *
+   * @param mixed $range supplied range
+   * @return array
+   */
+  private function range_options($range) : array {
+
+    if($range === null) return [];
+
+    return is_array($range)? $range : [$range];
 
   }
   
@@ -560,11 +606,23 @@ class Input{
   }
 
   private function matched() : bool {
-    $value = $this->value;
-    $pattern = $this->pregmatch;
+    $value = (string) $this->value;
+    $pattern = (string) $this->pregmatch;
 
-    return (preg_match($pattern, $value)) ?:
-              $this->response("$value does not match specified pattern");
+    /* The pattern is used exactly as it is supplied, delimiters and modifiers included, so
+       that a case insensitive match (i.e "/[a-z]+/i") stays available to the caller. */
+    if(@preg_match($pattern, '') === false){
+      return $this->response("pattern supplied is not a valid regular expression");
+    }
+
+    /* It has to account for the whole value as well. An unanchored pattern such as
+       "/[a-zA-Z]+/" matches the letters inside "abc123" and used to let that value through,
+       which reads as the opposite of a validation. */
+    if(preg_match($pattern, $value, $matches) && (($matches[0] ?? null) === $value)){
+      return true;
+    }
+
+    return $this->response("$value does not match specified pattern");
   }
 
 
@@ -667,11 +725,27 @@ class Input{
 
     if($message !== null){
 
-      $this->message = $message; 
+      if($return == false){
 
-      if($this->id) $this->errors[$this->id] = $message;
+        /* The first failure is the one reported. A later failure used to displace it, so
+           response() answered with whichever validation failed last rather than the first
+           one, which is what error tracking describes. Errors kept per id are unaffected. */
+        if(($this->message === null) || ($this->message === '')) $this->message = $message;
 
-      $this->error_exists = ($return == false)? true : false;
+        if($this->id) $this->errors[$this->id] = $message;
+
+        $this->error_exists = true;
+
+        return $return;
+
+      }
+
+      /* A validation that passed carries no error to report. Its message used to be kept
+         all the same, and error_exists() reads that message, so a value that passed was
+         reported as a failure. */
+      $this->message = '';
+
+      $this->error_exists = false;
 
       return $return;
     }

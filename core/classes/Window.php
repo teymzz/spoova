@@ -40,6 +40,7 @@ class Window extends WindowBase{
   private static object|false $lastWindowInstance = false;
   private static array $windowInstances = [];
   private static bool $INIT_TRUNK = false;
+  private static ?bool $TRUNKED = null;
   private static ?string $origin = null;
   private static ?Window $Window = null;
 
@@ -1606,34 +1607,41 @@ class Window extends WindowBase{
   private static function identify_truncation_for(array $windows, ?Closure $filter = null, &$authorizer = []) : array {
 
     $windows = self::set_truncation_for($windows);
-    $isTrunked = $windows[self::TRUNK];
+    $isTrunked = (bool) $windows[self::TRUNK];
     unset($windows[self::TRUNK]);
-    if($isTrunked) {    
+
+    if($isTrunked) {
+
+      // ":404" is a fallback handler rather than a route url, hence it must survive truncation
+      $hasE404 = array_key_exists(':404', $windows);
+      $e404 = $hasE404? $windows[':404'] : null;
+
       if($filter) {
         $windows = $filter($windows, $authorizer);
 
       }else{
         $windows = iTrunk($windows);
       }
+
+      if($hasE404 && !array_key_exists(':404', $windows)) $windows[':404'] = $e404;
     }
     return $windows;
   }
 
   private static function set_truncation_for(array $windows) : array {
-    
-    if(($test1 = array_key_exists(self::TRUNK, $windows)) || (in_array(self::TRUNK, $windows))){
-      if($test1) return $windows;
-      $key = array_search(self::TRUNK, $windows);
+
+    if(array_key_exists(self::TRUNK, $windows)) return $windows;
+
+    if(in_array(self::TRUNK, $windows, true)){
+      $key = array_search(self::TRUNK, $windows, true);
       unset($windows[$key]);
       $windows[self::TRUNK] = true;
       return $windows;
     }
-    
-    if(!isset(self::$TRUNKED)){
-      self::$INIT_TRUNK = false;
-      if(strtolower(Init::key('SHUTTERS')?:'') === 'trunk'){
-        self::$INIT_TRUNK = true;
-      }
+
+    if(self::$TRUNKED === null){
+      // resolve the global shutter setting once per request
+      self::$TRUNKED = self::$INIT_TRUNK = (strtolower(Init::key('SHUTTERS')?:'') === 'trunk');
     }
     $windows[self::TRUNK] =  self::$INIT_TRUNK;
     return $windows;
@@ -1752,10 +1760,16 @@ class Window extends WindowBase{
     
     $STRICT = $windows[self::STRICT] ?? false;
 
-    unset($windows[self::ARG], $windows[self::ONCALL], $windows[self::ONLOAD],  $windows[self::INCALL], $windows[self::STRICT], $windows[self::ORIGIN]);
+    $ORIGIN = $windows[self::ORIGIN] ?? null;
+
+    /**
+     * Remove every shutter key so that only route urls are left to be iterated.
+     * Note: self::PARAMS is not listed because it is an alias of self::ARG.
+     */
+    unset($windows[self::ARG], $windows[self::ONCALL], $windows[self::ONLOAD],  $windows[self::INCALL], $windows[self::STRICT], $windows[self::ORIGIN], $windows[self::SLUGS], $windows[self::ONSHUT], $windows[self::TRUNK]);
 
     self::$metrics[':keys'] = self::$metrics[':keys'] ?? [];
-    self::$metrics[':keys'][] = [$shutter => ['controller' => is_closure($controller)? 'closure()' : (is_object($controller) ? get_class($controller) : $controller), 'routes' => $windows, 'origin' => $windows[self::ORIGIN]??null]];
+    self::$metrics[':keys'][] = [$shutter => ['controller' => is_closure($controller)? 'closure()' : (is_object($controller) ? get_class($controller) : $controller), 'routes' => $windows, 'origin' => $ORIGIN]];
     self::$metrics[] = $controller;
   }
 

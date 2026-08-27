@@ -75,7 +75,8 @@ class User extends Session{
             $init['COOKIE_NAME']  = '';
         }
         
-        return (func_num_args() > 0)? $init[$param] : $init;
+        // an unknown key returns an empty string rather than raising an undefined key warning
+        return (func_num_args() > 0)? ($init[$param] ?? '') : $init;
     }
 
     /**
@@ -114,19 +115,26 @@ class User extends Session{
      */
     public static function validate($sessid, Closure $callback){
 
-        //select session id from database 
+        //select session id from database
         if(!Session::has(User::sessionName())){
+            return false;
+        }
+
+        /* $sessid names a column and cannot be bound as a value, so it is only ever
+           allowed through as a plain identifier. */
+        if(!is_string($sessid) || !preg_match('/^[A-Za-z_][A-Za-z0-9_]*$/', $sessid)){
+            trigger_error('invalid database column name supplied on User::validate()');
             return false;
         }
 
         $idField = User::idField();
         $idTable = User::tableName();
-        
+
         $auth = User::auth()->dbh();
-        
+
         if($auth){
 
-            $auth->query("SELECT $sessid FROM {$idTable} WHERE $idField = ?", [User::id(true)]);
+            $auth->query("SELECT `{$sessid}` FROM `{$idTable}` WHERE `{$idField}` = ?", [User::id(true)]);
             $auth->read();
             $results = $auth->results(0); 
 
@@ -243,7 +251,12 @@ class User extends Session{
 
             $userIdField = User::config('USER_ID_FIELDNAME');
 
-            $query = "SELECT * FROM {$userTable} WHERE $userIdField = ?";
+            // nothing can be looked up without a connection, a table, a field or an id
+            if(!$auth || $userTable === '' || $userIdField === '' || $userId === ''){
+                return self::$data = [];
+            }
+
+            $query = "SELECT * FROM `{$userTable}` WHERE `{$userIdField}` = ?";
 
             $auth->query($query, [$userId])->read();
 

@@ -45,7 +45,9 @@ class MkRex extends MkBase{
 
         $path = str_replace(['.','/'], '\\', $path);
 
-        
+        //keep the file's name for the default boiler template
+        $name = basename($path);
+
         $filename = basename($path).'.rex.'.$ext;
         $path     = dirname($path);
 
@@ -60,7 +62,14 @@ class MkRex extends MkBase{
         if(!file_exists(domroot($filepath))) {
             
             if( $Filemanager->openFile(true, domroot($fullpath)) ){
-    
+
+                /* write the default boiler template of the resource file */
+                if($template = self::boilerplate($name, $ext)){
+                    $file = fopen(domroot($fullpath), 'w');
+                    fputs($file, $template);
+                    fclose($file);
+                }
+
                 Cli::break(1);
                 Cli::textView(Cli::success('template created successfully'), '|2', '|2');
                 Cli::textView(Cli::emo('ribbon-arrow', '1|1').Cli::warn($filepath));
@@ -80,6 +89,33 @@ class MkRex extends MkBase{
         }
 
         return false;
+
+    }
+
+    /**
+     * Returns the default boiler template of a rex resource file where the
+     * file's own name is applied as the default marker name.
+     *
+     * @param string $name rex file name (without its extensions)
+     * @param string $ext rex file extension
+     * @return string an empty string is returned for extensions that have no boiler template
+     */
+    private static function boilerplate(string $name, string $ext) : string {
+
+        $markers = ['css' => 'style', 'js' => 'script'];
+
+        $marker = $markers[$ext] ?? '';
+
+        if(!$marker) return '';
+
+        //pad the marker with dots so that the opening and closing lines align
+        $width = 44;
+        $dots  = str_repeat('.', max(4, $width - strlen('/* '.$marker) - strlen($name.': */')));
+
+        $open  = '/* '.$marker.$dots.$name.': */';
+        $close = '/* '.$marker.$dots.$name.'; */';
+
+        return $open.PHP_EOL.PHP_EOL.PHP_EOL.$close.PHP_EOL;
 
     }
 

@@ -6,7 +6,7 @@ use spoova\mi\core\classes\Bundle\Filemanager\FileCompressor;
 use spoova\mi\core\classes\Bundle\Filemanager\Filemanager;
 use spoova\mi\core\commands\Root\Cli;
 use spoova\mi\core\commands\Support\Handlers\CastConsole;
-use spoova\mi\core\commands\Support\Handlers\InteractiveConsole;
+use spoova\mi\core\commands\Support\Handlers\WizLauncher;
 use spoova\mi\core\commands\Support\Handlers\Syntax;
 
 /**
@@ -17,11 +17,17 @@ class Root extends Entry{
 
     public const commands = Entry::root;
 
-    function __construct(string $command)
+    /**
+     * @param string $command the root command supplied
+     * @param array $args tokens supplied after it. Only the code channels read these,
+     *                    so that a one-liner can be run with -e; every other root
+     *                    command still refuses arguments.
+     */
+    function __construct(string $command, array $args = [])
     {
-        
-        if($command === ':wizi') return new CastConsole;
-        if($command === ':wiz') return new InteractiveConsole;
+
+        if($command === ':wizi') return new CastConsole($args);
+        if($command === ':wiz') return new WizLauncher($args);
 
         if(str_starts_with($command, 'cli')){
           if($command === 'cli ') return self::cli();
@@ -340,7 +346,14 @@ class Root extends Entry{
 
         $command1 = ($commands)? $commands[0] : '';
         $command2 = $commands[1] ?? '';
-        
+
+        /* the code channels take arguments of their own, so that a one-liner can be
+           run with -e without opening a session. Every other root command still
+           refuses them. */
+        if(in_array($command1, [':wiz', ':wizi'], true)){
+            return new Root($command1, array_slice($commands, 1));
+        }
+
         if($command1 !== 'cli' && (count($commands) > 1)) {
           Cli::headerView($command1, break: 2);
           Cli::errorView('no arguments required on this command!', break:1);

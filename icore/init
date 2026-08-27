@@ -8,8 +8,8 @@
  RESOURCE_HANDLER: Ress;
  SETUP_COMPLETE: 1;
  RESOURCE_WATCH: 1;
- INI-Path: D:\sites\wamp\bin\apache\apache2.4.65\bin\php.ini;
- INI-Token: c4ccebe81ebe949d47eeb9b49d0e8ef22e8c463a;
+ INI-Path: D:\sites\wamp\bin\php\php8.4.15\php.ini;
+ INI-Token: 047ea8a9dd4437d1090ca849a71deb14c9cdb82a;
  CSRF_GEN: TRUE;
  COMPONENT_DIRECT: FALSE;
  COMPONENT_VIEW: NO_BLANKS;

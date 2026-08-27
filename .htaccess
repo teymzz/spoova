@@ -6,7 +6,7 @@
     RewriteEngine on
 
     #ErrorDocuments: caution!!!
-    # ErrorDocument 404 /spoov/res/errors/404.php
+    # ErrorDocument 404 /spoova/res/errors/404.php
 
     #Advanced Options ----------------------------------------------
 

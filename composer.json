@@ -6,12 +6,12 @@
     "authors": [
         {
             "name": "Akinola Saheed",
-            "email": "teymss@gmail.com",
+            "email": "akinolasaheed001@gmail.com",
             "role": "Web Developer"
         }
-    ],
-    "require-dev": {
-        "phpunit/phpunit": "^9.5"
+    ], 
+    "require": {
+        "php": ">=8.4"
     },
     "autoload": {
         "psr-4": {

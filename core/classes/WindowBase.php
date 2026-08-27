@@ -38,6 +38,9 @@ class WindowBase extends Controller
   /**
    * Alias for Window::ARG
    * Sets shutter variable parameters (or arguments)
+   *
+   * @notice This resolves to the same shutter key as self::ARG. Both cannot be
+   * supplied within the same shutter list since the last one supplied overwrites the first.
    */
   public const PARAMS = ':ARG';
 
@@ -74,9 +77,12 @@ class WindowBase extends Controller
 
   /**
    * Defines all essential shutter keys
+   *
+   * @notice self::PARAMS is intentionally left out because it is only an alias of
+   * self::ARG. Listing it would duplicate ":ARG" within this list.
    */
   public const SHUTTER_KEYS = [
-    self::STRICT, self::ORIGIN, self::ARG,self::PARAMS,self::SLUGS,self::ONCALL,self::ONSHUT,self::ONLOAD, self::TRUNK
+    self::STRICT, self::ORIGIN, self::ARG, self::SLUGS, self::ONCALL, self::INCALL, self::ONSHUT, self::ONLOAD, self::TRUNK
   ];
 
   #define private constants only
@@ -91,8 +97,6 @@ class WindowBase extends Controller
 
   #inherent local variables
   protected static $variables = null;
-
-  protected static $this;
 
   /**
    * set window error response type
@@ -329,7 +333,6 @@ class WindowBase extends Controller
         $parentClass = br() . "&nbsp;:: <b>Parent Class: </b>" . $parentClass;
       }
       return EInfo::view('Invalid option set for property <i><u>$winAPI</u></i> in ' . get_called_class() . $parentClass);
-      return false;
     }
   }
 
@@ -386,14 +389,21 @@ class WindowBase extends Controller
   /**
    * Test if the current page or value supplied is index page
    *
-   * @param string $Index
+   * @param mixed $Index optional url root (or window) name to be tested.
+   *  - If a non empty string is supplied, that value is tested instead of the current url root.
+   *  - Any other value (e.g a window instance) is ignored and the current url root is tested.
    * @return boolean
    */
-  final static function isIndex($Index = '')
+  final static function isIndex($Index = '') : bool
   {
 
-    $root = window('root');
-    return (!$root || ($root == 'index'));
+    $root = (is_string($Index) && trim($Index) !== '') ? $Index : window('root');
+
+    $root = trim((string) $root, '/ ');
+    $root = strtok($root, '?') ?: '';      // discard any query string supplied
+    $root = explode('/', $root, 2)[0];     // only the first path segment defines a root
+
+    return (!$root || (strtolower($root) === 'index'));
   }
 
   /**
@@ -419,11 +429,23 @@ class WindowBase extends Controller
   {
     if (isset($_SERVER['HTTP_REFERER'])) {
       if ($_SERVER['HTTP_REFERER'] != $_SERVER['REQUEST_URI']) {
-        $data = $_SERVER['REQUEST_METHOD'] == 'POST' ? $_POST : $_GET;
+
+        $method = strtoupper($_SERVER['REQUEST_METHOD'] ?? 'GET');
+
+        $Request = new Request;
+
+        /**
+         * Read the request data without authentication. Unlike $_POST or $_GET, this
+         * also resolves the body carried methods (i.e PUT, PATCH and DELETE) whose
+         * request data is only available through "php://input"
+         */
+        $raw  = $Request->prompt();
+        $raw  = is_array($raw) ? $raw : [];
+
         $file = $_FILES ?? [];
 
         //redirect action
-        $action = $data[':form-action'] ?? '';
+        $action = $raw[':form-action'] ?? '';
         $ref    = dirname(rtrim($_SERVER['HTTP_REFERER'], '/'));
 
         if ($action) {
@@ -432,19 +454,18 @@ class WindowBase extends Controller
           $action = $_SERVER['HTTP_REFERER'];
         }
 
-        $csrfSent = $data['CSRF_TOKEN'] ?? '';
+        $csrfSent = $raw['CSRF_TOKEN'] ?? '';
         $csrfSess   = Session::base()->value('CSRF', 'TOKEN');
 
-        $Request = new Request;
-
         $data = $Request->data();
+        $data = is_array($data) ? $data : [];
 
         $CSRF_VALID = ($csrfSent && ($csrfSent === $csrfSess));
         $CSRF_TIME  = Session::base()->value('CSRF', 'TIME');
 
         $formdata['DATA']   = $data;
         $formdata['FILES']  = $file;
-        $formdata['METHOD'] = $_SERVER['REQUEST_METHOD'];
+        $formdata['METHOD'] = $method;
         $formdata['URI']    = $_SERVER['REQUEST_URI'];
         $formdata['CSRF_REF'] = [
           'VALID'   => $CSRF_VALID,
@@ -470,32 +491,40 @@ class WindowBase extends Controller
   {
     if (Session::base()->has(':FORM')) {
 
-      //fetch method 
-      $FORM = Session::base()->value(':FORM');
-      $method = $FORM['METHOD'];
+      //fetch method
+      $FORM    = Session::base()->value(':FORM');
+      $method  = strtoupper($FORM['METHOD'] ?? 'GET');
+      $formURI = $FORM['URI'] ?? '';
 
-      $_SERVER['REQUEST_METHOD'] = $method;
+      if ($formURI != ($_SERVER['REQUEST_URI'] ?? '')) {
 
-      //reference request data 
-      if ($method == 'POST') {
-        $method = &$_POST;
-      } elseif ($method == 'GET') {
-        $method = &$_GET;
-      }
+        $_SERVER['REQUEST_METHOD'] = $method;
 
-      //reference request files
-      $files  = &$_FILES;
+        $data  = is_array($FORM['DATA'] ?? null) ? $FORM['DATA'] : [];
+        $files = is_array($FORM['FILES'] ?? null) ? $FORM['FILES'] : [];
 
-      $formURI = $FORM['URI'];
+        //rebind request data into the superglobal of the request method
+        if ($method === 'POST') {
+          $_POST = $data;
+        } elseif ($method === 'GET') {
+          $_GET = $data;
+        } else {
+          /**
+           * Body carried methods (i.e PUT, PATCH, DELETE) have no superglobal and their
+           * original "php://input" stream is gone after the redirection. Their data is
+           * therefore restored on the environment key where {@see PHPInput()} rereads it.
+           */
+          $_ENV[':FORM'][':INPUT'] = $data;
+        }
 
-      if ($formURI != $_SERVER['REQUEST_URI']) {
-        $method = $FORM['DATA'];
-        $_REQUEST = $method;
-        $files  = $FORM['FILES'];
+        $_REQUEST = $data;
+
+        //rebind request files
+        $_FILES = $files;
       }
 
       //set CSRF Data into Environment
-      $_ENV[':FORM']['CSRF_REF'] = $FORM['CSRF_REF'];
+      $_ENV[':FORM']['CSRF_REF'] = $FORM['CSRF_REF'] ?? [];
       Session::base()->remove(':FORM');
     }
   }
@@ -728,7 +757,7 @@ class WindowBase extends Controller
   {
     $urlmap = new UrlMapper;
 
-    $base = DomUrl();
+    //$base = DomUrl();
     $urlmap->setbase(DomUrl('/'));
     return $urlmap->map($url, $separator, $exc);
   }

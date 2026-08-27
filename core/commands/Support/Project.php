@@ -469,7 +469,8 @@ exit; */
 
         include 'icore/filebase.php';
 
-        Server::run($logic);
+        return server($logic);
+
         LOGIC;
     }
 

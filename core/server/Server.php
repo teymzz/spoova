@@ -42,7 +42,13 @@ class Server extends Base{
   }
     
   final static function run(string $logic = '') {
-    if(is_file(domroot(to_dirslash(ltrim(strtok(uri, '?'),'/'))))) return false;
+    /* Under the built-in server this decision was already made, before the framework was
+       loaded {@see staticRequest()}, so a file that reaches here is one the application is
+       meant to answer for and must not be handed back. Everywhere else the web server has
+       already served whatever exists, and this stays as the last word on it. */
+    if(php_sapi_name() !== 'cli-server'){
+      if(is_file(domroot(to_dirslash(ltrim(strtok(uri, '?'),'/'))))) return false;
+    }
     new static(...func_get_args());
   }
 

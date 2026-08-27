@@ -109,6 +109,12 @@ class Cli
     private static bool $hiddenCursor = false;
     private static string|false|null $reader_state = null;
 
+    /** TRUE once a shutdown restore has been registered for reader mode. */
+    private static bool $reader_restored = false;
+
+    /** Seconds the last line evaluated by {@see Cli::cast()} took. */
+    private static float $castDuration = 0.0;
+
     private static bool $getMove = false; 
 
     private static bool|null $truecolor = null; 
@@ -2362,7 +2368,7 @@ class Cli
      *    - - close() → method to close input reading
      */
     static function input(Closure $callback){
-        CliInput::input($callback);
+        return CliInput::input($callback);
     }
     
     // /**
@@ -3093,6 +3099,8 @@ class Cli
 
             extract($scope, EXTR_SKIP);
 
+            $started = microtime(true);
+
             try {
 
                 try {
@@ -3101,7 +3109,7 @@ class Cli
                     // do not parse as one and run below instead. A parse failure
                     // executes nothing, so no line can be evaluated twice.
                     $result = eval("return {$input};");
-                    if($result !== null) print var_export($result, true).PHP_EOL;
+                    if($result !== null) print self::dump($result).PHP_EOL;
                 } catch (\ParseError $parse) {
                     eval($code);
                     print PHP_EOL;
@@ -3113,16 +3121,53 @@ class Cli
                 print Cli::infoView(" {$errorType} ", $error->getMessage(), break: '1|1');
             }
 
+            self::$castDuration = microtime(true) - $started;
+
             // carry the variables into the next line
             $scope = array_diff_key(get_defined_vars(), array_flip(
                 ['scope', 'value', 'input', 'code', 'result', 'parse', 'error',
-                 'callback', 'handled', 'stopped', 'response']
+                 'callback', 'handled', 'stopped', 'response', 'started']
             ));
 
             echo PHP_EOL;
 
         }
 
+    }
+
+    /**
+     * Renders a value for display at an interactive channel.
+     *
+     * var_export() is exact but unreadable for anything that is not a scalar — an
+     * object comes back as a \Foo::__set_state(array(...)) call. Scalars keep their
+     * var_export form, so a string still shows its quotes and a boolean still reads
+     * as true rather than 1, while anything else is printed as its shape.
+     *
+     * @param mixed $value
+     * @return string
+     */
+    public static function dump(mixed $value) : string {
+
+        if(is_object($value)){
+            $vars = get_object_vars($value);
+            return get_class($value).($vars? ' '.print_r($vars, true) : ' {}');
+        }
+
+        if(is_array($value)) return print_r($value, true);
+
+        if(is_resource($value)) return 'resource('.get_resource_type($value).')';
+
+        return var_export($value, true);
+
+    }
+
+    /**
+     * Seconds the last line evaluated by {@see Cli::cast()} took to run.
+     *
+     * @return float
+     */
+    public static function castDuration() : float {
+        return self::$castDuration;
     }
 
     /**
@@ -3217,6 +3262,18 @@ class Cli
             // Save current stty settings (so we can restore)
             if($open){
                 if(!self::$reader_state) self::$reader_state = trim(shell_exec('stty -g'));
+
+                /* The terminal belongs to the shell that launched this process, not to
+                   the process itself, so anything changed here outlives it. Without a
+                   restore, a reader that exits early — or is killed — hands the shell
+                   back with no echo and no Ctrl+C. Registered once, on the way in, so
+                   that exit paths which never reach a matching reader_mode(false) are
+                   covered too. */
+                if(!self::$reader_restored){
+                    self::$reader_restored = true;
+                    register_shutdown_function(fn() => self::reader_mode(false));
+                }
+
                 // Disable echo, canonical mode, signals, and extended input in WSL
                 shell_exec('stty -echo -icanon -isig -iexten');
             }else{
@@ -3238,10 +3295,8 @@ class Cli
 
         $contents = '';
 
-        self::reader_mode();
-        
-        $handle = fopen('php://stdin',"r");
-
+        /* Validated before the terminal is touched, so that a malformed callback
+           cannot return through a path that leaves reader mode applied. */
         if($callback){
             $array = $callback();
 
@@ -3264,9 +3319,13 @@ class Cli
                 Cli::error('callback of "iprompt" must return an array', 0, "|2");
                 return false;
             }
-            
+
         }
-        
+
+        self::reader_mode();
+
+        $handle = fopen('php://stdin',"r");
+
         self::$ipromptCounter = $counter = $starter = 1;
         while(!feof($handle)){
             if($boot ?? '') $boot($starter);
@@ -3284,8 +3343,12 @@ class Cli
         };
 
         fclose($handle);
-        
-        if($final) $final($contents);
+
+        /* Handed back before the callback runs, so that whatever it prints — and
+           anything the caller does afterwards — is echoed and line-edited normally. */
+        self::reader_mode(false);
+
+        if($final ?? '') $final($contents);
 
         return $input;
 
