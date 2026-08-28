@@ -78,7 +78,7 @@ class Window extends WindowBase{
 
       if(!defined('thisUri') && function_exists('thisUri')) define('thisUri', thisUri());
 
-      if(routeExists(strtolower($path))){ 
+      if(routeExists($path)){ 
         $class = (TClass::class($class)->getString());
         $parents = class_parents($class);
         $parents = (array_reverse(array_unset($parents, [WindowBase::class, Window::class, Controller::class], true)));
