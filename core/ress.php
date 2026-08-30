@@ -7,7 +7,7 @@ Ress::new('res/main/')
         
         // javascript ................................................. external
         ->url("js/local/autoload/ss.js => type:module")->named('ss')
-        ->url("js/jquery/jquery-3.6.0.js")->named('jquery')
+        ->url("js/jquery/jquery-4.0.0.js")->named('jquery')
         ->url("js/jquery/jquery.mousewheel.js")->named('mousewheel')
         //->url("css/bootstrap/js/bootstrap.min.js")->named('bootstrapJS')
     

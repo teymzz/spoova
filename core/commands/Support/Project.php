@@ -44,39 +44,7 @@ class Project extends Entry{
     }
 
     public function build(array $args) {
-      
-  /*    $zip = new ZipArchive();
-
-if ($zip->open('/storage/emulated/0/htdocs/lova.zip')) {
-    for ($i = 0; $i < $zip->numFiles; $i++) {
-    echo $zip->getNameIndex($i) . PHP_EOL;
-}
-}
-
-exit;*/
-/*
-        $Filemanager = new Filemanager;
-       // $Filemanager->setUrl('/storage/emulated/0/htdocs/spocid.zip');
-        $Filemanager->copyTo(dirname(docroot), $args[0].".zip");
-        $Filemanager->setUrl(dirname(docroot).'/'.$args[0].".zip");
-        $Filemanager->zipProgress(function($zip,$info) use(&$i){
-                
-          if($info->status === 0) Cli::clearLine();
-          Cli::moveStart()->textView(Cli::color(Cli::emos('hot', 1),'blue').'spoova [staging files for extraction]['.$info->status.'%] ... ');
-          if($info->status === 100){
-              Cli::pause(1)->clearLine();
-              Cli::textView(Cli::color(Cli::emos('hot', 1),'blue').'spoova [extraction process completed] ... '.Cli::warn('please wait'));
-          }
-                    
-        });
-        $Filemanager->unzip();
-        if($Filemanager->fails()){
-            Cli::clearLine()->errorView($Filemanager->err())->break();
-            Cli::clearLine()->errorView($Filemanager->err())->break();
-            yield false;
-        } 
-exit; */
-//ddump(is_writeable(realpath('/storage/emulated/0/htdocs/')));
+  
         Cli::loadTime(10000);
 
         if(!$this->validate_arguments($args)) {     
@@ -306,8 +274,6 @@ exit; */
         # Load configurations ---------------------------------
         Cli::clearLine();
         
-        //Cli::clearView('loading configurations', '1');
-        
         yield from Cli::play(6, Cli::textBuild(':loading configurations ', '2'), callback: fn() => Cli::stop()); //run animation 6 times  
  
         //load app configurations
@@ -319,6 +285,7 @@ exit; */
 
         $app_crest = ($app_root)? $app_root : $app_path;
         $app_file  = rtrim($app_crest,'/ ').DS.$app_name;
+        $zip_path = dirname(docroot). DS. $args[0].".zip";
 
         $Filemanager = new Filemanager;
         $Filemanager->setUrl($app_file);
@@ -357,21 +324,13 @@ exit; */
 
         $this->flushapp($project_path, $removables);
         
-        //Cli::textView(Cli::emos('checkmark'), 1, [0, 2]);
         Cli::pause(1);           
-
-        //Cli::textView(br(), 2, 1);
+        
         Cli::clearView('project "'.Cli::alert($project_name).'" created successfully"', '3');
 
         Cli::break(2);
         Cli::animeType('arrows'); 
         Cli::textView(Cli::emos('pipe').'mapping project: ('.Cli::warn($project_name).')', '3'); 
-
-        //yield from Cli::play(4, ''); 
-
-        //Cli::loadTime(100000);
-
-        //Cli::textView('>>');
 
         Cli::textView(br());
 
@@ -400,7 +359,46 @@ exit; */
 
         $final->build(['installer' => $addInstaller, 'entry_file' => $entryFile, 'logic' => $baseLogic ]);
         Cli::clearLine();
-        Cli::textView($project_name.Cli::emo('colon', [1, 1]).'http://localhost/'.$project_name, '3', '1', [2, 1]);
+
+        // Remove zip file
+        (new Filemanager)->removeFile($zip_path);
+
+        // Check project port...
+        if($path = self::newProject_running($project_name)){
+            Cli::textView($project_name.Cli::emo('colon','1').$path, '3', '1', [2, 1]);
+        } else {
+            Cli::textView($project_name.' serve project manually.', '3', '1', [2, 1]);
+        }
+
+    }
+
+    private static function newProject_running(string $path) :string|false {
+        $candidates = [
+            "http://localhost/".$path,
+            "http://localhost:80/".$path,
+            "http://localhost:8080/".$path
+        ];
+
+        foreach ($candidates as $url) {
+            if(self::isServerReachable($url)){
+                return $url;
+            }
+        }
+
+        return false;
+    }
+
+    private static function isServerReachable(string $url) : bool {
+        $ch  = \curl_init($url);
+        \curl_setopt_array($ch, [
+            \CURLOPT_NOBODY => true, // HEAD request, don't fetch body
+            \CURLOPT_RETURNTRANSFER => true,
+            \CURLOPT_TIMEOUT => 1,  // FAIL FAST 
+            \CURLOPT_CONNECTTIMEOUT => 1
+        ]);
+        curl_exec($ch);
+        $ok = \curl_errno($ch) === 0; // connected successfully (any HTTP status is fine)
+        return $ok;
     }
 
     private function validate_arguments(array $args){
