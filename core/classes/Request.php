@@ -130,9 +130,19 @@ class Request
   }
 
   /**
+   * Check if request method is PATCH
+   *
+   * @return boolean
+   */
+  public static function isPatch() : bool {
+    return (self::method() === 'patch');
+  }
+
+  /**
    * Request the input data depending on the request method.
    *  - Note that POST and GET request data keys' values are validated with INPUT_GET or INPUT_POST
    *    unless $validate is set as false
+   *  - Data is only returned for POST, GET or 'php://input'
    *
    * @param string $type optional [Request::any|Request::get|Request::post]
    * @param boolean $validate - determines the if request data values are validated for data keys of POST and GET requests.

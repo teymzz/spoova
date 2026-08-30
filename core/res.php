@@ -9,7 +9,7 @@ Res::new('res/main/')
         ->url("css/local/debug/res.css => x-debug:res-css")->named('x-debug')
     
         # javascript headers
-        //->url("js/jquery/jquery-3.6.0.js")->named('jquery')
+        //->url("js/jquery/jquery-4.0.0.js")->named('jquery')
         //->url("js/jquery/jquery.mousewheel.js")->named('mousewheel')
         //->url("css/bootstrap/js/bootstrap.min.js")->named('bootstrapJS')
         //->url("css/mdb5/css/mdb.min.css")->named('mdbCSS')

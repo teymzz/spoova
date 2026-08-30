@@ -1222,8 +1222,8 @@ if(!function_exists('HTERDOC')) {
    */
   function HTERDOC(string $name, string $filepath = ''){
     \Res::name($name)
-		->url('res/main/js/config.js')
-		->url('res/main/css/res.css');
+		->url('js/local/debug/debug.js => x-debug:res-js;type:module')
+		->url('res/main/css/local/debug/res.css => x-debug:res-css');
     $filepath = trim($filepath)? $filepath : $name;
     \Window::wvm(':404', $filepath);
     \Window::open();

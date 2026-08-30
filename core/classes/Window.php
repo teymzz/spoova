@@ -710,6 +710,27 @@ class Window extends WindowBase{
 
     return (func_num_args() === 0) ? self::$origin ?? '' : self::$Window;
   } 
+
+  /**
+   * Determines the request method accepted by a route
+   *  - Forces route termination with 404 header if request method is not met
+   * @param array|string $methods list of request methods accepted
+   *   - array e.g ['post','get']
+   *   - string e.g 'post,get'
+   * @return void
+   */
+  final protected static function accepts(array|string $methods){
+
+      if(is_string($methods)) {
+        $methods = strtolower($methods);
+        $methods = explode(',', $methods);
+      }
+
+      if(!in_array(Request::method(), $methods)){
+          self::close(true);
+      }
+
+  }
   
   /**
    * Include different acceptable routes on windows path url
