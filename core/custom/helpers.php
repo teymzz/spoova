@@ -240,9 +240,6 @@ if(!function_exists('import')){
     $isHash  = in_array(substr($caller, 0 , 1), ['#',':']);
     $isColon = strpos($caller, ':') !== false;
     
-    // strtolower() can never equal 'Res', so the old handler was unreachable here
-    // and Ress already ran by default. Compare in lower case so an init file that
-    // asks for Res is actually honoured, while Ress stays the default.
     if(strtolower((string) $key) === 'res') {
       //Use Old Resource Handler
       if($isHash || $isColon) {

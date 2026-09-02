@@ -2,6 +2,8 @@
 
 namespace spoova\mi\core\classes\DB;
 
+use spoova\mi\core\classes\Bundle\Filemanager\Filemanager;
+
 /**
  * @author Akinola Saheed <github teymzz>
  * 
@@ -18,6 +20,15 @@ namespace spoova\mi\core\classes\DB;
 class DBConfig{
     
     private static string|null $message = null;
+
+    /**
+     * For storing configurations defined in .env file.
+     *
+     * @var array|false
+     */
+    private static array|false $issued = false;
+
+    public const env_path =  secure_env_path;
     
     /**
      * Load the entire contents of the dbconfig file
@@ -27,16 +38,18 @@ class DBConfig{
      * @return bool
      */
     static function load(string $file, &$data) : bool{
-
         self::$message = null;
+
+        // error message defined if methods fail
         $online  = self::online($file);
         $offline = self::offline($file);
 
-        $config['online'] = $online;
+        $config['online'] = self::$issued ?: $online;
         $config['offline'] = $offline;
+        $config['issued'] = self::$issued;
 
         $data = $config;
-        return !isset(self::$message);
+        return !isset(self::$message); // returns TRUE when no error message is detected.
     }
 
     /**
@@ -49,7 +62,7 @@ class DBConfig{
     }
 
     /**
-     * Return offline database parameters from init file 
+     * Return offline database parameters from config file 
      *
      * @param string $file dbconfig file path
      * @return array
@@ -69,7 +82,7 @@ class DBConfig{
     }
 
     /**
-     * Get offline settings from init file
+     * Get online settings from config file
      *
      * @param string $file dbconfig file path
      * @return array
@@ -86,6 +99,55 @@ class DBConfig{
             self::$message = 'file cannot be accessed';
         }
         return [];
+    }
+
+    /**
+     * References database connection parameters from secured environment (.env) file. 
+     *  - This env file should be outside the root of the application
+     *
+     * @param array|null $var
+     * @param bool|string $path 
+     *    - bool(true): uses secure_env_path 
+     *    - bool(false): FALSE uses normal behavior (dbconfig.php)
+     *    - string: uses custom $path defined by user.
+     * @return void
+     */
+    static function safeguard(array|null &$var, bool|string $path = false) {
+        // if DBPARAMS is secured or $path is TRUE, use secured paths
+        // if DBPARAMS is secured && $path is FALSE, use secured paths
+        // if DBPARAMS is not secured && $path is defined, use defined path
+        // if not DBPARAMS is secured && $path is false, use normal dbconfig
+
+        if(getenv('DBPARAMS') === 'SECURED'){
+            if($path === true){
+               $var = self::load_env_params(secure_env_path);
+           }else if($path){
+               $var = self::load_env_params($path);
+           }
+        }
+    }
+
+    /**
+     * Load environment parameters only for database parameters.
+     *
+     * @param boolean $reload
+     * @return array|null
+     */
+    public static function load_env_params($path, bool $reload = false) : array|null {
+
+        $DBPARAMS = ['DBSOCKET','DBPORT','DBSERVER','DBUSER','DBPASS','DBNAME'];
+
+        if(is_file($path) && ($reload || !self::$issued)) {
+            Filemanager::putenv($path, $DBPARAMS); // stores into environment and populates to $_ENV, $_SERVER
+        }
+
+        foreach($DBPARAMS as $DBPARAM) $DBCONFIG[substr($DBPARAM, 2)] = getenv($DBPARAM) ?: '';;
+        $DBCONFIG = $DBCONFIG ?? NULL;
+
+        self::$issued = $DBCONFIG ?: [];
+
+        return $DBCONFIG;
+
     }
 
     /**
