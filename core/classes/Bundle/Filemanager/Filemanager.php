@@ -84,6 +84,14 @@ class Filemanager extends Enlist{
     private string $separator = ':'; // default used if not overridden
 
     /**
+     * Specifies the preferred format used when writing key-value entries.
+     * Example: ' | ' => 'KEY : VALUE', '| ' => 'KEY: VALUE', ' |' => 'KEY :VALUE', '|' => 'KEY:VALUE'
+     *
+     * @var array{separator:string,left:string,right:string}
+     */
+    private array $keyValueFormat = ['separator' => ':', 'left' => ' ', 'right' => ' '];
+
+    /**
      * Determines when method execution constraint is overruled
      *
      * @var boolean
@@ -274,6 +282,32 @@ class Filemanager extends Enlist{
     }
 
     /**
+     * Checks if a config line matches a key with optional spacing around the separator.
+     *
+     * Examples: "DB=true", "DB = true", "DB= true"
+     */
+    private static function matchesKeyLine(string $line, string $key, string $separator) : bool {
+      return self::parseKeyValue($line, $key, $separator) !== false;
+    }
+
+    /**
+     * Parses a key/value line while allowing optional spacing around the separator.
+     */
+    private static function parseKeyValue(string $line, string $key, string $separator) : array|false {
+      $line = trim($line);
+      $key = trim($key);
+      $separator = trim($separator);
+
+      if($line === '' || $key === '' || $separator === '') return false;
+
+      $allowed = preg_quote($separator, '/') . '|:|=';
+      $pattern = '/^\s*' . preg_quote($key, '/') . '\s*(?:' . $allowed . ')\s*(.*)$/is';
+      if(!preg_match($pattern, $line, $matches)) return false;
+
+      return [$key, trim($matches[1])];
+    }
+
+    /**
      * Determines whether a path sits inside (or is) an excluded path.
      *  - Both arguments must already be separator-normalized by {@see Filemanager::normalize_path()}.
      *  - Matching stops at a path boundary, so "vendor" cannot exclude "vendorlib".
@@ -374,13 +408,54 @@ class Filemanager extends Enlist{
     }
 
     /**
-     * Sets universal separator character
-     * 
-     * @param string $separator separator character 
+     * Sets the separator and preserves any custom spaces around it when writing key/value entries.
+     *
+     *  - Examples:
+     *     - '='      => KEY = VALUE
+     *     - '= '     => KEY= VALUE
+     *     - ' ='     => KEY =VALUE
+     *     - ' = '    => KEY = VALUE
+     *     - ':'      => KEY : VALUE
      */
     public function separator(string $separator = ':') {
+      $raw = (string) $separator;
+      $separator = trim($raw);
+
+      if($separator === '') {
+        $separator = ':';
+      }
+
+      $left = '';
+      $right = '';
+
+      if(preg_match('/\S/', $raw, $matches, PREG_OFFSET_CAPTURE)) {
+        $separator = $matches[0][0];
+        $pos = $matches[0][1];
+        $left = substr($raw, 0, $pos);
+        $right = substr($raw, $pos + 1);
+      }
+
       $this->separator = $separator;
+      $this->keyValueFormat = [
+        'separator' => $separator,
+        'left' => $left,
+        'right' => $right,
+      ];
+
       return $this;
+    }
+
+    /**
+     * Formats a key/value pair using the configured key-value writing format.
+     */
+    private function formatKeyValue(string $key, mixed $value, string $separator = ':') : string {
+      $value = is_array($value) ? '[' . json_encode($value) . ']' : (string) $value;
+      $format = $this->keyValueFormat;
+      $left = $format['left'] ?? '';
+      $right = $format['right'] ?? '';
+
+      $activeSeparator = $separator !== ':' ? $separator : ($format['separator'] ?? $separator);
+      return $key . $left . $activeSeparator . $right . $value;
     }
 
     /**
@@ -510,13 +585,13 @@ class Filemanager extends Enlist{
 
       while (!feof($reading)) {
           $line = fgets($reading);
-                
+
           if($separator != null && $separator !== true){
-            
+
             $textkeys = $key;
 
             foreach($textkeys as $keyindex => $textkey){
-              
+
               //* remove unecessary keys from $key list
               if(is_array($textkey)):
 
@@ -524,67 +599,50 @@ class Filemanager extends Enlist{
                 continue;
 
               endif;
-                
-              if (
-                  ($lineText1 = stristr($line, $textkey.$separator)) || 
-                  ($lineText2 = stristr($line, $textkey." ".$separator))
-                  ) 
-                  { 
-                  
-                  $lineText = (empty(trim($lineText1)) && isset($lineText2))? $lineText2 : $lineText1;
 
-                  //* find key value using delimiter
-                  $lineText = rtrim(trim($lineText), $delimiter.' ');
+              if (($parsed = self::parseKeyValue($line, $textkey, $separator)) !== false) {
+                  [$matchedKey, $value] = $parsed;
+                  $value = rtrim(trim($value), $delimiter.' ');
 
-                  //* add space if necessary
-                  if(!empty($lineText2)) $textkey .= " ";
-                  $lineText = explode($separator, $lineText, 2);
-                  
+                  if($keyslen === 1){
 
-                  if(in_array($textkey,$lineText) and array_key_exists(1,$lineText)){
+                    $value = empty(trim($value))? $value : trim($value);
 
+                    if((substr($value, 0 , 1) === '[') and ($value[-1] === "]")){
 
-                      if($keyslen === 1){
-                        
-                        $value = empty(trim($lineText[1]))? $lineText[1] : trim($lineText[1]);
+                      $value = ltrim(rtrim($value,"]"),"[");
+                      if($isArrayKey){
+                        fclose($reading);
+                        return $data_array[$matchedKey] = json_decode($value);
+                      }else{
+                        fclose($reading);
+                        return json_decode($value);
+                      }
 
-                        if((substr($value, 0 , 1) === '[') and ($value[-1] === "]")){
-                         
-                          $value = ltrim(rtrim($value,"]"),"[");
-                          if($isArrayKey){
-                            fclose($reading);
-                            return $data_array[$textkey] = json_decode($value);
-                          }else{
-                            fclose($reading);
-                            return json_decode($value);
-                          }
-                          
-                        }else{
-                          if($isArrayKey){
-                             $data_array[$textkey] = ltrim($value, " ");
-                             fclose($reading);
-                             return $data_array;
-                          }else{
-                            fclose($reading);
-                            return ltrim($value," ");
-                          }
-                        }
+                    }else{
+                      if($isArrayKey){
+                        $data_array[$matchedKey] = ltrim($value, " ");
                         fclose($reading);
                         return $data_array;
                       }else{
-                        $data_array[$key[$keyindex]] = ltrim($lineText[1], " ");
-                      } 
+                        fclose($reading);
+                        return ltrim($value," ");
+                      }
+                    }
+
+                  }else{
+                    $data_array[$matchedKey] = ltrim($value, " ");
                   }
 
                 //* remove found key from $keys list
                 unset($key[$keyindex]);
               }else{
                 $data_array[$key[$keyindex]] = '';
-              }           
+              }
             }
 
           }elseif($separator === true){
-            
+
             //* for reading single data
 
             if($keyslen == 1){
@@ -594,15 +652,15 @@ class Filemanager extends Enlist{
               }
             }else{
               foreach($key as $keyindex => $textkey){
-                if ($lineText = stristr($line,$textkey)) { 
+                if ($lineText = stristr($line,$textkey)) {
 
                     //* unset text key
                     unset($key[$keyindex]);
 
                     $data_array[$textkey] =  $lineText;
-                  
-                } 
-              }              
+
+                }
+              }
             }
 
           }
@@ -620,17 +678,22 @@ class Filemanager extends Enlist{
     /**
      * Create a new file if not exists
      *  - Note that this will return false if the expected file is not readable even if it exists. 
-     * @param bool $strict true creates directory if not exist
+     * @param bool|string $strict true creates directory if not exist
      *  - This specifies if a file's directory should be created when it does not exist where the directory name 
      *    is derived from the file path supplied. This will trigger an error if no directory name is detected.
+     *  - This (i.e $strict) may also serve as $url provided $url is not defined and $strict is supplied as a string.  
      * @param string $url optional url path for the file to be created.
      *  - Note that when not supplied, this uses default url.
      * @return bool true if directory exists or is created successfully and accessible
      */
-    public function openFile(bool $strict = false, string $url = '') : bool {
+    public function openFile(bool|string $strict = false, string $url = '') : bool {
       
       //get default set directory
       $fileUrl = $url ? $url : $this->path;
+
+      if(is_string($strict) && func_num_args() < 2){
+        $fileUrl = $strict;
+      }
 
       if(func_num_args() > 1){
         $fileUrl = func_get_args()[1];
@@ -778,7 +841,7 @@ class Filemanager extends Enlist{
 
       foreach($data as $key => $value){
         if(is_numeric($key)) trigger_error('keys must have a string name',E_USER_ERROR);
-        $newText .= " ".$key.$separator." ".(is_array($value)? "[".json_encode($value)."]" : $value).$delimiter."\n";  
+        $newText .= $this->formatKeyValue($key, $value, $separator) . $delimiter . "\n";
       }
 
       $newText = rtrim(preg_replace('/[[:blank:]]+/',' ',$newText));
@@ -825,11 +888,10 @@ class Filemanager extends Enlist{
           
           if(empty(ltrim($datakey) || empty($line))) continue;
           
-          if (stristr($line, $datakey.$separator)){        
+          if (($parsed = self::parseKeyValue($line, $datakey, $separator)) !== false){        
             $replaced = true;
             $replacements[] = $datakey;
-            $line = explode($separator, $line, 2);
-            $line = $line[0].$separator." ".$dataValue.$delimiter."\n";
+            $line = $this->formatKeyValue($datakey, $dataValue, $separator) . $delimiter . "\n";
             unset($data[$datakey]);
             break;
           }
@@ -844,7 +906,7 @@ class Filemanager extends Enlist{
             if(is_numeric($key)) trigger_error('keys must have a string name',E_USER_ERROR);
 
             //may later require trimming...
-            $arrLines[] = ($key.$separator." ".(is_array($value)? "[".json_encode($value)."]" : $value)).$delimiter;
+            $arrLines[] = $this->formatKeyValue($key, $value, $separator) . $delimiter;
 
           }
       }
@@ -928,7 +990,7 @@ class Filemanager extends Enlist{
 
         foreach($keys as $linekey){
           
-          if (stristr($line,$linekey.$separator)){
+          if (self::matchesKeyLine($line, $linekey, $separator)){
             $line = " ";
             $dels = [$linekey];
             $found = true;
@@ -1031,7 +1093,7 @@ class Filemanager extends Enlist{
               if($type == 'wLine'){
                 $lines .= $newText;
               }else{
-                $lines .= rtrim($newText,"\n")."/n";
+                $lines .= rtrim($newText,"\n")."\n";
               }
               $added_before = true;
               $replaced = true;
@@ -1046,7 +1108,7 @@ class Filemanager extends Enlist{
             if($type == 'wLine'){
               $lines .= $newText;
             }else{
-              $lines .= rtrim($newText,"\n")."/n";
+              $lines .= rtrim($newText,"\n")."\n";
             }
             $added_after = $replaced = true;
             unset($after);
@@ -1116,11 +1178,10 @@ class Filemanager extends Enlist{
           
           $datakey = ltrim($datakey);
           
-          if (stristr($line, $datakey.$separator)){
+          if (self::matchesKeyLine($line, $datakey, $separator)){
             $replacements[] = $datakey;
             $replaced = true;
-            $line = explode(":", $line, 2);
-            $line = $line[0].$separator." ".$dataValue.$delimiter."\n";
+            $line = $this->formatKeyValue($datakey, $dataValue, $separator) . $delimiter . "\n";
             unset($data[$datakey]);
             break;
           }
@@ -1174,9 +1235,12 @@ class Filemanager extends Enlist{
      *  - True will use global config keys from data returned that may overwrite any pre-existing key found in $_ENV.
      *  - False will use global config keys from data returned that will NOT overwrite any pre-existing key found in $_ENV
      * @param string $separator a unique key to value separator.
+     * @param bool|Closure|null $env 
+     *         - TRUE stores keys and values directly into environment variables 
+     *         - FALSE only populates $_ENV without storing keys and values directly into environment variables 
      * @return array pairs of keys and values
      */
-    public static function loadenv($path, bool|string $key = ':ENV', string $separator = '='){
+    public static function loadenv($path, bool|string $key = ':ENV', string $separator = '=', bool $env = false){
 
       $configs = self::load($path, $separator);
       
@@ -1191,6 +1255,7 @@ class Filemanager extends Enlist{
           if(is_string($key) && trim($key)){
 
             $_ENV[$key][$config] = $value;
+            if($env) putenv("$config=$value");
 
           }else{
 
@@ -1198,6 +1263,7 @@ class Filemanager extends Enlist{
               if($key === false){ continue; }
             }
             $_ENV[$config] = $value;
+            if($env) putenv("$config = $value");
 
           }
           
@@ -1205,10 +1271,67 @@ class Filemanager extends Enlist{
       self::$envData = $DATA;
       return $DATA;
     }
+    
+    /**
+     * Pulls data directly from environment files.
+     *
+     * @param string $path
+     * @param Closure $callback
+     * @return array pairs of keys and values
+     */
+    public static function pullenv(string $path, Closure $callback){
+
+      $configs = self::load($path, '=');
+      
+      //load data into the env 
+      $DATA = [];
+
+      foreach($configs as $config => $value){
+          $DATA[$config] = $value;
+
+          if($callback) $callback($config, $value);
+          
+      }
+      self::$envData = $DATA;
+      return $DATA;
+    }
+
+    /**
+     * Puts the values of an env key into environment, $_ENV and $_SERVER
+     *
+     * @param string $path
+     * @param boolean $keys defines keys to be stored
+     *      - TRUE : stores all keys in .env file into  environment and $_ENV
+     *      - Array : defines keys to be stored into  environment and $_ENV
+     * @param boolean $populate TRUE (default) populates $_SERVER and $_ENV while FALSE skips population.
+     * @return array
+     */
+    public static function putenv(string $path, bool|array $keys = true, bool $populate = true) : array {
+
+      $configs = self::load($path, '=');
+      
+      //load data into the env 
+      $data = [];
+
+      foreach($configs as $config => $value){
+
+          $data[$config] = $value;
+
+          if($keys === true || (is_array($keys) && in_array($config, $keys))){
+              putenv("$config=$value");
+              if($populate){
+                $_ENV[$config] = $value;
+                $_SERVER[$config] = $value;
+              }
+          }
+          
+      }
+      return $data;
+    }
 
     /**
      * Returns the last environment key used by the Filemanager::loadenv() method.
-     *
+     *  - Warning: depends on {@see  Filemanager::loadenv()}
      * @return bool|string
      */
     public static function env_key():bool|string{
