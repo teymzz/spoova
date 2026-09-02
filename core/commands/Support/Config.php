@@ -336,10 +336,12 @@ class Config extends Entry{
             });
 
             if($Filemanager->openFile()){
-                $Filemanager->textDelete([$key], $dels, '=');
-                if( $Filemanager->textUpdate([$key => $value], $upds, '=') ) {
+                $Filemanager->delimiter('');
+                $Filemanager->separator(' = ');
+                $Filemanager->textDelete([$key], $dels);
+                if( $Filemanager->textUpdate([$key => $value], $upds) ) {
     
-                    if( $Filemanager->readFile($key, '=') === $value ) {
+                    if( $Filemanager->readFile($key) === $value ) {
                         
                         Cli::textView(Cli::success('key configuration successful'), 0, "|2");
                         

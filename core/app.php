@@ -4,6 +4,9 @@
 if(!defined('docroot')) define('docroot', dirname(dirname(__FILE__))); #project folder path (document root)
 if(!defined('docBase')) define('docBase', basename(docroot)); # project folder name      
 if(!defined('approot')) define('approot', dirname(docroot));  # project folder directory (project files root)
+if(!defined('secure_env_path')) define('secure_env_path', approot.'/secured/'.'.env');  # secured environment path
+if(!defined('icore_env_path')) define('icore_env_path', docroot.'/icore/'.'.env');  # icore environment path
+if(!defined('smart_env_path')) define('smart_env_path', online? secure_env_path : icore_env_path);  # simulates environment path
 
 //directory separator
 !defined('DS')? define('DS', DIRECTORY_SEPARATOR) : '';

@@ -1,6 +1,7 @@
 <?php
  
  //core basic accessory files
+ require_once docroot.'/core/custom/env.php';  
  require_once docroot.'/core/custom/dbsets.php';  
  require_once docroot.'/core/classes/Dev.php';
  require_once docroot.'/core/classes/Res.php';
