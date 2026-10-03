@@ -2,24 +2,19 @@
 
 namespace spoova\mi\core\commands\Root\Cli;
 
-use spoova\mi\core\classes\Ghost\GhostDraft;
-use spoova\mi\core\classes\Ghost\GhostFunction;
-use spoova\mi\core\classes\Ghost\GhostProxy;
-use spoova\mi\core\classes\TClass;
-use spoova\mi\core\commands\Root\Cli;
+use Closure;
 use spoova\mi\core\commands\Root\Cli\CliForms\CliAlpha;
-use stdClass;
-use spoova\mi\core\commands\Root\Cli\CliForms\CliDate;
-use spoova\mi\core\commands\Root\Cli\CliForms\CliText;
-use spoova\mi\core\commands\Root\Cli\CliForms\CliRadio;
 use spoova\mi\core\commands\Root\Cli\CliForms\CliChoice;
-use spoova\mi\core\commands\Root\Cli\CliForms\CliFlow;
+use spoova\mi\core\commands\Root\Cli\CliForms\CliDate;
 use spoova\mi\core\commands\Root\Cli\CliForms\CliNumber;
 use spoova\mi\core\commands\Root\Cli\CliForms\CliPassword;
 use spoova\mi\core\commands\Root\Cli\CliForms\CliPattern;
+use spoova\mi\core\commands\Root\Cli\CliForms\CliRadio;
 use spoova\mi\core\commands\Root\Cli\CliForms\CliRange;
 use spoova\mi\core\commands\Root\Cli\CliForms\CliSelect;
+use spoova\mi\core\commands\Root\Cli\CliForms\CliText;
 use spoova\mi\core\commands\Root\Cli\CliForms\CliTextBox;
+use stdClass;
 
 /**
  * This class contains all the currently available and supported features of 
@@ -30,10 +25,6 @@ class CliForms {
     use CliDate, CliRadio, CliChoice, CliNumber, CliText, CliPassword, CliPattern, CliSelect, CliRange, CliAlpha, CliTextBox;
 
     private static $cleaner = 3;
-    protected static $using_requirements = false;
-    
-    /** Specified by a white color */
-    public const text_field_color = 'ash';
 
     public function __construct()
     {
@@ -42,22 +33,27 @@ class CliForms {
         }
     }
 
+    /**
+     * This method determines how the CLI wipes form fields. It points the CLI form cleaner to the number of lines used for 
+     * drawing out form field. 
+     *
+     * @param integer $value
+     * @return void
+     */
     public static function setLines(int $value){
         self::$cleaner = $value;
     }
 
-    public static function lines(){
+    /**
+     * This method returns the number of line defined by the  {@see CLIForm::setLines()} method.
+     *   - Default lines is 3 if setLines() have not been initially applied.
+     * @return integer
+     */
+    public static function lines() : int {
         return self::$cleaner;
     }
-
-    protected static function use_requirements() {
-        if(self::$using_requirements) return ;
-        Cli::requires('stty', fn() => Cli::errorView('Cli text input requires stty', break: 2) );
-        Cli::requires('pcntl', fn() => Cli::textPlain('Cli input requires pcntl extension') );
-        self::$using_requirements = true;
-    }
     
-    private static function readLine($callback){
+    private static function readLine(Closure $callback){
         
         function setRawMode() {
             if (stripos(PHP_OS, 'WIN') === false) {
@@ -86,7 +82,7 @@ class CliForms {
         }
 
         // Function to process arrow keys
-        function input($callback) {
+        function input(Closure $callback) {
             $control = new stdClass;
         
             $control->exit = function() {
@@ -116,9 +112,6 @@ class CliForms {
                     case "\033[D":
                         $callback('left', $control);
                         break;
-                    case "\033[D":
-                        $callback('left', $control);
-                        break;
                     default:
                         $callback($char, $control);
                         break;
@@ -129,44 +122,6 @@ class CliForms {
         // Call the function to process arrow keys
         input($callback);
         
-    }
-
-  
-    private static function modified($modifier, array $chars, string $argType = 'array'){
-      $md = array_values(TClass::funcParams($modifier));
-
-      $data = ['ghostData'];
-
-      if(count($md)>0 && is_array($md[0]) && $md[0][0] === CliFlow::class){
-        
-        $Ghost = new GhostFunction($data);
-        $data = [
-          'chars' => $chars,
-          'count' => count($chars), 
-          'value' => implode('',$chars),
-          'textColor' => self::text_field_color, 
-          'borderColor' => self::text_field_color
-        ];
-        
-        $Ghost->ghostData(fn($key) => $data[$key] ?? null);
-
-        GhostProxy::new($Ghost, fn(GhostDraft $draft) => new class($draft) extends CliFlow{});
-
-        $flow = GhostProxy::object();
-        $modifier($flow, $flow->value);
-        $mod = $flow;
-      }else{
-        $mod = $modifier(($argType === 'string')? $data['value'] : $chars);
-        $mod = is_array($mod) ? $mod : [];
-        if(is_array($mod)) {
-          $Ghost = new GhostFunction(['ghostData']);
-          $Ghost->ghostData(fn($key) => $mod[$key] ?? null);
-          GhostProxy::new($Ghost, fn(GhostDraft $draft) => new class($draft) extends CliFlow{});
-          $mod = GhostProxy::object();
-        }
-      }
-
-      return $mod;
     }
 
 }

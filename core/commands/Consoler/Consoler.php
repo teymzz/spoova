@@ -50,7 +50,6 @@ class Consoler {
 
     final public static function validate_arguments(array $args) : bool|string {
 
-        //validate arguments
         if(static::$auto_respond){
             Cli::cls();
             Cli::textView(Cli::danger(Cli::emo('point-list').' '.static::$cat.strtolower(basename(to_dirslash(get_called_class()))).' '.Cli::warn(implode(' ', $args))));
@@ -96,7 +95,6 @@ class Consoler {
         $nextOps = []; 
         $keys = []; 
         $description = '';
-        $arguments = []; 
         $allArgs = $args; 
         $counter = 0;
 
@@ -163,7 +161,7 @@ class Consoler {
                                 return false;
                             }
                             return array_values($allArgs);
-                        }elseif($b){
+                        }elseif($b??false){
                             //Parse subsequent arguments to the argument before ellipsis
                             $method = substr($testArg, 0, strlen($testArg) - 3);
                             array_unshift($allArgs, $method);
@@ -357,6 +355,32 @@ class Consoler {
     }
 
     /**
+     * Sort an argument list using specified order and requirements
+     *
+     * @param array $order ordering map for list
+     * @param array $list list to be ordered
+     * @param array $required defines required arguments
+     * @param array &$log references required arguments
+     * @return array|false
+     */
+    public static function arguments_order(array $order, array $list, array $required = [], &$log = []) : array|false {
+        $arguments = [];
+
+        foreach($order as $value){
+            $arguments[] = in_array($value, $list, true) ? $value : false;
+        }
+
+        foreach($required as $value){
+            if(!in_array($value, $arguments, true)){
+                if(func_num_args() < 4) return false;
+                $log[] = $value;
+            }
+        }
+
+        return $log? false : $arguments;
+    }
+
+    /**
      * Set options for command
      *
      * @return array
@@ -413,5 +437,11 @@ class Consoler {
     public static function log() {
       vdump(...func_get_args());
     }
+
+    /** 
+     * Resolve dependencies using container.
+     *    - Example: $container->bind($classString, $callback);
+     * */
+    // public static function dependencies(Container $container){ }
 
 }

@@ -1,6 +1,5 @@
 <?php
 
-use spoova\mi\core\classes\Bundle\Filemanager\Filemanager;
 use spoova\mi\core\classes\DB\DBConfig;
 use spoova\mi\core\classes\Environment;
 

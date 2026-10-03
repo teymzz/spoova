@@ -2,108 +2,47 @@
 
 namespace spoova\mi\core\commands\Root;
 
-use Error;
 use Closure;
-use stdClass;
+use Error;
 use Exception;
+use InvalidArgumentException;
 use LengthException;
 use ReflectionFunction;
 use ReflectionNamedType;
-use InvalidArgumentException;
-use spoova\mi\core\classes\Debug;
 use spoova\mi\core\classes\Bundle\Arr\Arr;
+use spoova\mi\core\classes\Debug;
 use spoova\mi\core\classes\ErrorHandlers\HandleCliErrors;
 use spoova\mi\core\classes\Ghost\GhostDraft;
-use spoova\mi\core\classes\Ghost\GhostProxy;
 use spoova\mi\core\classes\Ghost\GhostFunction;
-use spoova\mi\core\commands\Root\Cli\CliDev;
-use spoova\mi\core\commands\Root\Cli\CliKey;
-use spoova\mi\core\commands\Root\Cli\CliColor;
-use spoova\mi\core\commands\Root\Cli\CliInput;
-use spoova\mi\core\commands\Root\Cli\CliList;
+use spoova\mi\core\classes\Ghost\GhostProxy;
 use spoova\mi\core\commands\Root\Cli\CliCast;
-use spoova\mi\core\commands\Root\Cli\CliPrompt;
-use spoova\mi\core\commands\Root\Cli\CliPulser;
+use spoova\mi\core\commands\Root\Cli\CliColor;
+use spoova\mi\core\commands\Root\Cli\CliDev;
+use spoova\mi\core\commands\Root\Cli\CliEmos\CliEmos;
+use spoova\mi\core\commands\Root\Cli\CliInput;
+use spoova\mi\core\commands\Root\Cli\CliKey;
+use spoova\mi\core\commands\Root\Cli\CliList;
 use spoova\mi\core\commands\Root\Cli\CliPercent;
 use spoova\mi\core\commands\Root\Cli\CliPlay;
-use spoova\mi\core\commands\Root\Cli\Enums\AnimeList;
-use spoova\mi\core\commands\Root\Cli\CliQuery;
+use spoova\mi\core\commands\Root\Cli\CliPrompt;
 use spoova\mi\core\commands\Root\Cli\CliPrompter;
+use spoova\mi\core\commands\Root\Cli\CliPulser;
+use spoova\mi\core\commands\Root\Cli\CliQuery;
+use spoova\mi\core\commands\Root\Cli\CliRuntime;
+use spoova\mi\core\commands\Root\Cli\Enums\AnimeList;
+use spoova\mi\core\commands\Root\Cli\Enums\console;
+use spoova\mi\core\commands\Root\Cli\GhostCli\GhostCliPolicy;
+use stdClass;
 
 declare(ticks=1); // Ensures signal handling in loops
 
 /**
  * Animation class for cli
- * @todo resolve mapTo() to work properly
  */
-class Cli 
+class Cli extends CliEmos
 {
-
-    public const emos = [
-
-        /* starred */
-        'point-list'=> '►  ',
-        'point-list2'=> '▶  ', //different from top
-        'list-right'=> '▶  ',
-        'list-down'=> '▼  ',
-        'fish-eye'=> '◉  ',
-        'radio'=> '●  ',
-        'bullet'=> '•  ',
-        'bullet-square'=> '▪  ',
-        'bullet-insquare'=> '▣  ',
-        'bullet-right'=> '▸  ',
-        'point-right'=> ' →  ',
-        'degrees'=> '°  ',
-        'circle'=> '∘  ',
-        'lens'=> '⌕  ',
-        'ellipses'=> '⋯  ',
-        'therefore'=> '∴  ',
-        'raquo'=> '»  ',
-        'laquo'=> '«  ',
-        'block'=> '█  ',
-        'colon'=> ':  ',
-        'pipe'=> '|  ',
-        'infinity'=> '∞  ',
-        'minilist-right'=> '▸  ',
-        'pointer'   => '☞  ',  
-        'link'      => '☍  ', 
-        'linkb'     => '⚯  ',
-        'checkmark' => '✔  ',
-        'crossmark' => '✘  ',
-        'times' => 'x  ',
-        'times-big' => 'X  ',
-        'hot'       => '♨  ',
-        'capture'   => '⛶  ',
-        'flagb'     => '⛿  ',
-        'umbrella'  => '☂  ',
-        'plane'     => '✈  ',
-        'cloud'     => '☁  ',
-        'sun'       => '☀  ',
-        'cut'       => '✀  ',
-        'close'     => '⮿  ', 
-        'envelope'  => '✉  ', 
-        'share'     => '➦  ', 
-        'view'      => '➥  ', 
-        'checkbox'  => '☑  ', 
-        'timesbox'  => '☒  ', 
-        'clock'     => '◷  ', 
-
-        /* marked */
-        'flash'     => '⭍  ',
-        'yin-yang'  => '☯  ',
-        'diamond'   => '◈  ',        
-        'eye'       => '◉  ',
-        'ribbon-arrow' => '⮱  ',   
-        'light-arrow' => '⌁  ',   
-        'infinite-arrow' => '↝  ',   
-        'xs-arrow' => '⥂  ',   
-        'barb-arrow' => '⥊  ',   
-        'bullet-arrow' => '⥤  ',   
-    ]; 
-
     private static array $emods = [];
     private static bool $animeResolved = false;
-    private static bool $header_mode = false;
     private static ?Cli $instance = null;
     private static bool $hideCursor = false;
     private static bool $hiddenCursor = false;
@@ -117,6 +56,8 @@ class Cli
 
     private static bool $getMove = false; 
 
+    private static bool $use_console_colors = false; 
+    private static bool $use_console_keys = false; 
     private static bool|null $truecolor = null; 
     private static ?string $colormode = null; 
 
@@ -257,22 +198,126 @@ class Cli
      * Display a list of items on the CLI
      * @return void
      */
-    static function console(array|string $view, $label = '»', bool|Closure $exit = false) : void {
+    static function consoleList(array|string $view, $label = '»', bool|Closure $exit = false) : void {
 
         $label .= ' ';
 
         if(is_string($view)) $view = [$view];
 
         foreach($view as $item){
-            self::textPlain(Cli::alert($label));
-            print_r($item);
-            print_r(PHP_EOL.PHP_EOL);
+            self::textPlain($label);
+            self::console($item);
+            print_r(PHP_EOL);
         }
 
         if($exit) {
             if($exit instanceof Closure) $exit();
             exit;
         }
+    }
+
+    /**
+     * Display values using a compact recursive representation.
+     */
+    static function console(mixed ...$values) : void {
+        $args = func_get_args();
+        $last = end($args); 
+
+        if($last == console::ops){
+
+            if(func_num_args() !== 2){
+                throw new \ErrorException('invalid number of argument count for options');
+            }elseif(!is_array($args[0])){
+                throw new \ErrorException('argument(#1) must be an array for "console::ops"');
+            }
+
+            $options = $args[0];
+            $keys = array_keys($options);
+            $valids = ['colors','keys'];
+            if(array_diff($keys, $valids)){
+                 throw new \ErrorException('invalid option key defined for "console::ops"');
+            }
+
+            if(isset($options['colors']) && is_bool($options['colors'])) Cli::use_console_colors($options['colors']);
+            if(isset($options['keys']) && is_bool($options['keys'])) Cli::use_console_keys($options['keys']);
+
+            return;
+        }
+
+        foreach($values as $index => $value){
+            if($index > 0) print ' ▪ ';
+            print self::consoleValue($value);
+        }
+
+        self::break(1);
+    }
+
+    static function consolex(mixed ...$values) : void {
+        foreach($values as $index => $value){
+            if($index > 0) print ' ▪ ';
+            print self::consolexValue($value);
+        }
+
+        self::break(1);
+    }
+
+    public static function console_color_state() : bool {
+        return self::$use_console_colors;
+    }
+
+    public static function use_console_colors(bool $enable = true) {
+        self::$use_console_colors = $enable;
+    }
+
+    public static function use_console_keys(bool $enable = true) {
+        self::$use_console_keys = $enable;
+    }
+
+    private static function consoleValue(mixed $value) : string {
+        if(is_array($value)){
+            $items = [];
+
+            foreach($value as $key => $item){
+                $entry = self::consoleValue($item);
+                if(self::$use_console_keys || !is_int($key) || $key !== count($items)){
+                    $entry = self::consoleValue($key).' => '.$entry;
+                }
+                $items[] = $entry;
+            }
+
+            return '['.implode(', ', $items).']';
+        }
+
+        if(self::$use_console_colors){ 
+            if(is_string($value)) return "'".self::valid(addcslashes($value, "\\'"))."'";
+            if(is_int($value)) return self::color(addcslashes($value, "\\'"), '#fd5c92');
+            if(is_bool($value)) return self::color($value ? 'true' : 'false', '#ff9494');
+            if($value === null) return 'null';
+            if(is_resource($value)) return self::color('resource('.get_resource_type($value).')', '#f7d8b4');
+            if(is_object($value)) return self::color(get_class($value), '#e2a2fc');
+        }else{
+            if(is_string($value)) return "'".addcslashes($value, "\\'")."'";
+            if(is_bool($value)) return $value ? 'true' : 'false';
+            if($value === null) return 'null';
+            if(is_resource($value)) return 'resource('.get_resource_type($value).')';
+            if(is_object($value)) return get_class($value);
+        }
+
+        return (string) $value;
+    }
+
+    private static function consolexValue(mixed $value) : string {
+        if(is_array($value)){
+            $items = [];
+
+            foreach($value as $key => $item){
+                $items[] = (string) $key.' => '.self::consolexValue($item);
+            }
+
+            return '['.implode(', ', $items).']';
+        }
+
+        return self::consoleValue($value);
     }
 
     /**
@@ -312,7 +357,7 @@ class Cli
 
     }
     /**
-     * method to run progressbar
+     * Run an iterable process.
      *  - Class methods must be set as public to make it callable
      *  - Yielding FALSE denotes that an error has occured and animation closed
      *  - Yielding TRUE denotes that an all processes have been completed an animation ended
@@ -724,9 +769,9 @@ class Cli
      *     - FALSE prints without clearing line.
      *   - other accepted data types are processed according to the [CLI spacing](http://localhost/spocs/docs/helpers/classes/cli/spacing) documentation.
      * @param string $title if supplied, shows as red colored title
-     * @return Cli
+     * @return Never
      */
-    static function errorExit(?string $message = '', string|int $spacing = '0|0', string|int|bool $break = '0|1', string $title = '') : Cli {
+    static function errorExit(?string $message = '', string|int $spacing = '0|0', string|int|bool $break = '0|1', string $title = '') : Never {
         Cli::wait(100000);
         if($title){ 
             Cli::textPlain(Cli::error($message, title: $title), $spacing, $break); 
@@ -754,14 +799,18 @@ class Cli
 
     /**
      * Designed method for displaying console text as an header
-     *
+     * - Warning: This disables the silent mode setting latent_mode to false internally. This means that error display order is restored. To re-enable latent_mode, use Cli::silent_errors().
      * @param string|Closure $message header message
      * @param string $icon icon of header message (only supported UTF-8 icons)
      * @param string $color color of header message
      * @param integer $break break applied after header message is printed 
+     * @param integer $mode determines the mode of header text display 
+     *    - mode 0 : Disables silent error mode. This means errors are displayed as at when they occur
+     *    - mode 1 : applies silent error mode. This means warning errors (excluding fatal) are displayed after executable processes have been completed. If this mode is aplied, you can 
+     *      later use Cli::silent_errors(true) to re-enable silent errors mode.
      * @return Cli
      */
-    static function headerView(string|Closure $message, string $icon = '►', string $color = 'danger', int $break = 0) : Cli {
+    static function headerView(string|Closure $message, string $icon = '►', string $color = 'danger', int $break = 0, int $mode = 0) : Cli {
 
         if(CliDev::isBash()) Cli::break();
         if($icon && substr(strrev($icon), 0, 1) !== ' '){
@@ -787,23 +836,28 @@ class Cli
 
         echo Cli::br($break);
 
+        if($mode === 1) Cli::silentErrors(true, true);
+
         return self::instance();
     }
 
     /**
-     * Enables or disables silent error mode
-     *
-     * @param boolean $mode
+     * This method is used to delay warning errors' logging till after expected processes have been completed. This will not prevent fatal errors from displaying
+     *   - Notice: if silent error mode is enabled and fatal error occurs, all previously hidden warning errors will be displayed before the fatal error.
+     * @param boolean $mode TRUE enables silent error mode while FALSE disables it.
+     *    -  TRUE : enables both silent_error mode and header_mode (for headerView(), newCliHeader() function or methods) which are usually applied once.
+     *    -  FALSE : disables only silent_error.  To disable header_mode use {@see HandleCliErrors::header_mode()}
+     * @param boolean $forceBreak forces application of a single line break before warning error is displayed.
+     *   -  If an expected output is being cleared due to warning error, this mode should be enabled to apply a single linebreak before the error is displayed to avoid clearing expected output.  
      * @return Cli
      */
-    public static function silentErrors(bool $mode = true) : Cli {
+    public static function silentErrors(bool $mode = true, bool $forceBreak = false) : Cli {
         if($mode) self::header_mode();
-        HandleCliErrors::silentErrors($mode);
+        HandleCliErrors::silentErrors($mode, $forceBreak);
         return self::instance();
     }
 
-    private static function header_mode(bool $mode = true) {
-        self::$header_mode = true;
+    private static function header_mode() {
         HandleCliErrors::header_mode();
     }
 
@@ -819,9 +873,17 @@ class Cli
 
     /**
      * Disable silent mode and display console errors if it exists.
+     *  - Notice 1: If this method clears the output displayed before usage, set $break argument to 1 or above.
+     *  - Notice 2: Line breaks applied will be ignored if no previous error is detected.
+     * @param integer $breaks determines line breaks applied before error is displayed on the CLI. These line breaks will be ignored if no error is detected.
+     *    - break 0 - CLI moves cursor up by one line before displaying errors 
+     *    - break 1 - Maintains the number of line breaks applied.
      */
-    public static function showErrors() : void {
-        if($error_exists = Cli::error_exists())  Cli::moveUp();
+    public static function showErrors(int $breaks = 0) : void {
+        if($error_exists = Cli::error_exists())  { 
+            if($breaks < 1) Cli::moveUp();
+            if($breaks > 1) Cli::break($breaks  - 1);
+        }
         
         Cli::silentErrors(false)->consoleErrors();
 
@@ -863,7 +925,7 @@ class Cli
     }
 
     /**
-     * This is the {@see Cli} smartest way of returning or yielding a boolean response. This method 
+     * This is the {@see Cli} easiest way of returning or yielding a boolean response. This method 
      * ensures that the CLI errors are properly displayed smartly on the CLI screen. It also sets the last message displayed on the CLI screen.
      *  - This method is suitable when the {@Cli::silentErrors()} is initially applied.
      *  - Since a boolean value is applied, you can also yield from a false or true value.
@@ -884,15 +946,42 @@ class Cli
      *  - TRUE: when $return argument is 'success' or TRUE
      *  - FALSE: when $return argument is 'failed', 'fatal', FALSE or an invalid argument is supplied.
      */
-    public static function response(bool|string $return, string|Closure|false|null $msg = 'Program terminated!', string $title = 'Info', int $indent = 0) : bool {
+    public static function response(bool|string $return, string|Closure|false|null $msg = 'Program terminated!', string $title = 'Info', int $indent = 0, array|string $args = []) : bool {
        HandleCliErrors::strict_mode(strtolower($return.'') === 'fatal');
        HandleCliErrors::set_info($msg, $title, $indent);
+       HandleCliErrors::use_arguments(func_num_args()? $args : null);
        return in_array($return,[true, 'success'], true); // HandleCliErrors::consoleErrors($return) ?: false;
     }
 
-    // public static function hasError() : bool {
-    //     return HandleCliErrors::hasError();
-    // }
+    /**
+     * Apply a security validation policy on the CLI
+     *
+     * @param array|string $args arguments parsed to the CLI controller method
+     * @param callable $callback 
+     * @param boolean $timed 
+     * @return void
+     */
+    public static function policy(array|string $args, callable $callback, bool $timed = false) : void{
+
+        if($timed)  CliRuntime::start($runtime);
+        if(is_string($args)) $args = [$args];
+        
+        $Ghost = new GhostFunction(['args','policyGuard','iniTime']);
+        $Ghost->args(fn() => $args);
+
+        $policyGuard = (object) [];
+        $policyGuard->lock = true;
+
+        $Ghost->policyGuard(fn() => $policyGuard);
+        $Ghost->iniTime(fn() => $runtime ?? null);
+        $policy = GhostProxy::new($Ghost, fn(GhostDraft $draft) => new class($draft) extends GhostCliPolicy{});
+        
+        call_user_func($callback, $policy); // callback with GhostCliPolicy argument.
+        
+        $policyGuard->lock = false;
+        $policy->execute();
+
+    }
 
     /**
      * This is an alias for textView() method but is only used to escape 
@@ -1431,7 +1520,7 @@ class Cli
      *  - 0 : means that no word index is found as index (if found) runs from 1 above.
      * @return bool only TRUE if $index exists within range of supplied starting indices of $word
      */
-    static function match(string $word, string|array $indices, int $index, &$match = null, int|null &$frequency = 0) : bool {
+    static function match(string $word, int|string|array $indices, int $index, &$match = null, int|null &$frequency = 0) : bool {
         $indices = (array) $indices;
         foreach($indices as $start){
             $frequency++;
@@ -2222,7 +2311,7 @@ class Cli
             if(!$isLoading) {
                 
                 if(is_callable($callback)) {
-                    if($callback instanceof \Closure){
+                    if($callback instanceof Closure){
                     $response = $callback();
                     if($response) print $response;
                     }else{
@@ -2370,225 +2459,6 @@ class Cli
     static function input(Closure $callback){
         return CliInput::input($callback);
     }
-    
-    // /**
-    //  * This method requires stty & pcntl to retrieve inputs
-    //  *
-    //  * @param Closure $callback
-    //  * @return mixed
-    //  */
-    // static function input(Closure $callback){
-      
-    //   Cli::requires('stty', fn() => Cli::textPlain('Cli input requires stty') );
-    //   Cli::requires('pcntl', fn() => Cli::textPlain('Cli input requires pcntl extension') );
-
-    //   $input = new stdClass;
-    //   $open = trim(shell_exec('stty -g'));
-    //   $input->open = function() {
-    //       //open input reader
-    //       system('stty -echo -icanon min 1 time 0'); //requires stty
-    //   };
-
-    //   $input->close = function() use($input,$open){
-    //       // close input reader
-    //       system('stty sane'); //requires stty
-    //       //   shell_exec('stty ' . escapeshellarg($open));
-    //       $input->reading = false;
-    //       if(!self::$hideCursor) Cli::showCursor();
-    //   };
-    //   $input->read = function($length = 1) {
-    //       // read from inputs
-    //       return fread(STDIN, $length);
-    //   };
-      
-    //   /** appends 2 more characters length to make a total of 3 characters */
-    //   $input->key = function ($char) use($input) {
-    //       $char .= ($input->read)(); // append 1 character
-    //       if ($char === "\033[") {
-    //         $char .= $text = ($input->read)(); // append 1 character
-    //       }
-    //       return [$char, $text??false];
-    //   };
-      
-      
-    //   $input->isArrow = function(){
-    //     return false;
-    //   };
-      
-    //   ($input->open)(); //open stty
-
-    //   $input->previous = '';
-      
-    //   $input->reading = true;
-
-    //   Cli::useSignals([SIGINT, SIGTERM, SIGTSTP], function($signal) use($input, $callback) {
-    //     $callback(new CliKey($signal, $input, true));
-    //     ($input->close)();
-    //   });
-
-    //   while ($input->reading) {
-
-    //         // // Check for available keypress
-    //       $readStreams = [STDIN];
-    //       $writeStreams = null;
-    //       $exceptStreams = null;
-    //       $hasInput = stream_select($readStreams, $writeStreams, $exceptStreams, 0, 10000);
-
-    //       if($hasInput){
-
-    //         $key = ($input->read)();
-
-    //         $input->isArrow = function(){
-    //             return false;
-    //         };
-
-    //         if ($key !== false) {
-    //             $ascii = ord($key);
-                
-    //             $input->char = $key;
-    //             $input->ascii = $ascii;
-
-    //             if($ascii === 1) {
-    //                 $support = true;
-    //                 $key = 'CTRL-A';
-    //             }
-                
-    //             // Detect Enter (Carriage Return, ASCII 13)
-    //             if (($ascii === 13) || ($ascii === 10)) {
-    //                 $support = true;
-    //                 $key = 'ENTER';
-    //             }
-    //             // Detect Tab (ASCII 9)
-    //             elseif ($ascii === 9) {
-    //                 $support = true;
-    //                 $key = 'TAB';
-    //             }
-
-    //             // Detect Backspace (ASCII 8 or 127)
-    //             elseif ($ascii === 8 || $ascii === 127) {
-    //                 $support = true;
-    //                 $key = 'BACKSPACE';
-    //             }
-
-    //             // Detect arrow keys (escape sequences starting with \033)
-    //             elseif ($ascii === 27) {  // Escape sequence start 
-    //                 $keys = ($input->key)($key);
-
-    //                 switch ($keys[1]) {
-    //                     case 'A': 
-    //                         $input->char = $keys[0];
-    //                         $key = "UP";
-    //                         break;
-    //                     case 'B': 
-    //                         $input->char = $keys[0];
-    //                         $key = "DOWN";
-    //                         break;
-    //                     case 'C':
-    //                         $input->char = $keys[0]; 
-    //                         $key = "RIGHT";
-    //                         break;
-    //                     case 'D': 
-    //                         $input->char = $keys[0];
-    //                         $key = "LEFT";
-    //                         break;
-    //                 } 
-
-    //                 $support = true;
-
-    //                 $input->isArrow = function($keypressed = null) use($key) {
-    //                     if(func_num_args() > 0){
-    //                         return strtolower($keypressed) === strtolower($key);
-    //                     }
-    //                     return isset($key) && in_array($key,['UP','DOWN','LEFT','RIGHT']); 
-    //                 };
-
-    //                 $home = $keys[1] === 'H';
-    //                 if($home) $key = 'HOME';
-
-    //                 $end = $keys[1] === 'F';
-    //                 if($end) $key = 'END';
-
-    //                 if(is_numeric($keys[1])){
-
-    //                     $k1 = $keys[1];
-    //                     $k2 = ($input->read)(); // read second character
-
-    //                     $keys[0] .= $k2;
-    //                     $ks = $k1.$k2;
-
-    //                     if($k2 === '~'){
-    //                         if($ks === '2~'){
-    //                             $key = 'INSERT';
-    //                         }
-    //                         if($ks === '3~'){
-    //                             $key = 'DELETE';
-    //                         }
-    //                         if($ks === '5~'){
-    //                             $key = 'PAGEUP';
-    //                         }
-    //                         if($ks === '6~'){
-    //                             $key = 'PAGEDOWN';
-    //                         }
-    //                         $input->char = $keys[0];
-                            
-    //                     }elseif($k2 === ';'){
-
-    //                         if($k1 === '1'){
-    //                             // Handle Next 2 characters sequence
-    //                             $k3 = ($input->read)();
-    //                             $k4 = ($input->read)();
-    //                             // ddump($k4);
-    //                             $keys[0] .= $k3;
-    //                             $input->char = $keys[0];
-    //                             if($k3 === '5'){
-                                    
-    //                                 // Handle CTRL+Arrow Keys
-    //                                 $ctrlArrows = ['A'=>'UP','B'=>'DOWN','C'=>'RIGHT','D'=>'LEFT'];
-                                    
-    //                                 $key = 'CTRL-'.$ctrlArrows[$k4];
-
-    //                             }
-
-    //                         }
-
-    //                     }elseif(is_numeric($ks)){
-
-    //                         // Handle F5 to F2
-    //                         $k3 = ($input->read)();
-    //                         $keys[0] .= $k3;
-    //                         $input->char = $keys[0];
-
-    //                         if($k3 === '~'){
-    //                            $F5_F12 = [
-    //                                 '15'=>'F5','17'=>'F6','18'=>'F7','19'=>'F8','20'=>'F9','21'=>'F10','23'=>'F11','24'=>'F12',
-    //                             ];
-    //                             if(array_key_exists($ks, $F5_F12)){
-    //                                 $key = $F5_F12[$ks];
-    //                             }
-    //                         }
-    //                         $ks .= $k3;
-
-    //                     }
-    //                 }
-
-    //                 ddump($key);
-    //             }
-    //             else {
-    //                 // Detect other keys
-    //                 // echo "You pressed: $key (ASCII: $ascii)\n";
-    //                 $support = false;
-    //             }
-                
-    //             $response = $callback(new Clikey($key, $input));  
-    //         }
-    //       }
-    //       pcntl_signal_dispatch();
-    //   }
-      
-
-
-    //   return $response;
-    // }
 
     public static function keyboard(?Closure $callback = null) {
 
@@ -2695,8 +2565,8 @@ class Cli
     }
 
     /**
-     * Clears console
-     *
+     * Clears console screen
+     *   - Note : This operation may be prevented by the terminal.
      * @return Cli
      */
     public static function cls() : Cli{
@@ -2769,7 +2639,7 @@ class Cli
      *
      * @param array $options Valid options to be tested
      *   - Note : use ['::nocase'=>'true'] for case insensitive options validation.
-     * @param \Closure $callback callback function to be applied on option that takes {@see CliPrompt} object.
+     * @param Closure $callback callback function to be applied on option that takes {@see CliPrompt} object.
      * @param bool|int $terminate terminate prompt (in number of times) if option is not valid
      *    - True terminates once
      *    - Integers determines the number of acceptable error times 
@@ -2815,23 +2685,10 @@ class Cli
                 }
             }
 
-            // if(!isset($prompter)){
-            //     $userInput = fn() : string => self::$prompt['val'] ?? '';
-            //     $userTrials = function($option = '') use($trials)   { 
-            //         if($option === 'active') return false;
-            //         return ($trials); 
-            //     };
-            //     $invalid = $promptObj->invalid(); $exceeded = $promptObj->exceeded(); $max = $promptObj->maximum();
-            //     $CLIPrompt = self::ghostPrompt($userInput, $mainOptions, $userTrials, $terminate, $invalid, $exceeded, $max);
-            //     $prompter = self::prompter($CLIPrompt);
-            //     print 'ggg'.$prompter->inactive();
-            // }
-
             $prompter = isset($prompter) ? $prompter : self::prompter($promptObj);
             
             $counter = 0;
             return $prompter;
-            // return $val;
         }
 
         if($isFirstPrompt){
@@ -2999,7 +2856,6 @@ class Cli
                     self::prompt($mainOptions, $callback, $terminate, true);
                 }else{
 
-                    // $userTrials = fn() => $trials;
                     $userTrials = function($option = '') use($trials){ 
                         if($option === 'active') return false;
                         return $trials; 
@@ -3013,9 +2869,6 @@ class Cli
                     if($callback) {
                        $response = $callback($CLIPrompt, $options, self::$prompt);  
                        $terminate = $response? true : $terminate; // terminate with callback returning truthy response
-                        //    if($response){
-                        //       return self::prompt($mainOptions, $callback, true, $CLIPrompt);
-                        //    }
                     }
 
                     return self::prompt($mainOptions, $callback, true, $CLIPrompt);
@@ -3036,16 +2889,13 @@ class Cli
         $CLIPrompt = self::ghostPrompt($val, $mainOptions, $userTrials, $terminate, self::$prompt['invalid'], true, true);
 
         return self::prompt($options, $callback, true, $CLIPrompt);
-
-        /// GhostPrompt ... 
-        // return self::$prompt['val'] ?? '';
     }
 
     
     /**
      * Runs an interactive shell, evaluating each line typed at the prompt.
      *
-     * @param $callback receives a {@see CliCast} for every line typed, before that
+     * @param Closure|null $callback receives a {@see CliCast} for every line typed, before that
      *                  line is evaluated. The callback may claim the line with
      *                  CliCast::handled(), leaving it unevaluated, so that an
      *                  application can add commands of its own with PHP evaluation
@@ -3287,7 +3137,7 @@ class Cli
    * Cli Interactive prompt
    *  - Reading only ends with a final semicolon
    * @param string $input returned value
-   * @param \Closure $callback callback function to be tested
+   * @param Closure $callback callback function to be tested
    * 
    * @return string
    */
@@ -3624,7 +3474,7 @@ class Cli
 
     /**
      * Clears cursor back in the number of times defined
-     * @param $time number of backspace
+     * @param integer $time number of backspace
      *
      * @return void
      */
@@ -3636,8 +3486,8 @@ class Cli
     /**
      * Clears cursor back in the number of times defined
      * 
-     * @param $times number of backspace
-     * @param $return specifies if back character is printed or directly returned.
+     * @param integer $times number of backspace
+     * @param boolean $return specifies if back character is printed or directly returned.
      *
      * @return Cli
      */
@@ -3650,8 +3500,8 @@ class Cli
     /**
      * Uses cursor positioning to clear cursor back in a number of specified times 
      * 
-     * @param $times number of backspace
-     * @param $return specifies if back character is printed or directly returned.
+     * @param integer $times number of backspace
+     * @param boolean $return specifies if back character is printed or directly returned.
      *
      * @return Cli
      */
@@ -3932,7 +3782,7 @@ class Cli
      */
     public static function emods(array $emos = ["~"], ?Closure $emo = null) : string {
         self::$emods = $emos;
-        $emo = $emo();
+        if($emo) $emo = $emo();
         self::$emods = [];
         return $emo;
     }
@@ -4316,7 +4166,7 @@ class Cli
     }
 
     /**
-     * Specified by an success color (green). May also be used to denote code syntax
+     * Specified by a success color (green). May also be used to denote code syntax
      *
      * @param string $text text to be colored
      * @param string $spacing left and right spacing according to documentation at [CLI Spacing](http://spoova.com/docs/helpers/classes/cli/spacing)
@@ -4736,48 +4586,37 @@ class Cli
     }
     
     /**
-     * @todo: refix this method to use grid
-     * Moves the cursor to specified row and column
-     *  - Note: Highly unstable
-     * @param array $xy current horizontal and vertical axis of cursor
-     * @param integer $row new row if not null
-     * @param integer $col new column if not null
-     * @return Cli 
+     * Move from a known cursor position to a target row and/or column.
+     * The current position is [column, row]. A null target axis remains unchanged.
+     *
+     * @param array{0:int,1:int} $xy Current [column, row], both non-negative.
+     * @param int|null $row Target row, or null to leave the row unchanged.
+     * @param int|null $col Target column, or null to leave the column unchanged.
+     * @return Cli
+     * @throws InvalidArgumentException If any supplied coordinate is invalid.
      */
     static function mapTo(array $xy, ?int $row = null, ?int $col = null) : Cli {
-        $grid = array_keys($xy);
-        $gridX = $grid[0]; //total horizontal columns
-        $gridY = $grid[1]; //total vertical rows
-        $cursorX = $xy[0] ?? 0; //cursor position on x-axis
-        $cursorY = $xy[1] ?? 0 ; //cursor position on y-axis
-        
-        if(is_numeric($col)){
-          //resolve horizontal column
-          if($col >=0 && $col <= $gridX){
-            //supplied column is within column range
-            $advance = $col - $cursorX; //new column - current column
-            echo $advance;
-            if($advance > 0){
-              Cli::moveFront($advance);
-            }else{
-              Cli::moveBack(abs($advance));
-            }
-          }
+        if(!array_key_exists(0, $xy) || !array_key_exists(1, $xy)
+            || !is_int($xy[0]) || !is_int($xy[1])
+            || $xy[0] < 0 || $xy[1] < 0
+        ){
+            throw new InvalidArgumentException('Cli::mapTo(#1) must be a [column, row] pair of non-negative integers');
         }
-        
-        if(is_numeric($row)){
-          //Resolve vertical rows. 
-          $newRow = $row - $gridY;
-          if($row >=0 && $row <= $gridY){
-            //supplied column is within row range
-            $advance = $row - $cursorY; //new column - old column
-            if($advance > 0){
-              Cli::moveDown($advance);
-            }else{
-              Cli::moveUp(abs($advance));
-            }
-          }
+
+        if($col !== null){
+            if($col < 0) throw new InvalidArgumentException('Cli::mapTo(#3) must be a non-negative column');
+            $advance = $col - $xy[0];
+            if($advance > 0) self::moveFront($advance);
+            elseif($advance < 0) self::moveBack(-$advance);
         }
+
+        if($row !== null){
+            if($row < 0) throw new InvalidArgumentException('Cli::mapTo(#2) must be a non-negative row');
+            $advance = $row - $xy[1];
+            if($advance > 0) self::moveDown($advance);
+            elseif($advance < 0) self::moveUp(-$advance);
+        }
+
         return self::instance();
     }
 
@@ -4906,20 +4745,22 @@ class Cli
         return self::cursorPosition($order);
     }
 
-    static function testCursor() {
-        
-        $out = trim(shell_exec(__DIR__.'/cursor.exe get 2>&1'));
-        ddump($out);
-        if (strpos($out, ',') !== false) {
-            list($row, $col) = explode(',', $out);
-            return ['row'=>$row,'col'=> ''];
-            //echo "Cursor is at row $row, column $col\n";
-        } else {
-            //echo "Error reading cursor position: $out\n";
-        }
+    /**
+     * Return the current cursor position as row and column, or null if unavailable.
+     *
+     * @return array{row:int,col:int}|null
+     */
+    static function testCursor(): ?array {
+        $cursorTool = __DIR__.'/cursor.exe';
+        if(!is_file($cursorTool)) return null;
 
-        return [];
+        $out = shell_exec(escapeshellarg($cursorTool).' get 2>&1');
+        return is_string($out)? self::parseCursorPosition($out) : null;
+    }
 
+    private static function parseCursorPosition(string $output): ?array {
+        if(!preg_match('/^\s*(\d+)\s*,\s*(\d+)\s*$/', trim($output), $matches)) return null;
+        return ['row' => (int) $matches[1], 'col' => (int) $matches[2]];
     }
     /**
      * Blink cursor
@@ -5009,7 +4850,7 @@ class Cli
      *  - array: [before, after] 
      * @return array
      */
-    private static function toBreaks(int|string|array $break = '0|0') : array {
+    public static function toBreaks(int|string|array $break = '0|0') : array {
         
         $breakl = $break;
         $breakr = 0;

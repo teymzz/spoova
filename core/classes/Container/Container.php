@@ -5,16 +5,12 @@ namespace spoova\mi\core\classes\Container;
 use Closure;
 use Error;
 use Exception;
-use Reflection;
 use ReflectionClass;
 use ReflectionFunction;
 use ReflectionFunctionAbstract;
 use ReflectionMethod;
 use ReflectionNamedType;
-use ReflectionParameter;
 use ReflectionUnionType;
-use spoova\mi\core\classes\Debug;
-use spoova\mi\core\classes\Sensor\Sensor;
 use Throwable;
 
 class Container {
@@ -89,10 +85,12 @@ class Container {
      */
     private bool $feedALL = false;
     private bool $booted = false;
+    /** Optional [dependencies|arguments] */
     private string $order = 'dependencies';
     private array $registerMethods = []; // Stores custom methods per class
     private string $register_method = 'register';
     private bool $locked = false;
+    private bool $onDispatchExists = false;
 
     /**
      * Prevents accidental re-initialization
@@ -136,8 +134,13 @@ class Container {
      * @return Container
      */
     public function with(string $method) {
+        $method = trim($method);
         if(!$method){
             throw new Exception("Invalid handler method supplied.");
+        }
+        if(str_ends_with($method, '?')){
+            $method = substr($method, 0, strlen($method) - 1) ;
+            $this->onDispatchExists = true;
         }
         $this->register_method = $method? $method : $this->register_method;
         return $this;
@@ -302,7 +305,8 @@ class Container {
      *  - Note that only arguments can be supplied during a dispatch
      *  - This should only be used in a situation where boot() is permitted to be applied before the make() method. 
      */
-    public function dispatch(string $class, array $args = [])  {
+    public function dispatch(string $class, array $args = [])  { 
+        if(!method_exists($class, $this->register_method) && $this->onDispatchExists) { $this->register_method = ''; return;}
         $this->register($class, $args);
         $this->boot();
     }
@@ -336,7 +340,7 @@ class Container {
     }    
     
     private function resolveDependencies(ReflectionClass|ReflectionFunctionAbstract $reflection, array $parameters, array $arguments): array {
-
+        
         $dependencies = [];
         $arguments = array_values($arguments); // Reset array keys for positional arguments
 
@@ -346,6 +350,21 @@ class Container {
 
             // Handle ReflectionUnionType (PHP 8+)
             if ($type instanceof ReflectionUnionType) {
+                    if (isset($arguments[0])) {
+                        $dependencies[] = array_shift($arguments);
+                        continue;
+                    }
+
+                    if ($parameter->isDefaultValueAvailable()) {
+                        $dependencies[] = $parameter->getDefaultValue();
+                        continue;
+                    }
+
+                    if ($type->allowsNull()) {
+                        $dependencies[] = null;
+                        continue;
+                    }
+
                 $resolved = false;
                 $allowsNull = $type->allowsNull(); // Check if null is allowed
     
@@ -358,8 +377,6 @@ class Container {
                         } catch (Throwable) {
                             // Ignore and try next type
                         }
-                    }else{
-                        $resolved = true;
                     }
                 }
     
@@ -397,7 +414,6 @@ class Container {
                 throw new Error("Parameter '{$name}' is required but not supplied");
             }
         }
-    
         return ($this->order === 'dependencies') ? array_merge($dependencies, $arguments) : array_merge($arguments, $dependencies);
     }   
     
@@ -436,7 +452,7 @@ class Container {
      */
     public static function callMethod($instance, string $method, Closure|array $arguments = []) {
         $reflection = new ReflectionMethod($instance, $method);
-        $parameters = $reflection->getParameters();
+        $parameters = $reflection->getParameters(); 
         $tthis = Container::instance();
         if($arguments instanceof Closure){
             $args = $arguments($tthis);
@@ -448,7 +464,6 @@ class Container {
         }
 
         $args = $tthis->resolveDependencies($reflection, $parameters, $arguments);
-
         $args = array_values($args);
         if ($reflection->isStatic()) {
             return $reflection->invokeArgs(null, $args); // Use `null` for static method calls
@@ -469,7 +484,7 @@ class Container {
         $reflection = new ReflectionFunction($function);
         $parameters = $reflection->getParameters();        
         
-        $args = $this->resolveDependencies($reflection, $parameters, $arguments);
+       $args = $this->resolveDependencies($reflection, $parameters, $arguments);
      
         return $reflection->invokeArgs($args);
     }
@@ -522,7 +537,7 @@ class Container {
     /**
      * Set dependency order
      *
-     * @param string $order
+     * @param string $order Optional [dependencies|arguments]
      * @return void
      */
     public function setOrder(string $order = 'dependencies'): void {

@@ -2,8 +2,8 @@
 
 /* Custom stand-alone core functions. Do not Remove*/
 
-use spoova\mi\core\classes\Bundle\Arr\Arr;
 use spoova\mi\core\classes\Attribs;
+use spoova\mi\core\classes\Bundle\Arr\Arr;
 use spoova\mi\core\classes\Dumper;
 use spoova\mi\core\classes\EInfo;
 use spoova\mi\core\classes\Enums\inflect;
@@ -581,7 +581,7 @@ function encodeURIComponent(string $str){
  * Fetch the url parameters from a string or current url of a page
  * When no argument is supplied, it assumes the current url of the page
  * 
- * @param undefined $url_link, $url_link = $_SERVER['REQUEST_URI']
+ * @param string $url_link, $url_link = $_SERVER['REQUEST_URI']
  * @param string $url_link custom link to be dissected 
  * @return array  
  */
@@ -866,6 +866,7 @@ function arrSort(array $param, $sort = false ){
       $array[$arrVal] = $subVal;
     }
   }
+  $array = $array?? [];
 
   $param = ($array)? $array : $param;
   $param = ($sort === true)? array_values($param) : $param;
@@ -1061,7 +1062,8 @@ function to_lgts(string $item){
  *  - spoova modified function 
  * 
  * @param string $input
- * @param string $wrapper
+ * @param string $attrs define attributes (e.g "id:foo;token:123abc")
+ *    - Format 'id:foo;token:123abc' becomes 'id="foo" token="bar"'
  * @param boolean $track FALSE disables overidding active URL pointer.
  * 
  * @return string
@@ -1165,11 +1167,6 @@ function limitChars(string $string, int $limit){
 
   }
   return $string; //return the original text
-
-  if( strlen($string) > $limit ){
-    $string  = substr( $string, 0, $limit )."...";
-  }
-  return $string;
 }
 
 /**
@@ -1223,6 +1220,7 @@ function limitWord(string $string, int|string|null $length = null) : string {
       $buildexplode = explode(' ',$textString);
       $buildexplode = array_delete($buildexplode,''); 
     }
+    $buildexplode = $buildexplode ?? [];
       
     if(count($wordexplode) > count($buildexplode)){
       $textString .= '...';

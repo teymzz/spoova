@@ -5,7 +5,6 @@ namespace spoova\mi\core\commands\Support\Make;
 use spoova\mi\core\commands\Root\Cli;
 use spoova\mi\core\classes\Bundle\Filemanager\Filemanager;
 use spoova\mi\core\classes\Url;
-use spoova\mi\core\commands\Root\Mi;
 use spoova\mi\core\commands\Root\MiHelper;
 
 /**
@@ -69,24 +68,19 @@ class MkCommand extends MkBase{
         $fileLoc   = $fileDir.$className.'.php'; /* relative file path */
 
         /* window routes' absolute file path */
-        $filePath  = to_dirslash(domroot($fileLoc));        
-        
-        // Cli::textView(Cli::danger(Cli::emo('point-list').' add:command ').Cli::warn($nameSpace));
-        // Cli::break(2);
+        $filePath  = to_dirslash(domroot($fileLoc)); 
 
         if(count($args) > 3){
             Cli::clearUp(4);
             Cli::headerView('add:command '.Cli::warn($nameSpace), break: 2);
-            Cli::textView(Cli::error('Expecting a maximum of three(3) arguments!'), '1');
-            Cli::smartBreak(2);
+            Cli::textView(Cli::error('Expecting a maximum of three(3) arguments!'), '1|1');
             return false;
         }
 
         // Build Session File ...
 
         if(((count($args) == 3) && $lastArg != '-O') || ((strlen($lastArg) == 2) && ($lastArg[0] == '-') && $lastArg != "-O" )){
-            Cli::textView(Cli::error('Unknown directive "'.$lastArg.'" supplied'), '1');
-            Cli::smartBreak(2);
+            Cli::textView(Cli::error('Unknown directive "'.$lastArg.'" supplied'), '1', '1|1');
             return false;
         }
 
@@ -107,8 +101,7 @@ class MkCommand extends MkBase{
             preg_match($pattern1, $class, $matches) || 
             preg_match($pattern1, $extend, $matches)
         ){
-            print $extend;
-            Cli::textView(Cli::danger('Error:').' some invalid characters detected!', '1').Cli::smartBreak(2);
+            Cli::textView(Cli::danger('Error:').' some invalid characters detected!', '1', '1|1');
             return false;
         }
 

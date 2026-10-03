@@ -15,9 +15,10 @@ class MiPDO extends DBBridge {
   private $SETTINGS = [
    PDO::ATTR_EMULATE_PREPARES => true, //turn off emulation mode for real prepared statements
    PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION, //turn on errors in form of exceptions
-   PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC, //make default fetch to be in associative array
-   PDO::MYSQL_ATTR_FOUND_ROWS   => true // update this later to : Mysql::ATTR_FOUND_ROWS for version 8.5
-    ]; 
+   PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC //make default fetch to be in associative array
+  ]; 
+  
+  private bool $customSettings = false;
 
   /**
    * Determines when a connection is successful
@@ -35,7 +36,24 @@ class MiPDO extends DBBridge {
    * @return void
    */
   public function pdoSet($SETTINGS){
-   $this->SETTINGS = is_array($SETTINGS)? $SETTINGS : $this->SETTINGS;
+   if(is_array($SETTINGS)){
+     $this->SETTINGS = $SETTINGS;
+     $this->customSettings = true;
+   }
+  }
+
+  private function connectionSettings(): array {
+    $settings = $this->SETTINGS;
+
+    if(!$this->customSettings){
+      if(PHP_VERSION_ID >= 80500){
+        $settings[\Pdo\Mysql::ATTR_FOUND_ROWS] = true;
+      }else{
+        $settings[PDO::MYSQL_ATTR_FOUND_ROWS] = true;
+      }
+    }
+
+    return $settings;
   }
 
   /**
@@ -47,7 +65,7 @@ class MiPDO extends DBBridge {
 
     $this->conName  = "PDO"; //reset the connection name to PDO
 
-    $SETTINGS = $this->SETTINGS;
+    $SETTINGS = $this->connectionSettings();
  
     try{ 
 
@@ -134,7 +152,7 @@ class MiPDO extends DBBridge {
        
        $dns = "mysql:".$dnssocks.$dnshost.$dnsport.$dnsname;
 
-       $SETTINGS = $this->SETTINGS;
+      $SETTINGS = $this->connectionSettings();
 
        try{
          $this->isFailed = false;

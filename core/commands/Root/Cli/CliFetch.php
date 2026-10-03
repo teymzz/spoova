@@ -114,6 +114,7 @@ abstract class CliFetch extends GhostClass {
      * This executes the callback function when program is aborted with CTRL+Z or (SIGTSTP) signal
      *
      * @param Closure $callback a callback closure(CliProcess $process) argument. 
+     *     - Note: restore terminal after callback
      * @return mixed from callback
      */
     public function onSuspend(Closure $callback) {
@@ -124,10 +125,9 @@ abstract class CliFetch extends GhostClass {
             
             $this->setProcess($key);
 
-            //Note: restore terminal first here....
+            //Note: to restore terminal first here....
             if($key->isSignal(SIGTSTP)){
                return $callback(GhostProxy::object());
-                //Note: restore terminal after here....
             }
         }
     }
@@ -136,6 +136,7 @@ abstract class CliFetch extends GhostClass {
      * This executes the callback function when program is resumed (SIGCONT) signal
      *
      * @param Closure $callback a callback closure(CliProcess $process) argument.
+     *     - Note: restore terminal after callback
      * @return mixed from callback
      */
     public function onResume(Closure $callback) {
@@ -146,10 +147,9 @@ abstract class CliFetch extends GhostClass {
             
             $this->setProcess($key);
 
-            //Note: restore terminal first here....
+            //Note: to restore terminal first here....
             if($key->isSignal(SIGCONT)){
                return $callback(GhostProxy::object());
-                //Note: restore terminal after here....
             }
         }
     }
@@ -160,7 +160,8 @@ abstract class CliFetch extends GhostClass {
      *   - SIGSBUS : Bad memory access
      *
      * @param Closure $callback a callback closure(CliProcess $process) argument.
-     * @param int|int $type optional [SIGBUS,SIGSEGV] or both.
+     *     - Note: restore terminal after callback
+     * @param int|int[] $type optional [SIGBUS,SIGSEGV] or both.
      * @return mixed from callback
      */
     public function onCrash(Closure $callback, int|array $type) {
@@ -172,13 +173,11 @@ abstract class CliFetch extends GhostClass {
             $this->setProcess($key);
 
             $types = is_array($type)? $type : [$type];
-            foreach($types as $type){
-                if(!in_array($type, [SIGBUS, SIGSEGV])) throw new Exception('invalid type specified');
+            foreach($types as $stype){
+                if(!in_array($stype, [SIGBUS, SIGSEGV])) throw new Exception('invalid type specified');
             }
-            //Note: restore terminal first here....
             if($key->isSignal($type)){
                return $callback(GhostProxy::object());
-                //Note: restore terminal after here....
             }
         }
     }
@@ -224,7 +223,6 @@ abstract class CliFetch extends GhostClass {
      */
     public function onMathError(Closure $callback) {
         $key = $this->proxy->ghostData('key');
-        $buffer = $this->proxy->ghostData('buffer');
         if($key instanceof CliKey){
             if($key->isSignal(SIGFPE)){
                return $callback(GhostProxy::object());
@@ -240,7 +238,6 @@ abstract class CliFetch extends GhostClass {
      */
     public function onTimer(Closure $callback) {
         $key = $this->proxy->ghostData('key');
-        $buffer = $this->proxy->ghostData('buffer');
         if($key instanceof CliKey){
             if($key->isSignal(SIGALRM)){
                return $callback(GhostProxy::object());
@@ -256,7 +253,6 @@ abstract class CliFetch extends GhostClass {
      */
     public function onVTimer(Closure $callback) {
         $key = $this->proxy->ghostData('key');
-        $buffer = $this->proxy->ghostData('buffer');
         if($key instanceof CliKey){
             if($key->isSignal(SIGVTALRM)){
                 return $callback(GhostProxy::object());
@@ -272,7 +268,6 @@ abstract class CliFetch extends GhostClass {
      */
     public function onProfilerTick(Closure $callback) {
         $key = $this->proxy->ghostData('key');
-        $buffer = $this->proxy->ghostData('buffer');
         if($key instanceof CliKey){
             if($key->isSignal(SIGPROF)){
                return $callback(GhostProxy::object());
@@ -285,16 +280,15 @@ abstract class CliFetch extends GhostClass {
      * This executes the callback function when any of the event signals SIGUSR1 or SIGUSR2 is received.
      *
      * @param Closure $callback a callback closure(CliProcess $process) argument.
-     * @param int|int $type optional [SIGUSR1,SIGUSR2] or both.
+     * @param int|int[] $event optional [SIGUSR1,SIGUSR2] or both.
      * @return mixed from callback
      */
     public function onUserEvent(Closure $callback, int|array $event) {
         $key = $this->proxy->ghostData('key');
-        $buffer = $this->proxy->ghostData('buffer');
         if($key instanceof CliKey){
             $events = is_array($event)? $event : [$event];
-            foreach($events as $event){
-                if(!in_array($events, [SIGUSR1, SIGUSR2])) throw new Exception('invalid type specified');
+            foreach($events as $eventItem){
+                if(!in_array($eventItem, [SIGUSR1, SIGUSR2])) throw new Exception('invalid type specified');
             }
             if($key->inSignals($events)){
                return $callback(GhostProxy::object());
@@ -311,7 +305,6 @@ abstract class CliFetch extends GhostClass {
      */
     public function onSignal(int|array $signal, Closure $callback) {
         $key = $this->proxy->ghostData('key');
-        $buffer = $this->proxy->ghostData('buffer');
         if($key instanceof CliKey){
             $signals = is_array($signal)? $signal : [$signal];
             if($key->inSignals($signals)){
@@ -341,7 +334,6 @@ abstract class CliFetch extends GhostClass {
      */
     public function onWrite(Closure $callback) : bool {
         $key = $this->proxy->ghostData('key');
-        $buffer = $this->proxy->ghostData('buffer');
         if($key instanceof CliKey){
             if($key->isWritable()){
                 $callback(GhostProxy::object());
@@ -349,19 +341,6 @@ abstract class CliFetch extends GhostClass {
         }
         return false;
     }
-
-    // /**
-    //  * This returns the received signal
-    //  *
-    //  * @param int|int $signal supported signals [SIGUSR1,SIGUSR2] or both.
-    //  */
-    // public function signal() : int|false {
-    //     $key = $this->proxy->ghostData('key');
-    //     if($key instanceof CliKey){
-    //         return $key->signal;
-    //     }
-    //     return false;
-    // }
 
     private function setProcess(CliKey $key){
         $buffer = $this->proxy->ghostData('buffer');

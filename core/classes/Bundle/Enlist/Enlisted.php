@@ -10,17 +10,17 @@ abstract class Enlisted extends GhostClass {
     /** Returns a Mutable object */
     private function data() : object { return $this->proxy->ghostData(); }
 
-    /** Returns the current file path */
+    /** Returns the current file path before renamed */
     public function file() : string { return $this->data()->file; }
+
+    /** Alias to {@see Enlisted::file()} */
+    public function path() : string { return $this->data()->file; }
 
     /** Returns the list of all iterated files. */
     public function files() : array { return $this->data()->files; }
 
     /** Returns the total number of iterated files */
     public function count() : int { return $this->data()->count; }
-
-    /** Alias to {@see Enlisted::file()} */
-    public function path() : string { return $this->data()->file; }
 
     /** Name of current file  */
     public function name() : string { return basename($this->file()); }
@@ -34,7 +34,10 @@ abstract class Enlisted extends GhostClass {
     /** Returns the expected final name of a renamed file */
     public function presumedFile() : string  { return $this->data()->presumedFile; }
 
-    /** Returns true when the entire renaming process has been completed */
+    /** 
+     *  Returns true when the entire renaming process has been completed 
+     *  - For accuracy, use within the {@see Enlisted::after()} callback argument.
+     * */
     public function done() : bool { return $this->data()->done; }
 
     /**
@@ -61,8 +64,11 @@ abstract class Enlisted extends GhostClass {
     /** Returns index for every file allowed to be renamed  */
     public function candidateIndex() : int { return $this->data()->candidateIndex; }
     
-    /** Index of files that are renamed. Allows faking when {@see Enlist::view()} is enabled. */
+    /** Each Index of files that are renamed. Allows faking when {@see Enlist::view()} is enabled. */
     public function renamedIndex() : int { return $this->data()->renamedIndex; } 
+    
+    /** Total number of successfully renamed files. Cannot be faked. */
+    public function renamedCount() : int { return $this->data()->renamedCount; } 
 
     /** Alias to  {@see Enlisted::candidateIndex()}  */
     public function index() : int { return $this->candidateIndex(); }

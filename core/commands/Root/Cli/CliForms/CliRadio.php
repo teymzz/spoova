@@ -12,6 +12,8 @@ use spoova\mi\core\commands\Root\Cli\CliScreen;
 
 trait CliRadio {
 
+    use CliFormsModifier;
+
     /**
      * Create an optional radio button animation easily... 
      *
@@ -23,39 +25,29 @@ trait CliRadio {
      *   - width: specifies the width of the radio button's input field where the default width value is 50
      *   - indent: specifies the margin of input field from the left of the CLI screen 
      *   - shape: specifies the shape of the corners of the input radio field. Value are either specified as ```square``` or ```round``` 
-     *   - textColor: specifies colors of text characters which may be specified using supported color names (e.g danger, red, blue)
+    *   - color: selected|unselected text colors; textColor is also accepted for compatibility
      *   - borderColor: specifies colors of text characters which may be specified using supported color names (e.g danger, red, blue)
-     * @param Closure|null $onEnd callback closure(CliTransmit $form) function triggered when the form is submitted or terminated.
+      * @param Closure|null $modifier callback that modifies each option's text and border colors.
+      * @param Closure|null $onEnd callback closure(CliTransmit $form) function triggered when the form is submitted or terminated.
      * @return string $message
      */
-    public static function radio(array $options, ?string $selected = null, string $hint = '', bool $flow = false, array $design = [], ?Closure $onEnd = null)
+    public static function radio(array $options, ?string $selected = null, string $hint = '', bool $flow = false, array $design = self::flow_design, ?Closure $modifier = null, ?Closure $onEnd = null)
     {
 
       self::use_requirements();
-      
-      //requires options and arrows .... 
-      if(!is_numeric($selected) || !array_key_exists($selected, $options)){
-        $selected = 0;
-      }
 
-      $indent = $design['indent'] ?? 0;
-      $indent = (is_numeric($indent)) ? (int) $indent : 0;
-      $indent = CliDraw::fitIndent($indent);            // guard against excessive indent
+      // Get : selected, indent, modifier, defaults
+      $draft = self::draft('choice', compact('options','selected','design','modifier'));
 
-      $width = $design['width'] ?? 50;
-      $width = (is_numeric($width)) ? (int) $width : 50;
-      $width = CliDraw::fitWidth($width, $indent);      // keep box within the screen
+      $selected = $draft['selected'];
+      $shape = $draft['shape'];
+      $width = $draft['width'];
+      $height = $draft['height'];
+      $indent = $draft['indent'];
+      $defaults = $draft['defaults'];
+      $modifier = $draft['modifier'];
 
-      $colors = ['red','green','blue','white','yellow','purple'];
-
-      $textColor = $design['textColor'] ?? CliForms::text_field_color;
-      $textColor = in_array($textColor, $colors)? $textColor : CliForms::text_field_color;
-
-      $borderColor = $design['borderColor'] ?? CliForms::text_field_color;
-      $borderColor = in_array($borderColor, $colors)? $borderColor : CliForms::text_field_color;
-
-      $height = count($options);
-      CliForms::setLines($height+2);
+      CliForms::setLines($height+2); // adjust clear height behaviour
 
       /**
        * Creates a method to display options 
@@ -64,14 +56,22 @@ trait CliRadio {
        *  - @param string **``$selected``** - selected option
        *  - @param string **``$margin``** - left margin
        */
-      $Ghost = new GhostFunction(['displayOptions', 'drawField']);
+      $Ghost = new GhostFunction(['displayOptions', 'drawField','fixColor', 'update']);
 
-      $Ghost->displayOptions(function($options, $selected, $indent){
+      $Ghost->fixColor(function($color) : array {
+        $colors = explode('|', $color);
+        $colors[0] = $colors[0] ?? '';
+        $colors[1] = $colors[1] ?? '';
+        return $colors;
+      });
+
+      $Ghost->displayOptions(function($mod, $options, $selected, $indent) use ($Ghost){
+        [$color1, $color2] = $Ghost->fixColor($mod->textColor);
         foreach ($options as $index => $option){
             if($index === $selected){
-              Cli::moveStart($indent + 2)->textView(Cli::valid(Cli::emo('radio').' '.$option));
+              Cli::moveStart($indent + 2)->textView(Cli::color(Cli::emo('radio').' '.$option, $color1));
             }else{
-              Cli::moveStart($indent + 2)->textView(Cli::emo('radio').' '.$option);
+              Cli::moveStart($indent + 2)->textView(Cli::color(Cli::emo('radio').' '.$option, $color2));
             }
             if($index !== (count($options)-1)) Cli::break(1);
         }
@@ -79,21 +79,30 @@ trait CliRadio {
       });
 
       // Define activity to draw input field when method is called
-      $Ghost->drawField(function($color = CliForms::text_field_color, int $marginTop = 0) use($indent, $hint, $width, $height){      
-        
+      $Ghost->drawField(function($color = CliForms::text_field_color, int $marginTop = 0) use($indent, $hint, $width, $height, $shape){
         // Draw a text field
-        CliDraw::textBox($width, $height, indent: $indent, color: $color, title: $hint);
-
+        CliDraw::textBox($width, $height, indent: $indent, color: $color, title: $hint, shape: $shape);
         // Update cursor position inside text field for text space allowance 
         Cli::moveUp($marginTop);
-
       });
 
-      $selected = (($selected - 1) > 0)? $selected - 1 : 0;
+      // Define method to process modifier
+      $Ghost->update(function($selected, $new = false) use($modifier, $defaults, $options, $indent, $height, $Ghost){
+              if(!$new){
+                Cli::clearLine();
+                Cli::moveDown()->clearUp($height + 1);
+              }
+              $option = $options[$selected];
+              $mod = self::modified($modifier, $defaults, mb_str_split($option));
+                if(in_array(strtolower($mod->borderColor), ['currentcolor','color'])) $mod->borderColor = $Ghost->fixColor($mod->textColor)[0];
+                $Ghost->drawField($mod->borderColor);
+              $Ghost->displayOptions($mod, $options, $selected, $indent);
+      });
+
+      $selected = (($selected - 1) >= 0)? $selected - 1 : 0;
       
       Cli::hideCursor();
-      $Ghost->drawField();
-      $Ghost->displayOptions($options, $selected, $indent);
+      $Ghost->update($selected, true);
 
       $value = Cli::input(function(CliKey $key) use(&$selected, $options, $indent,  $flow, $Ghost, $onEnd){
         if($key->isExit() || $key->isEnter()){
@@ -101,7 +110,7 @@ trait CliRadio {
             if($onEnd){
                 Cli::moveDown()->break(1);
                 $message = $onEnd(new CliTransmit($key, $options[$selected]));
-                if($key->isExit()) Cli::break(2);
+                if($key->isExit()) Cli::break(1);
                 return $message;
             }else{
                 if($key->isEnter()){
@@ -116,35 +125,27 @@ trait CliRadio {
         }elseif($key->isArrow('up') || $key->isArrow('left')){
           if($selected !== 0){
             if(($selected - 1) >= 0){
-              Cli::moveDown()->clearUp(count($options)+1);
               $selected = $selected - 1;
-              $Ghost->drawField();
-              $Ghost->displayOptions($options, $selected, $indent);
+              $Ghost->update($selected);
             }
           }else{
             if($flow){
               $selected = count($options);
-              Cli::moveDown()->clearUp(count($options)+1);
               $selected = $selected - 1;
-              $Ghost->drawField();
-              $Ghost->displayOptions($options, $selected, $indent);
+              $Ghost->update($selected);
             }
           }
         }elseif($key->isArrow('down') || $key->isArrow('right') || ($key->isTab())){
 
           if($selected !== (count($options) - 1)){
             if(($selected + 1) < (count($options))){
-              Cli::moveDown()->clearUp(count($options)+1);
               $selected = $selected + 1;
-              $Ghost->drawField();
-              $Ghost->displayOptions($options, $selected, $indent);
+              $Ghost->update($selected);
             }
           }else{
             if($flow){
-              Cli::moveDown()->clearUp(count($options)+1);
               $selected = 0;
-              $Ghost->drawField();
-              $Ghost->displayOptions($options, $selected, $indent);
+              $Ghost->update($selected);
             }
           }
         }
@@ -155,6 +156,5 @@ trait CliRadio {
       return $value;
       
     }
-
 
 }

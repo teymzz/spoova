@@ -12,6 +12,8 @@ use spoova\mi\core\commands\Root\Cli\CliScreen;
 
 Trait CliSelect {
 
+    use CliFormsModifier;
+
     /**
      * Create an optional radio button form easily... 
      *
@@ -24,10 +26,11 @@ Trait CliSelect {
      *  - shape: optional [square|round].
      *  - color: sets the text color. 
      *  - borderColor: sets the selection box border color.
+     * @param ?Closure $modifier callback function closure(CliTransmit $key) triggered when the form is submitted or terminated.
      * @param ?Closure $onEnd callback function closure(CliTransmit $key) triggered when the form is submitted or terminated.
      * @return string
      */
-    public static function select(array $options, ?string $selected = null, string $hint = '', bool $flow = false, array $design = ['width' => 50, 'indent' => 0, 'shape'=>'square','color'=>CliForms::text_field_color,'borderColor'=>CliForms::text_field_color], ?Closure $onEnd = null) : string
+    public static function select(array $options, ?string $selected = null, string $hint = '', bool $flow = false, array $design = self::flow_design, ?Closure $modifier = null, ?Closure $onEnd = null) : string
     {
 
       self::use_requirements();
@@ -42,6 +45,9 @@ Trait CliSelect {
 
       $width = $design['width'] ?? 50;
       $width = (is_numeric($width)) ? (int) $width : 50;
+
+      $borderColor = $design['borderColor'] ?? CliForms::text_field_color;
+      $textColor = $design['color'] ?? CliForms::text_field_valid_color;
       
       // Ensure width is not greater than screen width at initial draw
       $indent = CliDraw::fitIndent($indent);            // guard against excessive indent
@@ -49,6 +55,22 @@ Trait CliSelect {
 
       CliForms::setLines(3);
       Cli::hideCursor();
+
+      
+       $defaults['textColor'] = $textColor;
+       $defaults['borderColor'] = $borderColor;
+
+      if(!$modifier){
+        $modifier = function(array $chars) use ($borderColor, $textColor){
+          return (object) [
+            'chars' => $chars,
+            'count' => count($chars),
+            'value' => implode('', $chars),
+            'textColor' => $textColor,
+            'borderColor' => $borderColor,
+          ];
+        };
+      }
 
       /**
        * @var object
@@ -60,7 +82,7 @@ Trait CliSelect {
        *  ##### drawField($color) - ***draw a new text field***
        *  ##### ``` $color: specifies the border color for text field ```
        */
-      $Ghost = new GhostFunction(['displayOptions','drawField']);
+      $Ghost = new GhostFunction(['displayOptions','drawField','update']);
 
       // Define activity to draw input field when method is called
       $Ghost->drawField(function($color = CliForms::text_field_color, int $marginTop = 0) use($indent, $hint, $width){      
@@ -84,6 +106,12 @@ Trait CliSelect {
             }
         }
       });
+
+      $Ghost->update(function($selected) use($Ghost, $options, $indent) {
+          $options[$selected];
+          $Ghost->drawField();
+          $Ghost->displayOptions($options, $selected, $indent);
+      });
       
       $selected = (($selected - 1) >= 0)? $selected-1 : 0;
       
@@ -98,7 +126,7 @@ Trait CliSelect {
             if($onEnd){
                 Cli::moveDown()->break(1);
                 $message = $onEnd(new CliTransmit($key, $options[$selected]));
-                if($key->isExit()) Cli::break(2);
+                if($key->isExit()) Cli::break(1);
                 return $message;
             }else{
                 if($key->isEnter()){

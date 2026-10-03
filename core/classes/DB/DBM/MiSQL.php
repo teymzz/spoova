@@ -5,7 +5,6 @@ namespace spoova\mi\core\classes\DB\DBM;
 use spoova\mi\core\classes\DB\DBBridge;
 
 use mysqli;
-use mysqli_sql_exception;
 
 class MiSQL extends DBBridge{
 
@@ -40,14 +39,15 @@ class MiSQL extends DBBridge{
       if(!empty($configs)){
         $db = false;
 
-        suppress_error(test: function() use(&$db){
-          $db = @(new mysqli($this->DBSERVER, $this->DBUSER, $this->DBPASS, $this->DBNAME, intval($this->DBPORT), $this->DBSOCKET));
-        });
-
-  
-        if(!$db){
-          throw new mysqli_sql_exception(mysqli_connect_error());
+       try {
+            $db = new mysqli(
+                $this->DBSERVER, $this->DBUSER, $this->DBPASS,
+                $this->DBNAME, intval($this->DBPORT), $this->DBSOCKET
+            );
+        } catch (\mysqli_sql_exception $e) {
+            throw new \mysqli_sql_exception($e->getMessage(), $e->getCode());
         }
+        
         $this->dbConnection = true;
         $this->conn = $db;
         $this->currentDB = $this->DBNAME;

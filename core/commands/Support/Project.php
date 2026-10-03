@@ -349,10 +349,7 @@ class Project extends Entry{
 
         file_put_contents($LOGIC_FILE, $LOGIC);
 
-        if($logic === ''){
-            /* add map file */
-            (new Filemanager)->createFile($project_path.'/'.'windows/Routes/.map');
-        }
+        if($logic === '')(new Filemanager)->createFile($project_path.'/'.'windows/Routes/.map');  // add map file
 
         //finalize 
         $final = new Welcome(dirname(docroot).DS.$project_name);

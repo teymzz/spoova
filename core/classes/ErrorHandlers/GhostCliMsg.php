@@ -3,16 +3,15 @@
 namespace spoova\mi\core\classes\ErrorHandlers;
 
 use Closure;
-use spoova\mi\core\classes\DB\DBSchema\DRAFT;
 use spoova\mi\core\classes\Ghost\GhostClass;
 use spoova\mi\core\classes\Ghost\GhostDraft;
 use spoova\mi\core\classes\Ghost\GhostProxy;
 use spoova\mi\core\commands\Root\Cli;
-use spoova\mi\core\commands\Root\Cli\CliDev;
 use spoova\mi\core\commands\Root\Cli\CliRuntime;
 use spoova\mi\core\commands\Root\Cli\GhostCli\GhostCliFinal;
+use spoova\mi\core\commands\Root\Cli\GhostCli\Interface\GhostCliMsgInterface;
 
-abstract class GhostCliMsg extends GhostClass {
+abstract class GhostCliMsg extends GhostClass implements GhostCliMsgInterface {
 
     /**
      * Determines if response message is disabled
@@ -55,6 +54,9 @@ abstract class GhostCliMsg extends GhostClass {
 
     /** @var array overrides default fatal error message  */
     private array $onFatal = [];
+
+    /** @var array default message when an argument validation fails  */
+    private array $argumentsEvent = [];
 
     /**
      * optional
@@ -157,16 +159,17 @@ abstract class GhostCliMsg extends GhostClass {
     /**
      * Sets custom error message
      *
-     * @param closure $callback
+     * @param closure $callback recieves {@see GhostCliFinal} object.
      * @return void
      */
-    function onFinal(Closure $callback, string $type = 'before') : void {
+    function onFinal(Closure $callback, string $type = 'before', bool $exit = false) : void {
         if($type === 'before') {
             GhostProxy::new([], fn(GhostDraft $draft) => new class($draft) extends GhostCliFinal{});
             $callback(GhostProxy::object());
             Cli::break();
         }
         if($type === 'after') HandleCliErrors::final($callback);
+        if($exit) exit;
     }
 
     /**
@@ -226,35 +229,23 @@ abstract class GhostCliMsg extends GhostClass {
             $error['title'] = ' '.trim($error['title']).' ';
             $error['break'] = 2;
             Cli::infoView(...$error);
+        }else if($this->argumentsEvent){
+            foreach($this->argumentsEvent as $argumentEvent){
+                $notice = $argumentEvent;
+                $notice['title'] = ' '.trim($notice['title']).' ';
+                $notice['break'] = 2;
+                $exit = $notice['exit'] ?? false;
+                unset($notice['exit']);
+                Cli::infoView(...$notice);
+                Cli::moveUp();
+                exit;
+            } 
         }else if($this->onNotice) {
             $notice = $this->onNotice;
             $notice['title'] = ' '.trim($notice['title']).' ';
             $notice['break'] = 2;
             Cli::infoView(...$notice);
         }
-        
-        // if($isFatal && $this->fatal_message) {
-        //     if(is_array($this->fatal_message)){
-        //         Cli::infoView(...$this->fatal_message);
-        //     }else{
-        //         Cli::infoView(' Info ', $this->fatal_message);
-        //     }
-        // }else if($this->default_message){
-        //     if(is_array($this->default_message)){
-        //         Cli::infoView(...$this->default_message)->break(2);
-        //     }else{
-        //         Cli::infoView(' Info ', $this->default_message, break: Cli::isTerminal(['linux','wt'])? 2 : 1);
-        //     }
-        // }else{
-
-        //     $hasMsg = in_array('dmsg', $properties) ? $this->proxy->dmsg : false;
-            
-        //     if($hasMsg !== false){
-        //         $dmsg = $this->proxy->dmsg;
-        //         Cli::infoView($dmsg['title'], $dmsg['message'], indent: $dmsg['indent'], break: 2);
-        //     }
-
-        // }
 
     }
 
@@ -267,7 +258,7 @@ abstract class GhostCliMsg extends GhostClass {
         return $this->isExecuted;
     }
     /**
-     * Returns TRUE only after the {@see GhostCliMsg::execute()} function has been called at least once.
+     * Executes a callback function which recieves the total amount of time required to execute a command
      *
      * @return void
      */
@@ -276,5 +267,8 @@ abstract class GhostCliMsg extends GhostClass {
         $callback($time);
     }
 
+    public function ghostInit() : void {
+         $this->argumentsEvent = [];
+    }
 
 }

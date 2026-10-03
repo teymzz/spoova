@@ -9,7 +9,6 @@ use spoova\mi\core\classes\Bundle\Enlist\Enlisted;
 use spoova\mi\core\classes\Ghost\GhostDraft;
 use spoova\mi\core\classes\Ghost\GhostFunction;
 use spoova\mi\core\classes\Ghost\GhostProxy;
-use spoova\mi\core\commands\Root\Cli;
 
 /**
  * This package is provides features such as listing files in a directory, 
@@ -338,11 +337,11 @@ class Enlist{
 
         if(!$this->active) return [];
         $this->result = [];
-
+        $thisExt = isset($this->ext)? $this->ext : [];
 		$url  = $this->url;
 		$files = [];
 		$ext = (array) $extension;
-        $ext = $ext?: ['*'];
+        $ext = $ext?:  $thisExt ?: ['*'];
         $dirHidden = [];
 
         if($this->validate_extension($ext)) {
@@ -440,7 +439,8 @@ class Enlist{
             'status' => 0, 'isView' => $isViewOnly, 'runAfter' => false, 'avert' => false,
             'isRenamed' => false, 'isSelected' => false, 'loopIndex' => 0, 'candidateIndex' => 0,
             'renamedIndex' => -1, 'error' => [], 'fileNames' => [], 'count' => count($files),
-            'badName' => false, 'usedNames' => [], 'identical' => false, 'exists' => false
+            'badName' => false, 'usedNames' => [], 'identical' => false, 'exists' => false,
+            'renamedCount' => 0
         ];
 
         if($callback){
@@ -560,6 +560,8 @@ class Enlist{
 
                     $selected = ($isViewOnly || $isRenamed) && !$isIdentical && !$targetExists;
 
+                    if($isRenamed) $info->renamedCount++;
+
                     if($selected) {
                         $renamedCounter++;
                         $vanished[] = $file;        // this original path no longer "exists" from here on
@@ -582,7 +584,6 @@ class Enlist{
                         $info->renamedIndex = $selected ? ($renamedCounter - 1) : $info->renamedIndex;
                         $info->done = $loopCounter === count($files);
                         $info->status = round(($loopCounter / count($files)) * 100);
-                        //$info->file = $file;
                         $newfile = $info->newFile;
 
                         if(!$selected) $info->newFile = $file;
@@ -950,8 +951,6 @@ class Enlist{
         }
         return $files;
     }
-
-    
 
 }
 

@@ -12,9 +12,9 @@ use spoova\mi\core\commands\Root\Cli\CliDraw;
 abstract class CliDrawer { 
 
     protected Cli $cli;
-    protected $shape;
-    protected $color;
-    protected $write;
+    protected string $shape;
+    protected string $color;
+    protected array $write;
     protected $draw = [];
     protected ?array $textStarts = null;
 
@@ -54,7 +54,14 @@ abstract class CliDrawer {
     }
 
 
-    public function write($text, ?Closure $mod = null) {
+    /**
+     * Write a text into the shape drawn
+     *
+     * @param string $text
+     * @param Closure|null $mod
+     * @return void
+     */
+    public function write(string $text, ?Closure $mod = null) {
         
         $this->entry();
         $width = $this->proxy->ghostData('width');
@@ -78,20 +85,33 @@ abstract class CliDrawer {
 
     }
 
-    /** box input entry */
+    /**
+     * Box input entry point
+     *
+     * @param integer $rowplus additional row movement
+     * @param integer $colplus aditional column movement
+     * @return void
+     */
     public function entry($rowplus = 0, $colplus = 0) {
 
         $startTexts['col'] = $this->textStarts['x']; 
         $startTexts['row'] = $this->textStarts['y']; 
-        // $startTexts['col'] = $this->draw['startX'] + 1 + $this->draw['indentLeft']; 
         
         if($startTexts['row'] < 0) $startTexts['row'] = 0;
         if($startTexts['col'] < 0) $startTexts['col'] = 0;
 
-        Cli::moveTo($startTexts['col'], $startTexts['row']);
+        Cli::moveTo($startTexts['col'] + $colplus, $startTexts['row'] + $rowplus);
     }
 
-    public function draw($shape = 'square', $color = '', $title='') : CliDrawer {
+    /**
+     * Draw a shape on CLI.
+     *
+     * @param string $shape optional [banner|cap-round||capture|round|square]
+     * @param string $color
+     * @param string $title
+     * @return CliDrawer
+     */
+    public function draw(string $shape = 'square', string $color = '', string $title='') : CliDrawer {
         
         $width = $this->proxy->ghostData('width');
         $height = $this->proxy->ghostData('height');
@@ -101,7 +121,6 @@ abstract class CliDrawer {
         }else{
             $indentXL = $this->draw['indentLeft'];
         }
-
 
         // Draw lines axis
         if(!isset($this->draw['startX'])) $this->draw['startX'] = $this->proxy->ghostData('col');
@@ -146,19 +165,10 @@ abstract class CliDrawer {
     public function moveLeft($length = 1){
 
         $length = $length < 0? 0: $length;
-        
-        $width = $this->proxy->ghostData('width');
-        $height = $this->proxy->ghostData('height');
 
         Cli::moveTo($this->draw['endX'], $this->draw['endY']); // move to last draw line
 
         $this->clearBox();
-        // // wipe box for redrawing
-        // for($i=0; $i <= $height+1; $i++){
-        //     Cli::moveback($width + 1); 
-        //     Cli::textPlain(str_repeat(' ',$width+2));
-        //     Cli::moveBack(1)->moveUp(1);
-        // }
 
         //prevent indent from moving beyond the initial point
         for($i=0; $i<=$length; $i++){
@@ -179,19 +189,10 @@ abstract class CliDrawer {
     public function moveRight($length = 1){
 
         $length = $length < 0? 0: $length;
-        
-        $width = $this->proxy->ghostData('width'); // width of box
-        $height = $this->proxy->ghostData('height'); // height of box
 
         Cli::moveTo($this->draw['endX'], $this->draw['endY']); // move to last draw line
         
         $this->clearBox();
-        // // Wipe box for redrawing
-        // for($i=0; $i <= $height+1; $i++){
-        //     Cli::moveback($width + 1); 
-        //     Cli::textPlain(str_repeat(' ',$width+2));
-        //     Cli::moveBack(1)->moveUp(1);
-        // }
 
         //prevent indent from moving beyond the initial point
         for($i=0; $i<=$length; $i++){

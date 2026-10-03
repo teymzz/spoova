@@ -197,7 +197,7 @@ class Root extends Entry{
 
         // Handle environmental directive
         if(!is_file(_core.'custom/app')){
-            Cli::textView(Cli::error('invalid command '.Cli::warn('"repack"')));
+            Cli::textView(Cli::error('permission disabled for '.Cli::warn('"repack"')));
             Cli::break(2);
             yield false; //stop here
         }
@@ -210,104 +210,126 @@ class Root extends Entry{
         $crest_name = self::crest;
         $crest_path = _core.'custom/';
         $crest_spac = _core.'custom/'.self::crest;
-        $crest_file = _core.'custom/'.self::crest.'.re';
         $crest_root = '';
-        
-        $sys_cresp  = sys.'/'.self::crest;
-        $sys_cresf  = sys.'/'.self::crest;
 
         yield from Cli::play(3, Cli::color(Cli::emos('hot', 1),'blue').'spoova build ... '); //stage 3
 
-        // Generate a spack file 
-        if(!is_file($crest_file)) {
-            
+        // Display message
+        yield from Cli::play(4, Cli::color(Cli::emos('hot', 1),'blue').'spoova [establishing fingerprint] ... '); //stage 4
+
+        $rebuildExclude = ['backup', '.git', 'core/storage', 'fingerprint'];
+        $manifestContent = static function(string $content, string $relativePath) : string {
+            if($relativePath !== 'core/custom/app') return $content;
+            return preg_replace('/^\s*fingerprint\s*:\s*.*(?:\R|$)/mi', '', $content) ?? $content;
+        };
+        $Filemanager->setFingerprintMode('content', $manifestContent);
+
+        // Staleness check: skip regeneration entirely if nothing has changed
+        $currentFingerprint = $Filemanager->fingerprint(docroot, $rebuildExclude);
+        $manifest = Filemanager::load(_core.'custom/app', delimiter: '');
+        $storedFingerprint = $manifest['fingerprint'] ?? null;
+
+        yield from Cli::play(10, Cli::color(Cli::emos('hot', 1),'blue').'spoova [authenticating fingerprint] ... ');
+
+        $needsRebuild = !is_file($crest_spac) || $storedFingerprint !== $currentFingerprint;
+
+        if(!$needsRebuild) {
             Cli::clearLine();
-            yield from Cli::play(4, Cli::color(Cli::emos('hot', 1),'blue').'spoova [checking compiler] ... '); //stage 4
+            Cli::textView(Cli::color(Cli::emos('hot', 1),'blue').'spoova [compiler up to date, skipping rebuild] ... ');
+            Cli::pause(1);
+
+            Cli::clearLine();
+            Cli::textView(Cli::alert(Cli::emos('hot', '1').'spoova repack: ').Cli::valid('maintained'), break: 1);
+            return ;
+        } 
+
+        // remove existing spack file
+        if(is_file($crest_spac))
+        {
+            yield from Cli::play(4, Cli::color(Cli::emos('hot', 1),'blue').'spoova [initializing process] ... '); //stage 5
+            unlink($crest_spac);
+        }
             
-            //unlink any spack file
-            if(is_file($crest_spac))
-            {
-                Cli::clearLine();
-                yield from Cli::play(4, Cli::color(Cli::emos('hot', 1),'blue').'spoova [initializing process] ... '); //stage 5
-                unlink($crest_spac);
+        yield from Cli::play(5, Cli::color(Cli::emos('hot', 1),'blue').'spoova [preparing to stage files] ... '); //stage 6
+
+        //  execute process: remove existing spv file
+        $spv = _core.'custom/spv';
+        $Filemanager->removeFile($spv);
+
+        // set zip file recursive callback event
+        $Filemanager->zipProgress(function(FileCompressor $info) {
+            
+            if($info->status === 0) Cli::clearLine();
+            Cli::moveStart()->textView(Cli::color(Cli::emos('hot', 1),'blue').'spoova [staging files for compression]['.$info->status.'%] ... ');
+            if($info->status === 100){
+                Cli::pause(1)->clearLine();
+                Cli::textView(Cli::color(Cli::emos('hot', 1),'blue').'spoova [repacking process may take a while] ... '.Cli::warn('please wait'));
             }
                 
-            // yield 5; //stage 6
-            Cli::clearLine();
-            yield from Cli::play(5, Cli::color(Cli::emos('hot', 1),'blue').'spoova [preparing to stage files] ... '); //stage 6
-            
-            $Filemanager->setUrl(docroot);
-            $i = false;
+        });
 
-            $Filemanager->zipProgress(function(FileCompressor $info) use(&$i){
-                
-                if($info->status === 0) Cli::clearLine();
-                Cli::moveStart()->textView(Cli::color(Cli::emos('hot', 1),'blue').'spoova [staging files for compression]['.$info->status.'%] ... ');
-                if($info->status === 100){
-                    Cli::pause(1)->clearLine();
-                    Cli::textView(Cli::color(Cli::emos('hot', 1),'blue').'spoova [repacking process may take a while] ... '.Cli::warn('please wait'));
-                }
-                    
-            });
-            
-            $spv = _core.'custom/spv';
+        // execute process: create new spv file
+        $Filemanager->setUrl(docroot);
+        $Filemanager->zipUrl(_core.'custom/spv', $rebuildExclude);  
 
-            $Filemanager->removeFile($spv);
+        Cli::clearLine();
+        Cli::textView(Cli::color(Cli::emos('hot', 1),'blue').'spoova repack: '.Cli::valid('process completed').' ... ');
+        Cli::pause(2);
 
-            $Filemanager->zipUrl(_core.'custom/spv', ['backup','.git','core/storage']);  
+        // execute process:  move generated spv to spack file.
+        yield from Cli::play(5, Cli::color(Cli::emos('hot', 1),'blue').'spoova [remapping compiler] ... '); //stage 7
+        $Filemanager->setUrl(_core.'custom/spv.zip'); 
+        $Filemanager->moveTo(_core.'custom/', self::crest);
 
-            Cli::clearLine();
-            Cli::textView(Cli::color(Cli::emos('hot', 1),'blue').'spoova repack: '.Cli::valid('process completed').' ... ');
-
-            Cli::pause(2);
-            
-            Cli::clearLine();
-            yield from Cli::play(5, Cli::color(Cli::emos('hot', 1),'blue').'spoova [remapping compiler] ... '); //stage 6
-            $Filemanager->setUrl(_core.'custom/spv.zip'); 
-            $Filemanager->moveTo(_core.'custom/', self::crest);
-
-            if($Filemanager->fails()) {
-                $this->addError($Filemanager->err()); 
-                yield false;
-                return false;
-            }
-            
-            Cli::clearLine();
-            yield from Cli::play(5, Cli::color(Cli::emos('hot', 1),'blue').'spoova [updating configurations] ... '); //stage 7
-            
-            //update app installer
-            $Filemanager->setUrl(_core.'custom/app');
-            $Filemanager->textUpdate(
-                [   
-                    'app'     => 'spoova',
-                    'version' => SP_VERSION,
-                    'spack'   => $crest_name,
-                    'path'    => $crest_path,
-                    'install' => '1',
-                    'complete'=> 'false',
-                ]);
-
+        if($Filemanager->fails()) {
+            $this->addError($Filemanager->err()); 
+            yield false;
+            return false;
         }
 
-        Cli::animeType('arrows');
-        Cli::clearLine();
-        yield from Cli::play(4, Cli::color(Cli::emos('hot', 1),'blue').'spoova [cleaning redundant files] ... '); //stage 8
+        //  execute process: update app config file          
+        yield from Cli::play(5, Cli::color(Cli::emos('hot', 1),'blue').'spoova [updating configurations] ... '); //stage 8
+        
+        $Filemanager->setUrl(_core.'custom/app');
+        $Filemanager->delimiter();
 
-        //Read from app installer
+        $newManifest = [   
+                'app'     => 'spoova',
+                'version' => SP_VERSION,
+                'spack'   => $crest_name,
+                'path'    => $crest_path,
+                'install' => '1',
+                'complete'=> 'false',
+            ];
+
+        // Captures what's changed/missing in both directions
+        $diff1 = \array_diff_assoc($manifest, $newManifest); 
+        $diff2 = \array_diff_assoc($newManifest, $manifest); 
+
+        $different = array_merge($diff1, $diff2);
+
+        if($different){
+            $Filemanager->textUpdate($newManifest);
+        }
+        
+        Cli::animeType('arrows');
+        yield from Cli::play(4, Cli::color(Cli::emos('hot', 1),'blue').'spoova [cleaning redundant files] ... '); //stage 9
+
+        // Read from app installer
         $Filemanager->setUrl(_core.'custom/app'); 
         $app = $Filemanager::load(_core.'custom/app');
         
-        Cli::clearLine();
-        yield from Cli::play(1, Cli::color(Cli::emos('hot', 1),'blue').'spoova [finalizing process] '); //stage 9
+        yield from Cli::play(1, Cli::color(Cli::emos('hot', 1),'blue').'spoova [finalizing process] '); //stage 10
         Cli::pause(2); Cli::clearLine();
 
         //* Handle incomplete setup
         if(isset($app['root'])) $Filemanager->textDelete(['root']);
 
         $this->complete_setup($crest_root);
-        
+        yield from self::lock($rebuildExclude, $manifestContent);
+        Cli::clearLine();
         Cli::textView(Cli::alert(Cli::emos('hot', '1').'spoova repack: ').Cli::valid('successful'));
-        
+
     }
 
     /**
@@ -320,16 +342,15 @@ class Root extends Entry{
 
         $Filemanager = new Filemanager;
         $Filemanager->setUrl(_core.'custom/app'); 
+        $Filemanager->delimiter();
 
         if($crest_root){
-
             if(!$Filemanager->readFile('root', true)){
                 $Filemanager->textWrite(
                     ['root' => $crest_root], ['after' => 'spack']);
             } else {
                 $Filemanager->textUpdate(['root' => $crest_root]);
             }
-
 
         }
 
@@ -338,6 +359,16 @@ class Root extends Entry{
             'complete'=> 'true',
         ]);
 
+    }
+
+    private static function lock(array $exclusive, \Closure $contentFilter){
+        yield from Cli::play(10, 'Establishing fingerprint');
+        $Filemanager = new Filemanager;
+        $Filemanager->setFingerprintMode('content', $contentFilter);
+        $newFingerprint = $Filemanager->fingerprint(docroot, $exclusive);
+        $Filemanager->setUrl(_core.'custom/app');
+        $Filemanager->delimiter();
+        $Filemanager->textUpdate(['fingerprint' => $newFingerprint]);
     }
 
     public static function initalize(array $commands){

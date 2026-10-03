@@ -6,6 +6,7 @@
   require_once 'custom/ErrorHandler.php';  
   require_once 'custom/functions.php'; 
   require_once 'custom/helpers.php'; 
+  require_once 'custom/helpmate.php'; 
   
   //include accessory files  controller
   require_once docroot.'/core/custom/base-files.php'; 

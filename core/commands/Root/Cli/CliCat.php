@@ -2,10 +2,9 @@
 
 namespace spoova\mi\core\commands\Root\Cli;
 
-use ReflectionMethod;
-use ReflectionNamedType;
+use spoova\mi\core\classes\Container\Container;
 use spoova\mi\core\classes\ErrorHandlers\HandleCliErrors;
-use spoova\mi\core\classes\Init; 
+use spoova\mi\core\classes\Init;
 use spoova\mi\core\commands\Consoler\Consoler;
 use spoova\mi\core\commands\Root\Cli;
 
@@ -16,6 +15,8 @@ use spoova\mi\core\commands\Root\Cli;
  */
 class CliCat {
 
+
+    public const latent_mode = false; /* defined to silent errors */
 
     public function __construct(string $cat, string $command, array $arguments)
     {
@@ -67,13 +68,16 @@ class CliCat {
                     if(method_exists($controller, 'validate_console') && method_exists($controller, 'isAuto')){
 
                         if($controller::isAuto()){ 
+                            /* Consoler Commands handled automatically with Consoler setOps */
                             $this->handleAutoCommands($controller, $args);
                         } else {
-                            $this->handleInterfacedCommands($base, $cat, $controller, $args);
+                            /* Consoler Commands handled manually with custom defined cat methods */
+                           $this->handleInterfacedCommands($base, $cat, $controller, $args);
                         }
 
                     }else{
-                        $this->handleDirectClass($controller, $args);
+                         /* Commands handled using raw direct class without extension to Consoler */
+                       $this->handleDirectClass($controller, $args);
                     }
 
                 } else {
@@ -104,28 +108,33 @@ class CliCat {
      * @return void
      */
     private function handleAutoCommands($controller, array $args){
-
+        
         // set auto interfaced controllers to use custom methods
         if($method = $controller::validate_console($args)){
             $arg = $args[count($args)-1]; // string argument
-            
-            $class = new $controller(); // instantiate the custom Auto controller
+
+            if (defined("$controller::latent_mode")) {
+                /** @var CliCat $controller  */
+                Cli::silentErrors($controller::latent_mode, forceBreak: true);
+            }  
+                      
+            $class = new $controller(); // instantiate the custom Auto controller (Consoler)
 
             if(is_array($method)){
 
-                // parse method and arguments
+                // parse method and arguments with ellipsis
                 $args = $method;
                 $method = $args[0];
                 unset($args[0]); $args = array_values($args); // filter out and resort arguments
-
+        
                 if(method_exists($controller, $method)){
-                    $class->$method($args); // parse only arguments to method (try resolving this with dependency)
+                    self::resolveMethod($class, $method, $args, 'consoler_arguments');
                 }else{
                     Cli::response(false);
                     Cli::textView(Cli::error('missing control method('.Cli::warn($method).') for "'.Cli::warn($arg).'"'), break: 1);
                 }
             }elseif(method_exists($controller, $method)){
-                $class->$method($arg); // parse the method as the only argument
+                self::resolveMethod($class, $method, $args, 'consoler_method');
             } else {
                 Cli::response(false);
                 Cli::textView(Cli::error('missing control method('.Cli::warn($method).') for "'.Cli::warn($arg).'".'), break: 1);
@@ -134,8 +143,8 @@ class CliCat {
     }
 
     /**
-     * Handle interfaced commands
-     *
+     * Handle interfaced commands. Commands extended to Consoler but where auto is disabled and cat handler methods are defined manually,
+     *   - These commands are execute through formatting the cat method triggers.
      * @param string $base base of command called.
      * @param string $cat cat typed called.
      * @param Consoler|string $controller
@@ -149,7 +158,13 @@ class CliCat {
 
         $method  = $cats[$cat] ?? '';
 
-        if(method_exists($class, $method)) return $class->$method($args);
+        if(method_exists($class, $method)){ 
+            if (defined("$class::latent_mode")) {
+                /** @var CliCat $class  */
+                Cli::silentErrors($class::latent_mode, forceBreak: true);
+            }
+            return self::resolveMethod($class, $method, $args, 'consoler_formatter');
+        }
         
         $meth = $method ? '('.Cli::warn($method).')' : '';
         Cli::response(false);
@@ -164,21 +179,50 @@ class CliCat {
      * @return void
      */
     private function handleDirectClass(string $controller, array $args){
+
+        Cli::break(1); // applies line break after command is executed
         if(defined("$controller::latent_mode")){
+
             if($controller::latent_mode === true){
                 Cli::silentErrors(true); // disable (silence) warning errors before initializing class. (fatal error remains enabled)
-                new $controller($args);
+                Cli::silentErrors(forceBreak: true);
+                self::resolveClass($controller, $args, 'direct_lantent_mode');
                 Cli::silentErrors(false);
                 Cli::consoleErrors(true); // ensure that all silent errors are always displayed. (displaying undisplayed errors later)
             }else{
                 Cli::silentErrors(false); // enable all errors before initializing class.
-                new $controller($args);
+                self::resolveClass($controller, $args, 'direct_lantent_none');
             }
         }else{
-            //Cli::silentErrors(true);
-            new $controller($args);
+            self::resolveClass($controller, $args, 'direct_free_mode');
             HandleCliErrors::consoleErrors(false, false);
         }
+    }
+
+    /**
+     * Resolve command methods with dependencies
+     *
+     * @param  object|string $class namespace of {@see Consoler}
+     * @param string $method
+     * @param array $args
+     * @param string $handler Recieved as : 
+     *    - consoler_formatter : Consoler command's handled using cat control methods' trigger.
+     *    - consoler_arguments : Consoler command's handled using setOps argument parser. 
+     *    - consoler_method : Consoler command's handled using direct method trigger.
+     * @return mixed
+     */
+    private static function resolveMethod($class, string $method, array $args, string $handler){
+        HandleCliErrors::launch();
+        Container::instance()->with('dependencies?')->dispatch($class::class, $args); // use dependencies method to resolve if it exists
+        return Container::instance()->callMethod($class, $method, $args); // using container to handle method
+    }
+
+    private static function resolveClass(string $class, array $args, string $handler){
+        HandleCliErrors::launch();
+        $Container = Container::instance();
+        $Container->with('dependencies?')->dispatch($class); // use dependencies method to resolve if it exists
+        $Container->make($class, [$args]);
+        HandleCliErrors::consoleErrors(false, false);
     }
 
 }

@@ -90,7 +90,6 @@ abstract class FileTransfer extends GhostClass {
      */
     public function error() : string|null  { return $this->proxy->error(); }
 
-
     public function is_dir() : bool  { return is_dir($this->file()); }
     public function is_file() : bool { return is_file($this->file()); }
     public function type() : string  { return $this->is_dir() ? 'directory' : 'file'; }

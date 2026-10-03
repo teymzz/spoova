@@ -14,6 +14,8 @@ use spoova\mi\core\commands\Root\Cli\CliScreen;
 
 trait CliRange {
 
+    use CliFormsModifier;
+
     /**
      * Creates an input range on the CLI screen
      *
@@ -35,8 +37,14 @@ trait CliRange {
      * @param Closure|null $onEnd callback closure(CliTransmit $form) function triggered when the form is submitted or terminated.
      * @return string response
      */
-    public static function range($type = 'lines', array $value = [], ?string $selected = null, string $placeholder = '', string $hint = '', array $design = ['width'=>25, 'indent' => 0, 'shape'=>'square','textColor'=>CliForms::text_field_color,'borderColor'=>CliForms::text_field_color], ?Closure $modifier = null, ?Closure $onEnd = null){
+    public static function range($type = 'lines', array $value = [], ?string $selected = null, string $placeholder = '', string $hint = '', array $design = self::design, ?Closure $modifier = null, ?Closure $onEnd = null){
         self::use_requirements();
+
+        if($value === []){
+            Cli::textView(Cli::error('input range requires at least one range'))->break(2);
+            exit;
+        }
+
         $min_width = 25;
         $width = $design['width'] ?? $min_width;
         $indent = $design['indent'] ?? 0;
@@ -45,25 +53,23 @@ trait CliRange {
         $borderColor = $design['borderColor'] ?? CliForms::text_field_color;
         $keys = array_keys($value);
         $percents = array_values($value);
-        $prevVal = null;
         CliForms::setLines(3);
 
-        foreach($value as $key => $val){
-            if($prevVal === null) {
-                $prevVal = $percents[0];
-            }else{
-
-                if($val < $prevVal){
-                    Cli::textView(Cli::error('invalid value format detected for input range'))->break(2);
-                    exit;
-                }
-
-                if($val > 100){
-                    Cli::textView(Cli::error('invalid value format detected for input range'))->break(2);
-                    exit;
-                }
-                $prevVal = $val;
+        $prevVal = null;
+        foreach($value as $val){
+            if(!is_numeric($val) || $val < 0 || $val > 100 || ($prevVal !== null && $val < $prevVal)){
+                Cli::textView(Cli::error('invalid value format detected for input range'))->break(2);
+                exit;
             }
+            $prevVal = $val;
+        }
+
+        $hasSelection = $selected !== null;
+        if($hasSelection && !array_key_exists($selected, $value)){
+            $trace = Debug::get(0);
+            Cli::textView(Cli::error('invalid default range supplied in '.$trace['file'].' on line '.$trace['line']));
+            Cli::break(2);
+            exit;
         }
   
         // set accepted configuration for default values 
@@ -89,6 +95,11 @@ trait CliRange {
         $types = explode('-', $type, 2);
         $type = $types[0];
         $animationEffect = $types[1] ?? null;
+
+        if(!array_key_exists($type, $charAnimes)){
+            Cli::textView(Cli::error('invalid range type supplied'))->break(2);
+            exit;
+        }
         
         if(($animationEffect !== null)){
             if(!is_numeric($animationEffect) || !is_int($animationEffect + 0)){
@@ -104,16 +115,16 @@ trait CliRange {
         $increase = 0;
   
         if(!$modifier){
-          $modifier = function($chars){
+                    $modifier = function($chars) use($color, $borderColor){
+                        $chars = is_array($chars)? $chars : str_split((string) $chars);
             
-            return (object) [
+                        return [
               'chars' => $chars,
               'count' => count($chars),
               'value' => implode('', $chars),
-              'textColor' => CliForms::text_field_color, 
-              'borderColor' => CliForms::text_field_color, 
+                            'textColor' => $color,
+                            'borderColor' => $borderColor,
             ];
-  
           };
         }
   
@@ -182,7 +193,11 @@ trait CliRange {
         });
         
         //Define activity to write a new text into the text box created
-        $GhostFunction->writeInput(function($text = '') use($indent, &$boxWidth) {
+                $GhostFunction->writeInput(function($text = '') use($indent, &$boxWidth, &$box) {
+                    if(isset($box['text-start'])){
+                        $textStart = $box['text-start'];
+                        Cli::moveTo($textStart['col'], $textStart['row']);
+                    }
           Cli::moveStart($indent + 1)
              ->textPlain(str_repeat(" ", $boxWidth))
              ->moveStart($indent + 1);
@@ -196,9 +211,14 @@ trait CliRange {
           Cli::restoreCursor();
         });
 
-        $baseInc = $selected ? $value[$selected] : 0;
+        $defaults = [
+            'textColor' => $color,
+            'borderColor' => $borderColor,
+        ];
 
-        $mod = self::modified($modifier, str_split("$baseInc"), 'string');
+        $baseInc = $hasSelection? $value[$selected] : $percents[0];
+
+        $mod = self::modified($modifier,  $defaults, str_split("$baseInc"), 'string');
         $color = property_exists($mod, 'textColor')? $mod->textColor : CliForms::text_field_color;
         $bdcolor = property_exists($mod, 'borderColor')? $mod->borderColor : '';
 
@@ -211,20 +231,14 @@ trait CliRange {
         // slider reserves 2 columns for the roller, so its track is box-w - 2
         $divider = ($type === 'slider') ? ($info['box-w'] - 2) : $info['box-w'];
 
-        if(!$selected){
-            $increment = intval(($percents[0]??0) / 100 * $divider);
+        if(!$hasSelection){
+            $increment = intval($percents[0] / 100 * $divider);
             $percentIncrease = str_repeat($bgcolor, max(0, $increment));
             if($type === 'slider'){
                 $percentIncrease .= Cli::bgColor('  ', $color);
                 $percentIncrease .= str_repeat($charAnime, max(0, ($info['box-w'] - 2) - $increment));
             }
         }else{
-            if(!array_key_exists($selected, $value)){
-                $trace = Debug::get(0);
-                Cli::textView(Cli::error('invalid default range supplied in '.$trace['file'].' on line '.$trace['line']));
-                Cli::break(2);
-                exit;
-            }
             $increment = intval(($value[$selected]) / 100 * $divider);
             $percentIncrease = str_repeat($bgcolor, max(0, $increment));
             if($type === 'slider'){
@@ -235,8 +249,9 @@ trait CliRange {
         }
 
         // Start by drawing the input field
+        $drawnBorderColor = $bdcolor ?: $color;
         $initialPos = Cli::cursor();
-        $GhostFunction->drawField($color, increase: $increase);
+        $GhostFunction->drawField($drawnBorderColor, increase: $increase);
 
         $finalPos = Cli::cursor();
         if($percentIncrease){
@@ -252,27 +267,16 @@ trait CliRange {
         Cli::hideCursor(); // Start by hiding cursor
         
         // Stream input into the text box field ......................................................................
-        return CliInput::input(function(CliKey $key) use ($type, $animationEffect, &$resizing, $initialPos, $finalPos, &$info, $GhostFunction, $color, $bgcolor, $percentIncrease, $percents, $onEnd, $modifier, &$increase, $indent, $charAnime, &$incremental) {
+        return CliInput::input(function(CliKey $key) use ($type, $animationEffect, &$resizing, $initialPos, $finalPos, &$info, $GhostFunction, $color, $bgcolor, $percentIncrease, $percents, $onEnd, $modifier, $defaults, &$increase, $indent, $charAnime, &$incremental, &$drawnBorderColor) {
           
           // if($key->isSignal(SIGWINCH)){ /* no support provided ... */ }
             
-          // $info['box-w'] = $boxWidth = CliScreen::width() - 2;
-          // $start = $finalPos['row'] + 4;
-          // $end = $initialPos['row'];
-          // Cli::moveTo(1, $start)->clearLine();
-          // for($i = $start; $i >= $end; $i--){
-          //     echo "\033[2K";
-          //     echo Cli::moveTo(1, $i);
-          //     echo "\033[2K";
-          //     Cli::clearLine();
-          // }
-
           if($key->isExit() || $key->isEnter()){
             
             if($onEnd){
                 Cli::moveDown()->break(1);
                 $message = $onEnd(new CliTransmit($key, $info['keys'][$increase]));
-                if($key->isExit()) Cli::break(2);
+                if($key->isExit()) Cli::break(1);
                 return $message;
             }else{
                 if($key->isEnter()){
@@ -297,24 +301,19 @@ trait CliRange {
                 return false;
             }
             
-            if($modifier){
-                $text = str_repeat($charAnime, $inc<0?0:$inc);
-                // $mod = $modifier($info['percents'][$increase]);
-                // if(is_array($mod)) $mod = (object) $mod;
-                $mod = self::modified($modifier, str_split((string)$info['percents'][$increase]), 'string');
-                $color = property_exists($mod, 'textColor')? $mod->textColor : CliForms::text_field_color;
-                $bdcolor = property_exists($mod, 'borderColor')? $mod->borderColor : CliForms::text_field_color;
-                
-                
-                if($type === 'slider'){
-                    $text = Cli::color($text, $color);
-                    $text .= Cli::bgcolor('  ', $color); //slider
-                    $rollerGrow = $info['box-w'] - 2 - $inc;
-                    $rollerGrow = $rollerGrow < 0? 0 : $rollerGrow;
-                    $text .= str_repeat($charAnime, $rollerGrow);
-                }else{
-                    $text = ($charAnime === ' ')? Cli::bgcolor($text, $color) : Cli::color($text, $color);
-                }
+            $text = str_repeat($charAnime, max(0, $inc));
+            $mod = self::modified($modifier, $defaults, str_split((string)$info['percents'][$increase]), 'string');
+            $color = property_exists($mod, 'textColor')? $mod->textColor : CliForms::text_field_color;
+            $bdcolor = property_exists($mod, 'borderColor')? $mod->borderColor : CliForms::text_field_color;
+
+            if($type === 'slider'){
+                $text = Cli::color($text, $color);
+                $text .= Cli::bgcolor('  ', $color); //slider
+                $rollerGrow = $info['box-w'] - 2 - $inc;
+                $rollerGrow = $rollerGrow < 0? 0 : $rollerGrow;
+                $text .= str_repeat($charAnime, $rollerGrow);
+            }else{
+                $text = ($charAnime === ' ')? Cli::bgcolor($text, $color) : Cli::color($text, $color);
             }
 
             if($animationEffect){
@@ -335,7 +334,7 @@ trait CliRange {
                         $text = str_repeat($charAnime, $inc);
                         // $mod = $modifier($flow);
                         // if(is_array($mod)) $mod = (object) $mod;
-                        $mod = self::modified($modifier, str_split((string)$flow), 'string');
+                        $mod = self::modified($modifier, $defaults, str_split((string)$flow), 'string');
                         $color = property_exists($mod, 'textColor')? $mod->textColor : CliForms::text_field_color;
                         $bdcolor = property_exists($mod, 'borderColor')? $mod->borderColor : CliForms::text_field_color;
     
@@ -350,15 +349,17 @@ trait CliRange {
                         }
     
                         $i++;
-                        Cli::moveDown()->clearUp(2);
-                        $GhostFunction->drawField(increase: $increase, color: $bdcolor);
+                        $nextBorderColor = $bdcolor ?: $color;
+                        if($nextBorderColor !== $drawnBorderColor){
+                            $GhostFunction->drawField(increase: $increase, color: $nextBorderColor);
+                            $drawnBorderColor = $nextBorderColor;
+                        }
                         $GhostFunction->writeInput($text);
                         Cli::moveBack();
                         Cli::wait($animationEffect);
                     }
                     if($newPoint === 0 && $type !== 'slider'){
                         if($info['placeholder']){
-                            $GhostFunction->drawField(increase: $increase, color: $bdcolor);
                             $GhostFunction->writeInput($info['placeholder']);
                             echo Cli::moveStart($info['margin'] + 1);
                             return false;
@@ -369,14 +370,21 @@ trait CliRange {
             }else{
                 if($increase === 0 && $type !== 'slider'){
                     if($info['placeholder']){
-                        $GhostFunction->drawField(increase: $increase, color: $bdcolor);
+                        $nextBorderColor = $bdcolor ?: $color;
+                        if($nextBorderColor !== $drawnBorderColor){
+                            $GhostFunction->drawField(increase: $increase, color: $nextBorderColor);
+                            $drawnBorderColor = $nextBorderColor;
+                        }
                         $GhostFunction->writeInput($info['placeholder']);
                         echo Cli::moveStart($info['margin'] + 1);
                         return false;
                     }
                 }
-                Cli::moveDown()->clearUp(2);
-                $GhostFunction->drawField(increase: $increase, color: $bdcolor);
+                $nextBorderColor = $bdcolor ?: $color;
+                if($nextBorderColor !== $drawnBorderColor){
+                    $GhostFunction->drawField(increase: $increase, color: $nextBorderColor);
+                    $drawnBorderColor = $nextBorderColor;
+                }
                 $GhostFunction->writeInput($text);
                 Cli::moveBack();
       
@@ -396,24 +404,19 @@ trait CliRange {
                 return false;
             }
 
-            if($modifier){
-                $text = str_repeat($charAnime, $inc);
-                // $mod = $modifier($info['percents'][$increase]);
-                // if(is_array($mod)) $mod = (object) $mod;
-                
-                $mod = self::modified($modifier, str_split((string)($info['percents'][$increase])),'string');
-                $color = property_exists($mod, 'textColor')? $mod->textColor : CliForms::text_field_color;
-                $bdcolor = property_exists($mod, 'borderColor')? $mod->borderColor : CliForms::text_field_color;
+            $text = str_repeat($charAnime, max(0, $inc));
+            $mod = self::modified($modifier, $defaults, str_split((string)($info['percents'][$increase])), 'string');
+            $color = property_exists($mod, 'textColor')? $mod->textColor : CliForms::text_field_color;
+            $bdcolor = property_exists($mod, 'borderColor')? $mod->borderColor : CliForms::text_field_color;
 
-                if($type === 'slider'){
-                    $text = Cli::color($text, $color);
-                    $text .= Cli::bgcolor('  ', $color); // slider
-                    $rollerGrow = $info['box-w'] - 2 - $inc;
-                    $rollerGrow = $rollerGrow < 0? 0 : $rollerGrow;
-                    $text .= str_repeat($charAnime, $rollerGrow);
-                }else{
-                    $text = ($charAnime === ' ')? Cli::bgcolor($text, $color) : Cli::color($text, $color);
-                }
+            if($type === 'slider'){
+                $text = Cli::color($text, $color);
+                $text .= Cli::bgcolor('  ', $color); // slider
+                $rollerGrow = $info['box-w'] - 2 - $inc;
+                $rollerGrow = $rollerGrow < 0? 0 : $rollerGrow;
+                $text .= str_repeat($charAnime, $rollerGrow);
+            }else{
+                $text = ($charAnime === ' ')? Cli::bgcolor($text, $color) : Cli::color($text, $color);
 
             }
             
@@ -437,7 +440,7 @@ trait CliRange {
                         // $mod = $modifier($flow);
                         // if(is_array($mod)) $mod = (object) $mod;
                         
-                        $mod = self::modified($modifier, str_split((string)$flow), 'string');
+                        $mod = self::modified($modifier, $defaults, str_split((string)$flow), 'string');
                         $color = property_exists($mod, 'textColor')? $mod->textColor : CliForms::text_field_color;
                         $bdcolor = property_exists($mod, 'borderColor')? $mod->borderColor : CliForms::text_field_color;
     
@@ -452,8 +455,11 @@ trait CliRange {
                         }
     
                         $i++;
-                        Cli::moveDown()->clearUp(2);
-                        $GhostFunction->drawField(increase: $increase, color: $bdcolor);
+                        $nextBorderColor = $bdcolor ?: $color;
+                        if($nextBorderColor !== $drawnBorderColor){
+                            $GhostFunction->drawField(increase: $increase, color: $nextBorderColor);
+                            $drawnBorderColor = $nextBorderColor;
+                        }
                         $GhostFunction->writeInput($text);
                         Cli::moveBack();
                         Cli::wait($animationEffect);
@@ -462,8 +468,11 @@ trait CliRange {
                 }
             }else{
 
-                Cli::moveDown()->clearUp(2);
-                $GhostFunction->drawField(increase: $increase, color: $bdcolor);
+                $nextBorderColor = $bdcolor ?: $color;
+                if($nextBorderColor !== $drawnBorderColor){
+                    $GhostFunction->drawField(increase: $increase, color: $nextBorderColor);
+                    $drawnBorderColor = $nextBorderColor;
+                }
                 $GhostFunction->writeInput($text);
                 Cli::moveBack();
       

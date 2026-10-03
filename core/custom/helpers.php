@@ -53,26 +53,66 @@ if(!function_exists('unscheme')){
 
 if(!function_exists('suppress_error')){
   /**
-   * Suppress errors as alternative for the @ symbol
+   * Temporarily suppress PHP diagnostics (warnings/notices/deprecations) for a
+   * block of code, or toggle suppression on/off manually.
    *
-   * @param int|false $error_levels 
-   *  - False uses {@see restore_error_handler()} to restores back the error handler
-   *  - Other error levels use {@see set_error_handler()} to suppress error.
-   * @param Closure|null $test a callback used to suppress a function
-   * @return mixed value depends on what is returned by $test
+   * @param int|false    $error_levels  Bitmask of error levels to suppress (e.g. E_WARNING),
+   *                                     or `false` to restore the previous handler when used
+   *                                     in manual toggle mode (no $test closure).
+   * @param Closure|null $test          If provided, suppression is scoped to this closure only:
+   *                                     the handler is installed, the closure runs, and the
+   *                                     handler is guaranteed to be restored afterward — even
+   *                                     if the closure throws. Prefer this form over the manual
+   *                                     toggle form below whenever possible.
+   *
+   * ⚠️ IMPORTANT LIMITATIONS — READ BEFORE USING
+   *
+   * 1. This ONLY suppresses classic PHP error diagnostics (E_WARNING, E_NOTICE,
+   *    E_DEPRECATED, etc.) routed through set_error_handler(). It does NOT catch
+   *    or suppress thrown exceptions/Errors. Since PHP 8.1, many previously
+   *    "warning + false" failures (e.g. failed mysqli connections/queries under
+   *    MYSQLI_REPORT_ERROR) throw exceptions instead. Those will NOT be silenced
+   *    by this function and will propagate straight out of $test() — wrap the
+   *    call site in its own try/catch if you need to handle that.
+   *
+   * 2. Manual toggle mode (no $test closure) mutates GLOBAL error-handler state
+   *    for the rest of the request until something calls suppress_error(false).
+   *    Any code path that exits early (early return, uncaught exception, fatal
+   *    error) between the "on" call and the "off" call will leak the suppression
+   *    application-wide — every warning everywhere goes silent, with no obvious
+   *    cause. This is exactly the class of bug that motivated the closure form's
+   *    try/finally guarantee below. Avoid the manual toggle form unless you have
+   *    no alternative, and if you use it, keep the on/off calls as close together
+   *    as possible with no branching/exceptions between them.
+   *
+   * 3. set_error_handler() stacks. Each call pushes a new handler; a single
+   *    restore_error_handler() only pops one level off. Nested or repeated
+   *    manual-mode calls without matching restores will leave stale handlers
+   *    behind. The closure form avoids this because each call is self-contained
+   *    and balanced by construction.
+   *
+   * There is no fix that makes the manual toggle form as safe as the closure
+   * form — by design, "on" and "off" are two separate calls with arbitrary code
+   * (and failure points) in between. If you need guaranteed restoration, use the
+   * closure form. If you need to suppress exceptions (not just warnings), this
+   * function is the wrong tool — use try/catch instead.
    */
-  function suppress_error(int|false $error_levels = E_ALL, ?Closure $test = null){
-    if($test){
-      set_error_handler(function () {/* Do nothing */}, $error_levels);
-      $response = $test();
-      restore_error_handler();
-      return $response;
-    }
-    if($error_levels === false){
-      restore_error_handler();
-    }else{
-      set_error_handler(function () {/* Do nothing */}, $error_levels);
-    }
+  function suppress_error(int|false $error_levels = E_ALL, ?Closure $test = null)
+  {
+      if ($test) {
+          set_error_handler(function () {/* Do nothing */}, $error_levels);
+          try {
+              return $test();
+          } finally {
+              restore_error_handler();
+          }
+      }
+
+      if ($error_levels === false) {
+          restore_error_handler();
+      } else {
+          set_error_handler(function () {/* Do nothing */}, $error_levels);
+      }
   }
 }
 
@@ -200,11 +240,10 @@ if(!function_exists('monitor')){
 if(!function_exists('recall')){
   /**
    * Helper function for loading resource pre-named scripts discussed in [recall documentation](https://spoova.com/docs/helpers/functions/core/recall).
+   *  - Parameter : func_get_args() resource files unique names
    *  - Scripts loading is through resource classes Ress or Res depending on init file 'RESOURCE_HANDLER' configuration
-   * 
-   * @param $args resource files unique names
    */
-  function recall($args) : string {
+  function recall() : string {
     $args = func_get_args();
     $resource = '';
     // Ress is the default handler; Res is used only when the init file asks for it
@@ -314,8 +353,8 @@ if(!function_exists('import')){
 if(!function_exists('SET')){
   /**
    * Set a top level key that can be retrieved with {@see \GET()} function.
-   * @param $key the key to be used to set a value
-   * @param $value the value stored under the key defined.
+   * @param string $key the key to be used to set a value
+   * @param mixed $value the value stored under the key defined.
    * @param string|float|int|bool|array|object $lock determines security key of the value stored. 
    * @uses SETTER::SET() 
    * @uses SETTER::MOD()
@@ -349,7 +388,6 @@ if(!function_exists('GET')){
 if(!function_exists('webClass')){
   /**
    * Load a class from the classes folder
-   * @throws error if class does not exist
    *
    * @param string $className
    * @return object|false
@@ -392,8 +430,9 @@ if(!function_exists('window')){
 if(!function_exists('win')){
 
   /**
-   *
-   * @param \Window $window
+   * Instantiates and returns  the {@see Win} class.
+   * @param \Window $window 
+   *     - This argument does nothing other than ensures that this function can only be called with an existing Window object.
    * @return Win
    */
   function win(\Window $window) : Win{
@@ -689,14 +728,17 @@ if(!function_exists('inPath')){
   /**
    * This is used for testing the current web url against the last tracked url (i.e after Domurl function is called)
    *  - The Domurl function is an in-built function that is designed to automatically track the last called url. 
+   *  - Format1: inPath('foo')   .......... if last tracked route matches parent structure of currently visited route, returns "foo"
+   *  - Format2: inPath('i:foo')   .......... if last tracked route matches parent structure of currently visited route, returns "foo" ('i:' for case-insensitive)
+   *  - Format3: inPath('route/path','i:foo') ...  if 'route/path' matches parent structure of currently visited route, returns "foo" ('i:' for case-insensitive)
    *
-   * @param string $value sets the returned value when match is valid or set a custom url address that overides the default current web url addressed used.
-   *     - when one argument is supplied, this assumes that $value is returned when the current web url parent structure matches the last tracked path.
-   *     - when two arguments are supplied, this assumes that $value is the web url address whose parent structure matches last tracked path
+   * @param string $value1 sets the returned value when match is valid or set a custom url address that overides the default current web url addressed used.
+   *     - when one argument is supplied, this assumes that $value1 is returned when the current web url parent structure matches the last tracked path.
+   *     - when two arguments are supplied, this assumes that $value1 is the web url address whose parent structure matches last tracked path
    * @param string $value2 if defined, this assumes that $value2 is returned when $value1 (custom url address) parent structure matches the last tracked path
    * @return string
    */ 
-  function inPath(string $value, string $value2 = '') : string { 
+  function inPath(string $value1, string $value2 = '') : string { 
 
     $args = func_get_args();
     $case = true; //use case
@@ -742,14 +784,18 @@ if(!function_exists('isPath')){
   /**
    * This is used for testing the current web url against the last tracked url (i.e after Domurl function is called)
    *  - The Domurl function is an in-built function that is designed to automatically track the last called url. 
-   *
-   * @param string $value sets the returned value when match is valid or set a custom url address that overides the default current web url addressed used.
-   *     - when one argument is supplied, this assumes that $value is returned when the current web url address matches the entire structure of the last tracked path.
-   *     - when two arguments are supplied, this assumes that $value is the web url address that must match the entire structure of the last tracked path.
+   *  - Format1: isPath('foo')   .......... if last tracked route directly matches currently visited route, returns "foo" (case-sensitive)
+   *  - Format2: isPath('i:foo')   .......... if last tracked route directly matches currently visited route, returns "foo" ('i:' for case-insensitive)
+   *  - Format3: isPath('route/path','i:foo') ...  if 'route/path' directly matches currently visited route, returns "foo" ('i:' for case-insensitive)
+   *  
+   * @param string $value1 sets the returned value when match is valid or set a custom url address that overides the default current web url addressed used.
+   *   - when one argument is supplied, this assumes that $value1 is returned when the current web url address matches the entire structure of the last tracked path.
+   *   - when two arguments are supplied, this assumes that $value1 is the test route path that must match the entire structure of the last tracked path.
    * @param string $value2 if defined, this assumes that $value2 is returned when $value1 (custom url address) matches the entire structure of the last tracked path.
+
    * @return string
    */  
-  function isPath($url) : string {
+  function isPath(string $value1, string $value2 = '') : string {
 
     $args = func_get_args();
     $case = true; //use case
@@ -1026,15 +1072,14 @@ if(!function_exists('redirect')){
    */
   function redirect( string $url = '', string $type = 'header' ){
 
-    if (!$url) $loc = $_SERVER['PHP_SELF'];
-    if ($url) {
+    if (!$url) {
+      $loc = $_SERVER['PHP_SELF'];
+    }else{
 
       $isOffline = defined('online') ? !online : false;
 
       $url = ($url == "/" && $isOffline)? '' : $url;
       $type = ($type === 'header')? $type : 'java';
-
-      // $eUrl=isHTTP($url)? $url : domUrl($url)
 
       $self  = $_SERVER['PHP_SELF'];
       $rqUri = $_SERVER['REQUEST_URI'];
@@ -1051,11 +1096,7 @@ if(!function_exists('redirect')){
       $loc = $loc?? '';
       $loc = !$loc? (isHTTP($url)? $url : docdir.$url) : $loc;
 
-      // docdir is assembled with DS, so on Windows $loc arrives here as a
-      // backslash path. A URL must use forward slashes either way, and the
-      // "java" branch below embeds $loc in a single quoted JS string where a
-      // backslash starts an escape sequence ("\testa\install" reads back as
-      // "\testainstall"), which silently rewrites the destination.
+      // docdir assembled with DS converted to frontslash
       $loc = str_replace('\\', '/', $loc);
 
       $query = explode( "?", $loc );
@@ -1072,7 +1113,6 @@ if(!function_exists('redirect')){
       }
 
       $loc .= $linkquery;
-
     }
 
     if($type === "header"){
@@ -1181,10 +1221,7 @@ if(!function_exists('response')){
 
     if(isCli()) return json_encode([]);
     
-    if(func_num_args() < 3) {
-        //modify success message with response code
-        $success = !$error;
-    }
+    if(func_num_args() < 3) $success = !$error; 
     
     //set array of response data
     if(func_num_args() > 1) {

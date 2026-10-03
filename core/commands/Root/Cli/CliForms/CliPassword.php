@@ -15,6 +15,8 @@ use spoova\mi\core\commands\Root\Cli\CliScreen;
 
 trait CliPassword {
 
+    use CliFormsModifier;
+
     /**
      * Creates an input text field on the CLI screen
      *
@@ -28,55 +30,29 @@ trait CliPassword {
      *   - textColor   : sets default text color
      *   - shape       : sets input field shape
      *   - width       : sets width of input field, the minimum is 25.
+     *   - indent     : margin (integer) from the left side of the terminal
      * @param Closure|null $modifier sets a border color or text color for input field 
      * @param Closure|null $onEnd callback closure(CliTransmit $form) function triggered when the form is submitted or terminated.
      * @return string response
      */
-    public static function password(string $placeholder = '', string $hint = '',  ?string $value = null, bool $required = false, ?int $maxlength = null, array $design = ['width'=>25, 'indent' => 0, 'shape'=>'square','textColor'=>CliForms::text_field_color,'borderColor'=>CliForms::text_field_color], ?Closure $modifier = null, ?Closure $onEnd = null){
+    public static function password(string $placeholder = '', string $hint = '',  ?string $value = null, bool $required = false, ?int $maxlength = null, array $design = self::design, ?Closure $modifier = null, ?Closure $onEnd = null){
+       
         self::use_requirements();
-        $width = $design['width'] ?? 25;
-        $margin = $design['indent'] ?? 0;
-        $shape = $design['shape'] ?? 'square';
-        $color = $design['textColor'] ?? CliForms::text_field_color;
-        $borderColor = $design['borderColor'] ?? CliForms::text_field_color;
 
-        // set accepted configuration for default values 
-        if(!in_array($shape, ['square','round'])) $shape = 'square';
-        if(!in_array($color, ['red','blue','white','yellow'])) $shape = CliForms::text_field_color;
-        if(!in_array($borderColor, ['red','blue','white','yellow'])) $borderColor = CliForms::text_field_color;
-        $width = (!is_numeric($width) || ($width < 25))? 25 : (int) $width;
-        $margin = (!is_numeric($margin))? 0 : (int) $margin;
-
-        // Ensure width is not greater than screen width at initial draw
-        $margin = CliDraw::fitIndent($margin);           // guard against excessive indent
-        $width  = CliDraw::fitWidth($width, $margin);    // keep box within the screen
-
-        $info['x'] = $width; //width
-        $info['y'] = $height = 1; //height
-        $info['chars'] = []; // keep text characters
-        $info['charsNum'] = 0; // keep text characters
-        $info['margin'] = $margin; // left margin
-        $info['placeholder'] = $placeholder; // left margin
-        $info['color'] = CliForms::text_field_color;
-        $info['required'] = $required;
-        $info['maxlength'] = $maxlength;
-        $cursor = 0; // text end point
-        $info['bound'] = 0;
-        $required = false;
-
-        if(!$modifier){
-            $modifier = function(array $chars){
-            
-                return (object) [
-                    'chars' => $chars, 
-                    'count' => count($chars), 
-                    'value' => implode('', $chars), 
-                    'textColor' => CliForms::text_field_color, 
-                    'borderColor' => CliForms::text_field_color, 
-                ];
-
-            };
-        }
+        $draft = self::draft('text', compact('placeholder','required','maxlength','design','modifier') );
+        
+        // Get : shape, width, height, margin, info, borderColor, textColor, defaults, cursor
+        $shape = $draft['shape'];
+        $width = $draft['width'];
+        $height = $draft['height'];
+        $margin = $draft['margin'];
+        $info = $draft['info'];
+        $borderColor = $draft['borderColor'];
+        $textColor = $draft['textColor'];
+        $defaults = $draft['defaults'];
+        $cursor = $draft['cursor'];
+        $advance = $defaults['advance'];
+        $modifier = $draft['modifier'];
 
         /**
          * @var object
@@ -93,10 +69,8 @@ trait CliPassword {
 
         // Define activity to draw input field when method is called
         $GhostFunction->drawField(function($color = CliForms::text_field_color, int $marginTop = 0) use($shape, $width, $height, $margin, $hint){      
-
             CliDraw::textBox($width, $height, $margin, $color, $hint, $shape);
             Cli::moveUp($marginTop); //fit cursor using margin specified.
-
         });
         
         //Define activity to write a new text into the text box created
@@ -123,7 +97,7 @@ trait CliPassword {
         });
 
         if($info['placeholder'] && !$value){
-            $GhostFunction->drawField($color); // Start by drawing the input field
+            $GhostFunction->drawField($borderColor); // Start by drawing the input field
             $GhostFunction->writeInput($info['placeholder']);
             Cli::moveStart($info['margin'] + 1);
         }elseif($value){
@@ -135,41 +109,44 @@ trait CliPassword {
                 $value = substr($value, 0, $info['x'] - 1);
             }
 
-            $mod = self::modified($modifier, mb_str_split($value));
+            $mod = self::modified($modifier, $defaults, mb_str_split($value));
 
-            if(is_object($mod)){
-                $borderColor = property_exists($mod, 'borderColor') ? $mod->borderColor : CliForms::text_field_color;
-                $textColor = property_exists($mod, 'textColor') ? $mod->textColor : CliForms::text_field_color;  
-            }else{
-                $borderColor = CliForms::text_field_color;
-                $textColor = CliForms::text_field_color;
-            }
+            $borderColor = $mod->borderColor;
+            $textColor = $mod->textColor;
 
             $GhostFunction->drawField($borderColor); // Start by drawing the input field
             $GhostFunction->writeInput(Cli::color($GhostFunction->toAsterisk($value), $textColor));
             $cursor = strlen($value);
         }
 
+        CliForms::setLines(3);
         Cli::blinkCursor(); // Start by blinking cursor
         
         // Stream input into the text box field ......................................................................
-        return Cli::input(function(CliKey $key) use (&$info, &$cursor, &$required, $GhostFunction,$onEnd, $modifier) {
+        return Cli::input(function(CliKey $key) use ($borderColor, $textColor, $defaults, &$info, &$cursor, &$required, $GhostFunction,$onEnd, $modifier, $advance) {
             
             if($key->isExit() || $key->isEnter()){
 
-                if($onEnd){
+                if($key->isExit()){
+                  if($onEnd){ 
                     Cli::moveDown()->break(1);
                     $message = $onEnd(new CliTransmit($key, implode('', $info['chars'])));
-                    if($key->isExit()) Cli::break(2);
+                    if($key->isExit()) Cli::break(1);
                     return $message;
+                  }
                 }else{
-                    if($key->isEnter()){
-                        Cli::break(3);
-                        $key->exit();
-                        return implode('', $info['chars']);
-                    }else{
-                        Cli::textView(Cli::warn('message:').' form terminated', $info['margin']);
+                  if($required){
+                    $chars = implode('', $info['chars']);
+                    if(!$chars) {
+                          $GhostFunction->showText(Cli::danger('﹡Required'), $info['margin']);
+                          return false;
                     }
+                  }
+                  Cli::moveDown();
+                  $key->exit();
+                  Cli::moveDown();
+                  $message = $onEnd(new CliTransmit($key, implode('', $info['chars'])));
+                  return $message;
                 }
             
             }elseif($key->isBackspace()){
@@ -179,16 +156,11 @@ trait CliPassword {
                 if($info['bound'] > 0 && (count($info['chars']) < $info['x'])) $info['bound']--;
                 if($cursor > 0) $cursor--;
                 $info['chars'] = array_values($chars);
+                $advance->advance = null;
+                $mod = self::modified($modifier, $defaults, $chars);
 
-                $modifier = self::modified($modifier, $chars);
-
-                if(is_object($modifier)){
-                    $borderColor = property_exists($modifier, 'borderColor') ? $modifier->borderColor : CliForms::text_field_color;
-                    $textColor = property_exists($modifier, 'textColor') ? $modifier->textColor : CliForms::text_field_color;  
-                }else{
-                    $borderColor = CliForms::text_field_color;
-                    $textColor = CliForms::text_field_color;
-                }
+                $borderColor = $mod->borderColor;
+                $textColor = $mod->textColor;
 
                 //get full characters string
                 $charsText = implode('', $info['chars']);
@@ -233,15 +205,10 @@ trait CliPassword {
                 if($info['bound']>=0){
 
                     $chars = $info['chars'];
-                    $modifier = self::modified($modifier, $chars);
+                    $mod = self::modified($modifier, $defaults, $chars);
 
-                    if(is_object($modifier)){
-                        $borderColor = property_exists($modifier, 'borderColor') ? $modifier->borderColor : CliForms::text_field_color;
-                        $textColor = property_exists($modifier, 'textColor') ? $modifier->textColor : CliForms::text_field_color;  
-                    }else{
-                        $borderColor = CliForms::text_field_color;
-                        $textColor = CliForms::text_field_color;
-                    }
+                    $borderColor = $mod->borderColor;
+                    $textColor = $mod->textColor;
 
                     if($home){
                         if(array_key_exists($cursor - 1, $info['chars'])){
@@ -270,15 +237,10 @@ trait CliPassword {
             $xe = ($info['bound'] === ($info['x'] - 1))? true : false;
 
             $chars = $info['chars'];
-            $modifier = self::modified($modifier, $chars);
+            $mod = self::modified($modifier, $defaults, $chars);
 
-            if(is_object($modifier)){
-                $borderColor = property_exists($modifier, 'borderColor') ? $modifier->borderColor : CliForms::text_field_color;
-                $textColor = property_exists($modifier, 'textColor') ? $modifier->textColor : CliForms::text_field_color;  
-            }else{
-                $borderColor = CliForms::text_field_color;
-                $textColor = CliForms::text_field_color;
-            }
+            $borderColor = $mod->borderColor;
+            $textColor = $mod->textColor;
 
             if($xe){
                 if($cursor !== count($info['chars'])){
@@ -314,6 +276,8 @@ trait CliPassword {
             }
 
             }elseif ($key->isWritable()) {
+
+                if($advance->advance === false) return false;
                 
                 if($info['maxlength'] !== null){
                     if(count($info['chars']) === $info['maxlength']) return false;
@@ -328,17 +292,12 @@ trait CliPassword {
                 $fullString = implode('', $fullChars);
 
                 $info['chars'] = $fullChars;
-                $info['color'] = ((count($info['chars']) -1) > 5)? 'red' : CliForms::text_field_color;
+                $info['color'] = ((count($info['chars']) -1) > 5)? 'danger' : $textColor;
 
-                $modifier = self::modified($modifier, $fullChars);
+                $mod = self::modified($modifier, $defaults, $fullChars);
 
-                if(is_object($modifier)){
-                    $borderColor = property_exists($modifier, 'borderColor') ? $modifier->borderColor : CliForms::text_field_color;
-                    $textColor = property_exists($modifier, 'textColor') ? $modifier->textColor : CliForms::text_field_color;  
-                }else{
-                    $borderColor = CliForms::text_field_color;
-                    $textColor = CliForms::text_field_color;
-                }
+                $borderColor = $mod->borderColor;
+                $textColor = $mod->textColor;
 
                 if($required){
                     $required = false;

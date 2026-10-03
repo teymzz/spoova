@@ -7,7 +7,6 @@ use spoova\mi\core\commands\Root\Cli;
 use spoova\mi\core\commands\Root\Cli\CliKey;
 use spoova\mi\core\commands\Root\Cli\CliDraw;
 use spoova\mi\core\commands\Root\Cli\CliForms;
-use spoova\mi\core\commands\Root\Cli\CliScreen;
 
 /**
  * Multi-line text input (textarea) field for the CLI.
@@ -47,6 +46,8 @@ use spoova\mi\core\commands\Root\Cli\CliScreen;
  */
 trait CliTextBox {
 
+    use CliFormsModifier;
+
     public static function textbox(string $hint = '', ?string $value = null, array $design = [], ?int $maxlength = null, ?Closure $onEnd = null){
 
         self::use_requirements();
@@ -74,8 +75,8 @@ trait CliTextBox {
         $scroll = 0;          // first visible content row (vertical scroll offset)
 
         // ---- draw the box and capture the interior anchor ------------------
-        CliForms::setLines($height + 2);
-        Cli::break(1);
+        CliForms::setLines($height + 3);
+
         CliDraw::textBox($width, $height, $margin, $color, $hint, $shape);
 
         // After textBox() the cursor rests on the top-left interior cell.
@@ -87,6 +88,10 @@ trait CliTextBox {
 
         // ---- renderer: redraw the visible window + place the real caret ----
         $render = function() use (&$chars, &$pos, &$scroll, $origin, $width, $height) {
+
+            // Reserve a display-only cell at the caret, like the single-line fields.
+            $displayChars = $chars;
+            array_splice($displayChars, $pos, 0, [' ']);
 
             // caret (row, col) from the flat index
             $caretRow = intdiv($pos, $width);
@@ -104,7 +109,7 @@ trait CliTextBox {
 
             for($r = 0; $r < $height; $r++){
                 $contentRow = $scroll + $r;                 // which buffer row is shown here
-                $rowChars = array_slice($chars, $contentRow * $width, $width);
+                $rowChars = array_slice($displayChars, $contentRow * $width, $width);
                 $line = implode('', $rowChars);
                 $len  = mb_strlen($line);
                 if($len < $width) $line .= str_repeat(' ', $width - $len); // clear stale chars
@@ -113,7 +118,6 @@ trait CliTextBox {
 
             // caret position on screen (relative to the scrolled window)
             $screenRow = $caretRow - $scroll;
-            if($screenRow > $height - 1){ $screenRow = $height - 1; $caretCol = $width; }
 
             Cli::moveTo($origin[0] + $caretCol, $origin[1] + $screenRow);
             Cli::showCursor();
@@ -122,25 +126,35 @@ trait CliTextBox {
         $render();
 
         // ---- input loop ----------------------------------------------------
-        return Cli::input(function(CliKey $key) use (&$chars, &$pos, $render, $origin, $width, $height, $margin, $maxlength, $onEnd) {
+        return Cli::input(function(CliKey $key) use (&$chars, &$pos, $render, $origin, $value, $width, $height, $margin, $maxlength, $onEnd) {
 
             // Submit (Enter) or cancel (interrupt signal)
             if($key->isEnter() || $key->isExit()){
+
                 $value = implode('', $chars);
                 Cli::showCursor();
                 Cli::moveTo(1, $origin[1] + $height + 1); // drop below the box
+
                 if($onEnd){
-                    Cli::break(1);
+                    if($key->isExit()) Cli::break(1);
                     $message = $onEnd(new CliTransmit($key, $value));
+                    Cli::moveDown();
+                    
                     $key->exit();
                     return $message;
+                }else{
+                    
+                    if($key->isExit()) {
+                        Cli::break(1);
+                        Cli::textView(Cli::warn('message:').' form terminated', $margin);
+                        Cli::moveDown();
+                    }else{
+                            $key->exit();
+                            Cli::moveDown();
+                    }
+                    return $value;
+                   
                 }
-                if($key->isExit()){
-                    Cli::textView(Cli::warn('message:').' form terminated', $margin);
-                }
-                Cli::break(1);
-                $key->exit();
-                return $value;
             }
 
             // Backspace : delete character before the caret

@@ -16,50 +16,46 @@ use spoova\mi\core\commands\Root\Cli\CliKey;
 
 Trait CliDate {
 
+    use CliFormsModifier;
+
     /**
      * Creates a date form field
      *
-     * @param array|string $date format as date('d-m-Y'). See PHP {@see date()} function.
+      * @param array|string $date date as d-m-Y; an optional second array item bounds the range.
      * @param string $hint
+      * @param bool $required determines if an invalid date must be corrected before submission.
      * @param array $design containing array keys :  
      *   - indent : as indent from the left 
      *   - width : as the width of the date input box 
      * @param Closure|null $onEnd callback triggered when form is submitted (ENTER) or cancelled {@see CliKey::EXIT_SIGNALS}.
-     * @return void
+     * @return string
      */
-    public static function date(array|string $date, $hint = '', array $design = [], ?Closure $onEnd = null){
+    public static function date(array|string $date, string $hint = '', bool $required = false, array $design = [], ?Closure $onEnd = null){
       
         self::use_requirements();
         Cli::hideCursor();
 
-        $date =  is_array($date)? $date : [$date];
-        $date1 = $date[0] ?? date('d-m-Y');
-        $date2 = $date[1] ?? null;
+        $date1 = is_array($date)? ($date[0] ?? date('d-m-Y')) : $date;
+        $date2 = is_array($date)? ($date[1] ?? null) : null;
+        $hasSecondDate = $date2 !== null && $date2 !== '';
 
-        $separator = (strpos($date1, '/') !== false)? "/" : "-";
+        $separator = (is_string($date1) && strpos($date1, '/') !== false)? "/" : "-";
 
-        $dateTime1 = DateTime::createFromFormat('d-m-Y', str_replace('/', '-',$date1));
-        if(!$dateTime1){
+        $dateTime1 = self::parseCalendarDate($date1);
+        $dateTime2 = $hasSecondDate? self::parseCalendarDate($date2) : null;
+        if(!$dateTime1 || ($hasSecondDate && !$dateTime2)){
           $trace = Debug::get(0);
           Cli::textView(Cli::error('invalid input date supplied in '.$trace['file'].' on line '.$trace['line']));
           Cli::break(2);
           exit;
         }
-        $dateTime1 = $dateTime1->getTimestamp();
 
-        if($date2) {
-          $dateTime2 = DateTime::createFromFormat('d-m-Y', str_replace('/', '-',$date2));
-          if(!$dateTime2){
-            $trace = Debug::get(0);
-            Cli::textView(Cli::error('invalid input date supplied in '.$trace['file'].' on line '.$trace['line']));
-            Cli::break(2);
-            exit;
-          }
-          $dateTime2 = $dateTime2->getTimestamp();
+        $rangeStart = null;
+        $rangeEnd = null;
+        if($dateTime2){
+          $rangeStart = ($dateTime1 <= $dateTime2)? $dateTime1 : $dateTime2;
+          $rangeEnd = ($dateTime1 <= $dateTime2)? $dateTime2 : $dateTime1;
         }
-
-        $dateString1 = date('d-m-Y', $dateTime1);
-        if($date2) $dateString2 = date('d-m-Y', $dateTime2);
   
         $indent = $design['indent'] ?? 0;
         $indent = (is_numeric($indent)) ? (int) $indent : 0;
@@ -70,36 +66,9 @@ Trait CliDate {
         $indent = CliDraw::fitIndent($indent);           // guard against excessive indent
         $width  = CliDraw::fitWidth($width, $indent);    // keep box within the screen
   
-        $dateList1 = explode('-',$dateString1);
-        $day = str_split($dateList1[0]);
-        $month = str_split($dateList1[1]); 
-        $year = str_split($dateList1[2]);
-
-        // $dateList1 is [day, month, year] (from date('d-m-Y')); checkdate() expects (month, day, year)
-        if(!checkdate((int) $dateList1[1], (int) $dateList1[0], (int) $dateList1[2])){
-          $trace = Debug::get(0);
-          Cli::textView(Cli::error('invalid input date supplied in '.$trace['file'].' on line '.$trace['line']));
-          Cli::break(2);
-          exit;
-        }
-        
-        $date = [$day, $month, $year];
-        $datex[0] = $date;
-
-        if($date2){
-          $dateList2 = explode('-', str_replace('/','-',$date2));
-          // $dateList2 is [day, month, year]; checkdate() expects (month, day, year)
-          if((count($dateList2) < 3) || !checkdate((int) $dateList2[1], (int) $dateList2[0], (int) $dateList2[2])) {
-            $trace = Debug::get(0);
-            Cli::textView(Cli::error('invalid input date supplied in '.$trace['file'].' on line '.$trace['line']));
-            Cli::break(2);
-            exit;
-          }
-          $day = str_split($dateList2[0]);
-          $month = str_split($dateList2[1]); 
-          $year = str_split($dateList2[2]);
-          $datex[1] = [$day, $month, $year];
-        }
+        $date = self::calendarDateParts($dateTime1);
+        $datex[0] = self::calendarDateParts($rangeStart ?? $dateTime1);
+        if($rangeEnd) $datex[1] = self::calendarDateParts($rangeEnd);
   
         /**
          * @var object
@@ -111,7 +80,7 @@ Trait CliDate {
          *  ##### drawField($color) - ***draw a new text field***
          *  ##### ``` $color: specifies the border color for text field ```
          */
-        $Ghost = new GhostFunction(['displayOptions','drawField', 'getColor']);
+        $Ghost = new GhostFunction(['displayOptions','drawField','getColor','showText']);
 
         // Define activity to draw input field when method is called
         $Ghost->drawField(function($color = CliForms::text_field_color, int $marginTop = 0, array $posit = []) use($indent, $hint, &$date, $datex, $width, $separator){      
@@ -145,12 +114,14 @@ Trait CliDate {
           Cli::moveStart(($indent + 1) + 1 + strlen($prefix));
         });
   
-        $Ghost->getColor(function($date){
-          $d = implode('',$date[0]) + 0;
-          $m = implode('',$date[1]) + 0;
-          $y = implode('',$date[2]) + 0;
-  
-          return checkdate($m, $d, $y)? CliForms::text_field_color : 'red';
+        $Ghost->getColor(function($date) use($rangeStart, $rangeEnd){
+          return self::isDateAllowed($date, $rangeStart, $rangeEnd)? CliForms::text_field_color : 'red';
+        });
+
+        $Ghost->showText(function($text, $indent = 0){
+          $position = Cli::cursor('col');
+          Cli::moveDown(2)->clearLine()->textPlain($text, $indent);
+          Cli::moveTo(...$position);
         });
   
         $posit = [1, 0]; // set default at day and positional index at 0.
@@ -160,7 +131,7 @@ Trait CliDate {
         $Ghost->drawField(posit: $posit);
   
         // Open input handler ........................................................................
-        return Cli::input(function(CliKey $key) use(&$posit, &$Ghost, &$date, $datex, $indent, $onEnd, $box){
+        return Cli::input(function(CliKey $key) use(&$posit, &$Ghost, &$date, $datex, $rangeStart, $rangeEnd, $required, $indent, $onEnd, $box){
           
           $datemap['d'] = $date[0];
           $datemap['m'] = $date[1];
@@ -171,17 +142,18 @@ Trait CliDate {
   
           if($key->isExit() || $key->isEnter()){ 
             
-            $d = implode('',$date[0]) + 0;
-            $m = implode('',$date[1]) + 0;
-            $y = implode('',$date[2]) + 0;
-
-            $color = $Ghost->getColor($date);
-            $color = checkdate($m, $d, $y)? $color : 'red'; 
+            $valid = self::isDateAllowed($date, $rangeStart, $rangeEnd);
+            $color = $valid? CliForms::text_field_color : 'red';
 
             $posix = Cli::cursorPosition('col'); // store current position
             Cli::moveTo(...$box['area']);
             $Ghost->drawField(color: $color, posit: $posit);
             Cli::moveTo(...$posix); // move back to previous position
+
+            if($key->isEnter() && !$valid && $required){
+              $Ghost->showText(Cli::danger('﹡Required'), $indent);
+              return false;
+            }
                   
             $response = [
               'd' => implode('',$date[0]) + 0, 
@@ -191,19 +163,17 @@ Trait CliDate {
 
             if($onEnd){
               
-                if($color === CliForms::text_field_color){
-                  Cli::moveDown()->break(1);
-                  $message = $onEnd(new CliTransmit($key, $response));
-                  if($key->isExit()) Cli::break(2);
-                  return $message;
-                }else{
-                  Cli::moveDown()->break(1);
-                  $message = $onEnd(new CliTransmit($key, false));
-                  if($key->isExit()) Cli::break(2);
-                }
+                Cli::moveDown()->break(1);
+                $message = $onEnd(new CliTransmit($key, $valid? $response : false));
+                if($key->isExit()) Cli::break(2);
+                return $message;
 
             }else{
                 if($key->isEnter()){
+                    if(!$valid){
+                      if($required) $Ghost->showText(Cli::danger('﹡Required'), $indent);
+                      return false;
+                    }
                     Cli::break(3);
                     $key->exit();
                     return $response;
@@ -270,13 +240,17 @@ Trait CliDate {
               $type = $cal[$datemark];
     
               if($type === 'd'){
+                $monthStart = DateTime::createFromFormat('!Y-n-j', implode('', $date[2]).'-'.implode('', $date[1]).'-1');
+                if(!$monthStart) return false;
+                $daysInMonth = (int) $monthStart->format('t');
                 $value = implode('',$date[0]) + 0;
                 $value--;
                 if($value < 1){
-                  $value = 31;
+                  $value = $daysInMonth;
                 }
                 $value = ($value < 10)? '0'.$value : $value;
                 $date[0] = str_split($value);
+                $date = self::normalizeCalendarDate($date, $rangeStart, $rangeEnd);
                 $color = $Ghost->getColor($date);
                 Cli::moveTo(...$box['area']);
                 $Ghost->drawField(color: $color, posit: $posit);
@@ -288,6 +262,7 @@ Trait CliDate {
                 }
                 $value = ($value < 10)? '0'.$value : $value;
                 $date[1] = str_split($value);
+                $date = self::normalizeCalendarDate($date, $rangeStart, $rangeEnd);
                 $color = $Ghost->getColor($date);
                 Cli::moveTo(...$box['area']);
                 $Ghost->drawField(color: $color, posit: $posit);
@@ -304,11 +279,11 @@ Trait CliDate {
                   if($value < $minYear) {
                     $value = $maxYear;
                   }
-                }
-                if($value < 1970){
-                  $value = date('Y');
+                }elseif($value < 1){
+                  $value = 9999;
                 }
                 $date[2] = str_split($value);
+                $date = self::normalizeCalendarDate($date, $rangeStart, $rangeEnd);
                 $color = $Ghost->getColor($date);
                 // Cli::saveCursor();
                 Cli::moveTo(...$box['area']);
@@ -324,13 +299,17 @@ Trait CliDate {
               $type = $cal[$datemark];
     
               if($type === 'd'){
+                $monthStart = DateTime::createFromFormat('!Y-n-j', implode('', $date[2]).'-'.implode('', $date[1]).'-1');
+                if(!$monthStart) return false;
+                $daysInMonth = (int) $monthStart->format('t');
                 $value = implode('',$date[0]) + 0;
                 $value++;
-                if($value > 31){
+                if($value > $daysInMonth){
                   $value = 1;
                 }
                 $value = ($value < 10)? '0'.$value : $value;
                 $date[0] = str_split($value);
+                $date = self::normalizeCalendarDate($date, $rangeStart, $rangeEnd);
                 $color = $Ghost->getColor($date);
                 Cli::moveTo(...$box['area']);
                 $Ghost->drawField(color: $color, posit: $posit);
@@ -342,6 +321,7 @@ Trait CliDate {
                 }
                 $value = ($value < 10)? '0'.$value : $value;
                 $date[1] = str_split($value);
+                $date = self::normalizeCalendarDate($date, $rangeStart, $rangeEnd);
                 $color = $Ghost->getColor($date);
                 Cli::moveTo(...$box['area']);
                 $Ghost->drawField(color: $color, posit: $posit);
@@ -360,9 +340,10 @@ Trait CliDate {
                   }
                 }
                 if($value > 9999){
-                  $value = 1970;
+                  $value = 1;
                 }
                 $date[2] = str_split($value);
+                $date = self::normalizeCalendarDate($date, $rangeStart, $rangeEnd);
                 $color = $Ghost->getColor($date);
                 // Cli::saveCursor();
                 // $cursor = Cli::cursorPosition();
@@ -373,6 +354,10 @@ Trait CliDate {
                 // Cli::restoreCursor();
               }
 
+            }
+
+            if($required && self::isDateAllowed($date, $rangeStart, $rangeEnd)){
+              $Ghost->showText('', $indent + 1);
             }
 
           } elseif($key->isWritable()){
@@ -451,6 +436,9 @@ Trait CliDate {
   
               echo Cli::underline($char);
               $date[$posit[0]-1][$posit[1]] = $char;
+              if($required && self::isDateAllowed($date, $rangeStart, $rangeEnd)){
+                $Ghost->showText('', $indent + 1);
+              }
               Cli::moveBack();
   
               $datemark = $posit[0] - 1;
@@ -490,5 +478,54 @@ Trait CliDate {
         });
   
       }
+
+    private static function parseCalendarDate(mixed $value): ?DateTime {
+      if(!is_string($value)) return null;
+
+      $value = str_replace('/', '-', trim($value));
+      if(!preg_match('/^(\d{1,2})-(\d{1,2})-(\d{4})$/', $value, $matches)) return null;
+
+      $date = DateTime::createFromFormat('!d-m-Y', $value);
+      $errors = DateTime::getLastErrors();
+      if(!$date || ($errors && ($errors['warning_count'] || $errors['error_count']))) return null;
+      if(!checkdate((int) $matches[2], (int) $matches[1], (int) $matches[3])) return null;
+      if($date->format('d-m-Y') !== sprintf('%02d-%02d-%04d', $matches[1], $matches[2], $matches[3])) return null;
+
+      return $date;
+    }
+
+    private static function calendarDateParts(DateTime $date): array {
+      return [
+        str_split($date->format('d')),
+        str_split($date->format('m')),
+        str_split($date->format('Y')),
+      ];
+    }
+
+    private static function isDateAllowed(array $parts, ?DateTime $rangeStart, ?DateTime $rangeEnd): bool {
+      $date = self::parseCalendarDate(implode('-', array_map('implode', $parts)));
+      if(!$date) return false;
+      if($rangeStart && $date < $rangeStart) return false;
+      if($rangeEnd && $date > $rangeEnd) return false;
+      return true;
+    }
+
+    private static function normalizeCalendarDate(array $parts, ?DateTime $rangeStart, ?DateTime $rangeEnd): array {
+      $day = (int) implode('', $parts[0] ?? []);
+      $month = (int) implode('', $parts[1] ?? []);
+      $year = (int) implode('', $parts[2] ?? []);
+      if($month < 1 || $month > 12 || $year < 1 || $year > 9999) return $parts;
+
+      $monthStart = DateTime::createFromFormat('!Y-n-j', $year.'-'.$month.'-1');
+      if(!$monthStart) return $parts;
+      $day = min(max(1, $day), (int) $monthStart->format('t'));
+
+      $date = self::parseCalendarDate(sprintf('%02d-%02d-%04d', $day, $month, $year));
+      if(!$date) return $parts;
+      if($rangeStart && $date < $rangeStart) $date = $rangeStart;
+      if($rangeEnd && $date > $rangeEnd) $date = $rangeEnd;
+
+      return self::calendarDateParts($date);
+    }
 
 }

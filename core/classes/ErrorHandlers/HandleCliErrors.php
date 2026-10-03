@@ -8,7 +8,6 @@ use Exception;
 use Throwable;
 use spoova\mi\core\commands\Root\Cli;
 use spoova\mi\core\commands\Root\Cli\CliState;
-use spoova\mi\core\classes\ErrorHandlers\ErrorBridge;
 use spoova\mi\core\classes\Ghost\GhostDraft;
 use spoova\mi\core\classes\Ghost\GhostFunction;
 use spoova\mi\core\classes\Ghost\GhostProxy;
@@ -17,11 +16,22 @@ use spoova\mi\core\commands\Root\Cli\GhostCli\GhostCliFinal;
 
 class HandleCliErrors extends ErrorHandler{
 
+    /** Determines if a command has been lauched */
+    public static bool $lauched = false;
+
+
+    /** Determinines if an error has been  initialized */
     public static bool $initialized = false;
+
+    /** True when error output has been displayed on the CLI screen*/
     public static bool $started = false;
+
+    /** True when silent mode is activated */
     public static bool $silent = false;
     public static bool $header_mode = false;
+    public static ?array $args = null;
     public static ?Closure $final = null;
+    private static bool $forceBreak = true;
 
     /**
      * This variable is used to detect that the silent mode property (i.e $silent) had been enabled before error occured. 
@@ -104,6 +114,15 @@ class HandleCliErrors extends ErrorHandler{
          }
     }
 
+    /**
+     * This is used for tracking the  initialization of a command's
+     *
+     * @return void
+     */
+    public static function launch() {
+        self::$lauched = true;
+    }
+
     private static function handle_shutdown(?array $errors, string $type) {
         self::normalize_cli(); 
 
@@ -117,7 +136,11 @@ class HandleCliErrors extends ErrorHandler{
 
                 Cli::break(Cli::isTerminal('windows')? 1 : 0); // break for window terminals
 
-                $GhostFunction = new GhostFunction(['error_exists', ['fatal'=>self::$fatal]]);
+                $GhostFunction = new GhostFunction(['error_exists',  'args',  ['fatal'=>self::$fatal]]);
+
+                $GhostFunction->args(function(){
+                    return self::$args;
+                });
 
                 $GhostFunction->error_exists(function(){
                     return self::error_exists();
@@ -153,8 +176,12 @@ class HandleCliErrors extends ErrorHandler{
                 if(is_closure(self::$shutdown_info)){
                     Cli::break(Cli::isTerminal('windows')? 1 : 0); // break for window terminals
                         
-                    $GhostFunction = new GhostFunction(['error_exists', ['fatal'=>self::$fatal]]);
+                    $GhostFunction = new GhostFunction(['error_exists', 'args', ['fatal'=>self::$fatal]]);
 
+                    $GhostFunction->args(function(){
+                        return self::$args;
+                    });
+                    
                     $GhostFunction->error_exists(function(){
                         return self::error_exists();
                     });
@@ -217,7 +244,11 @@ class HandleCliErrors extends ErrorHandler{
                            
                         Cli::break(Cli::isTerminal('windows')? 1 : 0); // break for window terminals
 
-                        $GhostFunction = new GhostFunction(['error_exists', ['fatal'=>self::$fatal]]);
+                        $GhostFunction = new GhostFunction(['error_exists', 'args', ['fatal'=>self::$fatal]]);
+                        
+                        $GhostFunction->args(function(){
+                            return self::$args;
+                        });
 
                         $GhostFunction->error_exists(function(){
                             return self::error_exists();
@@ -277,9 +308,10 @@ class HandleCliErrors extends ErrorHandler{
 
     private static function handle_triggers(array $errors, string $type, int $counter){
 
-        if(!self::$header_mode && $counter < 2) Cli::break(1);
-
         $isSilent = self::$silent;
+        if((!self::$header_mode || self::$forceBreak) && $counter < 2 && !$isSilent && $type !== 'error') {
+            Cli::break(1);
+        }
         
         if($type === 'error'){
             self::$errors[] = [
@@ -299,7 +331,7 @@ class HandleCliErrors extends ErrorHandler{
         
         // When not in silent mode or fatal error occurs, log the errors immediately
 
-        if(!$isSilent && ($counter == 0)) Cli::break(1); 
+        if(!$isSilent && ($counter == 0)){ Cli::break(1);  $appliedBreak = true; }
         
         foreach(self::$errorLogs as $errorkey => $errorLogs){
 
@@ -342,6 +374,18 @@ class HandleCliErrors extends ErrorHandler{
     }
 
     /**
+     * Use arguments with GhostCliMsg  
+     *  - Setting arguments allow {@see GhostCliMsg} to validate arguments with methods.
+     *
+     * @param string|array|null $args
+     * @return void
+     */
+    public static function use_arguments(string|array|null $args = null){
+        $args = is_string($args)? [$args] : $args;
+        self::$args = $args;
+    }
+
+    /**
      * This method allows the default fatal error message to be overriden with the response message defined.
      *
      * @param boolean $mode
@@ -362,8 +406,27 @@ class HandleCliErrors extends ErrorHandler{
         self::$header_mode = $mode;
     }
 
-    public static function silentErrors(bool $mode = true){
+    /**
+     *  This method is used to delay warning errors' logging till after expected processes have been completed. This will not prevent fatal errors from displaying
+     *   - Notice: if silent error mode is enabled and fatal error occurs, all previously hidden warning errors will be displayed before the fatal error.
+     * @param boolean $mode TRUE enables silent error mode while FALSE disables it.
+     * @param boolean $forceBreak forces application of a single line break before warning error is displayed.
+     *   -  If an expected output is being cleared due to warning error, this mode should be enabled to apply a single linebreak before the error is displayed to avoid clearing expected output.  
+     * @return void
+     */
+    public static function silentErrors(bool $mode = true, bool $forceBreak = false){
         self::$silent = $mode;
+        self::$forceBreak = $forceBreak;
+    }
+
+    /**
+     * Forces a line break when the first error is displayed.
+     *
+     * @param boolean $force
+     * @return void
+     */
+    public static function forceBreak(bool $force = true){
+        self::$forceBreak = $force;
     }
 
     public static function isConsoled() : bool {
@@ -482,17 +545,6 @@ class HandleCliErrors extends ErrorHandler{
         );
     }
 
-    public function cli_shutdown(array $errors) : array {
-        // // $errno, $errstr, $errfile, $errline
-        // $error = $errors['error'] = self::errors[$errno]; // type of shutdown error
-        // $message = $errors['message'] = $errstr;
-        // $efile = $errors['errfile'] = $errfile;
-        // $eline = $errors['errline'] = $errline;
-        // $backtrace = $errors['backtrace'] = Debug::get(2) ?: Debug::traces();
-        // //$errors['handler'] = 'Shutdown';
-        return []; // fix response later
-    }
-
     public static function hashLogs() : array {
         return self::$hashLogs;
     }
@@ -505,11 +557,12 @@ class HandleCliErrors extends ErrorHandler{
      */
     final static function cli_display(array $err){
 
+        if(self::$forceBreak && !self::$started){ 
+           Cli::break(); self::$forceBreak = false;
+        }
         $error   = $err['error'];
         $errfile = $err['errfile'];
         $errline = $err['errline'].br();
-        $errTrace = $err['errtrace'];
-        $errTraces = is_array($err['errtrace'])? count($err['errtrace']) : 0; 
         $errMessage = $err['message'];
         
         $fileString = (self::$addfile)? "in $errfile on line $errline" : '';
@@ -531,9 +584,6 @@ class HandleCliErrors extends ErrorHandler{
         $error $errMessage $fileString
         Body;
 
-        if(self::$started){
-            Cli::moveUp(1);
-        }
         if(self::$silent) self::$exitMode = true;
         self::$started = true;
         print $body;

@@ -28,7 +28,7 @@ class CliInput {
      *   - Produces modifier-aware names (e.g. CTRL+UP, SHIFT+DOWN) using private static comboKeys()
      *   - Emits raw ESC sequences only if unrecognised so callers can inspect .char directly.
      * 
-     * @param $callback Closure function that receives a CliKey object on each key press.
+     * @param Closure $callback Closure function that receives a CliKey object on each key press.
      * - CliKey properties:
      *    - .char → the raw character(s) read from input
      *    - .ascii → the ASCII code of the first character
@@ -36,7 +36,6 @@ class CliInput {
      *    - .isSignal → true if the key represents a caught signal (SIGINT, SIGTERM, SIGTSTP)
      *    - .input → the internal input object with read(), open(), close() methods
      *    - .close() → method to close input reading
-     * @param ?Closure $signal optional custom signal handler that receives (CliAutoSignals $signal) argument.
      */
     public static function input(Closure $callback) {
         Cli::requires('stty', fn() => Cli::textPlain('Cli input requires stty') );
@@ -203,7 +202,7 @@ class CliInput {
                 $r = [$readStream]; $w = null; $e = null;
                 $has = @stream_select($r, $w, $e, 0, 50000);
 
-                if ($sigmask_supported) {
+                if ($sigmask_supported && isset($toBlock)) {
                     pcntl_sigprocmask(SIG_UNBLOCK, $toBlock);
                 }
                 pcntl_signal_dispatch();
@@ -351,7 +350,7 @@ class CliInput {
         return $response ?? null;
     }
 
-    private static function comboKeys($mod){
+    private static function comboKeys(string|int $mod){
         $map = [
             2 => 'SHIFT',
             3 => 'ALT',
@@ -718,7 +717,6 @@ class CliInput {
             $read = [$stdin];
             $write = $except = null;
     
-            // $result = suppress_error(E_WARNING, fn() =>  stream_select($read, $write, $except, 0, 100000));
             $result = @stream_select($read, $write, $except, 0, 100000);
     
             if ($signal) {

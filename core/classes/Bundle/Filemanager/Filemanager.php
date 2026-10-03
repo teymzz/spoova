@@ -21,6 +21,10 @@ class Filemanager extends Enlist{
 
     private const DS = DIRECTORY_SEPARATOR;
 
+  private string $fingerprintMode = 'metadata';
+
+  private ?Closure $fingerprintFilter = null;
+
     /**
      * Contains defined configuration options
      *
@@ -74,6 +78,17 @@ class Filemanager extends Enlist{
      * @var array
      */
     private static array $envData = [];
+
+    /**
+     * Options used when environment files are read by static environment methods.
+     *
+     * @var array{strip_inline_comments:bool|string,strip_quotes:bool|string,strip_spaces:string}
+     */
+    private static array $envParseOptions = [
+      'strip_inline_comments' => true,
+      'strip_quotes' => true,
+      'strip_spaces' => 'normal',
+    ];
 
     /**
      * Determines the primary separator between a configuration 
@@ -1024,11 +1039,11 @@ class Filemanager extends Enlist{
      *
      * @param string $separator A key to value separator (e.g 'key: value' or  'key= value' )
      *  - A separator should not exist twice on a single line
-     * @return array Returns array of keys and value pairs
+     * @return array|false Returns array of keys and value pairs or FALSE on error.
      *  - Note that a delimiter of semicolon (i.e ";") will be trimmed off
      *  - It is better to specify the character separator to avoid any uncertainty
      */
-    public function readAll(string $separator = ':') {
+    public function readAll(string $separator = ':') : array|false {
 
       if(!is_readable($this->path)){
         trigger_error("url ".$this->path." is not readable");
@@ -1041,7 +1056,7 @@ class Filemanager extends Enlist{
 
       foreach($lines as $line) {
 
-        if (strpos(trim($line), '#')) continue;
+        if (str_starts_with(ltrim($line), '#')) continue;
         if(pathinfo($this->path, PATHINFO_EXTENSION) == 'php'){
           if( strstr($line, "<?php")  || strpos($line, "?>") || (strpos(trim($line), "//") === 0)){
             continue ;
@@ -1215,15 +1230,17 @@ class Filemanager extends Enlist{
      * 
      * @param string $path file path
      * @param string $separator a unique separator
+     * @param string $delimiter a special delimiter
      * @return array pair of keys and values
      */
-    public static function load($path, $separator = ':'){
+    public static function load($path, $separator = ':', $delimiter = ';') : array {
       $self = new self;
 
       $self->path = $path;
+      $self->delimiter($delimiter);
       $configs = $self->readAll($separator);
       
-      return $configs;
+      return $configs ?: [];
     }    
 
     /**
@@ -1242,7 +1259,8 @@ class Filemanager extends Enlist{
      */
     public static function loadenv($path, bool|string $key = ':ENV', string $separator = '=', bool $env = false){
 
-      $configs = self::load($path, $separator);
+      $configs = @self::load($path, $separator);
+      $configs = self::parse($configs, self::parseEnv());
       
       //load data into the env 
       $DATA = [];
@@ -1263,7 +1281,7 @@ class Filemanager extends Enlist{
               if($key === false){ continue; }
             }
             $_ENV[$config] = $value;
-            if($env) putenv("$config = $value");
+            if($env) putenv("$config=$value");
 
           }
           
@@ -1277,11 +1295,13 @@ class Filemanager extends Enlist{
      *
      * @param string $path
      * @param Closure $callback
+     * @param array $options value parsing options passed to {@see Filemanager::parse()}
      * @return array pairs of keys and values
      */
-    public static function pullenv(string $path, Closure $callback){
+    public static function pullenv(string $path, Closure $callback, array $options = []){
 
       $configs = self::load($path, '=');
+      $configs = self::parse($configs, array_replace(self::parseEnv(), $options));
       
       //load data into the env 
       $DATA = [];
@@ -1289,11 +1309,73 @@ class Filemanager extends Enlist{
       foreach($configs as $config => $value){
           $DATA[$config] = $value;
 
-          if($callback) $callback($config, $value);
+          if($callback)  $callback($config, $value);
           
       }
       self::$envData = $DATA;
       return $DATA;
+    }
+
+    /**
+     * Applies value parsing options after a file has been read.
+     *
+     * @param array $configs key and value pairs read from a file
+     * @param array $options
+     *  - strip_inline_comments : removes an inline '#' comment from values
+     *  - strip_quotes : removes matching single or double quotes around values
+     *  - strip_spaces : 'normal' trims unquoted values, 'all' trims every value
+     * @return array parsed key and value pairs
+     */
+    public static function parse(array $configs, array $options = []) : array {
+
+      $stripComments = self::parseBooleanOption($options['strip_inline_comments'] ?? false);
+      $stripQuotes = self::parseBooleanOption($options['strip_quotes'] ?? false);
+      $stripSpaces = strtolower((string) ($options['strip_spaces'] ?? 'normal'));
+      $stripSpaces = $stripSpaces === 'all' ? 'all' : 'normal';
+
+      return array_map(function($value) use ($stripComments, $stripQuotes, $stripSpaces) {
+        if(!is_string($value)) return $value;
+
+        if($stripComments){
+          $value = preg_replace('/\s*#.*$/s', '', $value);
+        }
+
+        $quoted = preg_match('/^\s*([\'\"])(.*)\1\s*$/s', $value) === 1;
+
+        if($stripQuotes && $quoted){
+          $value = substr($value, 0, 1) === $value[-1]
+            ? substr($value, 1, -1)
+            : $value;
+        }
+
+        if($stripSpaces === 'all' || !$quoted){
+          $value = trim($value);
+        }
+
+        return $value;
+      }, $configs);
+    }
+
+    /**
+     * Gets or sets the options used by static environment readers.
+     *
+     * @param array|null $options parsing options to merge with the current values
+     * @return array active environment parsing options
+     */
+    public static function parseEnv(?array $options = null) : array {
+      if($options !== null){
+        self::$envParseOptions = array_replace(self::$envParseOptions, array_intersect_key(
+          $options,
+          self::$envParseOptions
+        ));
+      }
+
+      return self::$envParseOptions;
+    }
+
+    private static function parseBooleanOption(mixed $value) : bool {
+      if(is_string($value)) return strtolower($value) === 'true';
+      return (bool) $value;
     }
 
     /**
@@ -1309,6 +1391,7 @@ class Filemanager extends Enlist{
     public static function putenv(string $path, bool|array $keys = true, bool $populate = true) : array {
 
       $configs = self::load($path, '=');
+      $configs = self::parse($configs, self::parseEnv());
       
       //load data into the env 
       $data = [];
@@ -1586,6 +1669,92 @@ class Filemanager extends Enlist{
     
       return $this;
     }
+
+    /**
+     * Generates a fingerprint representing the current state of a directory's
+     * contents, using the same exclusion matching as compress().
+     *
+     * @param string $dir directory to fingerprint
+     * @param array $exclude relative subdirectories/subfiles to exclude
+      * @param bool $strict TRUE hashes file content (slower, exact);
+      *   FALSE uses mtime+size (fast, sufficient for staleness detection)
+      * @param Closure|null $contentFilter optionally transforms file content before hashing
+     * @return string|false hash string, or FALSE if $dir is invalid
+     */
+    public function fingerprint(string $dir, array $exclude = [], bool $strict = false, ?Closure $contentFilter = null) : string|false {
+
+        $dir = self::normalize_path(realpath($dir));
+        if(!$dir || !is_dir($dir)) return false;
+
+        $exclude = array_map(function($path) use ($dir) {
+            $path = is_string($path) ? rtrim($dir, '/ ').'/'.ltrim($path, '/ ') : $path;
+            return self::normalize_path($path);
+        }, $exclude);
+
+        $files = new RecursiveIteratorIterator(
+            new RecursiveDirectoryIterator($dir, RecursiveDirectoryIterator::SKIP_DOTS),
+            RecursiveIteratorIterator::LEAVES_ONLY
+        );
+
+        $paths = [];
+        $fingerprintFilter = $contentFilter ?? $this->fingerprintFilter;
+        $useContent = $strict || $this->fingerprintMode === 'content' || $fingerprintFilter !== null;
+
+        foreach($files as $file){
+            if($file->isDir()) continue;
+
+            $filepath = $file->getRealPath();
+            if($filepath === false) continue;
+
+            $normpath = self::normalize_path($filepath);
+
+            $excluded = false;
+            foreach($exclude as $val){
+                if(self::isSubPath($normpath, $val)){
+                    $excluded = true;
+                    break;
+                }
+            }
+            if($excluded) continue;
+
+            $relpath = substr($normpath, strlen($dir) + 1);
+            if($useContent){
+              $content = file_get_contents($filepath);
+              if($content === false) continue;
+              if($fingerprintFilter) $content = $fingerprintFilter($content, $relpath);
+              $paths[$relpath] = hash('xxh3', $content);
+            } else {
+              $paths[$relpath] = $file->getMTime().':'.$file->getSize();
+            }
+        }
+
+        ksort($paths); // deterministic regardless of filesystem iteration order
+
+        $hash = hash_init('xxh3');
+        foreach($paths as $relpath => $marker){
+            hash_update($hash, $relpath.'='.$marker.'|');
+        }
+
+        return hash_final($hash);
+    }
+
+      /**
+       * Selects how fingerprint entries are generated.
+       *
+       * @param string $mode metadata uses mtime+size; content hashes file contents
+       * @param Closure|null $contentFilter optionally transforms content before hashing
+       * @return static
+       */
+      public function setFingerprintMode(string $mode, ?Closure $contentFilter = null) : static {
+        $mode = strtolower($mode);
+        if(!in_array($mode, ['metadata', 'content'], true)){
+          throw new \InvalidArgumentException('Unsupported fingerprint mode: '.$mode);
+        }
+
+        $this->fingerprintMode = $mode;
+        $this->fingerprintFilter = $contentFilter;
+        return $this;
+      }
 
     /**
      * Throws error or triggers supplied callback if ZipArchive class is missing  
@@ -2097,6 +2266,7 @@ class Filemanager extends Enlist{
               ($success = copy($file, $finalPath))? $resolved[] = $file : $unresolved[] = $file;
               if(!$success) $error = 'copy failed for: '.$file;
             }
+            $success = $success ?? false;
             
             if($error) $info->errors[$file] = $error;
 

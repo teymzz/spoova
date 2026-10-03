@@ -3,13 +3,15 @@
 namespace spoova\mi\core\commands\Root\Cli\CliForms;
 
 use Closure;
-use spoova\mi\core\commands\Root\Cli;
-use spoova\mi\core\commands\Root\Cli\CliKey;
 use spoova\mi\core\classes\Ghost\GhostFunction;
+use spoova\mi\core\commands\Root\Cli;
 use spoova\mi\core\commands\Root\Cli\CliDraw;
-use spoova\mi\core\commands\Root\Cli\CliScreen;
+use spoova\mi\core\commands\Root\Cli\CliForms\CliFormsModifier;
+use spoova\mi\core\commands\Root\Cli\CliKey;
 
 trait CliAlpha {
+
+  use CliFormsModifier;
 
   /**
    * Creates an input that supports only alphabets (no spaces allowed)
@@ -17,8 +19,8 @@ trait CliAlpha {
    * @param string $placeholder placeholder text for alpha box
    * @param string $hint hint text for alpha box (or box title)
    * @param string $value default alpha box form value
-   * @param string $required determines if field is required
-   * @param string $maxlength maximum length of value
+   * @param bool $required determines if field is required
+   * @param int $maxlength maximum length of value
    * @param array $design extended design features
    *   - width: specifies width of text field
    *   - indent: specifies margin from left
@@ -30,55 +32,28 @@ trait CliAlpha {
    * @uses Cli::input()
    * @return string
    */
-  public static function alpha(string $placeholder = '', string $hint = '',  ?string $value = null, bool $required = false, ?int $maxlength = null, array $design = ['width'=>25, 'indent' => 0, 'shape'=>'square','textColor'=>'white','borderColor'=>'white'], ?Closure $modifier = null, ?Closure $onEnd = null){
+  public static function alpha(string $placeholder = '', string $hint = '',  ?string $value = null, bool $required = false, ?int $maxlength = null, array $design = self::design, ?Closure $modifier = null, ?Closure $onEnd = null){
       self::use_requirements();
-      $width = $design['width'] ?? 25;
-      $indent = $design['indent'] ?? 0;
-      $shape = $design['shape'] ?? 'square';
-      $color = $design['textColor'] ?? 'white';
-      $borderColor = $design['borderColor'] ?? 'white';
 
-      // set accepted configuration for default values 
-      if(!in_array($shape, ['square','round'])) $shape = 'square';
-      if(!in_array($color, ['red','blue','white','yellow'])) $shape = 'white';
-      if(!in_array($borderColor, ['red','blue','white','yellow'])) $borderColor = 'white';
-      $width = (!is_numeric($width) || ($width < 25))? 25 : (int) $width;
-      $indent = (!is_numeric($indent))? 0 : (int) $indent;
+      $draft = self::draft('text', compact('placeholder','required','maxlength','design','modifier') );
 
-      // Ensure width is not greater than screen width at initial draw
-      $indent = CliDraw::fitIndent($indent);            // guard against excessive indent
-      $width  = CliDraw::fitWidth($width, $indent);     // keep box within the screen
+      // Get : shape, width, height, margin, info, borderColor, textColor, defaults, cursor
+      $shape = $draft['shape'];
+      $width = $draft['width'];
+      $height = $draft['height'];
+      $indent = $draft['indent'];
+      $info = $draft['info'];
+      $borderColor = $draft['borderColor'];
+      $textColor = $draft['textColor'];
+      $defaults = $draft['defaults'];
+      $cursor = $draft['cursor'];
+      $advance = $defaults['advance'];
+      $modifier = $draft['modifier'];
+
+       $defaults['textColor'] = $textColor;
+       $defaults['borderColor'] = $borderColor;
 
       $box = [];
-      $info['x'] = $width; //width
-      $info['y'] = $height = 1; //height
-      $info['chars'] = []; // keep text characters
-      $info['charsNum'] = 0; // keep text characters
-      $info['margin'] = $indent; // left margin
-      $info['placeholder'] = $placeholder; // left margin
-      $info['color'] = 'white';
-      $info['required'] = $required;
-      $info['maxlength'] = $maxlength;
-      $cursor = 0; // text end point
-      $info['bound'] = 0;
-
-      $info['bdcolor-state'] = 'white';
-      $info['text-state'] = '';
-      $required = false;
-
-      if(!$modifier){
-        $modifier = function(array|CliFlow $chars){
-          
-          return (object) [
-            'chars' => $chars, 
-            'count' => count($chars), 
-            'value' => implode('', $chars),
-            'textColor' => 'white', 
-            'borderColor' => 'white', 
-          ];
-
-        };
-      }
 
       /**
        * @var object
@@ -124,7 +99,7 @@ trait CliAlpha {
 
 
       if($info['placeholder'] && !$value){
-        $GhostFunction->drawField($color); // Start by drawing the input field
+        $GhostFunction->drawField($textColor); // Start by drawing the input field
         $GhostFunction->writeInput($info['placeholder']);
         Cli::moveTo(...$box['text-start']);
       }elseif($value){
@@ -136,7 +111,7 @@ trait CliAlpha {
               $value = substr($value, 0, $info['x'] - 1);
           }
           
-          $mod = self::modified($modifier, mb_str_split($value));
+          $mod = self::modified($modifier, $defaults, mb_str_split($value));
 
           if(is_object($mod)){
               $borderColor = property_exists($mod, 'borderColor') ? $mod->borderColor : 'white';
@@ -155,7 +130,7 @@ trait CliAlpha {
       Cli::blinkCursor(); // Start by blinking cursor
       
       // Stream input into the text box field ......................................................................
-      return Cli::input(function(CliKey $key) use (&$info, &$cursor, &$required, $GhostFunction, $modifier, $onEnd) {
+      return Cli::input(function(CliKey $key) use ($defaults, &$info, &$cursor, &$required, $GhostFunction, $modifier, $onEnd) {
         
         if($key->isExit() || $key->isEnter()){ 
 
@@ -183,7 +158,7 @@ trait CliAlpha {
           if($cursor > 0) $cursor--;
           $info['chars'] = array_values($chars);
           
-          $modifier = self::modified($modifier, $chars);
+          $modifier = self::modified($modifier, $chars, $defaults);
 
           if(is_object($modifier)){
             $borderColor = property_exists($modifier, 'borderColor') ? $modifier->borderColor : 'white';
@@ -234,15 +209,10 @@ trait CliAlpha {
 
             $chars = $info['chars'];
             
-            $modifier = self::modified($modifier, $chars);
+            $modifier = self::modified($modifier, $chars, $defaults);
 
-            if(is_object($modifier)){
-              $borderColor = property_exists($modifier, 'borderColor') ? $modifier->borderColor : 'white';
-              $textColor = property_exists($modifier, 'textColor') ? $modifier->textColor : 'white';  
-            }else{
-              $borderColor = 'white';
-              $textColor = 'white';
-            }
+            $borderColor = $modifier->borderColor;
+            $textColor = $modifier->textColor;
 
             $info['bdcolor-state'] = $textColor;
 
@@ -284,15 +254,11 @@ trait CliAlpha {
           $xe = ($info['bound'] === ($info['x'] - 1))? true : false;
 
           $chars = $info['chars'];
-          $modifier = self::modified($modifier, $chars);
+          $modifier = self::modified($modifier, $defaults, $chars);
 
-          if(is_object($modifier)){
-            $borderColor = property_exists($modifier, 'borderColor') ? $modifier->borderColor : 'white';
-            $textColor = property_exists($modifier, 'textColor') ? $modifier->textColor : 'white';  
-          }else{
-            $borderColor = 'white';
-            $textColor = 'white';
-          }
+          
+          $borderColor = $modifier->borderColor;
+          $textColor = $modifier->textColor;
 
           $info['bdcolor-state'] = $textColor;
 
@@ -369,15 +335,10 @@ trait CliAlpha {
           $info['chars'] = $fullChars;
           $info['color'] = ((count($info['chars']) -1) > 5)? 'red' : 'white';
 
-          $modifier = self::modified($modifier, $fullChars);
+          $modifier = self::modified($modifier, $defaults, $fullChars);
 
-          if(is_object($modifier)){
-            $borderColor = property_exists($modifier, 'borderColor') ? $modifier->borderColor : 'white';
-            $textColor = property_exists($modifier, 'textColor') ? $modifier->textColor : 'white';  
-          }else{
-            $borderColor = 'white';
-            $textColor = 'white';
-          }
+          $borderColor = $modifier->borderColor;
+          $textColor = $modifier->textColor;
 
           $info['bdcolor-state'] = $textColor;
 
@@ -418,7 +379,6 @@ trait CliAlpha {
             $bound = $info['bound']+1;          
             if($info['bound'] < $info['x']) {
               $bound -= 1;
-            //  $info['bound']++;
             }
           }else if($info['bound'] == ($info['x']-1)){
             $bound = $info['bound'];
@@ -438,8 +398,6 @@ trait CliAlpha {
           return implode('', $info['chars']);
 
         }
-
-        //Apply validations here ... 
 
       });
 

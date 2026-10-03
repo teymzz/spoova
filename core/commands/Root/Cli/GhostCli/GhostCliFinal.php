@@ -21,13 +21,23 @@ abstract class GhostCliFinal {
     }
 
     /**
-     * This uses the {@see CliRuntime::duration()} to detect the entire execution time.
+     * Returns list of all errors detected
      *
      * @uses HandleCliErrors::errors()
      * @return array
      */
     public function errors() : array {
         return HandleCliErrors::errors();
+    }
+
+    /**
+     * Returns total number of errors detected
+     *
+     * @uses HandleCliErrors::errors()
+     * @return int
+     */
+    public function errorsCount() : int {
+        return count($this->errors());
     }
 
 }

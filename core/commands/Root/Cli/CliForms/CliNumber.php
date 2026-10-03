@@ -14,6 +14,8 @@ use spoova\mi\core\commands\Root\Cli\CliForms;
 
 trait CliNumber {
 
+    use CliFormsModifier;
+
   /**
    * Creates an input text field on the CLI screen
    *
@@ -31,52 +33,23 @@ trait CliNumber {
    * @param Closure|null $onEnd callback closure(CliTransmit $form) function triggered when the form is submitted or terminated.
    * @return string response
    */
-  public static function number(string $placeholder = '', string $hint = '',  ?int $value = null, bool $required = false, ?int $maxlength = null, array $design = ['width'=>25, 'indent' => 0, 'shape'=>'square','color'=>CliForms::text_field_color,'borderColor'=>CliForms::text_field_color], ?Closure $modifier = null, ?Closure $onCancel = null){
+  public static function number(string $placeholder = '', string $hint = '',  ?int $value = null, bool $required = false, ?int $maxlength = null, array $design = self::design, ?Closure $modifier = null, ?Closure $onEnd = null){
       self::use_requirements();
-      $width = $design['width'] ?? 25;
-      $margin = $design['indent'] ?? 0;
-      $shape = $design['shape'] ?? 'square';
-      $color = $design['color'] ?? CliForms::text_field_color;
-      $borderColor = $design['borderColor'] ?? CliForms::text_field_color;
 
-      // set accepted configuration for default values 
-      if(!in_array($shape, ['square','round'])) $shape = 'square';
-      if(!in_array($color, ['red','blue','white','yellow'])) $shape = CliForms::text_field_color;
-      if(!in_array($borderColor, ['red','blue','white','yellow'])) $borderColor = CliForms::text_field_color;
-      $width = (!is_numeric($width) || ($width < 25))? 25 : (int) $width;
-      $margin = (!is_numeric($margin))? 0 : (int) $margin;
-      $margin = CliDraw::fitIndent($margin);            // guard against excessive indent
-      $width  = CliDraw::fitWidth($width, $margin);     // keep box within the screen
-
-      $info['x'] = $width; //width
-      $info['y'] = $height = 1; //height
-      $info['chars'] = []; // keep text characters
-      $info['charsNum'] = 0; // keep text characters
-      $info['margin'] = $margin; // left margin
-      $info['placeholder'] = $placeholder; // left margin
-      $info['color'] = CliForms::text_field_color;
-      $info['required'] = $required;
-      $info['maxlength'] = $maxlength;
-      $cursor = 0; // text end point
-      $info['bound'] = 0;
-
-      $info['bdcolor-state'] = CliForms::text_field_color;
-      $info['text-state'] = '';
-      $required = false;
-
-      if(!$modifier){
-        $modifier = function(array $chars){
-          
-          return (object) [
-            'chars' => $chars, 
-            'count' => count($chars), 
-            'value' => implode('', $chars),
-            'textColor' => CliForms::text_field_color, 
-            'borderColor' => CliForms::text_field_color, 
-          ];
-
-        };
-      }
+      $draft = self::draft('text', compact('placeholder','required','maxlength','design','modifier') );
+        
+      // Get : shape, width, height, margin, info, borderColor, textColor, defaults, cursor
+      $shape = $draft['shape'];
+      $width = $draft['width'];
+      $height = $draft['height'];
+      $margin = $draft['margin'];
+      $info = $draft['info'];
+      $borderColor = $draft['borderColor'];
+      $textColor = $draft['textColor'];
+      $defaults = $draft['defaults'];
+      $cursor = $draft['cursor'];
+      $advance = $defaults['advance'];
+      $modifier = $draft['modifier'];
 
       /**
        * @var object
@@ -89,7 +62,7 @@ trait CliNumber {
        *  ##### showText($text) - ***For Testing: this displays a text below the input field***
        *  ##### ``` $text: text to be written ```
        */
-      $GhostFunction = new GhostFunction(['drawField','writeInput','showText','toAsterisk'],'GhostFunction');
+      $GhostFunction = new GhostFunction(['drawField','writeInput','showText'],'GhostFunction');
 
       // Define activity to draw input field when method is called
       $GhostFunction->drawField(function($color = CliForms::text_field_color, int $marginTop = 0) use($shape, $width, $height, $margin, $hint){      
@@ -114,14 +87,8 @@ trait CliNumber {
         Cli::restoreCursor();
       });
 
-      $GhostFunction->drawField($color); // Start by drawing the input field
-      if($info['placeholder']){
-        $GhostFunction->writeInput($info['placeholder']);
-        Cli::moveStart($info['margin'] + 1);
-      }
-
       if($info['placeholder'] && !$value){
-          $GhostFunction->drawField($color); // Start by drawing the input field
+          $GhostFunction->drawField($borderColor); // Start by drawing the input field
           $GhostFunction->writeInput($info['placeholder']);
           Cli::moveStart($info['margin'] + 1);
       }elseif($value){
@@ -132,15 +99,11 @@ trait CliNumber {
               $info['bound'] = $info['x'] - 1;
               $value = substr($value, 0, $info['x'] - 1);
           }
-          $mod = self::modified($modifier, mb_str_split($value));
 
-          if(is_object($mod)){
-              $borderColor = property_exists($mod, 'borderColor') ? $mod->borderColor : CliForms::text_field_color;
-              $textColor = property_exists($mod, 'textColor') ? $mod->textColor : CliForms::text_field_color;  
-          }else{
-              $borderColor = CliForms::text_field_color;
-              $textColor = CliForms::text_field_color;
-          }
+          $mod = self::modified($modifier, $defaults, mb_str_split($value));
+
+          $borderColor = $mod->borderColor;
+          $textColor = $mod->textColor;
 
           $GhostFunction->drawField($borderColor); // Start by drawing the input field
           $GhostFunction->writeInput(Cli::color($value, $textColor));
@@ -150,28 +113,32 @@ trait CliNumber {
       Cli::blinkCursor(); // Start by blinking cursor
       
       // Stream input into the text box field ......................................................................
-      return Cli::input(function(CliKey $key) use (&$info, &$cursor, &$required, $GhostFunction,$onCancel, $modifier) {
+      return Cli::input(function(CliKey $key) use ($borderColor, $defaults, &$info, &$cursor, &$required, $GhostFunction, $advance, $onEnd, $modifier) {
         
-        if($key->isSignal()){
+        if($key->isExit() || $key->isEnter()){
 
-          if(!$onCancel){
-            if($key->inSignals([SIGTERM, SIGTSTP, SIGQUIT, SIGSTOP, SIGINT])){
-              $text = Cli::textIndent('❌  Cancelling ...', $info['margin']);
-    
-              Cli::break(2)->hideCursor(function() use($text){
-                Cli::pulseView($text, eachChar: fn($char) => Cli::danger($char))
-                      ->wait(50000)
-                      ->pulseToggle(3, 10, 50000)
-                      ->pulseBack(strlen($text))
-                      ->showCursor()
-                      ->break(1)
-                    ;
-              });
-            }
-          }else{
-            $onCancel();
-          }
-          
+                if($key->isExit()){
+                  if($onEnd){ 
+                    Cli::moveDown()->break(1);
+                    $message = $onEnd(new CliTransmit($key, implode('', $info['chars'])));
+                    if($key->isExit()) Cli::break(1);
+                    return $message;
+                  }
+                }else{
+                  if($required){
+                    $chars = implode('', $info['chars']);
+                    if(!$chars) {
+                          $GhostFunction->showText(Cli::danger('﹡Required'), $info['margin']);
+                          return false;
+                    }
+                  }
+                  Cli::moveDown();
+                  $key->exit();
+                  Cli::moveDown();
+                  $message = $onEnd(new CliTransmit($key, implode('', $info['chars'])));
+                  return $message;
+                }
+            
         }elseif($key->isBackspace()){
 
           $chars = $info['chars'];
@@ -179,17 +146,12 @@ trait CliNumber {
           if($info['bound'] > 0 && (count($info['chars']) < $info['x'])) $info['bound']--;
           if($cursor > 0) $cursor--;
           $info['chars'] = array_values($chars);
+          $advance->advance = null;
+          
+          $mod = self::modified($modifier, $defaults, $chars);
 
-          $modifier = $modifier($chars);
-          if(is_array($modifier)) $modifier = (object) $modifier;
-
-          if(is_object($modifier)){
-            $borderColor = property_exists($modifier, 'borderColor') ? $modifier->borderColor : CliForms::text_field_color;
-            $textColor = property_exists($modifier, 'textColor') ? $modifier->textColor : CliForms::text_field_color;  
-          }else{
-            $borderColor = CliForms::text_field_color;
-            $textColor = CliForms::text_field_color;
-          }
+          $borderColor = $mod->borderColor;
+          $textColor = $mod->textColor;
 
           //get full characters string
           $charsText = implode('', $info['chars']);
@@ -230,16 +192,10 @@ trait CliNumber {
           if($info['bound']>=0){
 
             $chars = $info['chars'];
-            $modifier = $modifier($chars);
-            if(is_array($modifier)) $modifier = (object) $modifier;
+            $mod = self::modified($modifier, $defaults, $chars);
 
-            if(is_object($modifier)){
-              $borderColor = property_exists($modifier, 'borderColor') ? $modifier->borderColor : CliForms::text_field_color;
-              $textColor = property_exists($modifier, 'textColor') ? $modifier->textColor : CliForms::text_field_color;  
-            }else{
-              $borderColor = CliForms::text_field_color;
-              $textColor = CliForms::text_field_color;
-            }
+            $borderColor = $mod->borderColor;
+            $textColor = $mod->textColor;
 
             $info['bdcolor-state'] = $textColor;
 
@@ -272,8 +228,6 @@ trait CliNumber {
             }
 
           }
-          
-          // $GhostFunction->showText($info['bound'].':'.$cursor);
 
         }elseif ($key->isArrow('right')){
           
@@ -281,18 +235,10 @@ trait CliNumber {
           $xe = ($info['bound'] === ($info['x'] - 1))? true : false;
 
           $chars = $info['chars'];
-          $modifier = $modifier($chars);
-          if(is_array($modifier)) $modifier = (object) $modifier;
+          $mod =  self::modified($modifier, $defaults, $chars);
 
-          if(is_object($modifier)){
-            $borderColor = property_exists($modifier, 'borderColor') ? $modifier->borderColor : CliForms::text_field_color;
-            $textColor = property_exists($modifier, 'textColor') ? $modifier->textColor : CliForms::text_field_color;  
-          }else{
-            $borderColor = CliForms::text_field_color;
-            $textColor = CliForms::text_field_color;
-          }
-
-          $info['bdcolor-state'] = $textColor;
+          $borderColor = $mod->borderColor;
+          $textColor = $mod->textColor;
 
           if($xe){
             if($cursor !== count($info['chars'])){
@@ -333,17 +279,30 @@ trait CliNumber {
           
           $value = $key->fetch();
           
+          $chars = $info['chars'];
+          $input =  implode('',$info['chars']);
+          
           if(!is_numeric($value)) {
-              $bdColor = $info['bdcolor-state'];
-              Cli::saveCursor();
+
+              $mod =  self::modified($modifier, $defaults,  $chars);
+
+              $borderColor = $mod->borderColor;
+              $textColor = $mod->textColor;
+
+              $bdColor = $info['bdcolor-state'] ?? $borderColor;
+              Cli::saveCursor(); 
               Cli::moveDown()->clearUp($info['y'] + 1);
-              $GhostFunction->drawField('red');
-              $GhostFunction->writeInput($info['text-state']);
+              Cli::hideCursor();
+              $GhostFunction->drawField('danger');
+              
+              $GhostFunction->writeInput($info['text-state'] ?? $input);
               Cli::restoreCursor();
-              Cli::wait(100000);
+              Cli::wait(100000);              
               Cli::moveDown()->clearUp($info['y'] + 1);
+              Cli::showCursor();
               $GhostFunction->drawField($bdColor);
-              $GhostFunction->writeInput($info['text-state']);
+              $GhostFunction->writeInput($info['text-state'] ?? $input);
+
               Cli::restoreCursor();
               return false;
           }
@@ -361,25 +320,18 @@ trait CliNumber {
           $fullString = implode('', $fullChars);
 
           $info['chars'] = $fullChars;
-          $info['color'] = ((count($info['chars']) -1) > 5)? 'red' : CliForms::text_field_color;
+          $info['color'] = ((count($info['chars']) -1) > 5)? 'red' : $borderColor;
 
-          $modifier = $modifier($fullChars);
-          if(is_array($modifier)) $modifier = (object) $modifier;
+          $mod = self::modified($modifier, $defaults, mb_str_split($input));
 
-          if(is_object($modifier)){
-            $borderColor = property_exists($modifier, 'borderColor') ? $modifier->borderColor : CliForms::text_field_color;
-            $textColor = property_exists($modifier, 'textColor') ? $modifier->textColor : CliForms::text_field_color;  
-          }else{
-            $borderColor = CliForms::text_field_color;
-            $textColor = CliForms::text_field_color;
-          }
+          $borderColor = $mod->borderColor;
+          $textColor = $mod->textColor;
 
           $info['bdcolor-state'] = $textColor;
 
           if($required){
             $required = false;
             $GhostFunction->showText('', $info['margin'] + 1);
-            // Cli::moveDown()->saveCursor()->clearUp(10)->restoreCursor()->moveUp();
           }
           // Clear entire input text field
           Cli::moveDown()->clearUp($info['y'] + 1);
@@ -413,7 +365,6 @@ trait CliNumber {
             $bound = $info['bound']+1;          
             if($info['bound'] < $info['x']) {
               $bound -= 1;
-            //  $info['bound']++;
             }
           }else if($info['bound'] == ($info['x']-1)){
             $bound = $info['bound'];

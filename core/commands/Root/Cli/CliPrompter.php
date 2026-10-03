@@ -108,7 +108,7 @@ abstract class CliPrompter extends GhostClass {
     /**
      * Detects when the input supplied is invalid
      *
-     * @return boolean TRUE only if input supplied is not within the range of options supplied to the prompt
+     * @return boolean TRUE only if input supplied is not within the range of options supplied  (case-sensitive) to the prompt 
      */
     public function invalid(): bool {
         return !$this->proxy->valid();
@@ -128,10 +128,19 @@ abstract class CliPrompter extends GhostClass {
     /**
      * Detects when the input supplied is valid
      *
-     * @return boolean TRUE only if input supplied is legal and within the range of options supplied to the prompt
+     * @return boolean TRUE only if input supplied is legal and within the range of options supplied (case-sensitive) to the prompt
      */
     public function valid(): bool {
         return $this->proxy->valid();
+    }
+
+    /**
+     * Detects when the input supplied is valid
+     *
+     * @return boolean TRUE only if input supplied is legal and within the range of options supplied (case-insensitive) to the prompt
+     */
+    public function anyValid(): bool {
+        return $this->proxy->imatches($this->options());
     }
 
     /**
@@ -148,7 +157,7 @@ abstract class CliPrompter extends GhostClass {
     /**
      * Detects when the maximum number of trials was reached
      *
-     * @return int|false $input
+     * @return integer|false $input
      */
     public function maximum(): int|false {
         return $this->proxy->maximum();
